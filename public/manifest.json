@@ -1,0 +1,10 @@
+{
+  "name": "EV Live",
+  "short_name": "EV Live",
+  "description": "実戦EVチェッカー",
+  "start_url": "/machines",
+  "display": "standalone",
+  "background_color": "#0b0d10",
+  "theme_color": "#14181d",
+  "icons": []
+}
