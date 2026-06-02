@@ -3,9 +3,9 @@ import { getMachine, getMachines } from "@/lib/machines";
 import { MachineDetailClient } from "./MachineDetailClient";
 
 type MachineDetailPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function generateStaticParams() {
@@ -14,7 +14,8 @@ export async function generateStaticParams() {
 }
 
 export default async function MachineDetailPage({ params }: MachineDetailPageProps) {
-  const machine = await getMachine(params.id);
+  const { id } = await params;
+  const machine = await getMachine(id);
   if (!machine) notFound();
   return <MachineDetailClient machine={machine} />;
 }
