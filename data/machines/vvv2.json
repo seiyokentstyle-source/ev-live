@@ -20,7 +20,7 @@
   "profiles": [
     {
       "key": "game_ceiling",
-      "label": "ゲーム数天井（実戦値）",
+      "label": "ゲーム数天井（実戦値）（n=1230）",
       "ceiling": "1500G",
       "gRange": {
         "start": 0,
