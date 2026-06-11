@@ -24,7 +24,7 @@
       "ceiling": "1500G",
       "gRange": {
         "start": 0,
-        "end": 800,
+        "end": 1500,
         "step": 25
       },
       "activeAxes": [
