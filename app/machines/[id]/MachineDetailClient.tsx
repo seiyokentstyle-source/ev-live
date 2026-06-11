@@ -34,8 +34,12 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
     return machine.axes.filter((axis) => keys.has(axis.key));
   }, [machine.axes, profile.activeAxes]);
 
+  const isPending = Boolean(profile.dataPending);
   const pivot = pivotAxis && pivotValues.length > 0 ? ({ axisKey: pivotAxis, values: pivotValues } satisfies PivotConfig) : undefined;
-  const rows = useMemo(() => generateRows(profile, machine, selection, pivot), [machine, pivot, profile, selection]);
+  const rows = useMemo(
+    () => (isPending ? [] : generateRows(profile, machine, selection, pivot)),
+    [isPending, machine, pivot, profile, selection]
+  );
 
   function switchProfile(key: string): void {
     setActiveProfileKey(key);
@@ -73,17 +77,33 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
       </header>
 
       <ProfileBar profiles={machine.profiles} activeKey={activeProfileKey} onChange={switchProfile} />
-      <ConditionsPanel
-        axes={activeAxes}
-        selection={selection}
-        pivotAxis={pivotAxis}
-        pivotValues={pivotValues}
-        collapsed={collapsed}
-        onToggleCollapsed={() => setCollapsed((value) => !value)}
-        onOpenPicker={(axis, mode) => setPicker({ axis, mode })}
-      />
-      <EvTable machine={machine} profile={profile} rows={rows} pivot={pivot} onViewGChange={setCurrentG} />
-      <FooterBar profile={profile} rowCount={rows.length} currentG={currentG} />
+
+      {isPending ? (
+        <div className="flex min-h-0 flex-1 items-center justify-center px-8 text-center">
+          <div>
+            <div className="text-sm font-bold text-neg">実戦データなし</div>
+            <p className="mt-2 text-xs leading-relaxed text-ink-soft">
+              「{profile.label}」の実戦データはまだありません。
+              <br />
+              集計でき次第、期待値を表示します。
+            </p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <ConditionsPanel
+            axes={activeAxes}
+            selection={selection}
+            pivotAxis={pivotAxis}
+            pivotValues={pivotValues}
+            collapsed={collapsed}
+            onToggleCollapsed={() => setCollapsed((value) => !value)}
+            onOpenPicker={(axis, mode) => setPicker({ axis, mode })}
+          />
+          <EvTable machine={machine} profile={profile} rows={rows} pivot={pivot} onViewGChange={setCurrentG} />
+          <FooterBar profile={profile} rowCount={rows.length} currentG={currentG} />
+        </>
+      )}
 
       {picker ? (
         <AxisPicker

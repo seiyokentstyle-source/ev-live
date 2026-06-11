@@ -98,7 +98,10 @@ export function calcRow(g: number, conditions: Conditions, profile: Profile, mac
   const hourly = hourlyEV(g, ev, profile, machine);
   const medals = avgMedals(g, profile, machine);
   const zoneLabel = profile.zones.find((zone) => zone.g === g)?.label;
-  return { g, ev, rtp, hourly, medals, zoneLabel };
+  const anchors = profile.baseAnchors;
+  const lastSampledG = anchors.length > 0 ? anchors[anchors.length - 1].g : Number.POSITIVE_INFINITY;
+  const noData = g > lastSampledG;
+  return { g, ev, rtp, hourly, medals, zoneLabel, noData };
 }
 
 export function generateGValues(profile: Profile): number[] {
