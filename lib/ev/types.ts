@@ -97,4 +97,6 @@ export type TableRow = {
   medals: number;
   zoneLabel?: string;
   pivotValues?: Record<string, number>;
+  /** True when g is past the last sampled anchor: no 実戦 data, render as "—". */
+  noData?: boolean;
 };

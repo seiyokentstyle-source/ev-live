@@ -114,29 +114,37 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                       return (
                         <td
                           key={column.value}
-                          className={`border-b border-r border-line-soft px-2 py-2 text-right ${toneClass(ev)} ${alt}`}
+                          className={`border-b border-r border-line-soft px-2 py-2 text-right ${
+                            row.noData ? "text-muted" : toneClass(ev)
+                          } ${alt}`}
                         >
-                          {formatSigned(ev)}
+                          {row.noData ? "—" : formatSigned(ev)}
                         </td>
                       );
                     })}
                     <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-ink-soft ${alt}`}>
-                      {row.medals.toLocaleString("ja-JP")}
+                      {row.noData ? "—" : row.medals.toLocaleString("ja-JP")}
                     </td>
                   </>
                 ) : (
                   <>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${rtpToneClass(row.rtp)} ${alt}`}>
-                      {row.rtp.toFixed(1)}%
+                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${
+                      row.noData ? "text-muted" : rtpToneClass(row.rtp)
+                    } ${alt}`}>
+                      {row.noData ? "—" : `${row.rtp.toFixed(1)}%`}
                     </td>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${toneClass(row.ev)} ${alt}`}>
-                      {formatSigned(row.ev)}
+                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${
+                      row.noData ? "text-muted" : toneClass(row.ev)
+                    } ${alt}`}>
+                      {row.noData ? "—" : formatSigned(row.ev)}
                     </td>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${toneClass(row.hourly)} ${alt}`}>
-                      {formatSigned(row.hourly)}
+                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${
+                      row.noData ? "text-muted" : toneClass(row.hourly)
+                    } ${alt}`}>
+                      {row.noData ? "—" : formatSigned(row.hourly)}
                     </td>
                     <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-ink-soft ${alt}`}>
-                      {row.medals.toLocaleString("ja-JP")}
+                      {row.noData ? "—" : row.medals.toLocaleString("ja-JP")}
                     </td>
                   </>
                 )}

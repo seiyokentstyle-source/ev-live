@@ -27,11 +27,23 @@ describe("EV calculation", () => {
     expect(avgMedals(profile.gRange.end, profile, machine)).toBe(0);
   });
 
-  test("keeps EV/RTP/hourly sign aligned for default rows away from terminal zero-hour rows", () => {
-    const rows = generateRows(profile, machine, conditions).filter((row) => row.g < profile.gRange.end);
+  test("keeps EV/RTP/hourly sign aligned for sampled rows away from terminal zero-hour rows", () => {
+    const lastSampledG = profile.baseAnchors[profile.baseAnchors.length - 1].g;
+    const rows = generateRows(profile, machine, conditions).filter((row) => row.g < lastSampledG);
     for (const row of rows) {
       expect(row.rtp >= 100).toBe(row.ev >= 0);
       expect(row.ev >= 0).toBe(row.hourly >= 0);
+    }
+  });
+
+  test("marks rows past the last sampled anchor as no-data", () => {
+    const lastSampledG = profile.baseAnchors[profile.baseAnchors.length - 1].g;
+    const rows = generateRows(profile, machine, conditions);
+    expect(rows.find((row) => row.g === lastSampledG)?.noData).toBeFalsy();
+    const beyond = rows.filter((row) => row.g > lastSampledG);
+    expect(beyond.length).toBeGreaterThan(0);
+    for (const row of beyond) {
+      expect(row.noData).toBe(true);
     }
   });
 });
