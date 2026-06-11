@@ -79,6 +79,13 @@ export function validateMachine(data: unknown): Machine {
     for (const key of profile.activeAxes) {
       assert(axisKeys.has(key), `profile ${profile.key} references unknown axis ${key}`);
     }
+    assert(Array.isArray(profile.baseAnchors), `profile ${profile.key} baseAnchors must be an array`);
+    assert(Array.isArray(profile.zones), `profile ${profile.key} zones must be an array`);
+
+    // A data-pending profile has no 実戦 data yet: the tab is shown but no table is
+    // rendered, so the anchor/zone constraints below do not apply.
+    if (profile.dataPending) continue;
+
     assert(profile.baseAnchors.length >= 2, `profile ${profile.key} must have at least two anchors`);
     for (let i = 0; i < profile.baseAnchors.length; i += 1) {
       const anchor = profile.baseAnchors[i];

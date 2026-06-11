@@ -53,6 +53,8 @@ export type Profile = {
   activeAxes: string[];
   baseAnchors: BaseAnchor[];
   zones: Zone[];
+  /** When true, this profile has no 実戦 data yet: the tab is shown but no numbers are rendered. */
+  dataPending?: boolean;
 };
 
 export type ModifierMap = Record<string, Record<string, number>>;
