@@ -4,11 +4,13 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig } from "@/lib/ev/types";
 import { defaultConditions, generateRows } from "@/lib/ev/calc";
+import { groupProfiles, resolveProfile } from "@/lib/ev/profiles";
 import { AxisPicker } from "@/components/ev/AxisPicker";
 import { ConditionsPanel } from "@/components/ev/ConditionsPanel";
 import { EvTable } from "@/components/ev/EvTable";
 import { FooterBar } from "@/components/ev/FooterBar";
 import { ProfileBar } from "@/components/ev/ProfileBar";
+import { RateSelector } from "@/components/ev/RateSelector";
 
 type PickerState = {
   axis: Axis;
@@ -20,7 +22,11 @@ type MachineDetailClientProps = {
 };
 
 export function MachineDetailClient({ machine }: MachineDetailClientProps) {
-  const [activeProfileKey, setActiveProfileKey] = useState(machine.profiles[0].key);
+  const grouped = useMemo(() => groupProfiles(machine.profiles), [machine.profiles]);
+  const hasRatePairs = grouped.rates.length >= 2;
+
+  const [activeGroupKey, setActiveGroupKey] = useState(grouped.groups[0].key);
+  const [activeRate, setActiveRate] = useState<string | null>(grouped.defaultRate);
   const [selection, setSelection] = useState<Conditions>(() => defaultConditions(machine));
   const [pivotAxis, setPivotAxis] = useState<string | null>(null);
   const [pivotValues, setPivotValues] = useState<string[]>([]);
@@ -28,11 +34,20 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   const [currentG, setCurrentG] = useState(0);
   const [picker, setPicker] = useState<PickerState>(null);
 
-  const profile = machine.profiles.find((candidate) => candidate.key === activeProfileKey) ?? machine.profiles[0];
+  const group = grouped.groups.find((candidate) => candidate.key === activeGroupKey) ?? grouped.groups[0];
+  const profile = resolveProfile(group, activeRate);
+
+  const tabs = useMemo(
+    () => grouped.groups.map((candidate) => ({ key: candidate.key, label: candidate.label, ceiling: candidate.ceiling })),
+    [grouped.groups]
+  );
+
+  // When rate is handled by the selector, drop the (dummy) rate axis from the
+  // conditions panel so it is not shown twice.
   const activeAxes = useMemo(() => {
     const keys = new Set(profile.activeAxes);
-    return machine.axes.filter((axis) => keys.has(axis.key));
-  }, [machine.axes, profile.activeAxes]);
+    return machine.axes.filter((axis) => keys.has(axis.key) && !(hasRatePairs && axis.key === "rate"));
+  }, [hasRatePairs, machine.axes, profile.activeAxes]);
 
   const isPending = Boolean(profile.dataPending);
   const pivot = pivotAxis && pivotValues.length > 0 ? ({ axisKey: pivotAxis, values: pivotValues } satisfies PivotConfig) : undefined;
@@ -41,9 +56,10 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
     [isPending, machine, pivot, profile, selection]
   );
 
-  function switchProfile(key: string): void {
-    setActiveProfileKey(key);
-    const nextProfile = machine.profiles.find((candidate) => candidate.key === key);
+  function switchGroup(key: string): void {
+    setActiveGroupKey(key);
+    const nextGroup = grouped.groups.find((candidate) => candidate.key === key);
+    const nextProfile = nextGroup ? resolveProfile(nextGroup, activeRate) : undefined;
     if (pivotAxis && nextProfile && !nextProfile.activeAxes.includes(pivotAxis)) {
       setPivotAxis(null);
       setPivotValues([]);
@@ -76,14 +92,15 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         <div className="mono text-lg text-ink-soft">...</div>
       </header>
 
-      <ProfileBar profiles={machine.profiles} activeKey={activeProfileKey} onChange={switchProfile} />
+      <ProfileBar tabs={tabs} activeKey={activeGroupKey} onChange={switchGroup} />
+      {hasRatePairs ? <RateSelector rates={grouped.rates} value={activeRate} onChange={setActiveRate} /> : null}
 
       {isPending ? (
         <div className="flex min-h-0 flex-1 items-center justify-center px-8 text-center">
           <div>
             <div className="text-sm font-bold text-neg">実戦データなし</div>
             <p className="mt-2 text-xs leading-relaxed text-ink-soft">
-              「{profile.label}」の実戦データはまだありません。
+              「{group.label}」の実戦データはまだありません。
               <br />
               集計でき次第、期待値を表示します。
             </p>
@@ -91,15 +108,17 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         </div>
       ) : (
         <>
-          <ConditionsPanel
-            axes={activeAxes}
-            selection={selection}
-            pivotAxis={pivotAxis}
-            pivotValues={pivotValues}
-            collapsed={collapsed}
-            onToggleCollapsed={() => setCollapsed((value) => !value)}
-            onOpenPicker={(axis, mode) => setPicker({ axis, mode })}
-          />
+          {activeAxes.length > 0 ? (
+            <ConditionsPanel
+              axes={activeAxes}
+              selection={selection}
+              pivotAxis={pivotAxis}
+              pivotValues={pivotValues}
+              collapsed={collapsed}
+              onToggleCollapsed={() => setCollapsed((value) => !value)}
+              onOpenPicker={(axis, mode) => setPicker({ axis, mode })}
+            />
+          ) : null}
           <EvTable machine={machine} profile={profile} rows={rows} pivot={pivot} onViewGChange={setCurrentG} />
           <FooterBar profile={profile} rowCount={rows.length} currentG={currentG} />
         </>
