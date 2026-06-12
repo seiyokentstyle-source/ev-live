@@ -8,3 +8,5 @@ coverage
 .DS_Store
 npm-debug.log*
 next-dev.*.log
+
+tsconfig.tsbuildinfo
