@@ -100,6 +100,28 @@ describe("rate grouping", () => {
   });
 });
 
+describe("sample size (n)", () => {
+  test("surfaces the anchor n on the exact-G row and leaves interpolated rows undefined", () => {
+    const withN: Profile = {
+      ...profile,
+      baseAnchors: [
+        { g: 0, ev: -1000, rtp: 90, n: 40 },
+        { g: 500, ev: 1000, rtp: 120, n: 12 }
+      ]
+    };
+    const rows = generateRows(withN, machine, conditions);
+    expect(rows.find((row) => row.g === 0)?.n).toBe(40);
+    expect(rows.find((row) => row.g === 500)?.n).toBe(12);
+    // gRange step is 100, so g=100 is interpolated (no anchor) and carries no n.
+    expect(rows.find((row) => row.g === 100)?.n).toBeUndefined();
+  });
+
+  test("old anchors without n stay undefined and do not crash", () => {
+    const rows = generateRows(profile, machine, conditions);
+    expect(rows.every((row) => row.n === undefined)).toBe(true);
+  });
+});
+
 describe("real machine data", () => {
   test("vvv2 validates and every 狙い方 group resolves a profile", () => {
     const realMachine = validateMachine(vvv2Data);

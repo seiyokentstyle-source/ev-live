@@ -91,6 +91,11 @@ export function validateMachine(data: unknown): Machine {
       const anchor = profile.baseAnchors[i];
       assert(anchor.g >= profile.gRange.start && anchor.g <= profile.gRange.end, `anchor ${anchor.g} is out of range`);
       assert((anchor.rtp >= 100) === (anchor.ev >= 0), `anchor ${anchor.g} EV/RTP sign mismatch`);
+      // Sample size is optional (older data omits it); when present it must be a non-negative number.
+      assert(
+        anchor.n === undefined || (typeof anchor.n === "number" && Number.isFinite(anchor.n) && anchor.n >= 0),
+        `anchor ${anchor.g} n must be a non-negative number`
+      );
       if (i > 0) {
         assert(anchor.g > profile.baseAnchors[i - 1].g, `anchors must be sorted for ${profile.key}`);
       }
