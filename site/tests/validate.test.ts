@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import machineData from "../data/machines/vvv2.json";
+import machineData from "../../data/machines/vvv2.json";
 import { validateMachine } from "../lib/ev/validate";
 
 describe("machine validation", () => {

@@ -30,8 +30,17 @@ const securityHeaders = [
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }
 ];
 
+// On GitHub Pages the site is a project page served under basePath=/ev-live and
+// built as a static export. The deploy workflow sets these env vars; local dev
+// leaves them unset so `next dev` runs at "/" with no export.
+const basePath = process.env.PAGES_BASE_PATH || "";
+const staticExport = process.env.STATIC_EXPORT === "true";
+
 const nextConfig = {
   reactStrictMode: true,
+  ...(staticExport ? { output: "export" } : {}),
+  ...(basePath ? { basePath, assetPrefix: basePath } : {}),
+  images: { unoptimized: true },
   async headers() {
     return [
       {
