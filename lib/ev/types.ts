@@ -34,6 +34,8 @@ export type BaseAnchor = {
   g: number;
   ev: number;
   rtp: number;
+  /** Estimated sample size (当たり＋打ち切り台日数) used for this G. Optional: absent on older data. */
+  n?: number;
 };
 
 export type Zone = {
@@ -97,6 +99,8 @@ export type TableRow = {
   medals: number;
   zoneLabel?: string;
   pivotValues?: Record<string, number>;
+  /** Sample size of the anchor at this exact G, when one exists. Undefined for interpolated/old rows. */
+  n?: number;
   /** True when g is past the last sampled anchor: no 実戦 data, render as "—". */
   noData?: boolean;
 };

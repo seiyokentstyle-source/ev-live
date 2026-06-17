@@ -49,6 +49,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
             <col className="w-[88px]" />
             <col className="w-[96px]" />
             <col className="w-[88px]" />
+            <col className="w-[58px]" />
           </colgroup>
         )}
         <thead>
@@ -91,6 +92,10 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
               <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
                 平均投入
                 <span className="block text-[9px] text-muted">枚</span>
+              </th>
+              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
+                件数
+                <span className="block text-[9px] text-muted">n</span>
               </th>
             </tr>
           )}
@@ -145,6 +150,9 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                     </td>
                     <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-ink-soft ${alt}`}>
                       {row.noData ? "—" : row.medals.toLocaleString("ja-JP")}
+                    </td>
+                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-muted ${alt}`}>
+                      {row.n === undefined ? "—" : row.n.toLocaleString("ja-JP")}
                     </td>
                   </>
                 )}

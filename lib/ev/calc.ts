@@ -101,7 +101,9 @@ export function calcRow(g: number, conditions: Conditions, profile: Profile, mac
   const anchors = profile.baseAnchors;
   const lastSampledG = anchors.length > 0 ? anchors[anchors.length - 1].g : Number.POSITIVE_INFINITY;
   const noData = g > lastSampledG;
-  return { g, ev, rtp, hourly, medals, zoneLabel, noData };
+  // Sample size belongs to the anchor at this exact G; interpolated rows (and older data) have none.
+  const n = anchors.find((anchor) => anchor.g === g)?.n;
+  return { g, ev, rtp, hourly, medals, zoneLabel, n, noData };
 }
 
 export function generateGValues(profile: Profile): number[] {
