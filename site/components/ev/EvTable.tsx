@@ -23,9 +23,18 @@ function pivotHeader(machine: Machine, pivot: PivotConfig): Array<{ value: strin
 export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTableProps) {
   const pivotColumns = pivot ? pivotHeader(machine, pivot) : [];
 
+  // Discourage casual copying of the EV numbers: block text selection, the
+  // right-click/long-press menu, and copy/cut. This only deters; screenshots and
+  // devtools can still read the values. Scoped to the table container so the rest
+  // of the page stays selectable.
+  const blockEvent = (event: { preventDefault: () => void }) => event.preventDefault();
+
   return (
     <div
-      className="min-h-0 flex-1 overflow-auto bg-bg"
+      className="min-h-0 flex-1 select-none overflow-auto bg-bg [-webkit-touch-callout:none]"
+      onCopy={blockEvent}
+      onCut={blockEvent}
+      onContextMenu={blockEvent}
       onScroll={(event) => {
         const container = event.currentTarget;
         const rowHeight = 34;
