@@ -1,7 +1,14 @@
 # ev-live
 
-パチスロ期待値表示サイト。GitHub Pages のプロジェクトページ（basePath=`/ev-live`）として公開。
-データ（`data/machines/*.json`）は別リポジトリのスクレイパーが毎晩自動生成して push する。
+パチスロ期待値の**データ中心**リポジトリ。主役は `data/machines/*.json`（スクレイパー生成物）。
+表示用の Next.js サイトは従属物として `site/` に置き、GitHub Pages のプロジェクトページ
+（basePath=`/ev-live`）として公開する。
+
+## リポジトリ構成（データ中心）
+- `data/machines/*.json` … 主役。期待値データ（スクレイパーが毎晩生成・上書き）。
+- `scraper/` … データ生成スクリプト（独立。サイトとは分離）。※統合予定
+- `site/` … 表示用 Next.js（おまけ）。ビルド/テスト/設定は全て `site/` 配下で完結。
+- `.github/workflows/nextjs.yml` … `site/` をビルドして Pages へデプロイ。
 
 ## UIを見せるとき（重要）
 ユーザーにUIを見せる・確認してもらうときは、**ローカルの dev サーバ起動手順やスクショではなく、
@@ -14,6 +21,14 @@
 
 ## 制約
 - `data/machines/*.json` は編集しない（スクレイパーが毎晩上書きする）。表示の都合はサイト側で吸収する。
-- `lib/ev/validate.ts` のバリデーションを壊さない。
-- `tests/`（vitest）が通ること。テストはスクレイプ値に依存しない形で書く。
-- 公開は静的書き出し（`next build` → `out/`）。`actions/configure-pages` が basePath / `output: export` を注入。
+- `site/lib/ev/validate.ts` のバリデーションを壊さない。
+- `site/tests/`（vitest）が通ること。テストはスクレイプ値に依存しない形で書く。
+- データはリポジトリ root の `data/`、サイトは `site/`。`site/lib/machines.ts` は root の `data/` を解決して読む。
+- 公開は静的書き出し（`site/` で `next build` → `site/out/`）。basePath / `output: export` は
+  デプロイ workflow が env（`PAGES_BASE_PATH=/ev-live` / `STATIC_EXPORT=true`）で注入し、
+  `next.config.mjs` が読む。ローカル `next dev` は env 未設定で `/` で動く。
+
+## よく使うコマンド（すべて `site/` で）
+- 開発: `cd site && npm run dev`
+- テスト: `cd site && npm test`
+- 本番相当ビルド: `cd site && PAGES_BASE_PATH=/ev-live STATIC_EXPORT=true npm run build`

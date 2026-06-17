@@ -3,7 +3,7 @@ import type { Machine, Profile } from "../lib/ev/types";
 import { avgMedals, baseEV, baseRtp, calcEV, defaultConditions, generateRows } from "../lib/ev/calc";
 import { groupProfiles, resolveProfile } from "../lib/ev/profiles";
 import { validateMachine } from "../lib/ev/validate";
-import vvv2Data from "../data/machines/vvv2.json";
+import vvv2Data from "../../data/machines/vvv2.json";
 
 // Synthetic fixtures so the math tests do not depend on the nightly-scraped
 // numbers in data/machines/*.json.
