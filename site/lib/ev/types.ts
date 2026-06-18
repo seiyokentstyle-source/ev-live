@@ -59,6 +59,30 @@ export type Profile = {
   dataPending?: boolean;
 };
 
+export type SettingAimUnit = {
+  /** 台番号. */
+  unit: string;
+  /** 直近期間の平均推定出率（%）. */
+  avg: number;
+  /** 出率を計算できた日数. */
+  days: number;
+  /** dates と同じ並びの日別出率（その日のデータが無ければ null）. */
+  rates: Array<number | null>;
+  /** 期間合計の推定差枚（即やめ想定）. */
+  net: number;
+};
+
+/** 設定狙いモード：台番号別の推定出率（OUT÷IN）。データ未生成の機種では undefined。 */
+export type SettingAim = {
+  label: string;
+  unit: string;
+  note: string;
+  /** 列＝日付（昇順）. */
+  dates: string[];
+  /** 行＝台番号（avg 降順）. */
+  units: SettingAimUnit[];
+};
+
 export type ModifierMap = Record<string, Record<string, number>>;
 
 export type Economics = {
@@ -80,6 +104,8 @@ export type Machine = {
     source: string;
   };
   profiles: Profile[];
+  /** 設定狙いモードのデータ。スクレイパーが対応機種にのみ出力する（古い/未対応データでは undefined）。 */
+  settingAim?: SettingAim;
   axes: Axis[];
   modifiers: ModifierMap;
   creditValue: Record<string, number>;
