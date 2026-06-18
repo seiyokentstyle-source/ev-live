@@ -35,9 +35,20 @@ const SAMPLE_AIM: SettingAim = {
   ]
 };
 
+// 期待値稼働モードの「件数」列も確認できるよう、各アンカーにサンプルの n を載せる。
+// 実データの n は未生成で全行「—」なので、低Gほど多く天井へ向けて減る生存曲線で擬似値を振る。
+const TOTAL_SAMPLES = 743;
+function sampleN(g: number): number {
+  return Math.max(3, Math.round(TOTAL_SAMPLES * Math.exp(-g / 330)));
+}
+
 export default async function SettingAimPreviewPage() {
   const base = await getMachine("vvv2");
   if (!base) notFound();
-  const machine: Machine = { ...base, settingAim: SAMPLE_AIM };
+  const profiles = base.profiles.map((profile) => ({
+    ...profile,
+    baseAnchors: profile.baseAnchors.map((anchor) => ({ ...anchor, n: sampleN(anchor.g) }))
+  }));
+  const machine: Machine = { ...base, profiles, settingAim: SAMPLE_AIM };
   return <MachineDetailClient machine={machine} />;
 }
