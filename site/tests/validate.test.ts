@@ -34,4 +34,37 @@ describe("machine validation", () => {
     delete invalid.economics;
     expect(() => validateMachine(invalid)).toThrow(/economics are required/);
   });
+
+  test("accepts data without settingAim (optional)", () => {
+    const base = structuredClone(machineData) as Record<string, unknown>;
+    delete base.settingAim;
+    expect(validateMachine(base).settingAim).toBeUndefined();
+  });
+
+  test("accepts a well-formed settingAim", () => {
+    const withAim = structuredClone(machineData) as Record<string, unknown>;
+    withAim.settingAim = {
+      label: "設定狙い（台番号別 推定出率）",
+      unit: "%",
+      note: "出率＝OUT÷IN",
+      dates: ["2026-06-12", "2026-06-13"],
+      units: [
+        { unit: "101", avg: 103.2, days: 2, rates: [101.0, 105.4], net: 640 },
+        { unit: "102", avg: 96.1, days: 1, rates: [96.1, null], net: -210 }
+      ]
+    };
+    expect(validateMachine(withAim).settingAim?.units).toHaveLength(2);
+  });
+
+  test("rejects settingAim rows whose rates do not align with dates", () => {
+    const invalid = structuredClone(machineData) as Record<string, unknown>;
+    invalid.settingAim = {
+      label: "x",
+      unit: "%",
+      note: "x",
+      dates: ["2026-06-12", "2026-06-13"],
+      units: [{ unit: "101", avg: 100, days: 1, rates: [100], net: 0 }]
+    };
+    expect(() => validateMachine(invalid)).toThrow(/rates must align/);
+  });
 });

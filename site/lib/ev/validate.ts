@@ -115,6 +115,31 @@ export function validateMachine(data: unknown): Machine {
     }
   }
 
+  // 設定狙いデータは任意（対応機種のみ・古いデータには無い）。あるときだけ形を検証する。
+  if (machine.settingAim !== undefined) {
+    const aim = machine.settingAim;
+    assert(isRecord(aim), "settingAim must be an object");
+    assert(typeof aim.label === "string", "settingAim.label must be a string");
+    assert(typeof aim.unit === "string", "settingAim.unit must be a string");
+    assert(typeof aim.note === "string", "settingAim.note must be a string");
+    assert(Array.isArray(aim.dates) && aim.dates.every((d) => typeof d === "string"), "settingAim.dates must be string[]");
+    assert(Array.isArray(aim.units), "settingAim.units must be an array");
+    for (const unit of aim.units) {
+      assert(typeof unit.unit === "string" && unit.unit.length > 0, "settingAim unit id is required");
+      assert(typeof unit.avg === "number" && Number.isFinite(unit.avg), `settingAim ${unit.unit} avg must be a finite number`);
+      assert(typeof unit.days === "number" && unit.days >= 0, `settingAim ${unit.unit} days must be >= 0`);
+      assert(typeof unit.net === "number" && Number.isFinite(unit.net), `settingAim ${unit.unit} net must be a finite number`);
+      assert(
+        Array.isArray(unit.rates) && unit.rates.length === aim.dates.length,
+        `settingAim ${unit.unit} rates must align with dates`
+      );
+      assert(
+        unit.rates.every((r) => r === null || (typeof r === "number" && Number.isFinite(r))),
+        `settingAim ${unit.unit} rates must be number or null`
+      );
+    }
+  }
+
   const rateAxis = machine.axes.find((axis) => axis.key === "rate");
   assert(rateAxis?.type === "select", "rate axis must be a select axis");
   for (const option of rateAxis.options) {

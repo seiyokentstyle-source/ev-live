@@ -11,6 +11,8 @@ import { EvTable } from "@/components/ev/EvTable";
 import { FooterBar } from "@/components/ev/FooterBar";
 import { ProfileBar } from "@/components/ev/ProfileBar";
 import { RateSelector } from "@/components/ev/RateSelector";
+import { ModeSelector, type AimMode } from "@/components/ev/ModeSelector";
+import { SettingAimTable } from "@/components/ev/SettingAimTable";
 
 type PickerState = {
   axis: Axis;
@@ -24,7 +26,10 @@ type MachineDetailClientProps = {
 export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   const grouped = useMemo(() => groupProfiles(machine.profiles), [machine.profiles]);
   const hasRatePairs = grouped.rates.length >= 2;
+  const settingAim = machine.settingAim;
+  const hasSettingAim = Boolean(settingAim && settingAim.units.length > 0);
 
+  const [mode, setMode] = useState<AimMode>("ev");
   const [activeGroupKey, setActiveGroupKey] = useState(grouped.groups[0].key);
   const [activeRate, setActiveRate] = useState<string | null>(grouped.defaultRate);
   const [selection, setSelection] = useState<Conditions>(() => defaultConditions(machine));
@@ -92,6 +97,12 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         <div className="mono text-lg text-ink-soft">...</div>
       </header>
 
+      {hasSettingAim ? <ModeSelector value={mode} onChange={setMode} /> : null}
+
+      {mode === "setting" && settingAim ? (
+        <SettingAimTable aim={settingAim} />
+      ) : (
+        <>
       <ProfileBar tabs={tabs} activeKey={activeGroupKey} onChange={switchGroup} />
       {hasRatePairs ? <RateSelector rates={grouped.rates} value={activeRate} onChange={setActiveRate} /> : null}
 
@@ -121,6 +132,8 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
           ) : null}
           <EvTable machine={machine} profile={profile} rows={rows} pivot={pivot} onViewGChange={setCurrentG} />
           <FooterBar profile={profile} rowCount={rows.length} currentG={currentG} />
+        </>
+      )}
         </>
       )}
 
