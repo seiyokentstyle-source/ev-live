@@ -94,7 +94,8 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
         const present = visRates.filter((r): r is number => r !== null);
         const avg = present.length ? Math.round((present.reduce((a, b) => a + b, 0) / present.length) * 10) / 10 : null;
         const games = u.games ? visibleDateIdx.reduce((sum, i) => sum + (u.games?.[i] ?? 0), 0) : null;
-        return { unit: u.unit, net: u.net, avg, days: present.length, games, visRates };
+        const visGames = visibleDateIdx.map((i) => (u.games ? u.games[i] : null));
+        return { unit: u.unit, net: u.net, avg, days: present.length, games, visRates, visGames };
       })
       .filter((u) => u.days > 0)
       .sort((a, b) => (b.avg ?? -Infinity) - (a.avg ?? -Infinity));
@@ -187,6 +188,11 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
                         } ${alt}`}
                       >
                         {rateCell(rate)}
+                        {rate !== null && unit.visGames[i] !== null ? (
+                          <span className="block text-[9px] font-normal text-muted">
+                            {unit.visGames[i]!.toLocaleString("ja-JP")}G
+                          </span>
+                        ) : null}
                       </td>
                     ))}
                   </tr>
