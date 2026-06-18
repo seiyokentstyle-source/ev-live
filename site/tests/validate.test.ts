@@ -49,11 +49,23 @@ describe("machine validation", () => {
       note: "出率＝OUT÷IN",
       dates: ["2026-06-12", "2026-06-13"],
       units: [
-        { unit: "101", avg: 103.2, days: 2, rates: [101.0, 105.4], net: 640 },
-        { unit: "102", avg: 96.1, days: 1, rates: [96.1, null], net: -210 }
+        { unit: "101", avg: 103.2, days: 2, rates: [101.0, 105.4], games: [3200, 4100], net: 640 },
+        { unit: "102", avg: 96.1, days: 1, rates: [96.1, null], games: [2800, 0], net: -210 }
       ]
     };
     expect(validateMachine(withAim).settingAim?.units).toHaveLength(2);
+  });
+
+  test("rejects settingAim games that do not align with dates", () => {
+    const invalid = structuredClone(machineData) as Record<string, unknown>;
+    invalid.settingAim = {
+      label: "x",
+      unit: "%",
+      note: "x",
+      dates: ["2026-06-12", "2026-06-13"],
+      units: [{ unit: "101", avg: 100, days: 1, rates: [100, null], games: [3000], net: 0 }]
+    };
+    expect(() => validateMachine(invalid)).toThrow(/games must align/);
   });
 
   test("rejects settingAim rows whose rates do not align with dates", () => {

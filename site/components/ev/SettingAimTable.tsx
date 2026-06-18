@@ -93,7 +93,8 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
         const visRates = visibleDateIdx.map((i) => u.rates[i]);
         const present = visRates.filter((r): r is number => r !== null);
         const avg = present.length ? Math.round((present.reduce((a, b) => a + b, 0) / present.length) * 10) / 10 : null;
-        return { unit: u.unit, net: u.net, avg, days: present.length, visRates };
+        const games = u.games ? visibleDateIdx.reduce((sum, i) => sum + (u.games?.[i] ?? 0), 0) : null;
+        return { unit: u.unit, net: u.net, avg, days: present.length, games, visRates };
       })
       .filter((u) => u.days > 0)
       .sort((a, b) => (b.avg ?? -Infinity) - (a.avg ?? -Infinity));
@@ -145,6 +146,10 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
                   日数
                   <span className="block text-[9px] text-muted">日</span>
                 </th>
+                <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
+                  総回転
+                  <span className="block text-[9px] text-muted">G</span>
+                </th>
                 {visibleDateIdx.map((i) => (
                   <th
                     key={aim.dates[i]}
@@ -170,6 +175,9 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
                     </td>
                     <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-muted ${alt}`}>
                       {unit.days}
+                    </td>
+                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-ink-soft ${alt}`}>
+                      {unit.games === null ? "—" : unit.games.toLocaleString("ja-JP")}
                     </td>
                     {unit.visRates.map((rate, i) => (
                       <td
