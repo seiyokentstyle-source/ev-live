@@ -68,6 +68,8 @@ export type SettingAimUnit = {
   days: number;
   /** dates と同じ並びの日別出率（その日のデータが無ければ null）. */
   rates: Array<number | null>;
+  /** dates と同じ並びの日別総回転数（通常時G）。その日のデータが無ければ 0。古いデータには無い. */
+  games?: number[];
   /** 期間合計の推定差枚（即やめ想定）. */
   net: number;
 };

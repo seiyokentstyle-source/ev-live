@@ -137,6 +137,17 @@ export function validateMachine(data: unknown): Machine {
         unit.rates.every((r) => r === null || (typeof r === "number" && Number.isFinite(r))),
         `settingAim ${unit.unit} rates must be number or null`
       );
+      // games（日別総回転数）は任意。あるときだけ dates と同じ長さ・非負数であることを確認する。
+      if (unit.games !== undefined) {
+        assert(
+          Array.isArray(unit.games) && unit.games.length === aim.dates.length,
+          `settingAim ${unit.unit} games must align with dates`
+        );
+        assert(
+          unit.games.every((g) => typeof g === "number" && Number.isFinite(g) && g >= 0),
+          `settingAim ${unit.unit} games must be non-negative numbers`
+        );
+      }
     }
   }
 
