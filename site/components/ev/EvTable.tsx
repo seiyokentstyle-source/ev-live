@@ -103,8 +103,8 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                 <span className="block text-[9px] text-muted">枚</span>
               </th>
               <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                件数
-                <span className="block text-[9px] text-muted">n</span>
+                サンプル数
+                <span className="block text-[9px] text-muted">件</span>
               </th>
             </tr>
           )}
