@@ -87,6 +87,29 @@ export type SettingAim = {
   units: SettingAimUnit[];
 };
 
+/** AT獲得モード：当選G帯ごとの平均獲得（1AT＝初当たり〜引き戻し終了）。 */
+export type AtPayoutBand = {
+  /** 帯の下限G（含む）. */
+  lo: number;
+  /** 帯の上限G（含まない）. */
+  hi: number;
+  /** その帯のAT回数（サンプル数）. */
+  count: number;
+  /** その帯の平均獲得枚数. */
+  mean: number;
+  /** その帯の中央値獲得枚数. */
+  median: number;
+};
+
+export type AtPayout = {
+  /** 帯の幅（G）. */
+  step: number;
+  label: string;
+  note: string;
+  /** 当選G帯（昇順）. */
+  bands: AtPayoutBand[];
+};
+
 export type ModifierMap = Record<string, Record<string, number>>;
 
 export type Economics = {
@@ -110,6 +133,8 @@ export type Machine = {
   profiles: Profile[];
   /** 設定狙いモードのデータ。スクレイパーが対応機種にのみ出力する（古い/未対応データでは undefined）。 */
   settingAim?: SettingAim;
+  /** AT獲得モードのデータ。古い/未生成データでは undefined。 */
+  atPayout?: AtPayout;
   axes: Axis[];
   modifiers: ModifierMap;
   creditValue: Record<string, number>;

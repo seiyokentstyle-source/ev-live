@@ -151,6 +151,22 @@ export function validateMachine(data: unknown): Machine {
     }
   }
 
+  // AT獲得データは任意（対応機種のみ）。あるときだけ形を検証する。
+  if (machine.atPayout !== undefined) {
+    const ap = machine.atPayout;
+    assert(isRecord(ap), "atPayout must be an object");
+    assert(typeof ap.step === "number" && ap.step > 0, "atPayout.step must be > 0");
+    assert(typeof ap.label === "string", "atPayout.label must be a string");
+    assert(typeof ap.note === "string", "atPayout.note must be a string");
+    assert(Array.isArray(ap.bands) && ap.bands.length > 0, "atPayout.bands must be a non-empty array");
+    for (const band of ap.bands) {
+      assert(typeof band.lo === "number" && typeof band.hi === "number" && band.hi > band.lo, `atPayout band ${band.lo} range is invalid`);
+      assert(typeof band.count === "number" && band.count >= 0, `atPayout band ${band.lo} count must be >= 0`);
+      assert(typeof band.mean === "number" && Number.isFinite(band.mean), `atPayout band ${band.lo} mean must be finite`);
+      assert(typeof band.median === "number" && Number.isFinite(band.median), `atPayout band ${band.lo} median must be finite`);
+    }
+  }
+
   const rateAxis = machine.axes.find((axis) => axis.key === "rate");
   assert(rateAxis?.type === "select", "rate axis must be a select axis");
   for (const option of rateAxis.options) {

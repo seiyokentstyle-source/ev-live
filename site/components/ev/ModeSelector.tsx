@@ -1,23 +1,27 @@
 "use client";
 
-export type AimMode = "ev" | "setting";
+export type AimMode = "ev" | "setting" | "payout";
 
 type ModeSelectorProps = {
   value: AimMode;
   onChange: (value: AimMode) => void;
+  /** 表示するモード（データのあるものだけ親が渡す）. */
+  modes: AimMode[];
 };
 
 const MODES: Array<{ value: AimMode; label: string; hint: string }> = [
   { value: "ev", label: "期待値稼働", hint: "現在G→期待値" },
-  { value: "setting", label: "設定狙い", hint: "台番号別 出率" }
+  { value: "setting", label: "設定狙い", hint: "台番号別 出率" },
+  { value: "payout", label: "AT獲得", hint: "当選G別 平均獲得" }
 ];
 
-export function ModeSelector({ value, onChange }: ModeSelectorProps) {
+export function ModeSelector({ value, onChange, modes }: ModeSelectorProps) {
+  const visibleModes = MODES.filter((mode) => modes.includes(mode.value));
   return (
     <div className="flex shrink-0 items-center gap-2 border-b border-line bg-panel px-3 py-2">
       <span className="mono shrink-0 text-[9px] tracking-[0.14em] text-muted">目的</span>
       <div className="flex gap-1">
-        {MODES.map((mode) => {
+        {visibleModes.map((mode) => {
           const active = mode.value === value;
           return (
             <button

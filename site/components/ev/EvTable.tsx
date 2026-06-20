@@ -30,19 +30,18 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
   const blockEvent = (event: { preventDefault: () => void }) => event.preventDefault();
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col bg-bg">
-      <div
-        className="min-h-0 flex-1 select-none overflow-auto [-webkit-touch-callout:none]"
-        onCopy={blockEvent}
-        onCut={blockEvent}
-        onContextMenu={blockEvent}
-        onScroll={(event) => {
-          const container = event.currentTarget;
-          const rowHeight = 34;
-          const index = Math.max(0, Math.min(rows.length - 1, Math.floor(container.scrollTop / rowHeight)));
-          onViewGChange(rows[index]?.g ?? profile.gRange.start);
-        }}
-      >
+    <div
+      className="min-h-0 flex-1 select-none overflow-auto bg-bg [-webkit-touch-callout:none]"
+      onCopy={blockEvent}
+      onCut={blockEvent}
+      onContextMenu={blockEvent}
+      onScroll={(event) => {
+        const container = event.currentTarget;
+        const rowHeight = 34;
+        const index = Math.max(0, Math.min(rows.length - 1, Math.floor(container.scrollTop / rowHeight)));
+        onViewGChange(rows[index]?.g ?? profile.gRange.start);
+      }}
+    >
       <table className="mono w-full min-w-[430px] table-fixed border-separate border-spacing-0 text-xs">
         {pivot ? (
           <colgroup>
@@ -171,13 +170,6 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
           })}
         </tbody>
       </table>
-      </div>
-      {profile.totalPayout !== undefined ? (
-        <div className="flex shrink-0 items-center justify-between border-t border-line bg-panel-2 px-3 py-2 text-[11px]">
-          <span className="mono text-muted">トータル獲得枚数</span>
-          <span className="mono font-bold text-pos">{profile.totalPayout.toLocaleString("ja-JP")}枚</span>
-        </div>
-      ) : null}
     </div>
   );
 }
