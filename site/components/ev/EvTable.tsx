@@ -42,7 +42,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
         onViewGChange(rows[index]?.g ?? profile.gRange.start);
       }}
     >
-      <table className="mono w-full min-w-[430px] table-fixed border-separate border-spacing-0 text-xs">
+      <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
         {pivot ? (
           <colgroup>
             <col className="w-[70px]" />
@@ -53,56 +53,56 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
           </colgroup>
         ) : (
           <colgroup>
-            <col className="w-[70px]" />
-            <col className="w-[72px]" />
-            <col className="w-[88px]" />
-            <col className="w-[96px]" />
-            <col className="w-[88px]" />
-            <col className="w-[58px]" />
+            <col className="w-[15%]" />
+            <col className="w-[16%]" />
+            <col className="w-[19%]" />
+            <col className="w-[18%]" />
+            <col className="w-[16%]" />
+            <col className="w-[16%]" />
           </colgroup>
         )}
         <thead>
           {pivot ? (
             <tr>
-              <th className="sticky left-0 top-0 z-30 border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
+              <th className="sticky left-0 top-0 z-30 border-b-2 border-r border-line bg-panel-2 px-2 py-2 text-left text-[10px] text-ink-soft">
                 G数
               </th>
               {pivotColumns.map((column) => (
                 <th
                   key={column.value}
-                  className="sticky top-0 z-20 truncate border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight"
+                  className="sticky top-0 z-20 truncate border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-highlight"
                 >
                   {column.label}
                   <span className="block text-[9px] text-muted">期待値(円)</span>
                 </th>
               ))}
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
+              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
                 平均投入
                 <span className="block text-[9px] text-muted">枚</span>
               </th>
             </tr>
           ) : (
             <tr>
-              <th className="sticky left-0 top-0 z-30 border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
+              <th className="sticky left-0 top-0 z-30 border-b-2 border-r border-line bg-panel-2 px-2 py-2 text-left text-[10px] text-ink-soft">
                 G数
               </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
+              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
                 機械割
                 <span className="block text-[9px] text-muted">%</span>
               </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
+              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
                 期待値
                 <span className="block text-[9px] text-muted">円</span>
               </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
+              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
                 時給
                 <span className="block text-[9px] text-muted">円/h</span>
               </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
+              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
                 平均投入
                 <span className="block text-[9px] text-muted">枚</span>
               </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
+              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
                 サンプル数
                 <span className="block text-[9px] text-muted">件</span>
               </th>
@@ -114,7 +114,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
             const alt = index % 2 === 1 ? "bg-[var(--row-alt)]" : "";
             return (
               <tr key={row.g}>
-                <td className="sticky left-0 z-10 border-b border-r border-line-soft bg-panel px-3 py-2 text-left text-ink-soft">
+                <td className="sticky left-0 z-10 border-b border-r border-line-soft bg-panel px-2 py-2 text-left text-ink-soft">
                   <span className={row.zoneLabel ? "font-bold text-highlight" : ""}>
                     {row.zoneLabel ? "▸ " : ""}
                     {row.g}
@@ -128,7 +128,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                       return (
                         <td
                           key={column.value}
-                          className={`border-b border-r border-line-soft px-2 py-2 text-right ${
+                          className={`border-b border-r border-line-soft px-1.5 py-2 text-right ${
                             row.noData ? "text-muted" : toneClass(ev)
                           } ${alt}`}
                         >
@@ -136,31 +136,31 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                         </td>
                       );
                     })}
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-ink-soft ${alt}`}>
+                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right text-ink-soft ${alt}`}>
                       {row.noData ? "—" : row.medals.toLocaleString("ja-JP")}
                     </td>
                   </>
                 ) : (
                   <>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${
+                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right ${
                       row.noData ? "text-muted" : rtpToneClass(row.rtp)
                     } ${alt}`}>
                       {row.noData ? "—" : `${row.rtp.toFixed(1)}%`}
                     </td>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${
+                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right ${
                       row.noData ? "text-muted" : toneClass(row.ev)
                     } ${alt}`}>
                       {row.noData ? "—" : formatSigned(row.ev)}
                     </td>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${
+                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right ${
                       row.noData ? "text-muted" : toneClass(row.hourly)
                     } ${alt}`}>
                       {row.noData ? "—" : formatSigned(row.hourly)}
                     </td>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-ink-soft ${alt}`}>
+                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right text-ink-soft ${alt}`}>
                       {row.noData ? "—" : row.medals.toLocaleString("ja-JP")}
                     </td>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-muted ${alt}`}>
+                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right text-muted ${alt}`}>
                       {row.n === undefined ? "—" : row.n.toLocaleString("ja-JP")}
                     </td>
                   </>
