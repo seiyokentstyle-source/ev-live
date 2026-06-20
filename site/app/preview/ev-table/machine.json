@@ -908,7 +908,8 @@
           "n": 15
         }
       ],
-      "zones": []
+      "zones": [],
+      "totalPayout": 658674
     },
     {
       "key": "game_ceiling_5050",
@@ -1800,7 +1801,8 @@
           "n": 15
         }
       ],
-      "zones": []
+      "zones": [],
+      "totalPayout": 658674
     }
   ],
   "axes": [

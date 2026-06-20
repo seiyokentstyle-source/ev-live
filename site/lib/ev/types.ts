@@ -55,6 +55,8 @@ export type Profile = {
   activeAxes: string[];
   baseAnchors: BaseAnchor[];
   zones: Zone[];
+  /** このプロファイルのセッション総獲得枚数（出たメダル総数）。古い/未生成データでは undefined。 */
+  totalPayout?: number;
   /** When true, this profile has no 実戦 data yet: the tab is shown but no numbers are rendered. */
   dataPending?: boolean;
 };
