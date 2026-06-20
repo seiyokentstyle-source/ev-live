@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { SettingAim } from "@/lib/ev/types";
-import { formatSigned, rtpToneClass } from "./format";
+import { formatSigned, rtpToneClass, toneClass } from "./format";
 
 type SettingAimTableProps = {
   aim: SettingAim;
@@ -100,6 +100,16 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
       .filter((u) => u.days > 0)
       .sort((a, b) => (b.avg ?? -Infinity) - (a.avg ?? -Infinity));
   }, [aim.units, tailFilter, visibleDateIdx]);
+
+  // 表示中（絞り込み後）の台の合計。差枚＝即やめ想定の収支＝トータルの獲得枚数。
+  const totals = useMemo(
+    () =>
+      rows.reduce(
+        (acc, r) => ({ net: acc.net + r.net, games: acc.games + (r.games ?? 0) }),
+        { net: 0, games: 0 }
+      ),
+    [rows]
+  );
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-bg">
@@ -201,6 +211,15 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
             </tbody>
           </table>
         )}
+      </div>
+      <div className="flex shrink-0 items-center justify-between border-t border-line bg-panel-2 px-3 py-2 text-[11px]">
+        <span className="mono text-muted">
+          {rows.length}台 / 総回転 {totals.games.toLocaleString("ja-JP")}G
+        </span>
+        <span className="mono text-ink-soft">
+          トータル獲得（差枚）
+          <span className={`ml-2 font-bold ${toneClass(totals.net)}`}>{formatSigned(totals.net)}枚</span>
+        </span>
       </div>
     </div>
   );
