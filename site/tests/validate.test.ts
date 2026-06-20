@@ -79,4 +79,35 @@ describe("machine validation", () => {
     };
     expect(() => validateMachine(invalid)).toThrow(/rates must align/);
   });
+
+  test("accepts data without atPayout (optional)", () => {
+    const base = structuredClone(machineData) as Record<string, unknown>;
+    delete base.atPayout;
+    expect(validateMachine(base).atPayout).toBeUndefined();
+  });
+
+  test("accepts a well-formed atPayout", () => {
+    const withPayout = structuredClone(machineData) as Record<string, unknown>;
+    withPayout.atPayout = {
+      step: 50,
+      label: "AT初当たり時 平均獲得（当選G帯別）",
+      note: "x",
+      bands: [
+        { lo: 0, hi: 50, count: 1, mean: 781.0, median: 781 },
+        { lo: 50, hi: 100, count: 32, mean: 688.9, median: 615 }
+      ]
+    };
+    expect(validateMachine(withPayout).atPayout?.bands).toHaveLength(2);
+  });
+
+  test("rejects atPayout band with hi <= lo", () => {
+    const invalid = structuredClone(machineData) as Record<string, unknown>;
+    invalid.atPayout = {
+      step: 50,
+      label: "x",
+      note: "x",
+      bands: [{ lo: 100, hi: 100, count: 5, mean: 500, median: 480 }]
+    };
+    expect(() => validateMachine(invalid)).toThrow(/atPayout band 100 range is invalid/);
+  });
 });

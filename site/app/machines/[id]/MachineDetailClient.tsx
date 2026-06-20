@@ -13,6 +13,7 @@ import { ProfileBar } from "@/components/ev/ProfileBar";
 import { RateSelector } from "@/components/ev/RateSelector";
 import { ModeSelector, type AimMode } from "@/components/ev/ModeSelector";
 import { SettingAimTable } from "@/components/ev/SettingAimTable";
+import { AtPayoutTable } from "@/components/ev/AtPayoutTable";
 
 type PickerState = {
   axis: Axis;
@@ -28,6 +29,12 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   const hasRatePairs = grouped.rates.length >= 2;
   const settingAim = machine.settingAim;
   const hasSettingAim = Boolean(settingAim && settingAim.units.length > 0);
+  const atPayout = machine.atPayout;
+  const hasAtPayout = Boolean(atPayout && atPayout.bands.length > 0);
+  const availableModes = useMemo<AimMode[]>(
+    () => ["ev", ...(hasSettingAim ? (["setting"] as const) : []), ...(hasAtPayout ? (["payout"] as const) : [])],
+    [hasSettingAim, hasAtPayout]
+  );
 
   const [mode, setMode] = useState<AimMode>("ev");
   const [activeGroupKey, setActiveGroupKey] = useState(grouped.groups[0].key);
@@ -97,10 +104,12 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         <div className="mono text-lg text-ink-soft">...</div>
       </header>
 
-      {hasSettingAim ? <ModeSelector value={mode} onChange={setMode} /> : null}
+      {availableModes.length > 1 ? <ModeSelector value={mode} onChange={setMode} modes={availableModes} /> : null}
 
       {mode === "setting" && settingAim ? (
         <SettingAimTable aim={settingAim} />
+      ) : mode === "payout" && atPayout ? (
+        <AtPayoutTable data={atPayout} />
       ) : (
         <>
       <ProfileBar tabs={tabs} activeKey={activeGroupKey} onChange={switchGroup} />
