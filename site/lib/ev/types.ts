@@ -38,6 +38,8 @@ export type BaseAnchor = {
   n?: number;
   /** Average medals invested from this G until the AT hit (機械割と同じ基準). Optional: absent on older data. */
   inv?: number;
+  /** Average games to finish one session from this G (通常時＋AT中). Used for 時給. Optional: absent on older data. */
+  playG?: number;
 };
 
 export type Zone = {

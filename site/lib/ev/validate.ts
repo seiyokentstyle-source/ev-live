@@ -101,6 +101,11 @@ export function validateMachine(data: unknown): Machine {
         anchor.inv === undefined || (typeof anchor.inv === "number" && Number.isFinite(anchor.inv) && anchor.inv >= 0),
         `anchor ${anchor.g} inv must be a non-negative number`
       );
+      // Average session games (時給用) is optional; when present it must be a non-negative number.
+      assert(
+        anchor.playG === undefined || (typeof anchor.playG === "number" && Number.isFinite(anchor.playG) && anchor.playG >= 0),
+        `anchor ${anchor.g} playG must be a non-negative number`
+      );
       if (i > 0) {
         assert(anchor.g > profile.baseAnchors[i - 1].g, `anchors must be sorted for ${profile.key}`);
       }

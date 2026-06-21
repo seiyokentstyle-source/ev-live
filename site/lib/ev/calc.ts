@@ -79,10 +79,30 @@ export function adjustedRtp(
   return base + (evDelta / totalInvest) * 100;
 }
 
+export function basePlayG(g: number, profile: Profile): number {
+  const anchors = profile.baseAnchors;
+  if (g <= anchors[0].g) return anchors[0].playG ?? 0;
+  if (g >= anchors[anchors.length - 1].g) return anchors[anchors.length - 1].playG ?? 0;
+
+  for (let i = 0; i < anchors.length - 1; i += 1) {
+    const current = anchors[i];
+    const next = anchors[i + 1];
+    if (g >= current.g && g <= next.g) {
+      const t = (g - current.g) / (next.g - current.g);
+      return (current.playG ?? 0) + ((next.playG ?? 0) - (current.playG ?? 0)) * t;
+    }
+  }
+
+  return 0;
+}
+
 export function hourlyEV(g: number, ev: number, profile: Profile, machine: Machine): number {
-  const remain = Math.max(0, profile.gRange.end - g);
-  if (remain <= 0) return 0;
-  const hours = remain / machine.economics.gamesPerHour;
+  // 新データ: アンカーの playG（1セッション消化G＝当たりまで＋AT中）で消化時間を出す。
+  // 旧データ(playG 無し): 天井までの時間で近似（従来動作）。
+  const usePlayG = profile.baseAnchors.some((anchor) => anchor.playG !== undefined);
+  const games = usePlayG ? basePlayG(g, profile) : Math.max(0, profile.gRange.end - g);
+  if (games <= 0) return 0;
+  const hours = games / machine.economics.gamesPerHour;
   if (hours <= 0) return 0;
   return Math.round(ev / hours);
 }
