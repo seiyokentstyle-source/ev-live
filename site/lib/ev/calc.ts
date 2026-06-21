@@ -87,7 +87,29 @@ export function hourlyEV(g: number, ev: number, profile: Profile, machine: Machi
   return Math.round(ev / hours);
 }
 
+export function baseInv(g: number, profile: Profile): number {
+  const anchors = profile.baseAnchors;
+  if (g <= anchors[0].g) return anchors[0].inv ?? 0;
+  if (g >= anchors[anchors.length - 1].g) return anchors[anchors.length - 1].inv ?? 0;
+
+  for (let i = 0; i < anchors.length - 1; i += 1) {
+    const current = anchors[i];
+    const next = anchors[i + 1];
+    if (g >= current.g && g <= next.g) {
+      const t = (g - current.g) / (next.g - current.g);
+      return (current.inv ?? 0) + ((next.inv ?? 0) - (current.inv ?? 0)) * t;
+    }
+  }
+
+  return 0;
+}
+
 export function avgMedals(g: number, profile: Profile, machine: Machine): number {
+  // 新データ: アンカーの inv（当たりまでの平均投資枚数＝機械割と同じ基準）を補間する。
+  // 旧データ(inv 無し): 天井までの投資で近似（従来動作）。
+  if (profile.baseAnchors.some((anchor) => anchor.inv !== undefined)) {
+    return Math.round(baseInv(g, profile));
+  }
   const remain = Math.max(0, profile.gRange.end - g);
   return Math.round(remain * machine.economics.medalsPerGame);
 }

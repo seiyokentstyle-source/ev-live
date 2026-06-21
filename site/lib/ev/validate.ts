@@ -96,6 +96,11 @@ export function validateMachine(data: unknown): Machine {
         anchor.n === undefined || (typeof anchor.n === "number" && Number.isFinite(anchor.n) && anchor.n >= 0),
         `anchor ${anchor.g} n must be a non-negative number`
       );
+      // Average investment (medals) is optional; when present it must be a non-negative number.
+      assert(
+        anchor.inv === undefined || (typeof anchor.inv === "number" && Number.isFinite(anchor.inv) && anchor.inv >= 0),
+        `anchor ${anchor.g} inv must be a non-negative number`
+      );
       if (i > 0) {
         assert(anchor.g > profile.baseAnchors[i - 1].g, `anchors must be sorted for ${profile.key}`);
       }
