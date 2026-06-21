@@ -18,6 +18,11 @@ export function FooterBar({ profile, rowCount, currentG }: FooterBarProps) {
         <span>
           {rowCount}行 / {profile.gRange.start}〜{profile.gRange.end}G
         </span>
+        {profile.firstHitRate ? (
+          <span>
+            初当り <span className="text-accent">1/{profile.firstHitRate.toLocaleString("ja-JP")}</span>
+          </span>
+        ) : null}
       </div>
       <div className="text-ink-soft">視点: {currentG}G</div>
     </footer>

@@ -1126,7 +1126,8 @@
         }
       ],
       "zones": [],
-      "totalPayout": 658674
+      "totalPayout": 658674,
+      "firstHitRate": 443
     },
     {
       "key": "game_ceiling_5050",
@@ -2019,7 +2020,8 @@
         }
       ],
       "zones": [],
-      "totalPayout": 658674
+      "totalPayout": 658674,
+      "firstHitRate": 443
     }
   ],
   "axes": [
