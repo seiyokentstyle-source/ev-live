@@ -3,11 +3,12 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig } from "@/lib/ev/types";
-import { defaultConditions, generateRows } from "@/lib/ev/calc";
+import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
 import { groupProfiles, resolveProfile } from "@/lib/ev/profiles";
 import { AxisPicker } from "@/components/ev/AxisPicker";
 import { ConditionsPanel } from "@/components/ev/ConditionsPanel";
 import { EvTable } from "@/components/ev/EvTable";
+import { EvFilter } from "@/components/ev/EvFilter";
 import { FooterBar } from "@/components/ev/FooterBar";
 import { ProfileBar } from "@/components/ev/ProfileBar";
 import { RateSelector } from "@/components/ev/RateSelector";
@@ -19,6 +20,18 @@ type PickerState = {
   axis: Axis;
   mode: "select" | "pivot";
 } | null;
+
+// 台番号末尾（数字の最後の1桁）。"992"→"2"。
+function tailOf(unit: string): string {
+  const digits = unit.replace(/\D/g, "");
+  return digits.length > 0 ? digits.slice(-1) : "";
+}
+
+// 日にち（DD部分）の数字。"2026-06-19"→"19"。"1のつく日"判定に使う。
+function dayOfMonth(date: string): string {
+  const m = /^\d{4}-\d{2}-(\d{2})$/.exec(date);
+  return m ? String(Number(m[1])) : "";
+}
 
 type MachineDetailClientProps = {
   machine: Machine;
@@ -45,9 +58,53 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [currentG, setCurrentG] = useState(0);
   const [picker, setPicker] = useState<PickerState>(null);
+  const [evTail, setEvTail] = useState<string | null>(null); // 台番号末尾
+  const [evDay, setEvDay] = useState<string | null>(null); // 日にちに含まれる数字（○のつく日）
 
   const group = grouped.groups.find((candidate) => candidate.key === activeGroupKey) ?? grouped.groups[0];
   const profile = resolveProfile(group, activeRate);
+
+  // 絞り込み（台番号末尾/特定日）用の生サンプル。あれば EvTable を部分集合で再集計できる。
+  const evSamples = profile.ev;
+  const hasEvFilter = Boolean(evSamples && evSamples.hits.length > 0 && machine.evCalc);
+  const evTailOptions = useMemo(
+    () => (evSamples ? Array.from(new Set(evSamples.hits.map((h) => tailOf(h[0])))).filter(Boolean).sort() : []),
+    [evSamples]
+  );
+  const evDayOptions = useMemo(
+    () => (evSamples ? Array.from(new Set(evSamples.hits.flatMap((h) => dayOfMonth(h[1]).split("")))).sort() : []),
+    [evSamples]
+  );
+
+  // 絞り込みが効いていれば、その台/日だけでアンカーを再集計した表示用プロファイルを作る。
+  const displayProfile = useMemo(() => {
+    if (!evSamples || !machine.evCalc || (evTail === null && evDay === null)) return profile;
+    const keepUnitDate = (unit: string, date: string) =>
+      (evTail === null || tailOf(unit) === evTail) && (evDay === null || dayOfMonth(date).includes(evDay));
+    const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]));
+    const cens = evSamples.cens.filter((c) => keepUnitDate(c[0], c[1]));
+    const baseAnchors = computeAnchors(hits, cens, machine.evCalc, evSamples.tai, evSamples.kan, evSamples.minSess);
+    const end = baseAnchors.length > 0 ? baseAnchors[baseAnchors.length - 1].g : profile.gRange.start;
+    return {
+      ...profile,
+      baseAnchors,
+      zones: profile.zones.filter((zone) => zone.g <= end),
+      gRange: { ...profile.gRange, end },
+      totalPayout: hits.reduce((sum, h) => sum + h[3], 0),
+      firstHitRate: hits.length ? Math.round(hits.reduce((sum, h) => sum + h[2], 0) / hits.length) : undefined
+    };
+  }, [profile, evSamples, machine.evCalc, evTail, evDay]);
+
+  const evFiltered = displayProfile !== profile;
+  const evFilterStats = useMemo(() => {
+    if (!evFiltered || !evSamples) return { units: 0, hits: 0 };
+    const keepUnitDate = (unit: string, date: string) =>
+      (evTail === null || tailOf(unit) === evTail) && (evDay === null || dayOfMonth(date).includes(evDay));
+    const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]));
+    return { units: new Set(hits.map((h) => h[0])).size, hits: hits.length };
+  }, [evFiltered, evSamples, evTail, evDay]);
+  // 絞り込み結果がアンカー2本未満（データ不足）かどうか。
+  const evEmpty = evFiltered && displayProfile.baseAnchors.length < 2;
 
   const tabs = useMemo(
     () => grouped.groups.map((candidate) => ({ key: candidate.key, label: candidate.label, ceiling: candidate.ceiling })),
@@ -64,8 +121,8 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   const isPending = Boolean(profile.dataPending);
   const pivot = pivotAxis && pivotValues.length > 0 ? ({ axisKey: pivotAxis, values: pivotValues } satisfies PivotConfig) : undefined;
   const rows = useMemo(
-    () => (isPending ? [] : generateRows(profile, machine, selection, pivot)),
-    [isPending, machine, pivot, profile, selection]
+    () => (isPending || evEmpty ? [] : generateRows(displayProfile, machine, selection, pivot)),
+    [isPending, evEmpty, machine, pivot, displayProfile, selection]
   );
 
   function switchGroup(key: string): void {
@@ -114,6 +171,18 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         <>
       <ProfileBar tabs={tabs} activeKey={activeGroupKey} onChange={switchGroup} />
       {hasRatePairs ? <RateSelector rates={grouped.rates} value={activeRate} onChange={setActiveRate} /> : null}
+      {hasEvFilter && !isPending ? (
+        <EvFilter
+          tailOptions={evTailOptions}
+          dayOptions={evDayOptions}
+          tail={evTail}
+          day={evDay}
+          onTailChange={setEvTail}
+          onDayChange={setEvDay}
+          units={evFilterStats.units}
+          hits={evFilterStats.hits}
+        />
+      ) : null}
 
       {isPending ? (
         <div className="flex min-h-0 flex-1 items-center justify-center px-8 text-center">
@@ -125,6 +194,14 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
               集計でき次第、期待値を表示します。
             </p>
           </div>
+        </div>
+      ) : evEmpty ? (
+        <div className="flex min-h-0 flex-1 items-center justify-center px-8 text-center">
+          <p className="text-xs leading-relaxed text-muted">
+            該当する台／日のデータが足りません。
+            <br />
+            （アンカーを作るには当たり{evSamples?.minSess ?? 15}件以上が必要です）
+          </p>
         </div>
       ) : (
         <>
@@ -139,8 +216,8 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
               onOpenPicker={(axis, mode) => setPicker({ axis, mode })}
             />
           ) : null}
-          <EvTable machine={machine} profile={profile} rows={rows} pivot={pivot} onViewGChange={setCurrentG} />
-          <FooterBar profile={profile} rowCount={rows.length} currentG={currentG} />
+          <EvTable machine={machine} profile={displayProfile} rows={rows} pivot={pivot} onViewGChange={setCurrentG} />
+          <FooterBar profile={displayProfile} rowCount={rows.length} currentG={currentG} />
         </>
       )}
         </>

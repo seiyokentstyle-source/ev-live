@@ -1,4 +1,51 @@
-import type { Conditions, Machine, PivotConfig, Profile, TableRow } from "./types";
+import type { BaseAnchor, Conditions, EvCalc, EvSamples, Machine, PivotConfig, Profile, TableRow } from "./types";
+
+// scraper/make_evlive_data.py の forward_anchors と同じ式。絞り込み（台番号末尾/特定日）で
+// 部分集合のアンカーをクライアント側で再集計するために移植したもの。
+export function computeAnchors(
+  hits: EvSamples["hits"],
+  cens: EvSamples["cens"],
+  calc: EvCalc,
+  tai: number,
+  kan: number,
+  minSess: number
+): BaseAnchor[] {
+  const anchors: BaseAnchor[] = [];
+  const maxHitG = hits.reduce((m, h) => Math.max(m, h[2]), 0);
+  const gTop = calc.ceiling || maxHitG;
+  for (let g = 0; g <= gTop; g += calc.step) {
+    let subN = 0;
+    let invMed = 0;
+    let payMed = 0;
+    for (const h of hits) {
+      if (h[2] >= g) {
+        subN += 1;
+        invMed += (h[2] - g) * calc.use;
+        payMed += h[3];
+      }
+    }
+    let cenN = 0;
+    for (const c of cens) {
+      if (c[2] >= g) {
+        cenN += 1;
+        invMed += (c[2] - g) * calc.use;
+      }
+    }
+    if (subN < minSess) break; // 当たりサンプルが薄いG帯から先は出さない
+    const n = subN + cenN;
+    const meanInv = (invMed * tai) / n;
+    const meanRet = (payMed * kan) / n;
+    if (meanInv < 1) break;
+    const ev = Math.round(meanRet - meanInv);
+    let rtp = Math.round((1000 * meanRet) / meanInv) / 10;
+    rtp = ev >= 0 ? Math.max(rtp, 100) : Math.min(rtp, 99.9);
+    const inv = Math.round(invMed / n);
+    const atG = calc.junzou ? payMed / calc.junzou : 0;
+    const playG = Math.round((invMed / calc.use + atG) / n);
+    anchors.push({ g, ev, rtp, n, inv, playG });
+  }
+  return anchors;
+}
 
 export function baseEV(g: number, profile: Profile): number {
   const anchors = profile.baseAnchors;

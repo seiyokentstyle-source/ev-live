@@ -47,6 +47,32 @@ export type Zone = {
   label: string;
 };
 
+/** 絞り込み再集計の共通パラメータ（機種スペック由来）。 */
+export type EvCalc = {
+  /** 通常時使用枚数（枚/G）. */
+  use: number;
+  /** AT純増ペース（枚/G）. 0 のとき AT中G を 0 とみなす. */
+  junzou: number;
+  /** 天井G（アンカー上限）. */
+  ceiling: number;
+  /** アンカー間隔G. */
+  step: number;
+};
+
+/** プロファイルの生サンプル（絞り込み時にアンカーを再集計するため）。 */
+export type EvSamples = {
+  /** 貸単価（円/枚）. */
+  tai: number;
+  /** 換金単価（円/枚）. */
+  kan: number;
+  /** アンカー打ち切り件数. */
+  minSess: number;
+  /** 当たり: [台番号, 取得日, 初当りG, 総獲得]. */
+  hits: Array<[string, string, number, number]>;
+  /** 打ち切り: [台番号, 取得日, ハマりG]. */
+  cens: Array<[string, string, number]>;
+};
+
 export type Profile = {
   key: string;
   label: string;
@@ -63,6 +89,8 @@ export type Profile = {
   totalPayout?: number;
   /** 平均初当り確率＝平均初当りG（AT・RB間）。1/X 表記の X。古い/未生成データでは undefined。 */
   firstHitRate?: number;
+  /** 生サンプル（台番号末尾/特定日の絞り込みで再集計に使う）。古い/未生成データでは undefined。 */
+  ev?: EvSamples;
   /** When true, this profile has no 実戦 data yet: the tab is shown but no numbers are rendered. */
   dataPending?: boolean;
 };
@@ -141,6 +169,8 @@ export type Machine = {
   settingAim?: SettingAim;
   /** AT獲得モードのデータ。古い/未生成データでは undefined。 */
   atPayout?: AtPayout;
+  /** 絞り込み再集計の共通パラメータ。古い/未生成データでは undefined。 */
+  evCalc?: EvCalc;
   axes: Axis[];
   modifiers: ModifierMap;
   creditValue: Record<string, number>;
