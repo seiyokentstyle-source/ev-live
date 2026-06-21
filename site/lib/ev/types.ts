@@ -36,6 +36,8 @@ export type BaseAnchor = {
   rtp: number;
   /** Estimated sample size (当たり＋打ち切り台日数) used for this G. Optional: absent on older data. */
   n?: number;
+  /** Average medals invested from this G until the AT hit (機械割と同じ基準). Optional: absent on older data. */
+  inv?: number;
 };
 
 export type Zone = {

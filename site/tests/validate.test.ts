@@ -13,6 +13,12 @@ describe("machine validation", () => {
     expect(() => validateMachine(invalid)).toThrow(/sign mismatch/);
   });
 
+  test("rejects negative anchor inv", () => {
+    const invalid = structuredClone(machineData) as Record<string, unknown>;
+    (invalid.profiles as Array<{ baseAnchors: Array<{ inv?: number }> }>)[0].baseAnchors[0].inv = -5;
+    expect(() => validateMachine(invalid)).toThrow(/inv must be a non-negative number/);
+  });
+
   test("rejects dangerous thumb URLs", () => {
     const invalid = structuredClone(machineData) as Record<string, unknown>;
     invalid.thumb = "javascript:alert(1)";
