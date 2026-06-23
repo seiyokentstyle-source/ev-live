@@ -89,6 +89,8 @@ export type Profile = {
   totalPayout?: number;
   /** 平均初当り確率＝平均初当りG（AT・RB間）。1/X 表記の X。古い/未生成データでは undefined。 */
   firstHitRate?: number;
+  /** 平均CZ回数＝1ボーナス当選までに挟んだ道中CZの平均（AT間区切り機種のみ意味を持つ。0や未生成データでは非表示）。 */
+  midCZ?: number;
   /** 生サンプル（台番号末尾/特定日の絞り込みで再集計に使う）。古い/未生成データでは undefined。 */
   ev?: EvSamples;
   /** When true, this profile has no 実戦 data yet: the tab is shown but no numbers are rendered. */
