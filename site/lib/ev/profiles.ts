@@ -39,16 +39,20 @@ const RATE_META: Record<string, { label: string; order: number }> = {
 
 const RATE_KEY_RE = /_(4652|5050)$/;
 const RATE_LABEL_RE = /・(?:46\/52|50\/50)/g;
+// 旧データのラベルに焼き込まれた「（n=◯◯）」を表示から除去する。サンプル件数は
+// EvTable の「サンプル数」列（baseAnchors[].n）に一本化したため、ラベル側の重複表記は出さない。
+const SAMPLE_SUFFIX_RE = /（n=\d+）/g;
 const SINGLE = "_single";
 
 function parseProfile(profile: Profile): { baseKey: string; baseLabel: string; rate: string | null } {
+  const cleanLabel = profile.label.replace(SAMPLE_SUFFIX_RE, "");
   const match = RATE_KEY_RE.exec(profile.key);
   if (!match) {
-    return { baseKey: profile.key, baseLabel: profile.label, rate: null };
+    return { baseKey: profile.key, baseLabel: cleanLabel.trim(), rate: null };
   }
   return {
     baseKey: profile.key.slice(0, match.index),
-    baseLabel: profile.label.replace(RATE_LABEL_RE, "").trim(),
+    baseLabel: cleanLabel.replace(RATE_LABEL_RE, "").trim(),
     rate: match[1]
   };
 }
