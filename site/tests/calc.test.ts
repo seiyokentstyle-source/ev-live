@@ -81,7 +81,8 @@ describe("rate grouping", () => {
     const grouped = groupProfiles(profiles);
 
     expect(grouped.groups.map((group) => group.key)).toEqual(["after_first", "morning"]);
-    expect(grouped.groups[0].label).toBe("通常（n=10）");
+    // ラベルの「（n=◯◯）」は除去され、サンプル件数は EvTable の列に一本化される。
+    expect(grouped.groups[0].label).toBe("通常");
     expect(grouped.rates.map((rate) => rate.value)).toEqual(["4652", "5050"]);
     expect(grouped.rates[1].label).toBe("50/50（等価）");
     expect(grouped.defaultRate).toBe("4652");
