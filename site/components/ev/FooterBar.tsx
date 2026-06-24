@@ -23,11 +23,6 @@ export function FooterBar({ profile, rowCount, currentG }: FooterBarProps) {
             初当り <span className="text-accent">1/{profile.firstHitRate.toLocaleString("ja-JP")}</span>
           </span>
         ) : null}
-        {profile.midCZ ? (
-          <span>
-            CZ平均 <span className="text-accent">{profile.midCZ.toLocaleString("ja-JP")}回</span>
-          </span>
-        ) : null}
       </div>
       <div className="text-ink-soft">視点: {currentG}G</div>
     </footer>
