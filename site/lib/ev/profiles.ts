@@ -42,10 +42,17 @@ const RATE_LABEL_RE = /・(?:46\/52|50\/50)/g;
 // 旧データのラベルに焼き込まれた「（n=◯◯）」を表示から除去する。サンプル件数は
 // EvTable の「サンプル数」列（baseAnchors[].n）に一本化したため、ラベル側の重複表記は出さない。
 const SAMPLE_SUFFIX_RE = /（n=\d+）/g;
+// 表記名の正規化。文言の言い換えはデータ再生成を待たずここで即時反映する
+// （数値はデータが正・文言はサイトが正、という役割分担）。データ側の生成文言が
+// 追いついたら各ルールは実質no-opになるが、旧JSONが残っても表示は常に新表記になる。
+const LABEL_REWRITES: Array<[RegExp, string]> = [
+  [/据え置き/g, "通常"]
+];
 const SINGLE = "_single";
 
 function parseProfile(profile: Profile): { baseKey: string; baseLabel: string; rate: string | null } {
-  const cleanLabel = profile.label.replace(SAMPLE_SUFFIX_RE, "");
+  let cleanLabel = profile.label.replace(SAMPLE_SUFFIX_RE, "");
+  for (const [from, to] of LABEL_REWRITES) cleanLabel = cleanLabel.replace(from, to);
   const match = RATE_KEY_RE.exec(profile.key);
   if (!match) {
     return { baseKey: profile.key, baseLabel: cleanLabel.trim(), rate: null };

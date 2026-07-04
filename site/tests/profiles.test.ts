@@ -36,4 +36,15 @@ describe("groupProfiles label cleanup", () => {
     const { groups } = groupProfiles([makeProfile("reset_4652", "リセット狙い・46/52")]);
     expect(groups[0].label).toBe("リセット狙い");
   });
+
+  // 文言の言い換え（LABEL_REWRITES）はデータ再生成を待たずサイト側で即時反映する。
+  // 旧データの「据え置き」は新表記「通常」で表示される（n=除去と併用でも効く）。
+  test("rewrites 据え置き to 通常 without regenerating data", () => {
+    const { groups } = groupProfiles([
+      makeProfile("game_ceiling_4652", "AT・RB間天井（据え置き）・46/52（n=822）"),
+      makeProfile("game_ceiling_5050", "AT・RB間天井（据え置き）・50/50（n=822）")
+    ]);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].label).toBe("AT・RB間天井（通常）");
+  });
 });
