@@ -177,6 +177,32 @@ export function validateMachine(data: unknown): Machine {
     }
   }
 
+  // ハラキリドライブ（台別推定率）は任意（対応機種＝ヴヴヴ2のみ）。あるときだけ形を検証する。
+  if (machine.harakiri !== undefined) {
+    const hk = machine.harakiri;
+    assert(isRecord(hk), "harakiri must be an object");
+    assert(typeof hk.label === "string", "harakiri.label must be a string");
+    assert(typeof hk.note === "string", "harakiri.note must be a string");
+    assert(typeof hk.threshold === "number" && hk.threshold > 0, "harakiri.threshold must be > 0");
+    assert(isRecord(hk.total), "harakiri.total must be an object");
+    for (const key of ["sessions", "rush", "hits", "rate"] as const) {
+      const value = hk.total[key];
+      assert(typeof value === "number" && Number.isFinite(value) && value >= 0, `harakiri.total.${key} must be >= 0`);
+    }
+    assert(Array.isArray(hk.units) && hk.units.length > 0, "harakiri.units must be a non-empty array");
+    for (const unit of hk.units) {
+      assert(typeof unit.unit === "string" && unit.unit.length > 0, "harakiri unit id is required");
+      for (const key of ["sessions", "rush", "hits", "rate"] as const) {
+        const value = unit[key];
+        assert(
+          typeof value === "number" && Number.isFinite(value) && value >= 0,
+          `harakiri ${unit.unit} ${key} must be >= 0`
+        );
+      }
+      assert(unit.hits <= unit.rush, `harakiri ${unit.unit} hits must not exceed rush`);
+    }
+  }
+
   const rateAxis = machine.axes.find((axis) => axis.key === "rate");
   assert(rateAxis?.type === "select", "rate axis must be a select axis");
   for (const option of rateAxis.options) {

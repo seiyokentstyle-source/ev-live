@@ -144,6 +144,32 @@ export type AtPayout = {
   bands: AtPayoutBand[];
 };
 
+/** ハラキリドライブ（台番号別・推定）の1台分。 */
+export type HarakiriUnit = {
+  /** 台番号. */
+  unit: string;
+  /** セッション（AT・RB間の初当り）数. */
+  sessions: number;
+  /** ラッシュ突入（連チャンが1回以上続いたセッション）数. */
+  rush: number;
+  /** ハラキリ発生（ラッシュ中の1回で獲得しきい値以上）の推定回数. */
+  hits: number;
+  /** 発生率％＝hits÷rush×100（rush=0なら0）. */
+  rate: number;
+};
+
+/** ハラキリドライブモード：台番号別の推定発生率。対応機種（ヴヴヴ2）のみ。 */
+export type Harakiri = {
+  label: string;
+  note: string;
+  /** 判定しきい値（ラッシュ中1回の獲得枚数）. */
+  threshold: number;
+  /** 全台合計（機種全体の率。台別より信頼できる）. */
+  total: { sessions: number; rush: number; hits: number; rate: number };
+  /** 行＝台番号（rate降順）. */
+  units: HarakiriUnit[];
+};
+
 export type ModifierMap = Record<string, Record<string, number>>;
 
 export type Economics = {
@@ -169,6 +195,8 @@ export type Machine = {
   settingAim?: SettingAim;
   /** AT獲得モードのデータ。古い/未生成データでは undefined。 */
   atPayout?: AtPayout;
+  /** ハラキリドライブモードのデータ。対応機種（ヴヴヴ2）のみ。古い/未生成データでは undefined。 */
+  harakiri?: Harakiri;
   /** 絞り込み再集計の共通パラメータ。古い/未生成データでは undefined。 */
   evCalc?: EvCalc;
   axes: Axis[];

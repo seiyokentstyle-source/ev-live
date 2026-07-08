@@ -1,0 +1,20 @@
+# サイトのテストと本番相当ビルドを push/PR ごとに実行する。
+# ローカルで検証できない環境からの変更も、ここが通れば安全にマージできる。
+# 本番ビルドは data/machines/*.json を validate.ts で検証するので、実データとの整合も担保される。
+name: site-test
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm test
+      - name: production build (validates machine JSONs too)
+        run: PAGES_BASE_PATH=/ev-live STATIC_EXPORT=true npm run build
