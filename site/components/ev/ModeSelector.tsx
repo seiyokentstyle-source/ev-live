@@ -1,6 +1,6 @@
 "use client";
 
-export type AimMode = "ev" | "setting" | "payout";
+export type AimMode = "ev" | "setting" | "payout" | "harakiri";
 
 type ModeSelectorProps = {
   value: AimMode;
@@ -12,7 +12,8 @@ type ModeSelectorProps = {
 const MODES: Array<{ value: AimMode; label: string; hint: string }> = [
   { value: "ev", label: "期待値稼働", hint: "現在G→期待値" },
   { value: "setting", label: "設定狙い", hint: "台番号別 出率" },
-  { value: "payout", label: "AT獲得", hint: "当選G別 平均獲得" }
+  { value: "payout", label: "AT獲得", hint: "当選G別 平均獲得" },
+  { value: "harakiri", label: "ハラキリ", hint: "台番号別 発生率" }
 ];
 
 export function ModeSelector({ value, onChange, modes }: ModeSelectorProps) {
