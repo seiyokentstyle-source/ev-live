@@ -116,4 +116,49 @@ describe("machine validation", () => {
     };
     expect(() => validateMachine(invalid)).toThrow(/atPayout band 100 range is invalid/);
   });
+
+  test("accepts data without harakiri (optional)", () => {
+    const base = structuredClone(machineData) as Record<string, unknown>;
+    delete base.harakiri;
+    expect(validateMachine(base).harakiri).toBeUndefined();
+  });
+
+  test("accepts a well-formed harakiri", () => {
+    const withHk = structuredClone(machineData) as Record<string, unknown>;
+    withHk.harakiri = {
+      label: "ハラキリドライブ（台別・推定）",
+      note: "x",
+      threshold: 400,
+      total: { sessions: 100, rush: 40, hits: 6, rate: 15.0 },
+      units: [
+        { unit: "791", sessions: 50, rush: 22, hits: 4, rate: 18.2 },
+        { unit: "792", sessions: 50, rush: 18, hits: 2, rate: 11.1 }
+      ]
+    };
+    expect(validateMachine(withHk).harakiri?.units).toHaveLength(2);
+  });
+
+  test("rejects harakiri unit with hits exceeding rush", () => {
+    const invalid = structuredClone(machineData) as Record<string, unknown>;
+    invalid.harakiri = {
+      label: "x",
+      note: "x",
+      threshold: 400,
+      total: { sessions: 10, rush: 4, hits: 5, rate: 0 },
+      units: [{ unit: "791", sessions: 10, rush: 4, hits: 5, rate: 125.0 }]
+    };
+    expect(() => validateMachine(invalid)).toThrow(/hits must not exceed rush/);
+  });
+
+  test("rejects harakiri with non-positive threshold", () => {
+    const invalid = structuredClone(machineData) as Record<string, unknown>;
+    invalid.harakiri = {
+      label: "x",
+      note: "x",
+      threshold: 0,
+      total: { sessions: 1, rush: 1, hits: 0, rate: 0 },
+      units: [{ unit: "791", sessions: 1, rush: 1, hits: 0, rate: 0 }]
+    };
+    expect(() => validateMachine(invalid)).toThrow(/threshold must be > 0/);
+  });
 });
