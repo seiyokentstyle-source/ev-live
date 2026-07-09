@@ -67,8 +67,8 @@ export type EvSamples = {
   kan: number;
   /** アンカー打ち切り件数. */
   minSess: number;
-  /** 当たり: [台番号, 取得日, 初当りG, 総獲得]. */
-  hits: Array<[string, string, number, number]>;
+  /** 当たり: [台番号, 取得日, 初当りG, 総獲得, 道中CZ数?]. 道中CZ数はAT間区切り機種(ヴヴヴ2)のみ5要素目に入る. */
+  hits: Array<[string, string, number, number, number?]>;
   /** 打ち切り: [台番号, 取得日, ハマりG]. */
   cens: Array<[string, string, number]>;
 };

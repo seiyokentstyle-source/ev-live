@@ -34,6 +34,20 @@ function dayOfMonth(date: string): string {
   return m ? String(Number(m[1])) : "";
 }
 
+// 道中CZ回数のバケット。undefined→""（CZ情報なし・絞り込み対象外）、0→"0"、1→"1"、2以上→"2".
+// 「CZ1回失敗後」= hitsの5要素目が1 = このセッションはAT到達までに道中CZを1回挟んだ、を意味する。
+function czBucket(cz: number | undefined): string {
+  if (cz === undefined) return "";
+  if (cz >= 2) return "2";
+  return String(cz);
+}
+
+function czLabel(bucket: string): string {
+  if (bucket === "0") return "CZ0回(直撃)";
+  if (bucket === "2") return "CZ2回以上";
+  return `CZ${bucket}回`;
+}
+
 type MachineDetailClientProps = {
   machine: Machine;
 };
@@ -68,6 +82,7 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   const [picker, setPicker] = useState<PickerState>(null);
   const [evTail, setEvTail] = useState<string | null>(null); // 台番号末尾
   const [evDay, setEvDay] = useState<string | null>(null); // 日にちに含まれる数字（○のつく日）
+  const [evCz, setEvCz] = useState<string | null>(null); // 初当りまでの道中CZ回数（"0"/"1"/"2"=2以上）
 
   const group = grouped.groups.find((candidate) => candidate.key === activeGroupKey) ?? grouped.groups[0];
   const profile = resolveProfile(group, activeRate);
@@ -83,14 +98,22 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
     () => (evSamples ? Array.from(new Set(evSamples.hits.flatMap((h) => dayOfMonth(h[1]).split("")))).sort() : []),
     [evSamples]
   );
+  // 道中CZ回数の絞り込み候補。hitsの5要素目（AT間区切り機種のみ）から実在するバケットだけ出す。
+  const evCzOptions = useMemo(
+    () => (evSamples ? Array.from(new Set(evSamples.hits.map((h) => czBucket(h[4])))).filter(Boolean).sort() : []),
+    [evSamples]
+  );
+  const hasCzFilter = evCzOptions.length > 0;
 
-  // 絞り込みが効いていれば、その台/日だけでアンカーを再集計した表示用プロファイルを作る。
+  // 絞り込みが効いていれば、その台/日/CZ回数だけでアンカーを再集計した表示用プロファイルを作る。
   const displayProfile = useMemo(() => {
-    if (!evSamples || !machine.evCalc || (evTail === null && evDay === null)) return profile;
+    if (!evSamples || !machine.evCalc || (evTail === null && evDay === null && evCz === null)) return profile;
     const keepUnitDate = (unit: string, date: string) =>
       (evTail === null || tailOf(unit) === evTail) && (evDay === null || dayOfMonth(date).includes(evDay));
-    const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]));
-    const cens = evSamples.cens.filter((c) => keepUnitDate(c[0], c[1]));
+    const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]) && (evCz === null || czBucket(h[4]) === evCz));
+    // CZ回数で絞る時は打ち切り(閉店ハマり)を母数から外す＝当たりのみの参考値
+    // （打ち切りは道中CZ数の概念が無く、混ぜると別条件のセッションが紛れるため）。
+    const cens = evCz === null ? evSamples.cens.filter((c) => keepUnitDate(c[0], c[1])) : [];
     const baseAnchors = computeAnchors(hits, cens, machine.evCalc, evSamples.tai, evSamples.kan, evSamples.minSess);
     const end = baseAnchors.length > 0 ? baseAnchors[baseAnchors.length - 1].g : profile.gRange.start;
     return {
@@ -101,16 +124,16 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
       totalPayout: hits.reduce((sum, h) => sum + h[3], 0),
       firstHitRate: hits.length ? Math.round(hits.reduce((sum, h) => sum + h[2], 0) / hits.length) : undefined
     };
-  }, [profile, evSamples, machine.evCalc, evTail, evDay]);
+  }, [profile, evSamples, machine.evCalc, evTail, evDay, evCz]);
 
   const evFiltered = displayProfile !== profile;
   const evFilterStats = useMemo(() => {
     if (!evFiltered || !evSamples) return { units: 0, hits: 0 };
     const keepUnitDate = (unit: string, date: string) =>
       (evTail === null || tailOf(unit) === evTail) && (evDay === null || dayOfMonth(date).includes(evDay));
-    const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]));
+    const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]) && (evCz === null || czBucket(h[4]) === evCz));
     return { units: new Set(hits.map((h) => h[0])).size, hits: hits.length };
-  }, [evFiltered, evSamples, evTail, evDay]);
+  }, [evFiltered, evSamples, evTail, evDay, evCz]);
   // 絞り込み結果がアンカー2本未満（データ不足）かどうか。
   const evEmpty = evFiltered && displayProfile.baseAnchors.length < 2;
 
@@ -185,10 +208,14 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         <EvFilter
           tailOptions={evTailOptions}
           dayOptions={evDayOptions}
+          czOptions={hasCzFilter ? evCzOptions : undefined}
+          czLabelFn={czLabel}
           tail={evTail}
           day={evDay}
+          cz={evCz}
           onTailChange={setEvTail}
           onDayChange={setEvDay}
+          onCzChange={setEvCz}
           units={evFilterStats.units}
           hits={evFilterStats.hits}
         />
