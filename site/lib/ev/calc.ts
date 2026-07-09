@@ -11,6 +11,9 @@ export function computeAnchors(
   minSess: number
 ): BaseAnchor[] {
   const anchors: BaseAnchor[] = [];
+  // 前兆補正：打ち始め(g)から前兆Gは当たらない＝当たり判定を g+preg 以上にする。
+  // 投資は減らさない（前兆分も回して払う）ので投資は実G基準の (初当りG - g) のまま。
+  const preg = calc.preg ?? 0;
   const maxHitG = hits.reduce((m, h) => Math.max(m, h[2]), 0);
   const gTop = calc.ceiling || maxHitG;
   for (let g = 0; g <= gTop; g += calc.step) {
@@ -18,7 +21,7 @@ export function computeAnchors(
     let invMed = 0;
     let payMed = 0;
     for (const h of hits) {
-      if (h[2] >= g) {
+      if (h[2] >= g + preg) {
         subN += 1;
         invMed += (h[2] - g) * calc.use;
         payMed += h[3];
