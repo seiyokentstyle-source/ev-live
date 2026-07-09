@@ -3,10 +3,16 @@
 type EvFilterProps = {
   tailOptions: string[];
   dayOptions: string[];
+  /** 道中CZ回数の候補（AT間区切り機種のみ）。無い機種は undefined でセレクタ非表示. */
+  czOptions?: string[];
+  /** CZバケット値→表示ラベル（"1"→"CZ1回" 等）. */
+  czLabelFn?: (v: string) => string;
   tail: string | null;
   day: string | null;
+  cz?: string | null;
   onTailChange: (v: string | null) => void;
   onDayChange: (v: string | null) => void;
+  onCzChange?: (v: string | null) => void;
   /** 絞り込み後の台数（実台数の概算）と当たり件数. */
   units: number;
   hits: number;
@@ -49,14 +55,19 @@ function Select({
 export function EvFilter({
   tailOptions,
   dayOptions,
+  czOptions,
+  czLabelFn,
   tail,
   day,
+  cz = null,
   onTailChange,
   onDayChange,
+  onCzChange,
   units,
   hits
 }: EvFilterProps) {
-  const active = tail !== null || day !== null;
+  const hasCz = Boolean(czOptions && czOptions.length > 0 && onCzChange);
+  const active = tail !== null || day !== null || cz !== null;
   return (
     <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-line bg-panel px-3 py-2">
       <span className="mono shrink-0 text-[9px] tracking-[0.14em] text-muted">絞り込み</span>
@@ -76,6 +87,16 @@ export function EvFilter({
         onChange={onDayChange}
         fmt={(v) => `${v}のつく日`}
       />
+      {hasCz ? (
+        <Select
+          label="道中CZ"
+          allLabel="全部"
+          options={czOptions ?? []}
+          value={cz}
+          onChange={onCzChange ?? (() => undefined)}
+          fmt={(v) => (czLabelFn ? czLabelFn(v) : v)}
+        />
+      ) : null}
       {active ? (
         <span className="mono text-[10px] text-muted">
           {units}台 / {hits}AT
@@ -84,6 +105,7 @@ export function EvFilter({
             onClick={() => {
               onTailChange(null);
               onDayChange(null);
+              onCzChange?.(null);
             }}
             className="mono ml-2 rounded border border-line px-2 py-0.5 text-[10px] text-ink-soft"
           >
