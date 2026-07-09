@@ -170,6 +170,41 @@ describe("道中CZ回数フィルタ（hitsの5要素目）", () => {
   });
 });
 
+describe("前兆補正（preg：打ち始めから前兆Gは当たらない・投資はフル）", () => {
+  const tai = 21.74;
+  const kan = 19.23;
+  // 初当りG 100/130/200 の3件。前兆32・10G刻みで検証する。
+  const hits: EvSamples["hits"] = [
+    ["101", "2026-07-01", 100, 500],
+    ["102", "2026-07-02", 130, 600],
+    ["103", "2026-07-03", 200, 700]
+  ];
+
+  test("preg=0（従来）はアンカーgに 初当りG>=g の全件が母数", () => {
+    const calc: EvCalc = { use: 1.53, junzou: 9, ceiling: 300, step: 10 };
+    const anchors = computeAnchors(hits, [], calc, tai, kan, 1);
+    // g=100 では 100/130/200 の3件すべて当たり扱い
+    expect(anchors.find((a) => a.g === 100)?.n).toBe(3);
+  });
+
+  test("preg=32 だと g から32G以内の当たりは母数から外れる", () => {
+    const calc: EvCalc = { use: 1.53, junzou: 9, ceiling: 300, step: 10, preg: 32 };
+    const anchors = computeAnchors(hits, [], calc, tai, kan, 1);
+    // g=100: 当たり扱いは 初当りG>=132 の {200} だけ（100と130は前兆窓内で除外）
+    const a100 = anchors.find((a) => a.g === 100);
+    expect(a100?.n).toBe(1);
+  });
+
+  test("投資は実G基準（前兆分も引かない）＝ (初当りG - g)×use のまま", () => {
+    const calc: EvCalc = { use: 1.53, junzou: 9, ceiling: 300, step: 10, preg: 32 };
+    // 打ち切りなし・minSess=1、g=100で母数は{200}のみ。
+    // 平均投資枚数 inv = (200-100)*1.53 = 153（前兆32を引かない）。
+    const anchors = computeAnchors(hits, [], calc, tai, kan, 1);
+    const a100 = anchors.find((a) => a.g === 100);
+    expect(a100?.inv).toBe(Math.round((200 - 100) * 1.53));
+  });
+});
+
 describe("real machine data", () => {
   test("vvv2 validates and every 狙い方 group resolves a profile", () => {
     const realMachine = validateMachine(vvv2Data);
