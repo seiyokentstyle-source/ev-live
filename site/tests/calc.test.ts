@@ -1,9 +1,16 @@
 import { describe, expect, test } from "vitest";
-import type { Machine, Profile } from "../lib/ev/types";
-import { avgMedals, baseEV, baseRtp, calcEV, defaultConditions, generateRows } from "../lib/ev/calc";
+import type { EvCalc, EvSamples, Machine, Profile } from "../lib/ev/types";
+import { avgMedals, baseEV, baseRtp, calcEV, computeAnchors, defaultConditions, generateRows } from "../lib/ev/calc";
 import { groupProfiles, resolveProfile } from "../lib/ev/profiles";
 import { validateMachine } from "../lib/ev/validate";
 import vvv2Data from "../../data/machines/vvv2.json";
+
+// サイトの「道中CZ回数」絞り込みと同じバケット化（MachineDetailClient と揃える）。
+function czBucket(cz: number | undefined): string {
+  if (cz === undefined) return "";
+  if (cz >= 2) return "2";
+  return String(cz);
+}
 
 // Synthetic fixtures so the math tests do not depend on the nightly-scraped
 // numbers in data/machines/*.json.
@@ -120,6 +127,46 @@ describe("sample size (n)", () => {
   test("old anchors without n stay undefined and do not crash", () => {
     const rows = generateRows(profile, machine, conditions);
     expect(rows.every((row) => row.n === undefined)).toBe(true);
+  });
+});
+
+describe("道中CZ回数フィルタ（hitsの5要素目）", () => {
+  const evCalc: EvCalc = { use: 1.53, junzou: 9, ceiling: 500, step: 100 };
+  // [台番号, 取得日, 初当りG, 総獲得, 道中CZ数]
+  const hits: EvSamples["hits"] = [
+    ["101", "2026-07-01", 100, 500, 0],
+    ["101", "2026-07-01", 200, 600, 1],
+    ["102", "2026-07-02", 150, 700, 1],
+    ["102", "2026-07-02", 300, 900, 2],
+    ["103", "2026-07-03", 250, 800, 3]
+  ];
+
+  test("czBucket は 0/1/2以上 に丸める", () => {
+    expect(hits.map((h) => czBucket(h[4]))).toEqual(["0", "1", "1", "2", "2"]);
+  });
+
+  test("CZ=1 で絞ると該当2件だけが残る", () => {
+    const only1 = hits.filter((h) => czBucket(h[4]) === "1");
+    expect(only1.map((h) => h[2])).toEqual([200, 150]);
+  });
+
+  test("computeAnchors は5要素目(CZ数)を無視して従来通り集計する", () => {
+    // minSess=1・打ち切りなしで、CZ=1の部分集合だけでアンカーが立つ。
+    const subset = hits.filter((h) => czBucket(h[4]) === "1");
+    const anchors = computeAnchors(subset, [], evCalc, 21.74, 19.23, 1);
+    expect(anchors.length).toBeGreaterThan(0);
+    // 0G地点は2件（初当りG 150,200）が母数
+    expect(anchors[0].n).toBe(2);
+  });
+
+  test("4要素のみ（CZ情報なし）のhitsでも壊れない", () => {
+    const legacy: EvSamples["hits"] = [
+      ["101", "2026-07-01", 100, 500],
+      ["102", "2026-07-02", 200, 600]
+    ];
+    expect(legacy.map((h) => czBucket(h[4]))).toEqual(["", ""]);
+    const anchors = computeAnchors(legacy, [], evCalc, 21.74, 19.23, 1);
+    expect(anchors[0].n).toBe(2);
   });
 });
 
