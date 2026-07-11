@@ -59,6 +59,8 @@ export type EvCalc = {
   step: number;
   /** 前兆補正G。打ち始めからこのGは当たらない＝アンカーgでは 初当りG>=g+preg のみ当たり扱い（投資はフル）. 無い/0で従来動作. */
   preg?: number;
+  /** 賭け枚数（機械割OUT/INの分母＝bet×消化G）。AT間モデル（hitsに投入G0がある機種）で使う. */
+  bet?: number;
 };
 
 /** プロファイルの生サンプル（絞り込み時にアンカーを再集計するため）。 */
@@ -69,8 +71,10 @@ export type EvSamples = {
   kan: number;
   /** アンカー打ち切り件数. */
   minSess: number;
-  /** 当たり: [台番号, 取得日, 初当りG, 総獲得, 道中CZ数?]. 道中CZ数はAT間区切り機種(ヴヴヴ2)のみ5要素目に入る. */
-  hits: Array<[string, string, number, number, number?]>;
+  /** 当たり: [台番号, 取得日, 初当りG, 総獲得, 道中CZ数?, 投入G0?].
+   *  5要素目=道中CZ回数、6要素目=投入G0（g=0時の1サイクル通常時投入G＝初当りG＋引き戻しゾーンG＋やめtail）。
+   *  どちらもAT間区切り機種(ヴヴヴ2)のみ。6要素目がある機種はAT間モデル（差枚時給・OUT/IN機械割）で再集計する. */
+  hits: Array<[string, string, number, number, number?, number?]>;
   /** 打ち切り: [台番号, 取得日, ハマりG]. */
   cens: Array<[string, string, number]>;
 };
