@@ -199,7 +199,8 @@ export function validateMachine(data: unknown): Machine {
           `harakiri ${unit.unit} ${key} must be >= 0`
         );
       }
-      assert(unit.hits <= unit.rush, `harakiri ${unit.unit} hits must not exceed rush`);
+      // hits はラッシュ中の総ハラキリ回数（1ラッシュで複数回の大量上乗せがあり得る）なので
+      // rush を超えることがある＝rateは100%超も正常。上限は課さない。
     }
   }
 

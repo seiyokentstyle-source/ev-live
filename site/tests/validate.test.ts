@@ -138,16 +138,16 @@ describe("machine validation", () => {
     expect(validateMachine(withHk).harakiri?.units).toHaveLength(2);
   });
 
-  test("rejects harakiri unit with hits exceeding rush", () => {
-    const invalid = structuredClone(machineData) as Record<string, unknown>;
-    invalid.harakiri = {
+  test("accepts harakiri unit with hits exceeding rush (1ラッシュで複数回ハラキリ→rate>100%)", () => {
+    const valid = structuredClone(machineData) as Record<string, unknown>;
+    valid.harakiri = {
       label: "x",
       note: "x",
       threshold: 400,
-      total: { sessions: 10, rush: 4, hits: 5, rate: 0 },
-      units: [{ unit: "791", sessions: 10, rush: 4, hits: 5, rate: 125.0 }]
+      total: { sessions: 10, rush: 4, hits: 10, rate: 250.0 },
+      units: [{ unit: "791", sessions: 10, rush: 4, hits: 10, rate: 250.0 }]
     };
-    expect(() => validateMachine(invalid)).toThrow(/hits must not exceed rush/);
+    expect(() => validateMachine(valid)).not.toThrow();
   });
 
   test("rejects harakiri with non-positive threshold", () => {
