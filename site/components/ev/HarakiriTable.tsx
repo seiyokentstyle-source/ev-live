@@ -74,12 +74,12 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
                   台番号
                 </th>
                 <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
-                  ハラキリ率
-                  <span className="block text-[9px] text-muted">%（推定）</span>
+                  ドライブ発生率
+                  <span className="block text-[9px] text-muted">%（推定・最大100）</span>
                 </th>
                 <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
                   発生
-                  <span className="block text-[9px] text-muted">回</span>
+                  <span className="block text-[9px] text-muted">ラッシュ</span>
                 </th>
                 <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
                   ラッシュ
