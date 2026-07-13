@@ -87,32 +87,66 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   const group = grouped.groups.find((candidate) => candidate.key === activeGroupKey) ?? grouped.groups[0];
   const profile = resolveProfile(group, activeRate);
 
-  // 絞り込み（台番号末尾/特定日）用の生サンプル。あれば EvTable を部分集合で再集計できる。
+  // 絞り込み（末尾/日/CZ）。新形式=公開前に集計済みの evFilters テーブルを引くだけ（生サンプル非公開）。
+  // 旧形式（後方互換）=生サンプル ev.hits からクライアント再集計。データ再生成までは旧形式で動く。
+  const evFilters = profile.evFilters;
   const evSamples = profile.ev;
-  const hasEvFilter = Boolean(evSamples && evSamples.hits.length > 0 && machine.evCalc);
+  const useFilters = Boolean(evFilters);
+  const hasEvFilter = useFilters
+    ? Boolean(evFilters && (evFilters.tails.length || evFilters.days.length || evFilters.cz.length))
+    : Boolean(evSamples && evSamples.hits.length > 0 && machine.evCalc);
   const evTailOptions = useMemo(
-    () => (evSamples ? Array.from(new Set(evSamples.hits.map((h) => tailOf(h[0])))).filter(Boolean).sort() : []),
-    [evSamples]
+    () =>
+      useFilters
+        ? evFilters!.tails
+        : evSamples
+          ? Array.from(new Set(evSamples.hits.map((h) => tailOf(h[0])))).filter(Boolean).sort()
+          : [],
+    [useFilters, evFilters, evSamples]
   );
   const evDayOptions = useMemo(
-    () => (evSamples ? Array.from(new Set(evSamples.hits.flatMap((h) => dayOfMonth(h[1]).split("")))).sort() : []),
-    [evSamples]
+    () =>
+      useFilters
+        ? evFilters!.days
+        : evSamples
+          ? Array.from(new Set(evSamples.hits.flatMap((h) => dayOfMonth(h[1]).split("")))).sort()
+          : [],
+    [useFilters, evFilters, evSamples]
   );
-  // 道中CZ回数の絞り込み候補。hitsの5要素目（AT間区切り機種のみ）から実在するバケットだけ出す。
   const evCzOptions = useMemo(
-    () => (evSamples ? Array.from(new Set(evSamples.hits.map((h) => czBucket(h[4])))).filter(Boolean).sort() : []),
-    [evSamples]
+    () =>
+      useFilters
+        ? evFilters!.cz
+        : evSamples
+          ? Array.from(new Set(evSamples.hits.map((h) => czBucket(h[4])))).filter(Boolean).sort()
+          : [],
+    [useFilters, evFilters, evSamples]
   );
   const hasCzFilter = evCzOptions.length > 0;
 
-  // 絞り込みが効いていれば、その台/日/CZ回数だけでアンカーを再集計した表示用プロファイルを作る。
+  // 選択(末尾/日/CZ)→キー（順序 t→d→c。例 末尾7×CZ1回='t7c1'）。全nullは素の全体。
+  const filterKey = (evTail ? `t${evTail}` : "") + (evDay ? `d${evDay}` : "") + (evCz ? `c${evCz}` : "");
+
+  // 絞り込みが効いていれば、その条件の表示用プロファイルを作る。
   const displayProfile = useMemo(() => {
-    if (!evSamples || !machine.evCalc || (evTail === null && evDay === null && evCz === null)) return profile;
+    if (evTail === null && evDay === null && evCz === null) return profile;
+    if (useFilters) {
+      const tbl = evFilters!.tables[filterKey];
+      if (!tbl) return { ...profile, baseAnchors: [], gRange: { ...profile.gRange, end: profile.gRange.start } };
+      return {
+        ...profile,
+        baseAnchors: tbl.baseAnchors,
+        zones: profile.zones.filter((zone) => zone.g <= tbl.end),
+        gRange: { ...profile.gRange, end: tbl.end },
+        totalPayout: tbl.totalPayout,
+        firstHitRate: tbl.firstHitRate ?? undefined
+      };
+    }
+    // 旧形式：生サンプルから再集計
+    if (!evSamples || !machine.evCalc) return profile;
     const keepUnitDate = (unit: string, date: string) =>
       (evTail === null || tailOf(unit) === evTail) && (evDay === null || dayOfMonth(date).includes(evDay));
     const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]) && (evCz === null || czBucket(h[4]) === evCz));
-    // CZ回数で絞る時は打ち切り(閉店ハマり)を母数から外す＝当たりのみの参考値
-    // （打ち切りは道中CZ数の概念が無く、混ぜると別条件のセッションが紛れるため）。
     const cens = evCz === null ? evSamples.cens.filter((c) => keepUnitDate(c[0], c[1])) : [];
     const baseAnchors = computeAnchors(hits, cens, machine.evCalc, evSamples.tai, evSamples.kan, evSamples.minSess);
     const end = baseAnchors.length > 0 ? baseAnchors[baseAnchors.length - 1].g : profile.gRange.start;
@@ -124,16 +158,21 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
       totalPayout: hits.reduce((sum, h) => sum + h[3], 0),
       firstHitRate: hits.length ? Math.round(hits.reduce((sum, h) => sum + h[2], 0) / hits.length) : undefined
     };
-  }, [profile, evSamples, machine.evCalc, evTail, evDay, evCz]);
+  }, [profile, useFilters, evFilters, filterKey, evSamples, machine.evCalc, evTail, evDay, evCz]);
 
   const evFiltered = displayProfile !== profile;
   const evFilterStats = useMemo(() => {
-    if (!evFiltered || !evSamples) return { units: 0, hits: 0 };
+    if (!evFiltered) return { units: 0, hits: 0 };
+    if (useFilters) {
+      const tbl = evFilters!.tables[filterKey];
+      return tbl ? { units: tbl.units, hits: tbl.hits } : { units: 0, hits: 0 };
+    }
+    if (!evSamples) return { units: 0, hits: 0 };
     const keepUnitDate = (unit: string, date: string) =>
       (evTail === null || tailOf(unit) === evTail) && (evDay === null || dayOfMonth(date).includes(evDay));
     const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]) && (evCz === null || czBucket(h[4]) === evCz));
     return { units: new Set(hits.map((h) => h[0])).size, hits: hits.length };
-  }, [evFiltered, evSamples, evTail, evDay, evCz]);
+  }, [evFiltered, useFilters, evFilters, filterKey, evSamples, evTail, evDay, evCz]);
   // 絞り込み結果がアンカー2本未満（データ不足）かどうか。
   const evEmpty = evFiltered && displayProfile.baseAnchors.length < 2;
 
