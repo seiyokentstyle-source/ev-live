@@ -79,6 +79,36 @@ export type EvSamples = {
   cens: Array<[string, string, number]>;
 };
 
+/** 絞り込み1パターンの集計済みテーブル（スクレイパーが公開前に計算）。 */
+export type EvFilterTable = {
+  /** この絞り込みのアンカー列（EV表）。 */
+  baseAnchors: BaseAnchor[];
+  /** アンカー上限G（gRange.end に使う）。 */
+  end: number;
+  /** 絞り込み後のセッション総獲得枚数。 */
+  totalPayout: number;
+  /** 絞り込み後の平均初当りG（1/X表記のX）。データ無しは null。 */
+  firstHitRate: number | null;
+  /** 絞り込み後の推定台数。 */
+  units: number;
+  /** 絞り込み後の当たり件数。 */
+  hits: number;
+};
+
+/** 末尾/日/CZ の絞り込みを“公開前に集計済み”で持つ（生サンプルは公開しない）。
+ *  サイトは選択からキー（例 't7c1'＝末尾7×CZ1回、順序 t→d→c）を作って tables を引くだけ。
+ *  素の全体（絞り込み無し）は profile.baseAnchors 側なので tables には入れない。 */
+export type EvFilters = {
+  /** 末尾候補. */
+  tails: string[];
+  /** ○のつく日候補. */
+  days: string[];
+  /** 道中CZ回数候補（AT間区切り機種のみ）. */
+  cz: string[];
+  /** キー→集計済みテーブル。該当キーが無い＝データ不足. */
+  tables: Record<string, EvFilterTable>;
+};
+
 export type Profile = {
   key: string;
   label: string;
@@ -95,8 +125,10 @@ export type Profile = {
   totalPayout?: number;
   /** 平均初当り確率＝平均初当りG（AT・RB間）。1/X 表記の X。古い/未生成データでは undefined。 */
   firstHitRate?: number;
-  /** 生サンプル（台番号末尾/特定日の絞り込みで再集計に使う）。古い/未生成データでは undefined。 */
+  /** 生サンプル（旧形式・後方互換）。台番号末尾/特定日の絞り込みで再集計に使う。新データでは undefined。 */
   ev?: EvSamples;
+  /** 絞り込みの集計済みテーブル（新形式）。生サンプルを公開せず絞り込みを実現する。古いデータでは undefined。 */
+  evFilters?: EvFilters;
   /** When true, this profile has no 実戦 data yet: the tab is shown but no numbers are rendered. */
   dataPending?: boolean;
 };
