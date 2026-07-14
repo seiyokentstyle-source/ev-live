@@ -5,8 +5,10 @@ type EvFilterProps = {
   dayOptions: string[];
   /** 道中CZ回数の候補（AT間区切り機種のみ）。無い機種は undefined でセレクタ非表示. */
   czOptions?: string[];
-  /** CZバケット値→表示ラベル（"1"→"CZ1回" 等）. */
+  /** CZバケット値→表示ラベル（"1"→"CZ1回後" 等）. */
   czLabelFn?: (v: string) => string;
+  /** CZセレクタの未選択ラベル（新形式＝CZ0回(天井狙い)。旧形式＝全部）. */
+  czAllLabel?: string;
   tail: string | null;
   day: string | null;
   cz?: string | null;
@@ -57,6 +59,7 @@ export function EvFilter({
   dayOptions,
   czOptions,
   czLabelFn,
+  czAllLabel = "全部",
   tail,
   day,
   cz = null,
@@ -90,7 +93,7 @@ export function EvFilter({
       {hasCz ? (
         <Select
           label="道中CZ"
-          allLabel="全部"
+          allLabel={czAllLabel}
           options={czOptions ?? []}
           value={cz}
           onChange={onCzChange ?? (() => undefined)}
