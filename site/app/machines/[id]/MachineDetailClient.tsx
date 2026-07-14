@@ -42,10 +42,11 @@ function czBucket(cz: number | undefined): string {
   return String(cz);
 }
 
+// CZ状態＝現在Gまでに（72G超で）当選した道中CZ回数。既定（未選択）＝CZ0回＝AT間天井狙い。
 function czLabel(bucket: string): string {
-  if (bucket === "0") return "CZ0回(直撃)";
-  if (bucket === "2") return "CZ2回以上";
-  return `CZ${bucket}回`;
+  if (bucket === "0") return "CZ0回(天井狙い)";
+  if (bucket === "2") return "CZ2回以上後";
+  return `CZ${bucket}回後`;
 }
 
 type MachineDetailClientProps = {
@@ -249,6 +250,7 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
           dayOptions={evDayOptions}
           czOptions={hasCzFilter ? evCzOptions : undefined}
           czLabelFn={czLabel}
+          czAllLabel={useFilters ? "CZ0回(天井狙い)" : "全部"}
           tail={evTail}
           day={evDay}
           cz={evCz}
