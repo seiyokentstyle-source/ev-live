@@ -60019,6 +60019,36 @@
         "hits": 0,
         "rate": 0.0
       }
+    ],
+    "byDate": [
+      {
+        "date": "2026-07-06",
+        "sessions": 245,
+        "rush": 143,
+        "hits": 25,
+        "rate": 17.5
+      },
+      {
+        "date": "2026-06-17",
+        "sessions": 199,
+        "rush": 114,
+        "hits": 20,
+        "rate": 17.5
+      },
+      {
+        "date": "2026-06-10",
+        "sessions": 358,
+        "rush": 212,
+        "hits": 26,
+        "rate": 12.3
+      },
+      {
+        "date": "2026-06-09",
+        "sessions": 394,
+        "rush": 227,
+        "hits": 28,
+        "rate": 12.3
+      }
     ]
   }
 }
