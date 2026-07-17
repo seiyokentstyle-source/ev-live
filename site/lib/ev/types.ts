@@ -196,6 +196,17 @@ export type HarakiriUnit = {
   rate: number;
 };
 
+/** ハラキリドライブ発生率の1日分（その日の全台合計）。 */
+export type HarakiriByDate = {
+  /** 日付（YYYY-MM-DD）. */
+  date: string;
+  sessions: number;
+  rush: number;
+  hits: number;
+  /** 発生率％＝hits÷rush×100（rush=0なら0）. */
+  rate: number;
+};
+
 /** ハラキリドライブモード：台番号別の推定発生率。対応機種（ヴヴヴ2）のみ。 */
 export type Harakiri = {
   label: string;
@@ -206,6 +217,8 @@ export type Harakiri = {
   total: { sessions: number; rush: number; hits: number; rate: number };
   /** 行＝台番号（rate降順）. */
   units: HarakiriUnit[];
+  /** 日付別（新しい日→古い日）。その日の全台合計の発生率。古いデータでは undefined。 */
+  byDate?: HarakiriByDate[];
 };
 
 export type ModifierMap = Record<string, Record<string, number>>;
