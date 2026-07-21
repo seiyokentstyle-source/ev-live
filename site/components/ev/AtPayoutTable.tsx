@@ -30,10 +30,16 @@ export function AtPayoutTable({ data }: AtPayoutTableProps) {
         onCut={blockEvent}
         onContextMenu={blockEvent}
       >
-        <table className="mono w-full border-separate border-spacing-0 text-xs">
+        <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
+          <colgroup>
+            <col className="w-1/4" />
+            <col className="w-1/4" />
+            <col className="w-1/4" />
+            <col className="w-1/4" />
+          </colgroup>
           <thead>
             <tr>
-              <th className="sticky left-0 top-0 z-30 border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
+              <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
                 当選G
                 <span className="block text-[9px] text-muted">ハマりG</span>
               </th>

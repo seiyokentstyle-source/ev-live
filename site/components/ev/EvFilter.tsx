@@ -41,7 +41,7 @@ function Select({
       <select
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value === "" ? null : e.target.value)}
-        className="mono rounded border border-line bg-panel-2 px-2 py-1 text-[11px] text-ink-soft [color-scheme:dark]"
+        className="mono min-w-[128px] rounded border border-line bg-panel-2 px-2 py-1 text-[11px] text-ink-soft [color-scheme:dark]"
       >
         <option value="">{allLabel}</option>
         {options.map((v) => (
