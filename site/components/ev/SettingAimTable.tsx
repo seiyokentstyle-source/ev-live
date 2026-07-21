@@ -173,7 +173,7 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
       <div className="shrink-0 border-b border-line bg-panel px-3 py-2">
         <MonthTabs dates={aim.dates} value={monthFilter} onChange={setMonthFilter} />
       </div>
-      <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-line bg-panel px-3 py-2">
+      <div className="flex shrink-0 items-center border-b border-line bg-panel px-3 py-2">
         <div className="flex overflow-hidden rounded border border-line">
           <button
             type="button"
@@ -190,6 +190,8 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
             つく日別
           </button>
         </div>
+      </div>
+      <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-line bg-panel px-3 py-2">
         <FilterSelect
           label="末尾"
           allLabel="全部"
@@ -222,7 +224,7 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
             <table className="mono w-full border-separate border-spacing-0 text-xs">
               <thead>
                 <tr>
-                  <th className="sticky left-0 top-0 z-30 border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
+                  <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
                     台番号
                   </th>
                   <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
@@ -274,14 +276,14 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
           <table className="mono w-full border-separate border-spacing-0 text-xs">
             <thead>
               <tr>
-                <th className="sticky left-0 top-0 z-30 border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
+                <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
                   台番号
                 </th>
                 <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
                   平均
                   <span className="block text-[9px] text-muted">出率%</span>
                 </th>
-                <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
+                <th className="sticky top-0 z-20 whitespace-nowrap border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
                   高設定
                   <span className="block text-[9px] text-muted">100%超/日</span>
                 </th>
