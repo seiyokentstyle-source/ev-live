@@ -83,7 +83,7 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
             <select
               value={tailFilter ?? ""}
               onChange={(e) => setTailFilter(e.target.value === "" ? null : e.target.value)}
-              className="mono rounded border border-line bg-panel-2 px-2 py-1 text-[11px] text-ink-soft [color-scheme:dark]"
+              className="mono w-[128px] rounded border border-line bg-panel-2 px-2 py-1 text-[11px] text-ink-soft [color-scheme:dark]"
             >
               <option value="">全部</option>
               {tailOptions.map((v) => (
@@ -111,10 +111,17 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
             {view === "date" ? "日付別データがありません" : "該当する台がありません"}
           </p>
         ) : (
-          <table className="mono w-full border-separate border-spacing-0 text-xs">
+          <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
+            <colgroup>
+              <col className="w-[22%]" />
+              <col className="w-[24%]" />
+              <col className="w-[18%]" />
+              <col className="w-[18%]" />
+              <col className="w-[18%]" />
+            </colgroup>
             <thead>
               <tr>
-                <th className="sticky left-0 top-0 z-30 border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
+                <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
                   {view === "date" ? "日付" : "台番号"}
                 </th>
                 <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
