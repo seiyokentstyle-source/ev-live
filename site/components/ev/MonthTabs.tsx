@@ -32,7 +32,8 @@ export function MonthTabs({ dates, value, onChange }: MonthTabsProps) {
     }`;
 
   return (
-    <div className="flex items-center gap-1 overflow-x-auto">
+    // 横スクロール（スライダー）を出さず、はみ出す分は折り返す。
+    <div className="flex flex-wrap items-center gap-1">
       <span className="mono w-8 shrink-0 text-[9px] tracking-[0.08em] text-muted">月</span>
       <button type="button" onClick={() => onChange(null)} className={tabClass(value === null, true)}>
         全
