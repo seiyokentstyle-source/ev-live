@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { SettingAim } from "@/lib/ev/types";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
+import { MonthTabs, monthOf } from "./MonthTabs";
 
 type SettingAimTableProps = {
   aim: SettingAim;
@@ -82,6 +83,7 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
   const [view, setView] = useState<AimView>("date");
   const [tailFilter, setTailFilter] = useState<string | null>(null); // 台番号末尾
   const [dayDigit, setDayDigit] = useState<string | null>(null); // 日にちに含まれる数字（○のつく日）
+  const [monthFilter, setMonthFilter] = useState<string | null>(null); // 月タブ（"MM"）。null=全期間
 
   // 絞り込み候補（データに実在する値だけ出す）
   const tailOptions = useMemo(
@@ -93,10 +95,18 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
     [aim.dates]
   );
 
-  // 表示する日付列（○のつく日で絞り込み）
+  // 表示する日付列（月タブ ＋ ○のつく日で絞り込み）
   const visibleDateIdx = useMemo(
-    () => aim.dates.map((_, i) => i).filter((i) => dayDigit === null || dayOfMonth(aim.dates[i]).includes(dayDigit)),
-    [aim.dates, dayDigit]
+    () =>
+      aim.dates
+        .map((_, i) => i)
+        .filter((i) => {
+          const date = aim.dates[i];
+          if (monthFilter !== null && monthOf(date) !== monthFilter) return false;
+          if (dayDigit !== null && !dayOfMonth(date).includes(dayDigit)) return false;
+          return true;
+        }),
+    [aim.dates, dayDigit, monthFilter]
   );
 
   // 台番号末尾で行を絞り、表示中の日付だけで平均・日数・一貫性を再計算（欠損だけの台は隠す）
@@ -124,19 +134,23 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
     return aim.units
       .filter((u) => tailFilter === null || tailOf(u.unit) === tailFilter)
       .map((u) => {
+        // 月タブで絞った日付だけを対象にする（選択月のつく日別を見られる）。
+        const inMonth = (date: string) => monthFilter === null || monthOf(date) === monthFilter;
         const cells = dayOptions.map((d) => {
           const rs = aim.dates
-            .map((date, i) => (dayOfMonth(date).includes(d) ? u.rates[i] : null))
+            .map((date, i) => (inMonth(date) && dayOfMonth(date).includes(d) ? u.rates[i] : null))
             .filter((r): r is number => r !== null);
           return { digit: d, avg: rs.length ? Math.round(mean(rs) * 10) / 10 : null, days: rs.length };
         });
-        const allPresent = u.rates.filter((r): r is number => r !== null);
+        const allPresent = aim.dates
+          .map((date, i) => (inMonth(date) ? u.rates[i] : null))
+          .filter((r): r is number => r !== null);
         const avg = allPresent.length ? Math.round(mean(allPresent) * 10) / 10 : null;
         return { unit: u.unit, net: u.net, avg, cells };
       })
       .filter((u) => u.avg !== null)
       .sort((a, b) => (b.avg ?? -Infinity) - (a.avg ?? -Infinity));
-  }, [aim.units, aim.dates, tailFilter, dayOptions]);
+  }, [aim.units, aim.dates, tailFilter, dayOptions, monthFilter]);
 
   // 表示中（絞り込み後）の台の合計。差枚＝即やめ想定の収支＝トータルの獲得枚数。
   const totals = useMemo(
@@ -156,6 +170,9 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
           ? "　※高設定＝出率100%超だった日数、ブレ＝出率の標準偏差（小さいほど安定）。"
           : "　※各セルは「その数字のつく日」の平均出率。特定日に強い台を探す用。"}
       </p>
+      <div className="shrink-0 border-b border-line bg-panel px-3 py-2">
+        <MonthTabs dates={aim.dates} value={monthFilter} onChange={setMonthFilter} />
+      </div>
       <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-line bg-panel px-3 py-2">
         <div className="flex overflow-hidden rounded border border-line">
           <button

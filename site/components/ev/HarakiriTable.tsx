@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { Harakiri } from "@/lib/ev/types";
+import { MonthTabs, monthOf } from "./MonthTabs";
 
 type HarakiriTableProps = {
   harakiri: Harakiri;
@@ -33,7 +34,9 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
 
   const [view, setView] = useState<HarakiriView>("unit");
   const [tailFilter, setTailFilter] = useState<string | null>(null);
+  const [monthFilter, setMonthFilter] = useState<string | null>(null); // 月タブ（日付別のみ）
   const hasByDate = Boolean(harakiri.byDate && harakiri.byDate.length > 0);
+  const allDates = useMemo(() => (harakiri.byDate ?? []).map((d) => d.date), [harakiri.byDate]);
 
   const tailOptions = useMemo(
     () => Array.from(new Set(harakiri.units.map((u) => tailOf(u.unit)))).filter(Boolean).sort(),
@@ -44,7 +47,10 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
     () => harakiri.units.filter((u) => tailFilter === null || tailOf(u.unit) === tailFilter),
     [harakiri.units, tailFilter]
   );
-  const dateRows = harakiri.byDate ?? [];
+  const dateRows = useMemo(
+    () => (harakiri.byDate ?? []).filter((d) => monthFilter === null || monthOf(d.date) === monthFilter),
+    [harakiri.byDate, monthFilter]
+  );
   const empty = view === "date" ? dateRows.length === 0 : rows.length === 0;
 
   return (
@@ -89,6 +95,11 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
           </label>
         ) : null}
       </div>
+      {view === "date" && hasByDate ? (
+        <div className="shrink-0 border-b border-line bg-panel px-3 py-2">
+          <MonthTabs dates={allDates} value={monthFilter} onChange={setMonthFilter} />
+        </div>
+      ) : null}
       <div
         className="min-h-0 flex-1 select-none overflow-auto [-webkit-touch-callout:none]"
         onCopy={blockEvent}
