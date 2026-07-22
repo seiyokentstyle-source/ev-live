@@ -22,8 +22,9 @@ type MonthTabsProps = {
 
 export function MonthTabs({ dates, value, onChange }: MonthTabsProps) {
   const present = new Set(dates.map(monthOf).filter(Boolean));
+  // 全ボタンを同じ幅に（1桁「7月」と2桁「10月」で幅が変わらないよう固定）。
   const tabClass = (active: boolean, enabled: boolean) =>
-    `mono shrink-0 rounded border px-2 py-1 text-[11px] ${
+    `mono shrink-0 w-11 rounded border py-1 text-center text-[11px] ${
       active
         ? "border-highlight bg-panel-2 text-highlight"
         : enabled
