@@ -221,7 +221,14 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
           crossRows.length === 0 ? (
             <p className="px-3 py-6 text-center text-xs text-muted">該当する台がありません</p>
           ) : (
-            <table className="mono w-full border-separate border-spacing-0 text-xs">
+            <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
+              <colgroup>
+                <col className="w-[88px]" />
+                <col className="w-[62px]" />
+                {dayOptions.map((d) => (
+                  <col key={d} className="w-[84px]" />
+                ))}
+              </colgroup>
               <thead>
                 <tr>
                   <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
@@ -273,7 +280,18 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
         ) : rows.length === 0 ? (
           <p className="px-3 py-6 text-center text-xs text-muted">該当する台がありません</p>
         ) : (
-          <table className="mono w-full border-separate border-spacing-0 text-xs">
+          <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
+            <colgroup>
+              <col className="w-[88px]" />
+              <col className="w-[62px]" />
+              <col className="w-[64px]" />
+              <col className="w-[50px]" />
+              <col className="w-[46px]" />
+              <col className="w-[80px]" />
+              {visibleDateIdx.map((i) => (
+                <col key={aim.dates[i]} className="w-[74px]" />
+              ))}
+            </colgroup>
             <thead>
               <tr>
                 <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
