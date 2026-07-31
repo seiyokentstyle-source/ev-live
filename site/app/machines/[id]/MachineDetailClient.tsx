@@ -6,6 +6,7 @@ import type { Axis, AxisValue, Conditions, Machine, PivotConfig } from "@/lib/ev
 import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
 import { groupProfiles, resolveProfile } from "@/lib/ev/profiles";
 import { AxisPicker } from "@/components/ev/AxisPicker";
+import { ConditionsBar } from "@/components/ev/ConditionsBar";
 import { ConditionsPanel } from "@/components/ev/ConditionsPanel";
 import { EvTable } from "@/components/ev/EvTable";
 import { EvFilter } from "@/components/ev/EvFilter";
@@ -233,6 +234,14 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
       </header>
 
       {availableModes.length > 1 ? <ModeSelector value={mode} onChange={setMode} modes={availableModes} /> : null}
+
+      <ConditionsBar
+        machine={machine}
+        mode={mode}
+        rateLabel={grouped.rates.find((r) => r.value === activeRate)?.label ?? activeRate}
+        czLabel={hasCzFilter ? czLabel(evCz ?? "0") : null}
+        ceilingText={profile.ceiling}
+      />
 
       {mode === "setting" && settingAim ? (
         <SettingAimTable aim={settingAim} />
