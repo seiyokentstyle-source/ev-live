@@ -7,6 +7,7 @@ import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
 import { groupProfiles, resolveProfile } from "@/lib/ev/profiles";
 import { AxisPicker } from "@/components/ev/AxisPicker";
 import { ConditionsBar } from "@/components/ev/ConditionsBar";
+import { TheoreticalTable } from "@/components/ev/TheoreticalTable";
 import { ConditionsPanel } from "@/components/ev/ConditionsPanel";
 import { EvTable } from "@/components/ev/EvTable";
 import { EvFilter } from "@/components/ev/EvFilter";
@@ -74,6 +75,8 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   );
 
   const [mode, setMode] = useState<AimMode>("ev");
+  // 上位の切替: 店舗別データ（実戦データ）/ 設定1想定（スペックからの理論値）
+  const [dataView, setDataView] = useState<"hall" | "theory">("hall");
   const [activeGroupKey, setActiveGroupKey] = useState(grouped.groups[0].key);
   const [activeRate, setActiveRate] = useState<string | null>(grouped.defaultRate);
   const [selection, setSelection] = useState<Conditions>(() => defaultConditions(machine));
@@ -233,6 +236,34 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         <div className="mono text-lg text-ink-soft">...</div>
       </header>
 
+      {machine.theoretical ? (
+        <div className="flex shrink-0 items-center gap-2 border-b border-line bg-panel px-3 py-2">
+          <span className="mono shrink-0 text-[9px] tracking-[0.14em] text-muted">データ</span>
+          <div className="flex overflow-hidden rounded-md border border-line">
+            <button
+              type="button"
+              aria-pressed={dataView === "hall"}
+              onClick={() => setDataView("hall")}
+              className={`px-3 py-1 text-xs font-bold ${dataView === "hall" ? "bg-[rgba(255,204,68,0.12)] text-highlight" : "bg-panel-2 text-ink-soft"}`}
+            >
+              店舗別データ
+            </button>
+            <button
+              type="button"
+              aria-pressed={dataView === "theory"}
+              onClick={() => setDataView("theory")}
+              className={`border-l border-line px-3 py-1 text-xs font-bold ${dataView === "theory" ? "bg-[rgba(255,204,68,0.12)] text-highlight" : "bg-panel-2 text-ink-soft"}`}
+            >
+              設定1想定
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {dataView === "theory" && machine.theoretical ? (
+        <TheoreticalTable data={machine.theoretical} gamesPerHour={machine.economics.gamesPerHour} />
+      ) : (
+        <>
       {availableModes.length > 1 ? <ModeSelector value={mode} onChange={setMode} modes={availableModes} /> : null}
 
       <ConditionsBar
@@ -305,6 +336,8 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
           ) : null}
           <EvTable machine={machine} profile={displayProfile} rows={rows} pivot={pivot} onViewGChange={setCurrentG} />
           <FooterBar profile={displayProfile} rowCount={rows.length} currentG={currentG} />
+        </>
+      )}
         </>
       )}
         </>

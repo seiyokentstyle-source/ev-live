@@ -228,6 +228,23 @@ export type Economics = {
   gamesPerHour: number;
 };
 
+/** 設定1想定の期待値表（スペックからの理論値。店舗の実戦データは使わない）。 */
+export type Theoretical = {
+  label: string;
+  /** 計算の前提を説明する文（そのまま表示する）. */
+  note: string;
+  /** 数値の出典（暫定値かどうかがわかる）. */
+  source: string;
+  /** 想定した初当りG（1/この値が毎Gの当選確率）. */
+  firstHitG: number;
+  /** 想定したAT平均獲得（枚）. */
+  avgPayout: number;
+  ceiling: number;
+  gRange: { start: number; end: number; step: number };
+  /** 現在G→期待値のアンカー列（実データ版と同じ形）. */
+  baseAnchors: BaseAnchor[];
+};
+
 export type Machine = {
   id: string;
   name: string;
@@ -248,6 +265,8 @@ export type Machine = {
   atPayout?: AtPayout;
   /** ハラキリドライブモードのデータ。対応機種（ヴヴヴ2）のみ。古い/未生成データでは undefined。 */
   harakiri?: Harakiri;
+  /** 設定1想定の期待値表（スペックからの理論値・実戦データ非依存）。未登録機種では undefined。 */
+  theoretical?: Theoretical;
   /** 絞り込み再集計の共通パラメータ。古い/未生成データでは undefined。 */
   evCalc?: EvCalc;
   axes: Axis[];
