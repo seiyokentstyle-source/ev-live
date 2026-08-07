@@ -119,7 +119,8 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                     {row.zoneLabel ? "▸ " : ""}
                     {row.g}
                   </span>
-                  {row.zoneLabel ? <span className="block truncate text-[9px] text-highlight opacity-70">{row.zoneLabel}</span> : null}
+                  {/* ゾーン名は狭い列に入るので折り返す（切り詰めると「ゾーン〜」しか読めない）。 */}
+                  {row.zoneLabel ? <span className="block text-[9px] leading-tight text-highlight opacity-70">{row.zoneLabel}</span> : null}
                 </td>
                 {pivot ? (
                   <>

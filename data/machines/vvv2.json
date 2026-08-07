@@ -12,7 +12,7 @@
   "thumb": null,
   "available": true,
   "releaseDate": "2025-09-01",
-  "lastUpdated": "2026-07-31",
+  "lastUpdated": "2026-08-07",
   "meta": {
     "samples": "1,512",
     "source": "実戦データ自動収集（2026-06-09〜2026-07-24・全データ）／機械割=回収円÷投資円（46/52は460枚投資=520枚回収、50/50は500枚投資=500枚回収で100%・タブでレート切替）／閉店時ハマり（打ち切り166台日）を損失計上済み／設定状況は収集日に依存／朝一(その日1回目)は『リセット狙い』タブに分離"
@@ -86379,392 +86379,6 @@
       }
     ]
   },
-  "harakiri": {
-    "label": "ハラキリドライブ（台別・推定）",
-    "note": "ラッシュ中（前回ボーナスから72G未満）の1回の当たりで獲得400枚以上をハラキリドライブと推定（履歴にフラグが無いため獲得枚数からの推定値）。発生率＝ハラキリドライブが出たラッシュ÷ラッシュ突入回数（1ラッシュで複数回出ても1回。最大100%）。台ごとの母数が小さく誤差が大きいので、台の差は参考程度に（機種全体の率が最も信頼できる）。",
-    "threshold": 400,
-    "total": {
-      "sessions": 1697,
-      "rush": 983,
-      "hits": 151,
-      "rate": 15.4
-    },
-    "units": [
-      {
-        "unit": "992",
-        "sessions": 14,
-        "rush": 12,
-        "hits": 4,
-        "rate": 33.3
-      },
-      {
-        "unit": "981",
-        "sessions": 65,
-        "rush": 37,
-        "hits": 10,
-        "rate": 27.0
-      },
-      {
-        "unit": "800",
-        "sessions": 21,
-        "rush": 15,
-        "hits": 4,
-        "rate": 26.7
-      },
-      {
-        "unit": "989",
-        "sessions": 63,
-        "rush": 38,
-        "hits": 10,
-        "rate": 26.3
-      },
-      {
-        "unit": "792",
-        "sessions": 10,
-        "rush": 4,
-        "hits": 1,
-        "rate": 25.0
-      },
-      {
-        "unit": "991",
-        "sessions": 51,
-        "rush": 37,
-        "hits": 9,
-        "rate": 24.3
-      },
-      {
-        "unit": "977",
-        "sessions": 57,
-        "rush": 35,
-        "hits": 8,
-        "rate": 22.9
-      },
-      {
-        "unit": "973",
-        "sessions": 67,
-        "rush": 33,
-        "hits": 7,
-        "rate": 21.2
-      },
-      {
-        "unit": "987",
-        "sessions": 55,
-        "rush": 34,
-        "hits": 7,
-        "rate": 20.6
-      },
-      {
-        "unit": "974",
-        "sessions": 10,
-        "rush": 5,
-        "hits": 1,
-        "rate": 20.0
-      },
-      {
-        "unit": "985",
-        "sessions": 63,
-        "rush": 40,
-        "hits": 8,
-        "rate": 20.0
-      },
-      {
-        "unit": "975",
-        "sessions": 70,
-        "rush": 47,
-        "hits": 9,
-        "rate": 19.1
-      },
-      {
-        "unit": "976",
-        "sessions": 18,
-        "rush": 11,
-        "hits": 2,
-        "rate": 18.2
-      },
-      {
-        "unit": "794",
-        "sessions": 14,
-        "rush": 6,
-        "hits": 1,
-        "rate": 16.7
-      },
-      {
-        "unit": "970",
-        "sessions": 19,
-        "rush": 12,
-        "hits": 2,
-        "rate": 16.7
-      },
-      {
-        "unit": "793",
-        "sessions": 73,
-        "rush": 37,
-        "hits": 6,
-        "rate": 16.2
-      },
-      {
-        "unit": "1216",
-        "sessions": 28,
-        "rush": 19,
-        "hits": 3,
-        "rate": 15.8
-      },
-      {
-        "unit": "797",
-        "sessions": 50,
-        "rush": 26,
-        "hits": 4,
-        "rate": 15.4
-      },
-      {
-        "unit": "980",
-        "sessions": 21,
-        "rush": 13,
-        "hits": 2,
-        "rate": 15.4
-      },
-      {
-        "unit": "979",
-        "sessions": 62,
-        "rush": 34,
-        "hits": 5,
-        "rate": 14.7
-      },
-      {
-        "unit": "1205",
-        "sessions": 68,
-        "rush": 41,
-        "hits": 6,
-        "rate": 14.6
-      },
-      {
-        "unit": "983",
-        "sessions": 65,
-        "rush": 35,
-        "hits": 5,
-        "rate": 14.3
-      },
-      {
-        "unit": "795",
-        "sessions": 53,
-        "rush": 29,
-        "hits": 4,
-        "rate": 13.8
-      },
-      {
-        "unit": "978",
-        "sessions": 32,
-        "rush": 23,
-        "hits": 3,
-        "rate": 13.0
-      },
-      {
-        "unit": "806",
-        "sessions": 16,
-        "rush": 8,
-        "hits": 1,
-        "rate": 12.5
-      },
-      {
-        "unit": "971",
-        "sessions": 69,
-        "rush": 41,
-        "hits": 5,
-        "rate": 12.2
-      },
-      {
-        "unit": "1215",
-        "sessions": 76,
-        "rush": 45,
-        "hits": 5,
-        "rate": 11.1
-      },
-      {
-        "unit": "801",
-        "sessions": 20,
-        "rush": 9,
-        "hits": 1,
-        "rate": 11.1
-      },
-      {
-        "unit": "967",
-        "sessions": 71,
-        "rush": 37,
-        "hits": 4,
-        "rate": 10.8
-      },
-      {
-        "unit": "805",
-        "sessions": 33,
-        "rush": 19,
-        "hits": 2,
-        "rate": 10.5
-      },
-      {
-        "unit": "969",
-        "sessions": 74,
-        "rush": 38,
-        "hits": 4,
-        "rate": 10.5
-      },
-      {
-        "unit": "798",
-        "sessions": 12,
-        "rush": 10,
-        "hits": 1,
-        "rate": 10.0
-      },
-      {
-        "unit": "790",
-        "sessions": 20,
-        "rush": 11,
-        "hits": 1,
-        "rate": 9.1
-      },
-      {
-        "unit": "791",
-        "sessions": 61,
-        "rush": 35,
-        "hits": 3,
-        "rate": 8.6
-      },
-      {
-        "unit": "799",
-        "sessions": 51,
-        "rush": 31,
-        "hits": 2,
-        "rate": 6.5
-      },
-      {
-        "unit": "796",
-        "sessions": 31,
-        "rush": 16,
-        "hits": 1,
-        "rate": 6.2
-      },
-      {
-        "unit": "1211",
-        "sessions": 13,
-        "rush": 6,
-        "hits": 0,
-        "rate": 0.0
-      },
-      {
-        "unit": "802",
-        "sessions": 7,
-        "rush": 3,
-        "hits": 0,
-        "rate": 0.0
-      },
-      {
-        "unit": "803",
-        "sessions": 16,
-        "rush": 7,
-        "hits": 0,
-        "rate": 0.0
-      },
-      {
-        "unit": "804",
-        "sessions": 3,
-        "rush": 2,
-        "hits": 0,
-        "rate": 0.0
-      },
-      {
-        "unit": "968",
-        "sessions": 11,
-        "rush": 3,
-        "hits": 0,
-        "rate": 0.0
-      },
-      {
-        "unit": "972",
-        "sessions": 15,
-        "rush": 9,
-        "hits": 0,
-        "rate": 0.0
-      },
-      {
-        "unit": "982",
-        "sessions": 14,
-        "rush": 8,
-        "hits": 0,
-        "rate": 0.0
-      },
-      {
-        "unit": "984",
-        "sessions": 6,
-        "rush": 4,
-        "hits": 0,
-        "rate": 0.0
-      },
-      {
-        "unit": "986",
-        "sessions": 9,
-        "rush": 5,
-        "hits": 0,
-        "rate": 0.0
-      },
-      {
-        "unit": "988",
-        "sessions": 10,
-        "rush": 6,
-        "hits": 0,
-        "rate": 0.0
-      },
-      {
-        "unit": "990",
-        "sessions": 10,
-        "rush": 7,
-        "hits": 0,
-        "rate": 0.0
-      }
-    ],
-    "byDate": [
-      {
-        "date": "2026-07-24",
-        "sessions": 235,
-        "rush": 142,
-        "hits": 27,
-        "rate": 19.0
-      },
-      {
-        "date": "2026-07-18",
-        "sessions": 266,
-        "rush": 145,
-        "hits": 25,
-        "rate": 17.2
-      },
-      {
-        "date": "2026-07-06",
-        "sessions": 245,
-        "rush": 143,
-        "hits": 25,
-        "rate": 17.5
-      },
-      {
-        "date": "2026-06-17",
-        "sessions": 199,
-        "rush": 114,
-        "hits": 20,
-        "rate": 17.5
-      },
-      {
-        "date": "2026-06-10",
-        "sessions": 358,
-        "rush": 212,
-        "hits": 26,
-        "rate": 12.3
-      },
-      {
-        "date": "2026-06-09",
-        "sessions": 394,
-        "rush": 227,
-        "hits": 28,
-        "rate": 12.3
-      }
-    ]
-  },
   "theoretical": {
     "label": "設定1想定 期待値表",
     "note": "設定1のスペック想定で計算した理論値（実戦データは使っていない）。初当り1/476・AT平均獲得740枚・天井1500Gが毎G一定確率で抽選される前提の近似で、ゾーン/モード/リセットは考慮しない。出典: 初当り1/476は公表値。平均獲得は設定1の公表値が無いため当店実測740枚を暫定使用（出率98%未満店舗のデータで差し替え予定）",
@@ -87985,6 +87599,392 @@
         "n": 0,
         "inv": 109,
         "playG": 153
+      }
+    ]
+  },
+  "harakiri": {
+    "label": "ハラキリドライブ（台別・推定）",
+    "note": "ラッシュ中（前回ボーナスから72G未満）の1回の当たりで獲得400枚以上をハラキリドライブと推定（履歴にフラグが無いため獲得枚数からの推定値）。発生率＝ハラキリドライブが出たラッシュ÷ラッシュ突入回数（1ラッシュで複数回出ても1回。最大100%）。台ごとの母数が小さく誤差が大きいので、台の差は参考程度に（機種全体の率が最も信頼できる）。",
+    "threshold": 400,
+    "total": {
+      "sessions": 1697,
+      "rush": 983,
+      "hits": 151,
+      "rate": 15.4
+    },
+    "units": [
+      {
+        "unit": "992",
+        "sessions": 14,
+        "rush": 12,
+        "hits": 4,
+        "rate": 33.3
+      },
+      {
+        "unit": "981",
+        "sessions": 65,
+        "rush": 37,
+        "hits": 10,
+        "rate": 27.0
+      },
+      {
+        "unit": "800",
+        "sessions": 21,
+        "rush": 15,
+        "hits": 4,
+        "rate": 26.7
+      },
+      {
+        "unit": "989",
+        "sessions": 63,
+        "rush": 38,
+        "hits": 10,
+        "rate": 26.3
+      },
+      {
+        "unit": "792",
+        "sessions": 10,
+        "rush": 4,
+        "hits": 1,
+        "rate": 25.0
+      },
+      {
+        "unit": "991",
+        "sessions": 51,
+        "rush": 37,
+        "hits": 9,
+        "rate": 24.3
+      },
+      {
+        "unit": "977",
+        "sessions": 57,
+        "rush": 35,
+        "hits": 8,
+        "rate": 22.9
+      },
+      {
+        "unit": "973",
+        "sessions": 67,
+        "rush": 33,
+        "hits": 7,
+        "rate": 21.2
+      },
+      {
+        "unit": "987",
+        "sessions": 55,
+        "rush": 34,
+        "hits": 7,
+        "rate": 20.6
+      },
+      {
+        "unit": "974",
+        "sessions": 10,
+        "rush": 5,
+        "hits": 1,
+        "rate": 20.0
+      },
+      {
+        "unit": "985",
+        "sessions": 63,
+        "rush": 40,
+        "hits": 8,
+        "rate": 20.0
+      },
+      {
+        "unit": "975",
+        "sessions": 70,
+        "rush": 47,
+        "hits": 9,
+        "rate": 19.1
+      },
+      {
+        "unit": "976",
+        "sessions": 18,
+        "rush": 11,
+        "hits": 2,
+        "rate": 18.2
+      },
+      {
+        "unit": "794",
+        "sessions": 14,
+        "rush": 6,
+        "hits": 1,
+        "rate": 16.7
+      },
+      {
+        "unit": "970",
+        "sessions": 19,
+        "rush": 12,
+        "hits": 2,
+        "rate": 16.7
+      },
+      {
+        "unit": "793",
+        "sessions": 73,
+        "rush": 37,
+        "hits": 6,
+        "rate": 16.2
+      },
+      {
+        "unit": "1216",
+        "sessions": 28,
+        "rush": 19,
+        "hits": 3,
+        "rate": 15.8
+      },
+      {
+        "unit": "797",
+        "sessions": 50,
+        "rush": 26,
+        "hits": 4,
+        "rate": 15.4
+      },
+      {
+        "unit": "980",
+        "sessions": 21,
+        "rush": 13,
+        "hits": 2,
+        "rate": 15.4
+      },
+      {
+        "unit": "979",
+        "sessions": 62,
+        "rush": 34,
+        "hits": 5,
+        "rate": 14.7
+      },
+      {
+        "unit": "1205",
+        "sessions": 68,
+        "rush": 41,
+        "hits": 6,
+        "rate": 14.6
+      },
+      {
+        "unit": "983",
+        "sessions": 65,
+        "rush": 35,
+        "hits": 5,
+        "rate": 14.3
+      },
+      {
+        "unit": "795",
+        "sessions": 53,
+        "rush": 29,
+        "hits": 4,
+        "rate": 13.8
+      },
+      {
+        "unit": "978",
+        "sessions": 32,
+        "rush": 23,
+        "hits": 3,
+        "rate": 13.0
+      },
+      {
+        "unit": "806",
+        "sessions": 16,
+        "rush": 8,
+        "hits": 1,
+        "rate": 12.5
+      },
+      {
+        "unit": "971",
+        "sessions": 69,
+        "rush": 41,
+        "hits": 5,
+        "rate": 12.2
+      },
+      {
+        "unit": "1215",
+        "sessions": 76,
+        "rush": 45,
+        "hits": 5,
+        "rate": 11.1
+      },
+      {
+        "unit": "801",
+        "sessions": 20,
+        "rush": 9,
+        "hits": 1,
+        "rate": 11.1
+      },
+      {
+        "unit": "967",
+        "sessions": 71,
+        "rush": 37,
+        "hits": 4,
+        "rate": 10.8
+      },
+      {
+        "unit": "805",
+        "sessions": 33,
+        "rush": 19,
+        "hits": 2,
+        "rate": 10.5
+      },
+      {
+        "unit": "969",
+        "sessions": 74,
+        "rush": 38,
+        "hits": 4,
+        "rate": 10.5
+      },
+      {
+        "unit": "798",
+        "sessions": 12,
+        "rush": 10,
+        "hits": 1,
+        "rate": 10.0
+      },
+      {
+        "unit": "790",
+        "sessions": 20,
+        "rush": 11,
+        "hits": 1,
+        "rate": 9.1
+      },
+      {
+        "unit": "791",
+        "sessions": 61,
+        "rush": 35,
+        "hits": 3,
+        "rate": 8.6
+      },
+      {
+        "unit": "799",
+        "sessions": 51,
+        "rush": 31,
+        "hits": 2,
+        "rate": 6.5
+      },
+      {
+        "unit": "796",
+        "sessions": 31,
+        "rush": 16,
+        "hits": 1,
+        "rate": 6.2
+      },
+      {
+        "unit": "1211",
+        "sessions": 13,
+        "rush": 6,
+        "hits": 0,
+        "rate": 0.0
+      },
+      {
+        "unit": "802",
+        "sessions": 7,
+        "rush": 3,
+        "hits": 0,
+        "rate": 0.0
+      },
+      {
+        "unit": "803",
+        "sessions": 16,
+        "rush": 7,
+        "hits": 0,
+        "rate": 0.0
+      },
+      {
+        "unit": "804",
+        "sessions": 3,
+        "rush": 2,
+        "hits": 0,
+        "rate": 0.0
+      },
+      {
+        "unit": "968",
+        "sessions": 11,
+        "rush": 3,
+        "hits": 0,
+        "rate": 0.0
+      },
+      {
+        "unit": "972",
+        "sessions": 15,
+        "rush": 9,
+        "hits": 0,
+        "rate": 0.0
+      },
+      {
+        "unit": "982",
+        "sessions": 14,
+        "rush": 8,
+        "hits": 0,
+        "rate": 0.0
+      },
+      {
+        "unit": "984",
+        "sessions": 6,
+        "rush": 4,
+        "hits": 0,
+        "rate": 0.0
+      },
+      {
+        "unit": "986",
+        "sessions": 9,
+        "rush": 5,
+        "hits": 0,
+        "rate": 0.0
+      },
+      {
+        "unit": "988",
+        "sessions": 10,
+        "rush": 6,
+        "hits": 0,
+        "rate": 0.0
+      },
+      {
+        "unit": "990",
+        "sessions": 10,
+        "rush": 7,
+        "hits": 0,
+        "rate": 0.0
+      }
+    ],
+    "byDate": [
+      {
+        "date": "2026-07-24",
+        "sessions": 235,
+        "rush": 142,
+        "hits": 27,
+        "rate": 19.0
+      },
+      {
+        "date": "2026-07-18",
+        "sessions": 266,
+        "rush": 145,
+        "hits": 25,
+        "rate": 17.2
+      },
+      {
+        "date": "2026-07-06",
+        "sessions": 245,
+        "rush": 143,
+        "hits": 25,
+        "rate": 17.5
+      },
+      {
+        "date": "2026-06-17",
+        "sessions": 199,
+        "rush": 114,
+        "hits": 20,
+        "rate": 17.5
+      },
+      {
+        "date": "2026-06-10",
+        "sessions": 358,
+        "rush": 212,
+        "hits": 26,
+        "rate": 12.3
+      },
+      {
+        "date": "2026-06-09",
+        "sessions": 394,
+        "rush": 227,
+        "hits": 28,
+        "rate": 12.3
       }
     ]
   }
