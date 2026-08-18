@@ -235,10 +235,14 @@ export type Theoretical = {
   note: string;
   /** 数値の出典（暫定値かどうかがわかる）. */
   source: string;
-  /** 想定した初当りG（1/この値が毎Gの当選確率）. */
+  /** 表が使っている初当りG（実測補正版なら当店実測の平均・理論式版なら公表値）. */
   firstHitG: number;
   /** 想定したAT平均獲得（枚）. */
   avgPayout: number;
+  /** 公表されている設定1の初当りG（1/この値）。実測補正版では firstHitG と一致しない。 */
+  specFirstHitG?: number | null;
+  /** 公表されている設定1の機械割（%）. */
+  specRtp?: number | null;
   ceiling: number;
   gRange: { start: number; end: number; step: number };
   /** 現在G→期待値のアンカー列（実データ版と同じ形）. */

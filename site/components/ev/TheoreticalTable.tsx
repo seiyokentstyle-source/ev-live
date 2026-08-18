@@ -4,6 +4,9 @@ import { useMemo } from "react";
 import type { Theoretical } from "@/lib/ev/types";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
 
+/** ボーダー判定に使う機械割（%）。これを下回る行が残っている間はボーダーとしない。 */
+const BORDER_RTP = 106;
+
 type TheoreticalTableProps = {
   data: Theoretical;
   /** 時給換算に使う（economics.gamesPerHour）. */
@@ -21,8 +24,15 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
     return data.baseAnchors.filter((a) => a.g % step === 0 || a.g === last?.g);
   }, [data.baseAnchors, data.gRange]);
 
-  // 期待値がプラスに転じる最初のG＝天井狙いのボーダー。
-  const border = useMemo(() => data.baseAnchors.find((a) => a.ev >= 0)?.g ?? null, [data.baseAnchors]);
+  // ボーダー＝ここから先が全部 BORDER_RTP% 以上になる最初のG。
+  // 「最初に超えたG」だと浅い側のブレを拾って早すぎるボーダーが出るので、
+  // 基準を割る一番深い行を探して、その次の行を採る（＝深い側のクロス点）。
+  const border = useMemo(() => {
+    const anchors = data.baseAnchors;
+    let i = anchors.length - 1;
+    while (i >= 0 && anchors[i].rtp >= BORDER_RTP) i--;
+    return i + 1 < anchors.length ? anchors[i + 1].g : null;
+  }, [data.baseAnchors]);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-bg">
@@ -31,13 +41,23 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
       </p>
       <div className="flex shrink-0 items-center justify-between border-b border-line bg-panel px-3 py-2 text-[11px]">
         <span className="mono text-muted">
-          ボーダー
+          ボーダー<span className="text-[9px]">（機械割{BORDER_RTP}%）</span>
           <span className="ml-2 font-bold text-highlight">
             {border === null ? "—" : `${border.toLocaleString("ja-JP")}G〜`}
           </span>
         </span>
-        <span className="mono text-muted">
-          初当り 1/{data.firstHitG.toLocaleString("ja-JP")} ／ 平均獲得 {data.avgPayout.toLocaleString("ja-JP")}枚
+        {/* 初当りGは表が実際に使っている値＝当店実測。公表の設定1とは別物なので分けて出す。 */}
+        <span className="mono flex flex-col items-end text-right text-muted">
+          <span>
+            当店実測 1/{data.firstHitG.toLocaleString("ja-JP")} ／ 平均獲得{" "}
+            {data.avgPayout.toLocaleString("ja-JP")}枚
+          </span>
+          {data.specFirstHitG ? (
+            <span className="text-[10px] text-ink-soft">
+              公表 設定1 1/{data.specFirstHitG.toLocaleString("ja-JP")}
+              {data.specRtp ? ` ・ ${data.specRtp.toFixed(1)}%` : ""}
+            </span>
+          ) : null}
         </span>
       </div>
       <div

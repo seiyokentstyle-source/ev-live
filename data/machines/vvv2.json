@@ -157382,6 +157382,8 @@
     "source": "公表: 初当り1/476・機械割97.7%。平均獲得690枚はこの2つからの逆算値（公表なし）",
     "firstHitG": 445,
     "avgPayout": 645,
+    "specFirstHitG": 476,
+    "specRtp": 97.7,
     "gRange": {
       "start": 0,
       "end": 1490,
