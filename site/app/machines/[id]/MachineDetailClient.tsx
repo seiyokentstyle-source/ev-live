@@ -272,6 +272,7 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         rateLabel={grouped.rates.find((r) => r.value === activeRate)?.label ?? activeRate}
         czLabel={hasCzFilter ? czLabel(evCz ?? "0") : null}
         ceilingText={profile.ceiling}
+        profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
       />
 
       {mode === "setting" && settingAim ? (

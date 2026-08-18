@@ -13,6 +13,8 @@ type ConditionsBarProps = {
   czLabel?: string | null;
   /** 表示中プロファイルの天井表記（例 "1500G"）。無ければ evCalc.ceiling を使う. */
   ceilingText?: string | null;
+  /** 表示中プロファイルの当たり件数（通常/リセットでタブごとに違う）。無ければ機種全体を出す. */
+  profileSessions?: number | null;
 };
 
 type Row = { k: string; v: string };
@@ -23,13 +25,30 @@ function dataRange(source: string): string | null {
   return m ? m[1] : null;
 }
 
-export function ConditionsBar({ machine, mode, rateLabel, czLabel, ceilingText }: ConditionsBarProps) {
+export function ConditionsBar({
+  machine,
+  mode,
+  rateLabel,
+  czLabel,
+  ceilingText,
+  profileSessions
+}: ConditionsBarProps) {
   const [open, setOpen] = useState(false);
   const ev = machine.evCalc;
   const range = dataRange(machine.meta.source);
+  const calcSpec = machine.calcSpec;
 
   const rows: Row[] = [];
-  if (mode === "ev" && ev) {
+  if (mode === "ev" && calcSpec) {
+    // 算出条件は生成側が組み立てた文字列をそのまま出す（サイトで組み直すと計算とズレるため）。
+    // 表示中のタブ/セレクタで変わるものだけ、ここで前後に足す。
+    if (rateLabel) rows.push({ k: "レート（表示中）", v: rateLabel });
+    if (czLabel) rows.push({ k: "道中CZ（表示中）", v: `${czLabel} の状態から次のボーナスまで` });
+    if (ceilingText) rows.push({ k: "天井（表示中のタブ）", v: ceilingText });
+    rows.push(...calcSpec.items);
+    rows.push({ k: "時給換算", v: `${machine.economics.gamesPerHour}G/時で消化する前提` });
+  } else if (mode === "ev" && ev) {
+    // 旧データ（calcSpec 未生成）向けのフォールバック。
     if (rateLabel) rows.push({ k: "レート", v: rateLabel });
     rows.push({ k: "賭け枚数", v: `${ev.bet ?? 3}枚掛け` });
     rows.push({ k: "通常時の使用枚数", v: `${ev.use}枚/G（ベース${(50 / ev.use).toFixed(1)}G/50枚）` });
@@ -38,7 +57,10 @@ export function ConditionsBar({ machine, mode, rateLabel, czLabel, ceilingText }
     if (ev.preg) rows.push({ k: "前兆", v: `${ev.preg}G（打ち始めから自力当選しない前提）` });
     if (czLabel) rows.push({ k: "道中CZ", v: `${czLabel} の状態から次のボーナスまで` });
     rows.push({ k: "時給換算", v: `${machine.economics.gamesPerHour}G/時` });
-    rows.push({ k: "機械割", v: "OUT÷IN（枚ベース・レート非依存）" });
+    rows.push({
+      k: "機械割",
+      v: ev.model === "hit" ? "回収円÷投資円（レート依存）" : "OUT÷IN（枚ベース・レート非依存）"
+    });
   } else if (mode === "setting") {
     rows.push({ k: "出率", v: "OUT÷IN（3枚掛け・即やめ想定）" });
     if (ev?.junzou) rows.push({ k: "AT中G", v: `総獲得÷${ev.junzou}枚/G で推定` });
@@ -53,7 +75,12 @@ export function ConditionsBar({ machine, mode, rateLabel, czLabel, ceilingText }
     rows.push({ k: "発生率", v: "出たラッシュ ÷ ラッシュ突入回数（1ラッシュ1回・最大100%）" });
   }
   if (range) rows.push({ k: "データ範囲", v: range });
-  rows.push({ k: "サンプル", v: `${machine.meta.samples}件` });
+  // サンプルは表示中のタブの母数を出す（meta.samples は機種全体なのでタブによってはズレる）。
+  rows.push(
+    mode === "ev" && profileSessions
+      ? { k: "サンプル", v: `${profileSessions.toLocaleString("ja-JP")}件（表示中のタブ／機種全体 ${machine.meta.samples}件）` }
+      : { k: "サンプル", v: `${machine.meta.samples}件` }
+  );
 
   if (rows.length === 0) return null;
   const summary = rows.slice(0, 3).map((r) => r.v.split("（")[0]).join(" / ");

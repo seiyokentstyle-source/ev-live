@@ -49,7 +49,7 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
         {/* 初当りGは表が実際に使っている値＝当店実測。公表の設定1とは別物なので分けて出す。 */}
         <span className="mono flex flex-col items-end text-right text-muted">
           <span>
-            当店実測 1/{data.firstHitG.toLocaleString("ja-JP")} ／ 平均獲得{" "}
+            当店実測 平均初当り {data.firstHitG.toLocaleString("ja-JP")}G ／ 平均獲得{" "}
             {data.avgPayout.toLocaleString("ja-JP")}枚
           </span>
           {data.specFirstHitG ? (

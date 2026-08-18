@@ -227,13 +227,106 @@
       }
     ]
   },
+  "calcSpec": {
+    "items": [
+      {
+        "k": "区切り",
+        "v": "AT間（AT・RB間で1セッション＝CZ等の小役当選をまたぐ）"
+      },
+      {
+        "k": "連チャン境界",
+        "v": "72G（前の当たりからこのG未満の当たりは同じセッションの連チャン扱い・初当りに数えない）"
+      },
+      {
+        "k": "賭け枚数",
+        "v": "3枚掛け"
+      },
+      {
+        "k": "通常時使用枚数",
+        "v": "1.53枚/G（ベース32.7G/50枚）"
+      },
+      {
+        "k": "AT純増",
+        "v": "9.0枚/G（AT消化Gは 総獲得÷純増 で推定）"
+      },
+      {
+        "k": "天井",
+        "v": "1500G"
+      },
+      {
+        "k": "CZ間天井",
+        "v": "999G"
+      },
+      {
+        "k": "前兆",
+        "v": "32G（有効：打ち始めからこのGは自力当選しない前提で当たり判定する。投資は減らさない。天井到達分は対象外）"
+      },
+      {
+        "k": "やめG",
+        "v": "当たり後71G（この分の投資を毎セッションに計上）"
+      },
+      {
+        "k": "AT扱いの当選種別",
+        "v": "BB・RB"
+      },
+      {
+        "k": "即やめ判定",
+        "v": "獲得400〜500枚は即やめ扱い"
+      },
+      {
+        "k": "ハラキリ判定",
+        "v": "ラッシュ中1回で400枚以上"
+      },
+      {
+        "k": "設定1（公表）",
+        "v": "初当り1/476・機械割97.7%・平均獲得690枚"
+      },
+      {
+        "k": "アンカー間隔",
+        "v": "10G刻み"
+      },
+      {
+        "k": "母数の下限",
+        "v": "通常15件・朝一8件未満のG帯は表に出さない（CZ間天井までの区間だけ3件まで許容）"
+      },
+      {
+        "k": "低稼働除外",
+        "v": "その台その日の総回転が1000G未満なら母数から除外"
+      },
+      {
+        "k": "打ち切り",
+        "v": "閉店時にハマったまま終わった206台日を「投資のみ・回収0」で計上"
+      },
+      {
+        "k": "朝一の扱い",
+        "v": "その日1回目の当たりは「リセット狙い」タブに分離（通常の表からは除外）"
+      },
+      {
+        "k": "集計期間",
+        "v": "収集済みの全期間"
+      },
+      {
+        "k": "レート",
+        "v": "46/52＝貸出46枚/1000円(21.7円per枚)・換金52枚/1000円(19.2円per枚) ／ 50/50＝貸出50枚/1000円(20.0円per枚)・換金50枚/1000円(20.0円per枚)"
+      },
+      {
+        "k": "機械割",
+        "v": "OUT÷IN（枚ベース＝3枚×全消化G が IN。レートに依らない）"
+      },
+      {
+        "k": "期待値",
+        "v": "差枚×換金単価（円）。1セッション平均"
+      }
+    ]
+  },
   "evCalc": {
     "use": 1.53,
     "junzou": 9.0,
     "ceiling": 1500,
     "step": 10,
     "preg": 32,
-    "bet": 3
+    "bet": 3,
+    "model": "at"
   },
   "profiles": [
     {
@@ -1051,6 +1144,7 @@
         }
       ],
       "zones": [],
+      "sessions": 1858,
       "totalPayout": 1396023,
       "firstHitRate": 445,
       "evFilters": {
@@ -2038,10 +2132,10 @@
               }
             ],
             "end": 1280,
-            "totalPayout": 1396023,
-            "firstHitRate": 445,
+            "totalPayout": 1231973,
+            "firstHitRate": 465,
             "units": 47,
-            "hits": 1858
+            "hits": 1680
           },
           "c2": {
             "baseAnchors": [
@@ -2999,10 +3093,10 @@
               }
             ],
             "end": 1430,
-            "totalPayout": 1396023,
-            "firstHitRate": 445,
+            "totalPayout": 455462,
+            "firstHitRate": 713,
             "units": 47,
-            "hits": 1858
+            "hits": 619
           },
           "d0": {
             "baseAnchors": [
@@ -4481,10 +4575,10 @@
               }
             ],
             "end": 1010,
-            "totalPayout": 215104,
-            "firstHitRate": 465,
-            "units": 46,
-            "hits": 308
+            "totalPayout": 197001,
+            "firstHitRate": 484,
+            "units": 45,
+            "hits": 281
           },
           "d0c2": {
             "baseAnchors": [
@@ -4674,10 +4768,10 @@
               }
             ],
             "end": 1160,
-            "totalPayout": 215104,
-            "firstHitRate": 465,
-            "units": 46,
-            "hits": 308
+            "totalPayout": 68154,
+            "firstHitRate": 761,
+            "units": 44,
+            "hits": 105
           },
           "d1": {
             "baseAnchors": [
@@ -6404,10 +6498,10 @@
               }
             ],
             "end": 1240,
-            "totalPayout": 786078,
-            "firstHitRate": 450,
+            "totalPayout": 693505,
+            "firstHitRate": 473,
             "units": 47,
-            "hits": 1077
+            "hits": 968
           },
           "d1c2": {
             "baseAnchors": [
@@ -7293,10 +7387,10 @@
               }
             ],
             "end": 1410,
-            "totalPayout": 786078,
-            "firstHitRate": 450,
+            "totalPayout": 261761,
+            "firstHitRate": 728,
             "units": 47,
-            "hits": 1077
+            "hits": 357
           },
           "d2": {
             "baseAnchors": [
@@ -8495,10 +8589,10 @@
               }
             ],
             "end": 800,
-            "totalPayout": 194882,
-            "firstHitRate": 457,
+            "totalPayout": 157132,
+            "firstHitRate": 477,
             "units": 20,
-            "hits": 215
+            "hits": 191
           },
           "d3": {
             "baseAnchors": [
@@ -9761,10 +9855,10 @@
               }
             ],
             "end": 880,
-            "totalPayout": 264470,
-            "firstHitRate": 438,
+            "totalPayout": 216455,
+            "firstHitRate": 468,
             "units": 41,
-            "hits": 346
+            "hits": 299
           },
           "d4": {
             "baseAnchors": [
@@ -10963,10 +11057,10 @@
               }
             ],
             "end": 800,
-            "totalPayout": 194882,
-            "firstHitRate": 457,
+            "totalPayout": 157132,
+            "firstHitRate": 477,
             "units": 20,
-            "hits": 215
+            "hits": 191
           },
           "d6": {
             "baseAnchors": [
@@ -12213,10 +12307,10 @@
               }
             ],
             "end": 790,
-            "totalPayout": 188493,
-            "firstHitRate": 438,
+            "totalPayout": 169984,
+            "firstHitRate": 456,
             "units": 20,
-            "hits": 226
+            "hits": 203
           },
           "d7": {
             "baseAnchors": [
@@ -13359,10 +13453,10 @@
               }
             ],
             "end": 710,
-            "totalPayout": 135262,
-            "firstHitRate": 473,
+            "totalPayout": 123847,
+            "firstHitRate": 493,
             "units": 23,
-            "hits": 173
+            "hits": 160
           },
           "d8": {
             "baseAnchors": [
@@ -14553,10 +14647,10 @@
               }
             ],
             "end": 720,
-            "totalPayout": 171242,
-            "firstHitRate": 433,
+            "totalPayout": 156202,
+            "firstHitRate": 452,
             "units": 20,
-            "hits": 250
+            "hits": 228
           },
           "d9": {
             "baseAnchors": [
@@ -15835,10 +15929,10 @@
               }
             ],
             "end": 870,
-            "totalPayout": 226570,
-            "firstHitRate": 426,
+            "totalPayout": 211352,
+            "firstHitRate": 437,
             "units": 43,
-            "hits": 340
+            "hits": 318
           },
           "d9c2": {
             "baseAnchors": [
@@ -16060,10 +16154,10 @@
               }
             ],
             "end": 1030,
-            "totalPayout": 226570,
-            "firstHitRate": 426,
-            "units": 43,
-            "hits": 340
+            "totalPayout": 80794,
+            "firstHitRate": 660,
+            "units": 39,
+            "hits": 118
           },
           "t0": {
             "baseAnchors": [
@@ -20539,10 +20633,10 @@
               }
             ],
             "end": 930,
-            "totalPayout": 258494,
-            "firstHitRate": 456,
+            "totalPayout": 225712,
+            "firstHitRate": 469,
             "units": 6,
-            "hits": 308
+            "hits": 279
           },
           "t1d0": {
             "baseAnchors": [
@@ -22286,10 +22380,10 @@
               }
             ],
             "end": 670,
-            "totalPayout": 141964,
-            "firstHitRate": 461,
+            "totalPayout": 127613,
+            "firstHitRate": 474,
             "units": 6,
-            "hits": 182
+            "hits": 168
           },
           "t1d2": {
             "baseAnchors": [
@@ -30308,10 +30402,10 @@
               }
             ],
             "end": 720,
-            "totalPayout": 172049,
-            "firstHitRate": 433,
+            "totalPayout": 156478,
+            "firstHitRate": 442,
             "units": 4,
-            "hits": 224
+            "hits": 211
           },
           "t3d0": {
             "baseAnchors": [
@@ -31799,10 +31893,10 @@
               }
             ],
             "end": 660,
-            "totalPayout": 84741,
-            "firstHitRate": 489,
+            "totalPayout": 77111,
+            "firstHitRate": 496,
             "units": 4,
-            "hits": 108
+            "hits": 102
           },
           "t3d2": {
             "baseAnchors": [
@@ -39020,10 +39114,10 @@
               }
             ],
             "end": 750,
-            "totalPayout": 293068,
-            "firstHitRate": 413,
+            "totalPayout": 254052,
+            "firstHitRate": 432,
             "units": 6,
-            "hits": 375
+            "hits": 333
           },
           "t5c2": {
             "baseAnchors": [
@@ -39333,10 +39427,10 @@
               }
             ],
             "end": 1000,
-            "totalPayout": 293068,
-            "firstHitRate": 413,
+            "totalPayout": 83113,
+            "firstHitRate": 641,
             "units": 6,
-            "hits": 375
+            "hits": 113
           },
           "t5d0": {
             "baseAnchors": [
@@ -40896,10 +40990,10 @@
               }
             ],
             "end": 590,
-            "totalPayout": 152355,
-            "firstHitRate": 405,
+            "totalPayout": 133914,
+            "firstHitRate": 427,
             "units": 6,
-            "hits": 215
+            "hits": 191
           },
           "t5d2": {
             "baseAnchors": [
@@ -45273,10 +45367,10 @@
               }
             ],
             "end": 300,
-            "totalPayout": 68602,
-            "firstHitRate": 439,
+            "totalPayout": 58894,
+            "firstHitRate": 452,
             "units": 5,
-            "hits": 108
+            "hits": 98
           },
           "t6d0": {
             "baseAnchors": [
@@ -48935,10 +49029,10 @@
               }
             ],
             "end": 980,
-            "totalPayout": 171588,
-            "firstHitRate": 477,
+            "totalPayout": 153852,
+            "firstHitRate": 500,
             "units": 4,
-            "hits": 239
+            "hits": 220
           },
           "t7c2": {
             "baseAnchors": [
@@ -49072,10 +49166,10 @@
               }
             ],
             "end": 1060,
-            "totalPayout": 171588,
-            "firstHitRate": 477,
+            "totalPayout": 62733,
+            "firstHitRate": 785,
             "units": 4,
-            "hits": 239
+            "hits": 87
           },
           "t7d0": {
             "baseAnchors": [
@@ -50443,10 +50537,10 @@
               }
             ],
             "end": 440,
-            "totalPayout": 100213,
-            "firstHitRate": 459,
+            "totalPayout": 90453,
+            "firstHitRate": 483,
             "units": 4,
-            "hits": 129
+            "hits": 118
           },
           "t7d2": {
             "baseAnchors": [
@@ -58153,10 +58247,10 @@
               }
             ],
             "end": 770,
-            "totalPayout": 158277,
-            "firstHitRate": 448,
+            "totalPayout": 143277,
+            "firstHitRate": 472,
             "units": 4,
-            "hits": 257
+            "hits": 231
           },
           "t9c2": {
             "baseAnchors": [
@@ -58282,10 +58376,10 @@
               }
             ],
             "end": 1000,
-            "totalPayout": 158277,
-            "firstHitRate": 448,
+            "totalPayout": 65860,
+            "firstHitRate": 724,
             "units": 4,
-            "hits": 257
+            "hits": 86
           },
           "t9d0": {
             "baseAnchors": [
@@ -59709,10 +59803,10 @@
               }
             ],
             "end": 670,
-            "totalPayout": 78824,
-            "firstHitRate": 436,
+            "totalPayout": 69656,
+            "firstHitRate": 462,
             "units": 4,
-            "hits": 140
+            "hits": 124
           },
           "t9d2": {
             "baseAnchors": [
@@ -64080,6 +64174,7 @@
         }
       ],
       "zones": [],
+      "sessions": 1681,
       "totalPayout": 1151655,
       "firstHitRate": 318,
       "evFilters": {
@@ -65844,6 +65939,7 @@
         }
       ],
       "zones": [],
+      "sessions": 214,
       "totalPayout": 143352,
       "firstHitRate": 401,
       "evFilters": {
@@ -66487,10 +66583,10 @@
               }
             ],
             "end": 870,
-            "totalPayout": 143352,
-            "firstHitRate": 401,
+            "totalPayout": 123116,
+            "firstHitRate": 438,
             "units": 47,
-            "hits": 214
+            "hits": 184
           },
           "c2": {
             "baseAnchors": [
@@ -66872,10 +66968,10 @@
               }
             ],
             "end": 930,
-            "totalPayout": 143352,
-            "firstHitRate": 401,
-            "units": 47,
-            "hits": 214
+            "totalPayout": 51688,
+            "firstHitRate": 679,
+            "units": 31,
+            "hits": 56
           },
           "d0": {
             "baseAnchors": [
@@ -67338,10 +67434,10 @@
               }
             ],
             "end": 380,
-            "totalPayout": 32672,
-            "firstHitRate": 401,
-            "units": 46,
-            "hits": 46
+            "totalPayout": 29316,
+            "firstHitRate": 420,
+            "units": 42,
+            "hits": 42
           },
           "d1": {
             "baseAnchors": [
@@ -68412,10 +68508,10 @@
               }
             ],
             "end": 870,
-            "totalPayout": 87158,
-            "firstHitRate": 433,
-            "units": 47,
-            "hits": 130
+            "totalPayout": 74329,
+            "firstHitRate": 467,
+            "units": 46,
+            "hits": 114
           },
           "d1c2": {
             "baseAnchors": [
@@ -68485,10 +68581,10 @@
               }
             ],
             "end": 930,
-            "totalPayout": 87158,
-            "firstHitRate": 433,
-            "units": 47,
-            "hits": 130
+            "totalPayout": 37680,
+            "firstHitRate": 688,
+            "units": 27,
+            "hits": 41
           },
           "d2": {
             "baseAnchors": [
@@ -69424,10 +69520,10 @@
               }
             ],
             "end": 480,
-            "totalPayout": 27126,
-            "firstHitRate": 443,
-            "units": 41,
-            "hits": 41
+            "totalPayout": 22394,
+            "firstHitRate": 477,
+            "units": 36,
+            "hits": 36
           },
           "d4": {
             "baseAnchors": [
@@ -70781,10 +70877,10 @@
               }
             ],
             "end": 420,
-            "totalPayout": 9134,
-            "firstHitRate": 438,
-            "units": 20,
-            "hits": 20
+            "totalPayout": 6570,
+            "firstHitRate": 494,
+            "units": 16,
+            "hits": 16
           },
           "d9": {
             "baseAnchors": [
@@ -72146,10 +72242,10 @@
               }
             ],
             "end": 480,
-            "totalPayout": 32613,
-            "firstHitRate": 423,
+            "totalPayout": 29000,
+            "firstHitRate": 465,
             "units": 6,
-            "hits": 34
+            "hits": 29
           },
           "t1d1": {
             "baseAnchors": [
@@ -74930,10 +75026,10 @@
               }
             ],
             "end": 630,
-            "totalPayout": 15617,
-            "firstHitRate": 466,
+            "totalPayout": 15242,
+            "firstHitRate": 483,
             "units": 6,
-            "hits": 38
+            "hits": 36
           },
           "t5d1": {
             "baseAnchors": [
@@ -75300,10 +75396,10 @@
               }
             ],
             "end": 430,
-            "totalPayout": 9138,
-            "firstHitRate": 499,
+            "totalPayout": 8999,
+            "firstHitRate": 509,
             "units": 6,
-            "hits": 22
+            "hits": 21
           },
           "t6": {
             "baseAnchors": [
@@ -78211,6 +78307,7 @@
         }
       ],
       "zones": [],
+      "sessions": 191,
       "totalPayout": 68326,
       "firstHitRate": 274,
       "evFilters": {
@@ -79035,6 +79132,7 @@
         }
       ],
       "zones": [],
+      "sessions": 1858,
       "totalPayout": 1396023,
       "firstHitRate": 445,
       "evFilters": {
@@ -80022,10 +80120,10 @@
               }
             ],
             "end": 1280,
-            "totalPayout": 1396023,
-            "firstHitRate": 445,
+            "totalPayout": 1231973,
+            "firstHitRate": 465,
             "units": 47,
-            "hits": 1858
+            "hits": 1680
           },
           "c2": {
             "baseAnchors": [
@@ -80983,10 +81081,10 @@
               }
             ],
             "end": 1430,
-            "totalPayout": 1396023,
-            "firstHitRate": 445,
+            "totalPayout": 455462,
+            "firstHitRate": 713,
             "units": 47,
-            "hits": 1858
+            "hits": 619
           },
           "d0": {
             "baseAnchors": [
@@ -82465,10 +82563,10 @@
               }
             ],
             "end": 1010,
-            "totalPayout": 215104,
-            "firstHitRate": 465,
-            "units": 46,
-            "hits": 308
+            "totalPayout": 197001,
+            "firstHitRate": 484,
+            "units": 45,
+            "hits": 281
           },
           "d0c2": {
             "baseAnchors": [
@@ -82658,10 +82756,10 @@
               }
             ],
             "end": 1160,
-            "totalPayout": 215104,
-            "firstHitRate": 465,
-            "units": 46,
-            "hits": 308
+            "totalPayout": 68154,
+            "firstHitRate": 761,
+            "units": 44,
+            "hits": 105
           },
           "d1": {
             "baseAnchors": [
@@ -84388,10 +84486,10 @@
               }
             ],
             "end": 1240,
-            "totalPayout": 786078,
-            "firstHitRate": 450,
+            "totalPayout": 693505,
+            "firstHitRate": 473,
             "units": 47,
-            "hits": 1077
+            "hits": 968
           },
           "d1c2": {
             "baseAnchors": [
@@ -85277,10 +85375,10 @@
               }
             ],
             "end": 1410,
-            "totalPayout": 786078,
-            "firstHitRate": 450,
+            "totalPayout": 261761,
+            "firstHitRate": 728,
             "units": 47,
-            "hits": 1077
+            "hits": 357
           },
           "d2": {
             "baseAnchors": [
@@ -86479,10 +86577,10 @@
               }
             ],
             "end": 800,
-            "totalPayout": 194882,
-            "firstHitRate": 457,
+            "totalPayout": 157132,
+            "firstHitRate": 477,
             "units": 20,
-            "hits": 215
+            "hits": 191
           },
           "d3": {
             "baseAnchors": [
@@ -87745,10 +87843,10 @@
               }
             ],
             "end": 880,
-            "totalPayout": 264470,
-            "firstHitRate": 438,
+            "totalPayout": 216455,
+            "firstHitRate": 468,
             "units": 41,
-            "hits": 346
+            "hits": 299
           },
           "d4": {
             "baseAnchors": [
@@ -88947,10 +89045,10 @@
               }
             ],
             "end": 800,
-            "totalPayout": 194882,
-            "firstHitRate": 457,
+            "totalPayout": 157132,
+            "firstHitRate": 477,
             "units": 20,
-            "hits": 215
+            "hits": 191
           },
           "d6": {
             "baseAnchors": [
@@ -90197,10 +90295,10 @@
               }
             ],
             "end": 790,
-            "totalPayout": 188493,
-            "firstHitRate": 438,
+            "totalPayout": 169984,
+            "firstHitRate": 456,
             "units": 20,
-            "hits": 226
+            "hits": 203
           },
           "d7": {
             "baseAnchors": [
@@ -91343,10 +91441,10 @@
               }
             ],
             "end": 710,
-            "totalPayout": 135262,
-            "firstHitRate": 473,
+            "totalPayout": 123847,
+            "firstHitRate": 493,
             "units": 23,
-            "hits": 173
+            "hits": 160
           },
           "d8": {
             "baseAnchors": [
@@ -92537,10 +92635,10 @@
               }
             ],
             "end": 720,
-            "totalPayout": 171242,
-            "firstHitRate": 433,
+            "totalPayout": 156202,
+            "firstHitRate": 452,
             "units": 20,
-            "hits": 250
+            "hits": 228
           },
           "d9": {
             "baseAnchors": [
@@ -93819,10 +93917,10 @@
               }
             ],
             "end": 870,
-            "totalPayout": 226570,
-            "firstHitRate": 426,
+            "totalPayout": 211352,
+            "firstHitRate": 437,
             "units": 43,
-            "hits": 340
+            "hits": 318
           },
           "d9c2": {
             "baseAnchors": [
@@ -94044,10 +94142,10 @@
               }
             ],
             "end": 1030,
-            "totalPayout": 226570,
-            "firstHitRate": 426,
-            "units": 43,
-            "hits": 340
+            "totalPayout": 80794,
+            "firstHitRate": 660,
+            "units": 39,
+            "hits": 118
           },
           "t0": {
             "baseAnchors": [
@@ -98523,10 +98621,10 @@
               }
             ],
             "end": 930,
-            "totalPayout": 258494,
-            "firstHitRate": 456,
+            "totalPayout": 225712,
+            "firstHitRate": 469,
             "units": 6,
-            "hits": 308
+            "hits": 279
           },
           "t1d0": {
             "baseAnchors": [
@@ -100270,10 +100368,10 @@
               }
             ],
             "end": 670,
-            "totalPayout": 141964,
-            "firstHitRate": 461,
+            "totalPayout": 127613,
+            "firstHitRate": 474,
             "units": 6,
-            "hits": 182
+            "hits": 168
           },
           "t1d2": {
             "baseAnchors": [
@@ -108292,10 +108390,10 @@
               }
             ],
             "end": 720,
-            "totalPayout": 172049,
-            "firstHitRate": 433,
+            "totalPayout": 156478,
+            "firstHitRate": 442,
             "units": 4,
-            "hits": 224
+            "hits": 211
           },
           "t3d0": {
             "baseAnchors": [
@@ -109783,10 +109881,10 @@
               }
             ],
             "end": 660,
-            "totalPayout": 84741,
-            "firstHitRate": 489,
+            "totalPayout": 77111,
+            "firstHitRate": 496,
             "units": 4,
-            "hits": 108
+            "hits": 102
           },
           "t3d2": {
             "baseAnchors": [
@@ -117004,10 +117102,10 @@
               }
             ],
             "end": 750,
-            "totalPayout": 293068,
-            "firstHitRate": 413,
+            "totalPayout": 254052,
+            "firstHitRate": 432,
             "units": 6,
-            "hits": 375
+            "hits": 333
           },
           "t5c2": {
             "baseAnchors": [
@@ -117317,10 +117415,10 @@
               }
             ],
             "end": 1000,
-            "totalPayout": 293068,
-            "firstHitRate": 413,
+            "totalPayout": 83113,
+            "firstHitRate": 641,
             "units": 6,
-            "hits": 375
+            "hits": 113
           },
           "t5d0": {
             "baseAnchors": [
@@ -118880,10 +118978,10 @@
               }
             ],
             "end": 590,
-            "totalPayout": 152355,
-            "firstHitRate": 405,
+            "totalPayout": 133914,
+            "firstHitRate": 427,
             "units": 6,
-            "hits": 215
+            "hits": 191
           },
           "t5d2": {
             "baseAnchors": [
@@ -123257,10 +123355,10 @@
               }
             ],
             "end": 300,
-            "totalPayout": 68602,
-            "firstHitRate": 439,
+            "totalPayout": 58894,
+            "firstHitRate": 452,
             "units": 5,
-            "hits": 108
+            "hits": 98
           },
           "t6d0": {
             "baseAnchors": [
@@ -126919,10 +127017,10 @@
               }
             ],
             "end": 980,
-            "totalPayout": 171588,
-            "firstHitRate": 477,
+            "totalPayout": 153852,
+            "firstHitRate": 500,
             "units": 4,
-            "hits": 239
+            "hits": 220
           },
           "t7c2": {
             "baseAnchors": [
@@ -127056,10 +127154,10 @@
               }
             ],
             "end": 1060,
-            "totalPayout": 171588,
-            "firstHitRate": 477,
+            "totalPayout": 62733,
+            "firstHitRate": 785,
             "units": 4,
-            "hits": 239
+            "hits": 87
           },
           "t7d0": {
             "baseAnchors": [
@@ -128427,10 +128525,10 @@
               }
             ],
             "end": 440,
-            "totalPayout": 100213,
-            "firstHitRate": 459,
+            "totalPayout": 90453,
+            "firstHitRate": 483,
             "units": 4,
-            "hits": 129
+            "hits": 118
           },
           "t7d2": {
             "baseAnchors": [
@@ -136137,10 +136235,10 @@
               }
             ],
             "end": 770,
-            "totalPayout": 158277,
-            "firstHitRate": 448,
+            "totalPayout": 143277,
+            "firstHitRate": 472,
             "units": 4,
-            "hits": 257
+            "hits": 231
           },
           "t9c2": {
             "baseAnchors": [
@@ -136266,10 +136364,10 @@
               }
             ],
             "end": 1000,
-            "totalPayout": 158277,
-            "firstHitRate": 448,
+            "totalPayout": 65860,
+            "firstHitRate": 724,
             "units": 4,
-            "hits": 257
+            "hits": 86
           },
           "t9d0": {
             "baseAnchors": [
@@ -137693,10 +137791,10 @@
               }
             ],
             "end": 670,
-            "totalPayout": 78824,
-            "firstHitRate": 436,
+            "totalPayout": 69656,
+            "firstHitRate": 462,
             "units": 4,
-            "hits": 140
+            "hits": 124
           },
           "t9d2": {
             "baseAnchors": [
@@ -142064,6 +142162,7 @@
         }
       ],
       "zones": [],
+      "sessions": 1681,
       "totalPayout": 1151655,
       "firstHitRate": 318,
       "evFilters": {
@@ -143828,6 +143927,7 @@
         }
       ],
       "zones": [],
+      "sessions": 214,
       "totalPayout": 143352,
       "firstHitRate": 401,
       "evFilters": {
@@ -144471,10 +144571,10 @@
               }
             ],
             "end": 870,
-            "totalPayout": 143352,
-            "firstHitRate": 401,
+            "totalPayout": 123116,
+            "firstHitRate": 438,
             "units": 47,
-            "hits": 214
+            "hits": 184
           },
           "c2": {
             "baseAnchors": [
@@ -144856,10 +144956,10 @@
               }
             ],
             "end": 930,
-            "totalPayout": 143352,
-            "firstHitRate": 401,
-            "units": 47,
-            "hits": 214
+            "totalPayout": 51688,
+            "firstHitRate": 679,
+            "units": 31,
+            "hits": 56
           },
           "d0": {
             "baseAnchors": [
@@ -145322,10 +145422,10 @@
               }
             ],
             "end": 380,
-            "totalPayout": 32672,
-            "firstHitRate": 401,
-            "units": 46,
-            "hits": 46
+            "totalPayout": 29316,
+            "firstHitRate": 420,
+            "units": 42,
+            "hits": 42
           },
           "d1": {
             "baseAnchors": [
@@ -146396,10 +146496,10 @@
               }
             ],
             "end": 870,
-            "totalPayout": 87158,
-            "firstHitRate": 433,
-            "units": 47,
-            "hits": 130
+            "totalPayout": 74329,
+            "firstHitRate": 467,
+            "units": 46,
+            "hits": 114
           },
           "d1c2": {
             "baseAnchors": [
@@ -146469,10 +146569,10 @@
               }
             ],
             "end": 930,
-            "totalPayout": 87158,
-            "firstHitRate": 433,
-            "units": 47,
-            "hits": 130
+            "totalPayout": 37680,
+            "firstHitRate": 688,
+            "units": 27,
+            "hits": 41
           },
           "d2": {
             "baseAnchors": [
@@ -147408,10 +147508,10 @@
               }
             ],
             "end": 480,
-            "totalPayout": 27126,
-            "firstHitRate": 443,
-            "units": 41,
-            "hits": 41
+            "totalPayout": 22394,
+            "firstHitRate": 477,
+            "units": 36,
+            "hits": 36
           },
           "d4": {
             "baseAnchors": [
@@ -148765,10 +148865,10 @@
               }
             ],
             "end": 420,
-            "totalPayout": 9134,
-            "firstHitRate": 438,
-            "units": 20,
-            "hits": 20
+            "totalPayout": 6570,
+            "firstHitRate": 494,
+            "units": 16,
+            "hits": 16
           },
           "d9": {
             "baseAnchors": [
@@ -150130,10 +150230,10 @@
               }
             ],
             "end": 480,
-            "totalPayout": 32613,
-            "firstHitRate": 423,
+            "totalPayout": 29000,
+            "firstHitRate": 465,
             "units": 6,
-            "hits": 34
+            "hits": 29
           },
           "t1d1": {
             "baseAnchors": [
@@ -152914,10 +153014,10 @@
               }
             ],
             "end": 630,
-            "totalPayout": 15617,
-            "firstHitRate": 466,
+            "totalPayout": 15242,
+            "firstHitRate": 483,
             "units": 6,
-            "hits": 38
+            "hits": 36
           },
           "t5d1": {
             "baseAnchors": [
@@ -153284,10 +153384,10 @@
               }
             ],
             "end": 430,
-            "totalPayout": 9138,
-            "firstHitRate": 499,
+            "totalPayout": 8999,
+            "firstHitRate": 509,
             "units": 6,
-            "hits": 22
+            "hits": 21
           },
           "t6": {
             "baseAnchors": [
@@ -156195,6 +156295,7 @@
         }
       ],
       "zones": [],
+      "sessions": 191,
       "totalPayout": 68326,
       "firstHitRate": 274,
       "evFilters": {
@@ -157380,6 +157481,7 @@
     "label": "設定1想定",
     "note": "店舗別データの期待値表に補正をかけた設定1想定。実測の獲得を85.9%に落として全体の機械割を公表の設定1（97.7%）に合わせている。初当りG分布は実測のまま＝この店の当たり方で設定1だといくらか。CZ状態では絞らない全体平均（0G〜天井を10G刻みで通しで見るため）。天井手前はサンプルが薄い（母数は期待値表タブ側で確認）。",
     "source": "公表: 初当り1/476・機械割97.7%。平均獲得690枚はこの2つからの逆算値（公表なし）",
+    "ceiling": 1500,
     "firstHitG": 445,
     "avgPayout": 645,
     "specFirstHitG": 476,

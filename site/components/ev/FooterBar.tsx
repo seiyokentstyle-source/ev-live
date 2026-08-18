@@ -18,9 +18,10 @@ export function FooterBar({ profile, rowCount, currentG }: FooterBarProps) {
         <span>
           {rowCount}行 / {profile.gRange.start}〜{profile.gRange.end}G
         </span>
+        {/* firstHitRate は平均ハマりG。確率ではないので 1/X 表記にはしない。 */}
         {profile.firstHitRate ? (
           <span>
-            初当り <span className="text-accent">1/{profile.firstHitRate.toLocaleString("ja-JP")}</span>
+            平均初当り <span className="text-accent">{profile.firstHitRate.toLocaleString("ja-JP")}G</span>
           </span>
         ) : null}
       </div>

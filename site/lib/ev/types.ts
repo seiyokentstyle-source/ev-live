@@ -61,6 +61,8 @@ export type EvCalc = {
   preg?: number;
   /** 賭け枚数（機械割OUT/INの分母＝bet×消化G）。AT間モデル（hitsに投入G0がある機種）で使う. */
   bet?: number;
+  /** 'at'＝AT間モデル（機械割=OUT/INの枚ベース）/ 'hit'＝当たり間モデル（機械割=回収円÷投資円）. */
+  model?: "at" | "hit";
 };
 
 /** プロファイルの生サンプル（絞り込み時にアンカーを再集計するため）。 */
@@ -123,7 +125,9 @@ export type Profile = {
   zones: Zone[];
   /** このプロファイルのセッション総獲得枚数（出たメダル総数）。古い/未生成データでは undefined。 */
   totalPayout?: number;
-  /** 平均初当り確率＝平均初当りG（AT・RB間）。1/X 表記の X。古い/未生成データでは undefined。 */
+  /** このプロファイル（通常/リセット）の当たり件数。古い/未生成データでは undefined。 */
+  sessions?: number;
+  /** 平均初当りG（AT・RB間のハマりGの平均）。確率ではないので 1/X 表記にはしない。 */
   firstHitRate?: number;
   /** 生サンプル（旧形式・後方互換）。台番号末尾/特定日の絞り込みで再集計に使う。新データでは undefined。 */
   ev?: EvSamples;
@@ -249,6 +253,11 @@ export type Theoretical = {
   baseAnchors: BaseAnchor[];
 };
 
+/** 期待値の算出に使った条件。生成側が文字列にして配る（表示＝実際に使った条件）. */
+export type CalcSpec = {
+  items: Array<{ k: string; v: string }>;
+};
+
 export type Machine = {
   id: string;
   name: string;
@@ -271,6 +280,8 @@ export type Machine = {
   harakiri?: Harakiri;
   /** 設定1想定の期待値表（スペックからの理論値・実戦データ非依存）。未登録機種では undefined。 */
   theoretical?: Theoretical;
+  /** 算出条件の全項目（生成側が組み立てた文字列）。古いデータでは undefined。 */
+  calcSpec?: CalcSpec;
   /** 絞り込み再集計の共通パラメータ。古い/未生成データでは undefined。 */
   evCalc?: EvCalc;
   axes: Axis[];
