@@ -149,7 +149,7 @@
       },
       {
         "k": "天井",
-        "v": "999G"
+        "v": "1500G（AT間1500G+α。CZ間天井は1000G+αで別物）"
       },
       {
         "k": "アンカー間隔",
@@ -192,7 +192,7 @@
   "evCalc": {
     "use": 1.6,
     "junzou": 7.2,
-    "ceiling": 999,
+    "ceiling": 1500,
     "step": 10,
     "preg": 0,
     "bet": 3,
@@ -202,7 +202,7 @@
     {
       "key": "game_ceiling_4652",
       "label": "ゲーム数天井（通常）・46/52",
-      "ceiling": "999G",
+      "ceiling": "1500G",
       "gRange": {
         "start": 0,
         "end": 430,
@@ -3253,7 +3253,7 @@
     {
       "key": "reset_4652",
       "label": "リセット狙い（朝一）・46/52",
-      "ceiling": "リセット時（999G）",
+      "ceiling": "リセット時（1500G）",
       "gRange": {
         "start": 0,
         "end": 100,
@@ -3376,7 +3376,7 @@
     {
       "key": "game_ceiling_5050",
       "label": "ゲーム数天井（通常）・50/50",
-      "ceiling": "999G",
+      "ceiling": "1500G",
       "gRange": {
         "start": 0,
         "end": 430,
@@ -6427,7 +6427,7 @@
     {
       "key": "reset_5050",
       "label": "リセット狙い（朝一）・50/50",
-      "ceiling": "リセット時（999G）",
+      "ceiling": "リセット時（1500G）",
       "gRange": {
         "start": 0,
         "end": 100,

@@ -142,7 +142,7 @@
       },
       {
         "k": "天井",
-        "v": "740G"
+        "v": "999G（CZ天井999（擬似G「まいる」）＋CZ6スルー→7回目でAT）"
       },
       {
         "k": "アンカー間隔",
@@ -185,7 +185,7 @@
   "evCalc": {
     "use": 1.41,
     "junzou": 5.0,
-    "ceiling": 740,
+    "ceiling": 999,
     "step": 10,
     "preg": 0,
     "bet": 3,
@@ -195,7 +195,7 @@
     {
       "key": "game_ceiling_4652",
       "label": "ゲーム数天井（通常）・46/52",
-      "ceiling": "740G",
+      "ceiling": "999G",
       "gRange": {
         "start": 0,
         "end": 360,
@@ -1987,7 +1987,7 @@
     {
       "key": "game_ceiling_5050",
       "label": "ゲーム数天井（通常）・50/50",
-      "ceiling": "740G",
+      "ceiling": "999G",
       "gRange": {
         "start": 0,
         "end": 360,

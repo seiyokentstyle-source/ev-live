@@ -128,7 +128,7 @@
       },
       {
         "k": "天井",
-        "v": "636G"
+        "v": "1000G（公表1000G+α。ゲーム数加算込みなので実Gでは平均約470Gで到達）"
       },
       {
         "k": "アンカー間隔",
@@ -171,7 +171,7 @@
   "evCalc": {
     "use": 1.56,
     "junzou": 6.0,
-    "ceiling": 636,
+    "ceiling": 1000,
     "step": 10,
     "preg": 0,
     "bet": 3,
@@ -181,7 +181,7 @@
     {
       "key": "game_ceiling_4652",
       "label": "ゲーム数天井（通常）・46/52",
-      "ceiling": "636G",
+      "ceiling": "1000G",
       "gRange": {
         "start": 0,
         "end": 330,
@@ -1244,7 +1244,7 @@
     {
       "key": "game_ceiling_5050",
       "label": "ゲーム数天井（通常）・50/50",
-      "ceiling": "636G",
+      "ceiling": "1000G",
       "gRange": {
         "start": 0,
         "end": 330,

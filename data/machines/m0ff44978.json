@@ -100,7 +100,7 @@
       },
       {
         "k": "天井",
-        "v": "400G"
+        "v": "370G（公表350G+α。AT間2000G+αはボーナス中Gが非カウントで別物）"
       },
       {
         "k": "アンカー間隔",
@@ -143,7 +143,7 @@
   "evCalc": {
     "use": 1.94,
     "junzou": 2.5,
-    "ceiling": 400,
+    "ceiling": 370,
     "step": 10,
     "preg": 0,
     "bet": 3,
@@ -153,7 +153,7 @@
     {
       "key": "game_ceiling_4652",
       "label": "ゲーム数天井（通常）・46/52",
-      "ceiling": "400G",
+      "ceiling": "370G",
       "gRange": {
         "start": 0,
         "end": 280,
@@ -1770,7 +1770,7 @@
     {
       "key": "game_ceiling_5050",
       "label": "ゲーム数天井（通常）・50/50",
-      "ceiling": "400G",
+      "ceiling": "370G",
       "gRange": {
         "start": 0,
         "end": 280,
