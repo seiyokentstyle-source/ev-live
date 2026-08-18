@@ -205,7 +205,7 @@ describe("前兆補正（preg：打ち始めから前兆Gは当たらない・�
   });
 });
 
-describe("AT間モデル（hitsに投入G0=6要素目・差枚時給・OUT/IN機械割）", () => {
+describe("AT間モデル（hitsに投入G0=6要素目・投資は貸単価/回収は換金単価）", () => {
   const kan = 19.23;
   const junzou = 9;
   const bet = 3;
@@ -219,19 +219,32 @@ describe("AT間モデル（hitsに投入G0=6要素目・差枚時給・OUT/IN機
   ];
   const calc: EvCalc = { use, junzou, ceiling: 500, step: 100, bet };
 
-  test("g=0で 差枚×換金の期待収支と OUT/IN機械割 を返す", () => {
-    const anchors = computeAnchors(hits, [], calc, 21.74, kan, 1);
+  test("g=0で 回収円−投資円の期待収支と 回収円÷投資円の機械割 を返す", () => {
+    const tai = 21.74;
+    const anchors = computeAnchors(hits, [], calc, tai, kan, 1);
     const a0 = anchors.find((a) => a.g === 0)!;
     // 投入G(0) = 366,466,200 → 通常時投入枚 = (366+466+200)*1.53 = 1579.0
     const invMed = (366 + 466 + 200) * use;
     const pay = 700 + 900 + 300;
-    const sabai = pay - invMed;
-    const shouka = 366 + 466 + 200 + pay / junzou;
-    const IN = bet * shouka;
+    // 機械割/期待値の定義は当たり間モデルと共通（投資=貸単価・回収=換金単価）。
+    const invTotal = invMed * tai;
+    const retTotal = pay * kan;
     expect(a0.n).toBe(3);
-    expect(a0.ev).toBe(Math.round((sabai * kan) / 3)); // 差枚×換金 / n
-    expect(a0.rtp).toBeCloseTo(Math.round((100 * (IN + sabai)) / IN * 10) / 10, 1);
+    expect(a0.ev).toBe(Math.round((retTotal - invTotal) / 3));
+    expect(a0.rtp).toBeCloseTo(Math.round((1000 * retTotal) / invTotal) / 10, 1);
     expect(a0.inv).toBe(Math.round(invMed / 3)); // 平均投入＝やめ想定込み
+  });
+
+  test("46枚投資=52枚回収なら機械割100%（レート定義の確認）", () => {
+    // 貸21.7391円/枚(46枚1000円)・換金19.2308円/枚(52枚1000円)。
+    // 投入枚:獲得枚 = 46:52 のとき 回収円÷投資円 = 100%。
+    const tai46 = 1000 / 46;
+    const kan52 = 1000 / 52;
+    const invG = 1000; // 通常時1000G → 投入 1000*1.53 = 1530枚
+    const payout = Math.round(invG * use * (52 / 46));
+    const evenHits: EvSamples["hits"] = [["101", "2026-07-01", invG, payout, 0, invG]];
+    const anchors = computeAnchors(evenHits, [], { ...calc, ceiling: invG }, tai46, kan52, 1);
+    expect(anchors.find((a) => a.g === 0)!.rtp).toBeCloseTo(100, 1);
   });
 
   test("投資は投入G0基準（やめtail込み）＝初当りGより多い", () => {

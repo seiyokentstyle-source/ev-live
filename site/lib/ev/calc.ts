@@ -17,11 +17,12 @@ export function computeAnchors(
   const maxHitG = hits.reduce((m, h) => Math.max(m, h[2]), 0);
   const gTop = calc.ceiling || maxHitG;
 
-  // AT間モデル：hitsに投入G0(6要素目)がある機種は、やめ想定込みの通常時投入・差枚時給・
-  // OUT/IN機械割で集計する（scraperのforward_anchors AT間分岐と同じ式）。打ち切りは含めない。
+  // AT間モデル：hitsに投入G0(6要素目)がある機種は、やめ想定込みの通常時投入で集計する
+  // （scraperのforward_anchors AT間分岐と同じ式）。打ち切りは含めない。
+  // 機械割/期待値の定義は当たり間モデルと共通＝投資は貸単価・回収は換金単価
+  // （46/52なら46枚投資=52枚回収で100%）。
   const atKan = Boolean(calc.bet) && hits.length > 0 && hits.every((h) => h[5] !== undefined);
   if (atKan) {
-    const bet = calc.bet as number;
     for (let g = 0; g <= gTop; g += calc.step) {
       let n = 0;
       let invMed = 0; // 通常時投入(枚)
@@ -37,13 +38,12 @@ export function computeAnchors(
         }
       }
       if (n < minSess) break;
-      const sabai = pay - invMed; // 純差枚(枚)
-      const shouka = toukyuuG + (calc.junzou ? pay / calc.junzou : 0); // 消化G(通常時＋AT中)
-      if (shouka < 1) break;
-      const IN = bet * shouka;
-      const kiwari = IN > 0 ? (100 * (IN + sabai)) / IN : 0; // OUT/IN
-      const ev = Math.round((sabai * kan) / n); // 差枚×換金（1セッション平均）
-      let rtp = Math.round(kiwari * 10) / 10;
+      const shouka = toukyuuG + (calc.junzou ? pay / calc.junzou : 0); // 消化G(通常時＋AT中・時給用)
+      const invTotal = invMed * tai; // 投資(円)＝通常時投入枚×貸単価
+      const retTotal = pay * kan; // 回収(円)＝AT獲得枚×換金単価
+      if (invTotal < 1) break;
+      const ev = Math.round((retTotal - invTotal) / n);
+      let rtp = Math.round((1000 * retTotal) / invTotal) / 10;
       rtp = ev >= 0 ? Math.max(rtp, 100) : Math.min(rtp, 99.9);
       anchors.push({ g, ev, rtp, n, inv: Math.round(invMed / n), playG: Math.round(shouka / n) });
     }
