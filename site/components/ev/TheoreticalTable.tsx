@@ -10,16 +10,16 @@ type TheoreticalTableProps = {
   gamesPerHour: number;
 };
 
-/** アンカーは10G刻み。表は50G刻みに間引いて見やすくする（天井行は必ず残す）。 */
-const ROW_STEP = 50;
-
 export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) {
   const blockEvent = (event: { preventDefault: () => void }) => event.preventDefault();
 
+  // 行間隔はデータ側の gRange.step に従う（生成側が10G刻みなら10G刻みで全部出す）。
+  // 最終行（天井手前の最深G）は step で割り切れなくても必ず残す。
   const rows = useMemo(() => {
+    const step = Math.max(1, data.gRange?.step ?? 10);
     const last = data.baseAnchors[data.baseAnchors.length - 1];
-    return data.baseAnchors.filter((a) => a.g % ROW_STEP === 0 || a.g === last?.g);
-  }, [data.baseAnchors]);
+    return data.baseAnchors.filter((a) => a.g % step === 0 || a.g === last?.g);
+  }, [data.baseAnchors, data.gRange]);
 
   // 期待値がプラスに転じる最初のG＝天井狙いのボーダー。
   const border = useMemo(() => data.baseAnchors.find((a) => a.ev >= 0)?.g ?? null, [data.baseAnchors]);
@@ -105,7 +105,7 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
         </table>
       </div>
       <div className="flex shrink-0 items-center justify-between border-t border-line bg-panel-2 px-3 py-2 text-[11px]">
-        <span className="mono text-muted">理論値（実戦データ非依存）</span>
+        <span className="mono text-muted">{data.label}</span>
         <span className="mono truncate pl-2 text-ink-soft">{data.source}</span>
       </div>
     </div>
