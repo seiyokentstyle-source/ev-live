@@ -141,6 +141,9 @@ export type Profile = {
   evFilters?: EvFilters;
   /** When true, this profile has no 実戦 data yet: the tab is shown but no numbers are rendered. */
   dataPending?: boolean;
+  /** ptカウンタ機（マギレコ）のG→pt換算率。あるときだけ表のG列に「≒何pt」を添える。
+   *  ptはBB間のカウンタなので、この値はBB間のプロファイルにしか入らない。 */
+  ptPerG?: number;
 };
 
 export type SettingAimUnit = {
