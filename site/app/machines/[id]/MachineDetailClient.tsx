@@ -270,7 +270,7 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         machine={machine}
         mode={mode}
         rateLabel={grouped.rates.find((r) => r.value === activeRate)?.label ?? activeRate}
-        czLabel={hasCzFilter ? czLabel(evCz ?? "0") : null}
+        czLabel={hasCzFilter ? (evCz === null ? (evFilters?.czAll ?? czLabel("0")) : czLabel(evCz)) : null}
         ceilingText={profile.ceiling}
         profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
       />
@@ -291,7 +291,7 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
           dayOptions={evDayOptions}
           czOptions={hasCzFilter ? evCzOptions : undefined}
           czLabelFn={czLabel}
-          czAllLabel={useFilters ? "CZ0回(天井狙い)" : "全部"}
+          czAllLabel={useFilters ? (evFilters?.czAll ?? "CZ0回(天井狙い)") : "全部"}
           tail={evTail}
           day={evDay}
           cz={evCz}

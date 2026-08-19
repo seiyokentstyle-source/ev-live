@@ -107,6 +107,8 @@ export type EvFilters = {
   days: string[];
   /** 道中CZ回数候補（AT間区切り機種のみ）. */
   cz: string[];
+  /** CZセレクタの「未選択」が何を意味するか（既定表のCZ条件）。古いデータでは undefined。 */
+  czAll?: string;
   /** キー→集計済みテーブル。該当キーが無い＝データ不足. */
   tables: Record<string, EvFilterTable>;
 };
