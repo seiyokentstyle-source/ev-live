@@ -32,16 +32,21 @@ export function AtPayoutTable({ data }: AtPayoutTableProps) {
       >
         <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
           <colgroup>
-            <col className="w-1/4" />
-            <col className="w-1/4" />
-            <col className="w-1/4" />
-            <col className="w-1/4" />
+            <col className="w-[22%]" />
+            <col className="w-[20%]" />
+            <col className="w-[21%]" />
+            <col className="w-[19%]" />
+            <col className="w-[18%]" />
           </colgroup>
           <thead>
             <tr>
               <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
                 当選G
                 <span className="block text-[9px] text-muted">ハマりG</span>
+              </th>
+              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
+                当選率
+                <span className="block text-[9px] text-muted">%</span>
               </th>
               <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
                 平均獲得
@@ -64,6 +69,21 @@ export function AtPayoutTable({ data }: AtPayoutTableProps) {
                 <tr key={band.lo}>
                   <td className="sticky left-0 z-10 border-b border-r border-line-soft bg-panel px-3 py-2 text-left font-bold text-ink-soft">
                     {band.lo}–{band.hi - 1}
+                  </td>
+                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${alt}`}>
+                    {band.hit === undefined || band.hit === null ? (
+                      <span className="text-muted">—</span>
+                    ) : (
+                      <>
+                        <span className="font-bold text-highlight">{band.hit.toFixed(1)}%</span>
+                        {/* 分母＝その帯に到達した件数。薄い帯を見分けられるように併記する。 */}
+                        {band.alive ? (
+                          <span className="block text-[9px] leading-tight text-muted">
+                            /{band.alive.toLocaleString("ja-JP")}到達
+                          </span>
+                        ) : null}
+                      </>
+                    )}
                   </td>
                   <td className={`border-b border-r border-line-soft px-2 py-2 text-right font-bold text-pos ${alt}`}>
                     {band.mean.toLocaleString("ja-JP")}

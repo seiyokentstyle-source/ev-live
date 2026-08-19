@@ -184,6 +184,10 @@ export type AtPayoutBand = {
   mean: number;
   /** その帯の中央値獲得枚数. */
   median: number;
+  /** その帯に到達したセッション数（当選率の分母）。古いデータでは undefined。 */
+  alive?: number;
+  /** その帯の当選率（%）＝count/alive。到達した中でその帯に当たった割合。古いデータでは undefined。 */
+  hit?: number | null;
 };
 
 export type AtPayout = {
