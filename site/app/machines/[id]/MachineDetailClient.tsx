@@ -44,11 +44,12 @@ function czBucket(cz: number | undefined): string {
   return String(cz);
 }
 
-// CZ状態＝現在Gまでに（72G超で）当選した道中CZ回数。既定（未選択）＝CZ0回＝AT間天井狙い。
-function czLabel(bucket: string): string {
-  if (bucket === "0") return "CZ0回(天井狙い)";
-  if (bucket === "2") return "CZ2回以上後";
-  return `CZ${bucket}回後`;
+// CZ状態＝現在Gまでに（連チャン境界超で）当選した道中の当たり回数。
+// 呼び名は機種で変わる（既定CZ / マギレコはBB）ので term を受け取る。
+function czLabel(bucket: string, term: string): string {
+  if (bucket === "0") return `${term}0回(天井狙い)`;
+  if (bucket === "2") return `${term}2回以上後`;
+  return `${term}${bucket}回後`;
 }
 
 type MachineDetailClientProps = {
@@ -128,6 +129,9 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
     [useFilters, evFilters, evSamples]
   );
   const hasCzFilter = evCzOptions.length > 0;
+  // 道中の当たりの呼び名。データに無ければ従来どおり CZ。
+  const czTerm = evFilters?.czTerm ?? "CZ";
+  const czLabelOf = (bucket: string) => czLabel(bucket, czTerm);
 
   // 選択(末尾/日/CZ)→キー（順序 t→d→c。例 末尾7×CZ1回='t7c1'）。全nullは素の全体。
   const filterKey = (evTail ? `t${evTail}` : "") + (evDay ? `d${evDay}` : "") + (evCz ? `c${evCz}` : "");
@@ -270,7 +274,8 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         machine={machine}
         mode={mode}
         rateLabel={grouped.rates.find((r) => r.value === activeRate)?.label ?? activeRate}
-        czLabel={hasCzFilter ? (evCz === null ? (evFilters?.czAll ?? czLabel("0")) : czLabel(evCz)) : null}
+        czLabel={hasCzFilter ? (evCz === null ? (evFilters?.czAll ?? czLabelOf("0")) : czLabelOf(evCz)) : null}
+        czTerm={czTerm}
         ceilingText={profile.ceiling}
         profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
       />
@@ -290,8 +295,9 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
           tailOptions={evTailOptions}
           dayOptions={evDayOptions}
           czOptions={hasCzFilter ? evCzOptions : undefined}
-          czLabelFn={czLabel}
-          czAllLabel={useFilters ? (evFilters?.czAll ?? "CZ0回(天井狙い)") : "全部"}
+          czLabelFn={czLabelOf}
+          czTerm={czTerm}
+          czAllLabel={useFilters ? (evFilters?.czAll ?? czLabelOf("0")) : "全部"}
           tail={evTail}
           day={evDay}
           cz={evCz}

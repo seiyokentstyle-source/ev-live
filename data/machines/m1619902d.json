@@ -294,7 +294,7 @@
         "v": "2000G"
       },
       {
-        "k": "CZ間天井",
+        "k": "BB間天井",
         "v": "600G"
       },
       {
@@ -1908,7 +1908,8 @@
           "1",
           "2"
         ],
-        "czAll": "CZ回数を問わない",
+        "czAll": "BB回数を問わない",
+        "czTerm": "BB",
         "tables": {
           "c1": {
             "baseAnchors": [
@@ -9321,8 +9322,8 @@
     },
     {
       "key": "cz_ceiling_4652",
-      "label": "CZ間天井（CZ1回でやめ・通常）・46/52",
-      "ceiling": "CZ間 最長695G（実測）",
+      "label": "BB間天井（BB1回でやめ・通常）・46/52",
+      "ceiling": "BB間 最長695G（実測）",
       "gRange": {
         "start": 0,
         "end": 600,
@@ -12152,7 +12153,8 @@
           "1",
           "2"
         ],
-        "czAll": "CZ回数を問わない",
+        "czAll": "BB回数を問わない",
+        "czTerm": "BB",
         "tables": {
           "d1": {
             "baseAnchors": [
@@ -12353,8 +12355,8 @@
     },
     {
       "key": "cz_reset_4652",
-      "label": "CZ間天井（CZ1回でやめ・リセット）・46/52",
-      "ceiling": "CZ間 最長476G（実測）",
+      "label": "BB間天井（BB1回でやめ・リセット）・46/52",
+      "ceiling": "BB間 最長476G（実測）",
       "gRange": {
         "start": 0,
         "end": 440,
@@ -14340,7 +14342,8 @@
           "1",
           "2"
         ],
-        "czAll": "CZ回数を問わない",
+        "czAll": "BB回数を問わない",
+        "czTerm": "BB",
         "tables": {
           "c1": {
             "baseAnchors": [
@@ -21753,8 +21756,8 @@
     },
     {
       "key": "cz_ceiling_5050",
-      "label": "CZ間天井（CZ1回でやめ・通常）・50/50",
-      "ceiling": "CZ間 最長695G（実測）",
+      "label": "BB間天井（BB1回でやめ・通常）・50/50",
+      "ceiling": "BB間 最長695G（実測）",
       "gRange": {
         "start": 0,
         "end": 600,
@@ -24584,7 +24587,8 @@
           "1",
           "2"
         ],
-        "czAll": "CZ回数を問わない",
+        "czAll": "BB回数を問わない",
+        "czTerm": "BB",
         "tables": {
           "d1": {
             "baseAnchors": [
@@ -24785,8 +24789,8 @@
     },
     {
       "key": "cz_reset_5050",
-      "label": "CZ間天井（CZ1回でやめ・リセット）・50/50",
-      "ceiling": "CZ間 最長476G（実測）",
+      "label": "BB間天井（BB1回でやめ・リセット）・50/50",
+      "ceiling": "BB間 最長476G（実測）",
       "gRange": {
         "start": 0,
         "end": 440,

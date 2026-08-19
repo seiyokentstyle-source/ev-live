@@ -9,6 +9,8 @@ type EvFilterProps = {
   czLabelFn?: (v: string) => string;
   /** CZセレクタの未選択ラベル（新形式＝CZ0回(天井狙い)。旧形式＝全部）. */
   czAllLabel?: string;
+  /** 道中の当たりの呼び名（既定CZ / マギレコはBB）。セレクタの見出しに使う. */
+  czTerm?: string;
   tail: string | null;
   day: string | null;
   cz?: string | null;
@@ -60,6 +62,7 @@ export function EvFilter({
   czOptions,
   czLabelFn,
   czAllLabel = "全部",
+  czTerm = "CZ",
   tail,
   day,
   cz = null,
@@ -92,7 +95,7 @@ export function EvFilter({
       />
       {hasCz ? (
         <Select
-          label="道中CZ"
+          label={`道中${czTerm}`}
           allLabel={czAllLabel}
           options={czOptions ?? []}
           value={cz}

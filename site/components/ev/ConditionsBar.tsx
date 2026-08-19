@@ -15,6 +15,8 @@ type ConditionsBarProps = {
   ceilingText?: string | null;
   /** 表示中プロファイルの当たり件数（通常/リセットでタブごとに違う）。無ければ機種全体を出す. */
   profileSessions?: number | null;
+  /** 道中の当たりの呼び名（既定CZ / マギレコはBB）. */
+  czTerm?: string;
 };
 
 type Row = { k: string; v: string };
@@ -31,7 +33,8 @@ export function ConditionsBar({
   rateLabel,
   czLabel,
   ceilingText,
-  profileSessions
+  profileSessions,
+  czTerm
 }: ConditionsBarProps) {
   const [open, setOpen] = useState(false);
   const ev = machine.evCalc;
@@ -43,7 +46,7 @@ export function ConditionsBar({
     // 算出条件は生成側が組み立てた文字列をそのまま出す（サイトで組み直すと計算とズレるため）。
     // 表示中のタブ/セレクタで変わるものだけ、ここで前後に足す。
     if (rateLabel) rows.push({ k: "レート（表示中）", v: rateLabel });
-    if (czLabel) rows.push({ k: "道中CZ（表示中）", v: `${czLabel} の状態から次のボーナスまで` });
+    if (czLabel) rows.push({ k: `道中${czTerm ?? "CZ"}（表示中）`, v: `${czLabel} の状態から次のボーナスまで` });
     if (ceilingText) rows.push({ k: "天井（表示中のタブ）", v: ceilingText });
     rows.push(...calcSpec.items);
     rows.push({ k: "時給換算", v: `${machine.economics.gamesPerHour}G/時で消化する前提` });
@@ -55,7 +58,7 @@ export function ConditionsBar({
     if (ev.junzou) rows.push({ k: "AT純増", v: `${ev.junzou}枚/G（AT中Gは総獲得÷純増で推定）` });
     rows.push({ k: "天井", v: ceilingText || `${ev.ceiling}G` });
     if (ev.preg) rows.push({ k: "前兆", v: `${ev.preg}G（打ち始めから自力当選しない前提）` });
-    if (czLabel) rows.push({ k: "道中CZ", v: `${czLabel} の状態から次のボーナスまで` });
+    if (czLabel) rows.push({ k: `道中${czTerm ?? "CZ"}`, v: `${czLabel} の状態から次のボーナスまで` });
     rows.push({ k: "時給換算", v: `${machine.economics.gamesPerHour}G/時` });
     rows.push({ k: "機械割", v: "回収円÷投資円（46/52なら46枚投資=52枚回収で100%）" });
   } else if (mode === "setting") {

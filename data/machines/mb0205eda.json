@@ -394,6 +394,7 @@
         ],
         "cz": [],
         "czAll": "CZ回数を問わない",
+        "czTerm": "CZ",
         "tables": {
           "d1": {
             "baseAnchors": [
@@ -1471,6 +1472,7 @@
         ],
         "cz": [],
         "czAll": "CZ回数を問わない",
+        "czTerm": "CZ",
         "tables": {
           "d1": {
             "baseAnchors": [

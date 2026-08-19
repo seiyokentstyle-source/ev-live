@@ -109,6 +109,8 @@ export type EvFilters = {
   cz: string[];
   /** CZセレクタの「未選択」が何を意味するか（既定表のCZ条件）。古いデータでは undefined。 */
   czAll?: string;
+  /** 道中の当たりの呼び名（既定 'CZ'。マギレコは 'BB'）。表示だけで計算には影響しない。 */
+  czTerm?: string;
   /** キー→集計済みテーブル。該当キーが無い＝データ不足. */
   tables: Record<string, EvFilterTable>;
 };
