@@ -25,8 +25,6 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
   // ptカウンタ機（マギレコ）はG列にpt目盛りを併記する。実機はptしか見えないので、
   // 「今何pt」から表を引けるようにするため。EVの計算はG基準のまま＝表示だけの話。
   const ptPerG = profile.ptPerG;
-  // 機械割は枚ベース OUT/IN。±0になる機械割は行ごとに違う（row.be）ので、
-  // 色分けは期待値の符号で判定し、±0の値は各行に併記する。
 
   // Discourage casual copying of the EV numbers: block text selection, the
   // right-click/long-press menu, and copy/cut. This only deters; screenshots and
@@ -95,7 +93,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
               </th>
               <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
                 機械割
-                <span className="block text-[9px] text-muted">% / ±0</span>
+                <span className="block text-[9px] text-muted">%</span>
               </th>
               <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
                 期待値
@@ -156,15 +154,9 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                 ) : (
                   <>
                     <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right ${
-                      row.noData ? "text-muted" : rtpToneClass(row.rtp, row.ev)
+                      row.noData ? "text-muted" : rtpToneClass(row.rtp)
                     } ${alt}`}>
                       {row.noData ? "—" : `${row.rtp.toFixed(1)}%`}
-                      {/* ±0になる機械割は行ごとに違う（買うのは通常時の不足分だけなので）。 */}
-                      {!row.noData && row.be !== undefined ? (
-                        <span className="block text-[9px] leading-tight text-muted">
-                          ±0 {row.be.toFixed(1)}%
-                        </span>
-                      ) : null}
                     </td>
                     <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right ${
                       row.noData ? "text-muted" : toneClass(row.ev)

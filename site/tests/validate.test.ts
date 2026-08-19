@@ -7,23 +7,10 @@ describe("machine validation", () => {
     expect(validateMachine(machineData).id).toBe("vvv2");
   });
 
-  // 機械割は枚ベース OUT/IN で、±0になる機械割(be)は100%固定ではなく行ごとに違う。
-  // 判定は be 基準なので、スクレイプ値に依存しないよう be からの相対で矛盾を作る。
   test("rejects EV/RTP sign mismatches", () => {
     const invalid = structuredClone(machineData);
-    const anchor = invalid.profiles[0].baseAnchors[0] as { rtp: number; ev: number; be?: number };
-    anchor.ev = -100;                          // 負けているのに
-    anchor.rtp = (anchor.be ?? 100) + 5;       // ±0を明確に上回る＝矛盾
+    invalid.profiles[0].baseAnchors[0].rtp = 101;
     expect(() => validateMachine(invalid)).toThrow(/sign mismatch/);
-  });
-
-  test("accepts 100%超でも±0未満なら期待値マイナス（枚ベースでは矛盾しない）", () => {
-    const data = structuredClone(machineData);
-    const anchor = data.profiles[0].baseAnchors[0] as { rtp: number; ev: number; be?: number };
-    if (anchor.be === undefined) return;       // 旧データ（be無し）は従来の100%基準なので対象外
-    anchor.ev = -100;
-    anchor.rtp = anchor.be - 1;                // 100%を超えていても±0未満なら負けで正しい
-    expect(validateMachine(data).id).toBe("vvv2");
   });
 
   test("rejects negative anchor inv", () => {

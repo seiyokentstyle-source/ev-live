@@ -9,10 +9,7 @@ export function toneClass(value: number): string {
   return "text-muted";
 }
 
-// 機械割は枚ベース(OUT/IN)なので、色の境目は100%ではない。±0になる機械割は
-// 行ごとに違う（実測で概ね101〜105%）ため、判定は期待値の符号で行うのが厳密。
-// ev 未指定は従来どおり100%を境にする（古いデータ・出率表など用）。
-export function rtpToneClass(value: number, ev?: number): string {
-  const win = ev === undefined ? value >= 100 : ev >= 0;
-  return win ? "text-pos" : "text-neg";
+export function rtpToneClass(value: number): string {
+  if (value >= 100) return "text-pos";
+  return "text-neg";
 }

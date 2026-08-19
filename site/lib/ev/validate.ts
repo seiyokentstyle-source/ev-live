@@ -90,21 +90,7 @@ export function validateMachine(data: unknown): Machine {
     for (let i = 0; i < profile.baseAnchors.length; i += 1) {
       const anchor = profile.baseAnchors[i];
       assert(anchor.g >= profile.gRange.start && anchor.g <= profile.gRange.end, `anchor ${anchor.g} is out of range`);
-      // 機械割は枚ベース OUT/IN。±0になる機械割は100%固定ではなく行ごとに違う（anchor.be）ので、
-      // 符号の整合は be を基準に見る。be が無い旧データは従来どおり100%を基準にする。
-      // rtp/be はどちらも小数1桁に丸めた値なので、境界ちょうどの行は許容する（0.05%の余裕）。
-      if (anchor.be !== undefined) {
-        assert(
-          Math.abs(anchor.rtp - anchor.be) <= 0.05 || (anchor.rtp >= anchor.be) === (anchor.ev >= 0),
-          `anchor ${anchor.g} EV/RTP sign mismatch (rtp ${anchor.rtp} / be ${anchor.be} / ev ${anchor.ev})`
-        );
-        assert(
-          typeof anchor.be === "number" && Number.isFinite(anchor.be) && anchor.be > 0,
-          `anchor ${anchor.g} be must be a positive number`
-        );
-      } else {
-        assert((anchor.rtp >= 100) === (anchor.ev >= 0), `anchor ${anchor.g} EV/RTP sign mismatch`);
-      }
+      assert((anchor.rtp >= 100) === (anchor.ev >= 0), `anchor ${anchor.g} EV/RTP sign mismatch`);
       // Sample size is optional (older data omits it); when present it must be a non-negative number.
       assert(
         anchor.n === undefined || (typeof anchor.n === "number" && Number.isFinite(anchor.n) && anchor.n >= 0),

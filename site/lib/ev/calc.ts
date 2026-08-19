@@ -151,36 +151,16 @@ export function adjustedRtp(
   machine: Machine
 ): number {
   const base = baseRtp(g, profile);
-  const evDelta = totalEv - baseEV(g, profile);
-  if (evDelta === 0) return base;
+  const remain = Math.max(0, profile.gRange.end - g);
+  if (remain <= 0) return base;
 
-  // 機械割は枚ベース OUT/IN（分母＝賭け枚数×総消化G）。条件で期待値が動いた分は
-  // 円→枚（換金単価で割る）に戻してから、同じ分母で割り戻す。
   const rate = String(conditions.rate ?? "50");
   const medalValue = machine.creditValue[rate] ?? 20;
-  const bet = machine.evCalc?.bet ?? 3;
-  const totalIn = bet * basePlayG(g, profile);
-  if (totalIn <= 0 || medalValue <= 0) return base;
+  const totalInvest = remain * machine.economics.medalsPerGame * medalValue;
+  if (totalInvest <= 0) return base;
 
-  return base + ((evDelta / medalValue) / totalIn) * 100;
-}
-
-// ±0になる機械割。行ごとに違うので rtp/inv と同じように補間する。
-export function baseBreakEven(g: number, profile: Profile): number | undefined {
-  const anchors = profile.baseAnchors;
-  if (anchors.length === 0 || anchors[0].be === undefined) return undefined;
-  if (g <= anchors[0].g) return anchors[0].be;
-  if (g >= anchors[anchors.length - 1].g) return anchors[anchors.length - 1].be;
-
-  for (let i = 0; i < anchors.length - 1; i += 1) {
-    const current = anchors[i];
-    const next = anchors[i + 1];
-    if (g >= current.g && g <= next.g) {
-      const t = (g - current.g) / (next.g - current.g);
-      return (current.be ?? 0) + ((next.be ?? 0) - (current.be ?? 0)) * t;
-    }
-  }
-  return undefined;
+  const evDelta = totalEv - baseEV(g, profile);
+  return base + (evDelta / totalInvest) * 100;
 }
 
 export function basePlayG(g: number, profile: Profile): number {
@@ -249,7 +229,7 @@ export function calcRow(g: number, conditions: Conditions, profile: Profile, mac
   const noData = g > lastSampledG;
   // Sample size belongs to the anchor at this exact G; interpolated rows (and older data) have none.
   const n = anchors.find((anchor) => anchor.g === g)?.n;
-  return { g, ev, rtp, hourly, medals, zoneLabel, n, noData, be: baseBreakEven(g, profile) };
+  return { g, ev, rtp, hourly, medals, zoneLabel, n, noData };
 }
 
 export function generateGValues(profile: Profile): number[] {

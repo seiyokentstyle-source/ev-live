@@ -40,10 +40,6 @@ export type BaseAnchor = {
   inv?: number;
   /** Average games to finish one session from this G (通常時＋AT中). Used for 時給. Optional: absent on older data. */
   playG?: number;
-  /** この行が±0になる機械割(%)。機械割は枚ベースOUT/INなので100%ではなく、
-   *  実際に買うのは通常時の不足分だけなので行ごとに違う（実測で概ね101〜105%）。
-   *  古いデータでは undefined。 */
-  be?: number;
 };
 
 export type Zone = {
@@ -323,8 +319,6 @@ export type TableRow = {
   ev: number;
   rtp: number;
   hourly: number;
-  /** この行が±0になる機械割(%)。機械割の横に併記する。 */
-  be?: number;
   medals: number;
   zoneLabel?: string;
   pivotValues?: Record<string, number>;

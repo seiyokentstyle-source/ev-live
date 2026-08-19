@@ -109,7 +109,7 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
                   <td className={`border-b border-r border-line-soft px-2 py-2 text-right font-bold ${toneClass(a.ev)} ${alt}`}>
                     {formatSigned(a.ev)}
                   </td>
-                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${rtpToneClass(a.rtp, a.ev)} ${alt}`}>
+                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${rtpToneClass(a.rtp)} ${alt}`}>
                     {a.rtp.toFixed(1)}
                   </td>
                   <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${toneClass(hourly)} ${alt}`}>
