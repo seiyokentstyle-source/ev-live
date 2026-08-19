@@ -11,9 +11,11 @@ type TheoreticalTableProps = {
   data: Theoretical;
   /** 時給換算に使う（economics.gamesPerHour）. */
   gamesPerHour: number;
+  /** 損益分岐の機械割(%)。枚ベースOUT/INなので46/52は113.0%。未指定は等価扱い. */
+  breakEven?: number;
 };
 
-export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) {
+export function TheoreticalTable({ data, gamesPerHour, breakEven = 100 }: TheoreticalTableProps) {
   const blockEvent = (event: { preventDefault: () => void }) => event.preventDefault();
 
   // 行間隔はデータ側の gRange.step に従う（生成側が10G刻みなら10G刻みで全部出す）。
@@ -41,7 +43,7 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
       </p>
       <div className="flex shrink-0 items-center justify-between border-b border-line bg-panel px-3 py-2 text-[11px]">
         <span className="mono text-muted">
-          ボーダー<span className="text-[9px]">（機械割{BORDER_RTP}%）</span>
+          ボーダー<span className="text-[9px]">（機械割{BORDER_RTP}%／±0は{breakEven.toFixed(1)}%）</span>
           <span className="ml-2 font-bold text-highlight">
             {border === null ? "—" : `${border.toLocaleString("ja-JP")}G〜`}
           </span>
@@ -109,7 +111,7 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
                   <td className={`border-b border-r border-line-soft px-2 py-2 text-right font-bold ${toneClass(a.ev)} ${alt}`}>
                     {formatSigned(a.ev)}
                   </td>
-                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${rtpToneClass(a.rtp)} ${alt}`}>
+                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${rtpToneClass(a.rtp, breakEven)} ${alt}`}>
                     {a.rtp.toFixed(1)}
                   </td>
                   <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${toneClass(hourly)} ${alt}`}>

@@ -303,6 +303,9 @@ export type Machine = {
   calcSpec?: CalcSpec;
   /** 絞り込み再集計の共通パラメータ。古い/未生成データでは undefined。 */
   evCalc?: EvCalc;
+  /** レート別の損益分岐となる機械割(%)。機械割は枚ベースOUT/INなので100%ではない
+   *  （46/52は貸単価÷換金単価＝113.0%、50/50は100.0%）。古いデータでは undefined。 */
+  breakEven?: Record<string, number>;
   axes: Axis[];
   modifiers: ModifierMap;
   creditValue: Record<string, number>;

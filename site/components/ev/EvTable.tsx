@@ -25,6 +25,10 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
   // ptカウンタ機（マギレコ）はG列にpt目盛りを併記する。実機はptしか見えないので、
   // 「今何pt」から表を引けるようにするため。EVの計算はG基準のまま＝表示だけの話。
   const ptPerG = profile.ptPerG;
+  // 機械割は枚ベース OUT/IN なので、±0は100%ではない（46/52なら113.0%）。
+  // どのレートの表かは profile.key の末尾（_4652 / _5050）で決まる。
+  const rateKey = /_(4652|5050)$/.exec(profile.key)?.[1] ?? "4652";
+  const breakEven = machine.breakEven?.[rateKey] ?? 100;
 
   // Discourage casual copying of the EV numbers: block text selection, the
   // right-click/long-press menu, and copy/cut. This only deters; screenshots and
@@ -93,7 +97,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
               </th>
               <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
                 機械割
-                <span className="block text-[9px] text-muted">%</span>
+                <span className="block text-[9px] text-muted">±0={breakEven.toFixed(1)}%</span>
               </th>
               <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
                 期待値
@@ -154,7 +158,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                 ) : (
                   <>
                     <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right ${
-                      row.noData ? "text-muted" : rtpToneClass(row.rtp)
+                      row.noData ? "text-muted" : rtpToneClass(row.rtp, breakEven)
                     } ${alt}`}>
                       {row.noData ? "—" : `${row.rtp.toFixed(1)}%`}
                     </td>

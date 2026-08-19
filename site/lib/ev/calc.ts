@@ -151,16 +151,18 @@ export function adjustedRtp(
   machine: Machine
 ): number {
   const base = baseRtp(g, profile);
-  const remain = Math.max(0, profile.gRange.end - g);
-  if (remain <= 0) return base;
+  const evDelta = totalEv - baseEV(g, profile);
+  if (evDelta === 0) return base;
 
+  // 機械割は枚ベース OUT/IN（分母＝賭け枚数×総消化G）。条件で期待値が動いた分は
+  // 円→枚（換金単価で割る）に戻してから、同じ分母で割り戻す。
   const rate = String(conditions.rate ?? "50");
   const medalValue = machine.creditValue[rate] ?? 20;
-  const totalInvest = remain * machine.economics.medalsPerGame * medalValue;
-  if (totalInvest <= 0) return base;
+  const bet = machine.evCalc?.bet ?? 3;
+  const totalIn = bet * basePlayG(g, profile);
+  if (totalIn <= 0 || medalValue <= 0) return base;
 
-  const evDelta = totalEv - baseEV(g, profile);
-  return base + (evDelta / totalInvest) * 100;
+  return base + ((evDelta / medalValue) / totalIn) * 100;
 }
 
 export function basePlayG(g: number, profile: Profile): number {
