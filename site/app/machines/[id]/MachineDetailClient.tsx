@@ -36,11 +36,10 @@ function dayOfMonth(date: string): string {
   return m ? String(Number(m[1])) : "";
 }
 
-// 道中CZ回数のバケット。undefined→""（CZ情報なし・絞り込み対象外）、0→"0"、1→"1"、2以上→"2".
-// 「CZ1回失敗後」= hitsの5要素目が1 = このセッションはAT到達までに道中CZを1回挟んだ、を意味する。
+// 道中CZ回数のバケット（旧形式データの再集計用）。undefined→""（CZ情報なし・絞り込み対象外）。
+// 新形式は回数ちょうどで絞るので、そのまま回数を返す。
 function czBucket(cz: number | undefined): string {
   if (cz === undefined) return "";
-  if (cz >= 2) return "2";
   return String(cz);
 }
 
@@ -48,8 +47,7 @@ function czBucket(cz: number | undefined): string {
 // 呼び名は機種で変わる（既定CZ / マギレコはBB）ので term を受け取る。
 function czLabel(bucket: string, term: string): string {
   if (bucket === "0") return `${term}0回(天井狙い)`;
-  if (bucket === "2") return `${term}2回以上後`;
-  return `${term}${bucket}回後`;
+  return `${term}${bucket}回後`;   // 回数ちょうどで絞る（以前は2を「2回以上」とまとめていた）
 }
 
 type MachineDetailClientProps = {
@@ -142,11 +140,14 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
     if (useFilters) {
       const tbl = evFilters!.tables[filterKey];
       if (!tbl) return { ...profile, baseAnchors: [], gRange: { ...profile.gRange, end: profile.gRange.start } };
+      // start は「その回数に達するG」。手前は母数が無いので表に出さない（アンカーが無いのに
+      // 0Gから最初のアンカー値で埋めると、あり得ない条件の期待値を描いてしまう）。
+      const start = tbl.start ?? profile.gRange.start;
       return {
         ...profile,
         baseAnchors: tbl.baseAnchors,
-        zones: profile.zones.filter((zone) => zone.g <= tbl.end),
-        gRange: { ...profile.gRange, end: tbl.end },
+        zones: profile.zones.filter((zone) => zone.g >= start && zone.g <= tbl.end),
+        gRange: { ...profile.gRange, start, end: tbl.end },
         totalPayout: tbl.totalPayout,
         firstHitRate: tbl.firstHitRate ?? undefined
       };

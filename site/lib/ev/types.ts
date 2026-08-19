@@ -85,6 +85,8 @@ export type EvSamples = {
 export type EvFilterTable = {
   /** この絞り込みのアンカー列（EV表）。 */
   baseAnchors: BaseAnchor[];
+  /** アンカー下限G（gRange.start に使う）。回数で絞ると0Gから母数が無いことがある。古いデータでは undefined。 */
+  start?: number;
   /** アンカー上限G（gRange.end に使う）。 */
   end: number;
   /** 絞り込み後のセッション総獲得枚数。 */
