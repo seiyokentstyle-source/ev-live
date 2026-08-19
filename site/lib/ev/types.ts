@@ -113,6 +113,12 @@ export type EvFilters = {
   czAll?: string;
   /** 道中の当たりの呼び名（既定 'CZ'。マギレコは 'BB'）。表示だけで計算には影響しない。 */
   czTerm?: string;
+  /** 前回AT獲得の絞り込み候補（帯の下限枚数）。古い/未対応データでは undefined。 */
+  pay?: string[];
+  /** 帯の下限 → 表示ラベル（'150'→'前AT150〜299枚'）。 */
+  payLabels?: Record<string, string>;
+  /** 前回AT獲得セレクタの「未選択」ラベル。 */
+  payAll?: string;
   /** キー→集計済みテーブル。該当キーが無い＝データ不足. */
   tables: Record<string, EvFilterTable>;
 };

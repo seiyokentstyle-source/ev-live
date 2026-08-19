@@ -11,12 +11,20 @@ type EvFilterProps = {
   czAllLabel?: string;
   /** 道中の当たりの呼び名（既定CZ / マギレコはBB）。セレクタの見出しに使う. */
   czTerm?: string;
+  /** 前回AT獲得の候補（帯の下限）。無い機種は undefined でセレクタ非表示. */
+  payOptions?: string[];
+  /** 帯の下限→表示ラベル. */
+  payLabelFn?: (v: string) => string;
+  /** 前回AT獲得セレクタの未選択ラベル. */
+  payAllLabel?: string;
   tail: string | null;
   day: string | null;
   cz?: string | null;
+  pay?: string | null;
   onTailChange: (v: string | null) => void;
   onDayChange: (v: string | null) => void;
   onCzChange?: (v: string | null) => void;
+  onPayChange?: (v: string | null) => void;
   /** 絞り込み後の台数（実台数の概算）と当たり件数. */
   units: number;
   hits: number;
@@ -63,17 +71,23 @@ export function EvFilter({
   czLabelFn,
   czAllLabel = "全部",
   czTerm = "CZ",
+  payOptions,
+  payLabelFn,
+  payAllLabel = "前ATを問わない",
   tail,
   day,
   cz = null,
+  pay = null,
   onTailChange,
   onDayChange,
   onCzChange,
+  onPayChange,
   units,
   hits
 }: EvFilterProps) {
   const hasCz = Boolean(czOptions && czOptions.length > 0 && onCzChange);
-  const active = tail !== null || day !== null || cz !== null;
+  const hasPay = Boolean(payOptions && payOptions.length > 0 && onPayChange);
+  const active = tail !== null || day !== null || cz !== null || pay !== null;
   return (
     <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-line bg-panel px-3 py-2">
       <span className="mono shrink-0 text-[9px] tracking-[0.14em] text-muted">絞り込み</span>
@@ -103,6 +117,16 @@ export function EvFilter({
           fmt={(v) => (czLabelFn ? czLabelFn(v) : v)}
         />
       ) : null}
+      {hasPay ? (
+        <Select
+          label="前回AT"
+          allLabel={payAllLabel}
+          options={payOptions ?? []}
+          value={pay}
+          onChange={onPayChange ?? (() => undefined)}
+          fmt={(v) => (payLabelFn ? payLabelFn(v) : v)}
+        />
+      ) : null}
       {active ? (
         <span className="mono text-[10px] text-muted">
           {units}台 / {hits}AT
@@ -112,6 +136,7 @@ export function EvFilter({
               onTailChange(null);
               onDayChange(null);
               onCzChange?.(null);
+              onPayChange?.(null);
             }}
             className="mono ml-2 rounded border border-line px-2 py-0.5 text-[10px] text-ink-soft"
           >

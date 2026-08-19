@@ -87,6 +87,7 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   const [evTail, setEvTail] = useState<string | null>(null); // 台番号末尾
   const [evDay, setEvDay] = useState<string | null>(null); // 日にちに含まれる数字（○のつく日）
   const [evCz, setEvCz] = useState<string | null>(null); // 初当りまでの道中CZ回数（"0"/"1"/"2"=2以上）
+  const [evPay, setEvPay] = useState<string | null>(null); // 前回ATの獲得枚数の帯（下限枚数）
 
   const group = grouped.groups.find((candidate) => candidate.key === activeGroupKey) ?? grouped.groups[0];
   const profile = resolveProfile(group, activeRate);
@@ -97,7 +98,8 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   const evSamples = profile.ev;
   const useFilters = Boolean(evFilters);
   const hasEvFilter = useFilters
-    ? Boolean(evFilters && (evFilters.tails.length || evFilters.days.length || evFilters.cz.length))
+    ? Boolean(evFilters && (evFilters.tails.length || evFilters.days.length || evFilters.cz.length
+        || (evFilters.pay?.length ?? 0)))
     : Boolean(evSamples && evSamples.hits.length > 0 && machine.evCalc);
   const evTailOptions = useMemo(
     () =>
@@ -130,13 +132,18 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   // 道中の当たりの呼び名。データに無ければ従来どおり CZ。
   const czTerm = evFilters?.czTerm ?? "CZ";
   const czLabelOf = (bucket: string) => czLabel(bucket, czTerm);
+  // 前回AT獲得（帯の下限枚数）。候補もラベルも生成側が配るので表示するだけ。
+  const evPayOptions = useFilters ? (evFilters?.pay ?? []) : [];
+  const payLabelOf = (v: string) => evFilters?.payLabels?.[v] ?? `${v}枚〜`;
 
   // 選択(末尾/日/CZ)→キー（順序 t→d→c。例 末尾7×CZ1回='t7c1'）。全nullは素の全体。
-  const filterKey = (evTail ? `t${evTail}` : "") + (evDay ? `d${evDay}` : "") + (evCz ? `c${evCz}` : "");
+  // 順序 t→d→c→p。生成側が同じ順でキーを作っている。
+  const filterKey = (evTail ? `t${evTail}` : "") + (evDay ? `d${evDay}` : "")
+    + (evCz ? `c${evCz}` : "") + (evPay ? `p${evPay}` : "");
 
   // 絞り込みが効いていれば、その条件の表示用プロファイルを作る。
   const displayProfile = useMemo(() => {
-    if (evTail === null && evDay === null && evCz === null) return profile;
+    if (evTail === null && evDay === null && evCz === null && evPay === null) return profile;
     if (useFilters) {
       const tbl = evFilters!.tables[filterKey];
       if (!tbl) return { ...profile, baseAnchors: [], gRange: { ...profile.gRange, end: profile.gRange.start } };
@@ -168,7 +175,7 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
       totalPayout: hits.reduce((sum, h) => sum + h[3], 0),
       firstHitRate: hits.length ? Math.round(hits.reduce((sum, h) => sum + h[2], 0) / hits.length) : undefined
     };
-  }, [profile, useFilters, evFilters, filterKey, evSamples, machine.evCalc, evTail, evDay, evCz]);
+  }, [profile, useFilters, evFilters, filterKey, evSamples, machine.evCalc, evTail, evDay, evCz, evPay]);
 
   const evFiltered = displayProfile !== profile;
   const evFilterStats = useMemo(() => {
@@ -182,7 +189,7 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
       (evTail === null || tailOf(unit) === evTail) && (evDay === null || dayOfMonth(date).includes(evDay));
     const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]) && (evCz === null || czBucket(h[4]) === evCz));
     return { units: new Set(hits.map((h) => h[0])).size, hits: hits.length };
-  }, [evFiltered, useFilters, evFilters, filterKey, evSamples, evTail, evDay, evCz]);
+  }, [evFiltered, useFilters, evFilters, filterKey, evSamples, evTail, evDay, evCz, evPay]);
   // 絞り込み結果がアンカー2本未満（データ不足）かどうか。
   const evEmpty = evFiltered && displayProfile.baseAnchors.length < 2;
 
@@ -299,6 +306,11 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
           czLabelFn={czLabelOf}
           czTerm={czTerm}
           czAllLabel={useFilters ? (evFilters?.czAll ?? czLabelOf("0")) : "全部"}
+          payOptions={evPayOptions.length > 0 ? evPayOptions : undefined}
+          payLabelFn={payLabelOf}
+          payAllLabel={evFilters?.payAll ?? "前ATを問わない"}
+          pay={evPay}
+          onPayChange={setEvPay}
           tail={evTail}
           day={evDay}
           cz={evCz}
