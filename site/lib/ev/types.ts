@@ -40,6 +40,10 @@ export type BaseAnchor = {
   inv?: number;
   /** Average games to finish one session from this G (通常時＋AT中). Used for 時給. Optional: absent on older data. */
   playG?: number;
+  /** この行が±0になる機械割(%)。機械割は枚ベースOUT/INなので100%ではなく、
+   *  実際に買うのは通常時の不足分だけなので行ごとに違う（実測で概ね101〜105%）。
+   *  古いデータでは undefined。 */
+  be?: number;
 };
 
 export type Zone = {
@@ -303,9 +307,6 @@ export type Machine = {
   calcSpec?: CalcSpec;
   /** 絞り込み再集計の共通パラメータ。古い/未生成データでは undefined。 */
   evCalc?: EvCalc;
-  /** レート別の損益分岐となる機械割(%)。機械割は枚ベースOUT/INなので100%ではない
-   *  （46/52は貸単価÷換金単価＝113.0%、50/50は100.0%）。古いデータでは undefined。 */
-  breakEven?: Record<string, number>;
   axes: Axis[];
   modifiers: ModifierMap;
   creditValue: Record<string, number>;
@@ -322,6 +323,8 @@ export type TableRow = {
   ev: number;
   rtp: number;
   hourly: number;
+  /** この行が±0になる機械割(%)。機械割の横に併記する。 */
+  be?: number;
   medals: number;
   zoneLabel?: string;
   pivotValues?: Record<string, number>;

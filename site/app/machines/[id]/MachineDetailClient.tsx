@@ -273,11 +273,7 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
       ) : null}
 
       {dataView === "theory" && machine.theoretical ? (
-        <TheoreticalTable
-          data={machine.theoretical}
-          gamesPerHour={machine.economics.gamesPerHour}
-          breakEven={machine.breakEven?.[activeRate ?? "4652"] ?? 100}
-        />
+        <TheoreticalTable data={machine.theoretical} gamesPerHour={machine.economics.gamesPerHour} />
       ) : (
         <>
       {availableModes.length > 1 ? <ModeSelector value={mode} onChange={setMode} modes={availableModes} /> : null}

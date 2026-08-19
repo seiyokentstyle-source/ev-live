@@ -165,6 +165,24 @@ export function adjustedRtp(
   return base + ((evDelta / medalValue) / totalIn) * 100;
 }
 
+// ±0になる機械割。行ごとに違うので rtp/inv と同じように補間する。
+export function baseBreakEven(g: number, profile: Profile): number | undefined {
+  const anchors = profile.baseAnchors;
+  if (anchors.length === 0 || anchors[0].be === undefined) return undefined;
+  if (g <= anchors[0].g) return anchors[0].be;
+  if (g >= anchors[anchors.length - 1].g) return anchors[anchors.length - 1].be;
+
+  for (let i = 0; i < anchors.length - 1; i += 1) {
+    const current = anchors[i];
+    const next = anchors[i + 1];
+    if (g >= current.g && g <= next.g) {
+      const t = (g - current.g) / (next.g - current.g);
+      return (current.be ?? 0) + ((next.be ?? 0) - (current.be ?? 0)) * t;
+    }
+  }
+  return undefined;
+}
+
 export function basePlayG(g: number, profile: Profile): number {
   const anchors = profile.baseAnchors;
   if (g <= anchors[0].g) return anchors[0].playG ?? 0;
@@ -231,7 +249,7 @@ export function calcRow(g: number, conditions: Conditions, profile: Profile, mac
   const noData = g > lastSampledG;
   // Sample size belongs to the anchor at this exact G; interpolated rows (and older data) have none.
   const n = anchors.find((anchor) => anchor.g === g)?.n;
-  return { g, ev, rtp, hourly, medals, zoneLabel, n, noData };
+  return { g, ev, rtp, hourly, medals, zoneLabel, n, noData, be: baseBreakEven(g, profile) };
 }
 
 export function generateGValues(profile: Profile): number[] {
