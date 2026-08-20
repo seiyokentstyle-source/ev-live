@@ -15,6 +15,8 @@ type ConditionsBarProps = {
   ceilingText?: string | null;
   /** 表示中プロファイルの当たり件数（通常/リセットでタブごとに違う）。無ければ機種全体を出す. */
   profileSessions?: number | null;
+  /** profileSessions の単位（『BB間』等）。CZ間天井の表は区間数なのでATと混ぜない. */
+  profileSessionUnit?: string;
   /** 道中の当たりの呼び名（既定CZ / マギレコはBB）. */
   czTerm?: string;
 };
@@ -34,6 +36,7 @@ export function ConditionsBar({
   czLabel,
   ceilingText,
   profileSessions,
+  profileSessionUnit,
   czTerm
 }: ConditionsBarProps) {
   const [open, setOpen] = useState(false);
@@ -78,7 +81,13 @@ export function ConditionsBar({
   // サンプルは表示中のタブの母数を出す（meta.samples は機種全体なのでタブによってはズレる）。
   rows.push(
     mode === "ev" && profileSessions
-      ? { k: "サンプル", v: `${profileSessions.toLocaleString("ja-JP")}件（表示中のタブ／機種全体 ${machine.meta.samples}件）` }
+      ? {
+          k: "サンプル",
+          v: profileSessionUnit
+            // 単位が違うので「機種全体」と単純に並べない（区間数のほうが多くなり誤解を招く）
+            ? `${profileSessions.toLocaleString("ja-JP")}区間（表示中のタブ＝${profileSessionUnit}／機種全体のAT ${machine.meta.samples}件）`
+            : `${profileSessions.toLocaleString("ja-JP")}件（表示中のタブ／機種全体 ${machine.meta.samples}件）`
+        }
       : { k: "サンプル", v: `${machine.meta.samples}件` }
   );
 

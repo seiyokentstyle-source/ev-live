@@ -286,6 +286,7 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         czTerm={czTerm}
         ceilingText={profile.ceiling}
         profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
+        profileSessionUnit={displayProfile.sessionUnit}
       />
 
       {mode === "setting" && settingAim ? (
@@ -319,6 +320,7 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
           onCzChange={setEvCz}
           units={evFilterStats.units}
           hits={evFilterStats.hits}
+          hitUnit={displayProfile.sessionUnit}
         />
       ) : null}
 

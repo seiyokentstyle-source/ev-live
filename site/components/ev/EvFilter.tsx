@@ -28,6 +28,8 @@ type EvFilterProps = {
   /** 絞り込み後の台数（実台数の概算）と当たり件数. */
   units: number;
   hits: number;
+  /** hits の単位（『BB間』等）。CZ間天井の表は区間数なのでATと書かない. */
+  hitUnit?: string;
 };
 
 function Select({
@@ -83,7 +85,8 @@ export function EvFilter({
   onCzChange,
   onPayChange,
   units,
-  hits
+  hits,
+  hitUnit
 }: EvFilterProps) {
   const hasCz = Boolean(czOptions && czOptions.length > 0 && onCzChange);
   const hasPay = Boolean(payOptions && payOptions.length > 0 && onPayChange);
@@ -129,7 +132,7 @@ export function EvFilter({
       ) : null}
       {active ? (
         <span className="mono text-[10px] text-muted">
-          {units}台 / {hits}AT
+          {units}台 / {hits}{hitUnit ? `${hitUnit}区間` : "AT"}
           <button
             type="button"
             onClick={() => {
