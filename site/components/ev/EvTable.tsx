@@ -45,7 +45,9 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
         onViewGChange(rows[index]?.g ?? profile.gRange.start);
       }}
     >
-      <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
+      <table className={`mono table-fixed border-separate border-spacing-0 text-xs ${
+        pivot ? "w-full" : "w-full min-w-[464px]"
+      }`}>
         {pivot ? (
           <colgroup>
             <col className="w-[70px]" />
@@ -56,12 +58,14 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
           </colgroup>
         ) : (
           <colgroup>
-            <col className="w-[15%]" />
-            <col className="w-[16%]" />
-            <col className="w-[19%]" />
-            <col className="w-[18%]" />
-            <col className="w-[16%]" />
-            <col className="w-[16%]" />
+            {/* 列が6本あり、狭い画面で%指定だと全列が潰れて読めなくなる。
+                最小幅をpxで確保し、足りない分は横スクロール（G列はsticky）。 */}
+            <col className="w-[76px]" />
+            <col className="w-[72px]" />
+            <col className="w-[92px]" />
+            <col className="w-[84px]" />
+            <col className="w-[72px]" />
+            <col className="w-[68px]" />
           </colgroup>
         )}
         <thead>

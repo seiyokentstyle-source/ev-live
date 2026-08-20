@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import type { Axis, AxisValue, Conditions, Machine, PivotConfig } from "@/lib/ev/types";
+import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
 import { groupProfiles, resolveProfile } from "@/lib/ev/profiles";
 import { AxisPicker } from "@/components/ev/AxisPicker";
@@ -84,70 +84,70 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [currentG, setCurrentG] = useState(0);
   const [picker, setPicker] = useState<PickerState>(null);
-  const [evTail, setEvTail] = useState<string | null>(null); // 台番号末尾
-  const [evDay, setEvDay] = useState<string | null>(null); // 日にちに含まれる数字（○のつく日）
-  const [evCz, setEvCz] = useState<string | null>(null); // 初当りまでの道中CZ回数（"0"/"1"/"2"=2以上）
-  const [evPay, setEvPay] = useState<string | null>(null); // 前回ATの獲得枚数の帯（下限枚数）
+  // 絞り込みは軸key→選択値の1本にまとめる。軸が増えても state を足す必要がない。
+  const [evSel, setEvSel] = useState<Record<string, string | null>>({});
 
   const group = grouped.groups.find((candidate) => candidate.key === activeGroupKey) ?? grouped.groups[0];
   const profile = resolveProfile(group, activeRate);
 
-  // 絞り込み（末尾/日/CZ）。新形式=公開前に集計済みの evFilters テーブルを引くだけ（生サンプル非公開）。
-  // 旧形式（後方互換）=生サンプル ev.hits からクライアント再集計。データ再生成までは旧形式で動く。
+  // 絞り込みは公開前に集計済みの evFilters テーブルを引くだけ（生サンプルは公開しない）。
+  // 軸の定義（並び順・ラベル・候補）はデータ側が配るので、軸が増えてもここは無改修。
   const evFilters = profile.evFilters;
   const evSamples = profile.ev;
   const useFilters = Boolean(evFilters);
-  const hasEvFilter = useFilters
-    ? Boolean(evFilters && (evFilters.tails.length || evFilters.days.length || evFilters.cz.length
-        || (evFilters.pay?.length ?? 0)))
-    : Boolean(evSamples && evSamples.hits.length > 0 && machine.evCalc);
-  const evTailOptions = useMemo(
-    () =>
-      useFilters
-        ? evFilters!.tails
-        : evSamples
-          ? Array.from(new Set(evSamples.hits.map((h) => tailOf(h[0])))).filter(Boolean).sort()
-          : [],
-    [useFilters, evFilters, evSamples]
-  );
-  const evDayOptions = useMemo(
-    () =>
-      useFilters
-        ? evFilters!.days
-        : evSamples
-          ? Array.from(new Set(evSamples.hits.flatMap((h) => dayOfMonth(h[1]).split("")))).sort()
-          : [],
-    [useFilters, evFilters, evSamples]
-  );
-  const evCzOptions = useMemo(
-    () =>
-      useFilters
-        ? evFilters!.cz
-        : evSamples
-          ? Array.from(new Set(evSamples.hits.map((h) => czBucket(h[4])))).filter(Boolean).sort()
-          : [],
-    [useFilters, evFilters, evSamples]
-  );
-  const hasCzFilter = evCzOptions.length > 0;
   // 道中の当たりの呼び名。データに無ければ従来どおり CZ。
   const czTerm = evFilters?.czTerm ?? "CZ";
-  const czLabelOf = (bucket: string) => czLabel(bucket, czTerm);
-  // 前回AT獲得（帯の下限枚数）。候補もラベルも生成側が配るので表示するだけ。
-  const evPayOptions = useFilters ? (evFilters?.pay ?? []) : [];
-  const payLabelOf = (v: string) => evFilters?.payLabels?.[v] ?? `${v}枚〜`;
 
-  // 選択(末尾/日/CZ)→キー（順序 t→d→c。例 末尾7×CZ1回='t7c1'）。全nullは素の全体。
-  // 順序 t→d→c→p。生成側が同じ順でキーを作っている。
-  const filterKey = (evTail ? `t${evTail}` : "") + (evDay ? `d${evDay}` : "")
-    + (evCz ? `c${evCz}` : "") + (evPay ? `p${evPay}` : "");
+  // 軸の一覧。新形式は axes をそのまま使い、旧データは従来のフィールドから組み立てる。
+  const evAxes: FilterAxis[] = useMemo(() => {
+    if (evFilters?.axes?.length) return evFilters.axes;
+    const out: FilterAxis[] = [];
+    const tails = useFilters
+      ? evFilters!.tails
+      : Array.from(new Set((evSamples?.hits ?? []).map((h) => tailOf(h[0])))).filter(Boolean).sort();
+    const days = useFilters
+      ? evFilters!.days
+      : Array.from(new Set((evSamples?.hits ?? []).flatMap((h) => dayOfMonth(h[1]).split("")))).sort();
+    const czs = useFilters
+      ? evFilters!.cz
+      : Array.from(new Set((evSamples?.hits ?? []).map((h) => czBucket(h[4])))).filter(Boolean).sort();
+    if (tails.length) out.push({ key: "t", label: "末尾", allLabel: "全部", options: tails.map((v) => ({ value: v, label: `末尾${v}` })) });
+    if (days.length) out.push({ key: "d", label: "つく日", allLabel: "全日", options: days.map((v) => ({ value: v, label: `${v}のつく日` })) });
+    if (czs.length) {
+      out.push({
+        key: "c",
+        label: `道中${czTerm}`,
+        allLabel: evFilters?.czAll ?? czLabel("0", czTerm),
+        options: czs.map((v) => ({ value: v, label: czLabel(v, czTerm) }))
+      });
+    }
+    const pays = evFilters?.pay ?? [];
+    if (pays.length) {
+      out.push({
+        key: "p",
+        label: "前回AT",
+        allLabel: evFilters?.payAll ?? "前ATを問わない",
+        options: pays.map((v) => ({ value: v, label: evFilters?.payLabels?.[v] ?? `${v}枚〜` }))
+      });
+    }
+    return out;
+  }, [evFilters, evSamples, useFilters, czTerm]);
+
+  const hasEvFilter = evAxes.length > 0 && (useFilters || Boolean(machine.evCalc));
+  const setAxis = (key: string, value: string | null) => setEvSel((prev) => ({ ...prev, [key]: value }));
+
+  // 選択→キー。axes の並び順に key+値 を連結する（生成側も同じ順で作っている）。
+  const filterKey = evAxes.map((axis) => (evSel[axis.key] ? `${axis.key}${evSel[axis.key]}` : "")).join("");
+  const anySelected = evAxes.some((axis) => evSel[axis.key] != null);
+  const selOf = (key: string) => evSel[key] ?? null;
 
   // 絞り込みが効いていれば、その条件の表示用プロファイルを作る。
   const displayProfile = useMemo(() => {
-    if (evTail === null && evDay === null && evCz === null && evPay === null) return profile;
+    if (!anySelected) return profile;
     if (useFilters) {
       const tbl = evFilters!.tables[filterKey];
       if (!tbl) return { ...profile, baseAnchors: [], gRange: { ...profile.gRange, end: profile.gRange.start } };
-      // start は「その回数に達するG」。手前は母数が無いので表に出さない（アンカーが無いのに
+      // start は「その条件に達するG」。手前は母数が無いので表に出さない（アンカーが無いのに
       // 0Gから最初のアンカー値で埋めると、あり得ない条件の期待値を描いてしまう）。
       const start = tbl.start ?? profile.gRange.start;
       return {
@@ -159,12 +159,13 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         firstHitRate: tbl.firstHitRate ?? undefined
       };
     }
-    // 旧形式：生サンプルから再集計
+    // 旧形式：生サンプルから再集計（末尾/日/CZ のみ対応）
     if (!evSamples || !machine.evCalc) return profile;
     const keepUnitDate = (unit: string, date: string) =>
-      (evTail === null || tailOf(unit) === evTail) && (evDay === null || dayOfMonth(date).includes(evDay));
-    const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]) && (evCz === null || czBucket(h[4]) === evCz));
-    const cens = evCz === null ? evSamples.cens.filter((c) => keepUnitDate(c[0], c[1])) : [];
+      (selOf("t") === null || tailOf(unit) === selOf("t")) &&
+      (selOf("d") === null || dayOfMonth(date).includes(selOf("d") as string));
+    const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]) && (selOf("c") === null || czBucket(h[4]) === selOf("c")));
+    const cens = selOf("c") === null ? evSamples.cens.filter((c) => keepUnitDate(c[0], c[1])) : [];
     const baseAnchors = computeAnchors(hits, cens, machine.evCalc, evSamples.tai, evSamples.kan, evSamples.minSess);
     const end = baseAnchors.length > 0 ? baseAnchors[baseAnchors.length - 1].g : profile.gRange.start;
     return {
@@ -175,7 +176,8 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
       totalPayout: hits.reduce((sum, h) => sum + h[3], 0),
       firstHitRate: hits.length ? Math.round(hits.reduce((sum, h) => sum + h[2], 0) / hits.length) : undefined
     };
-  }, [profile, useFilters, evFilters, filterKey, evSamples, machine.evCalc, evTail, evDay, evCz, evPay]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile, useFilters, evFilters, filterKey, anySelected, evSamples, machine.evCalc, evSel]);
 
   const evFiltered = displayProfile !== profile;
   const evFilterStats = useMemo(() => {
@@ -186,10 +188,12 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
     }
     if (!evSamples) return { units: 0, hits: 0 };
     const keepUnitDate = (unit: string, date: string) =>
-      (evTail === null || tailOf(unit) === evTail) && (evDay === null || dayOfMonth(date).includes(evDay));
-    const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]) && (evCz === null || czBucket(h[4]) === evCz));
+      (selOf("t") === null || tailOf(unit) === selOf("t")) &&
+      (selOf("d") === null || dayOfMonth(date).includes(selOf("d") as string));
+    const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]) && (selOf("c") === null || czBucket(h[4]) === selOf("c")));
     return { units: new Set(hits.map((h) => h[0])).size, hits: hits.length };
-  }, [evFiltered, useFilters, evFilters, filterKey, evSamples, evTail, evDay, evCz, evPay]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [evFiltered, useFilters, evFilters, filterKey, evSamples, evSel]);
   // 絞り込み結果がアンカー2本未満（データ不足）かどうか。
   const evEmpty = evFiltered && displayProfile.baseAnchors.length < 2;
 
@@ -282,7 +286,12 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
         machine={machine}
         mode={mode}
         rateLabel={grouped.rates.find((r) => r.value === activeRate)?.label ?? activeRate}
-        czLabel={hasCzFilter ? (evCz === null ? (evFilters?.czAll ?? czLabelOf("0")) : czLabelOf(evCz)) : null}
+        czLabel={(() => {
+          const axis = evAxes.find((a) => a.key === "c");
+          if (!axis) return null;
+          const v = evSel.c ?? null;
+          return v === null ? axis.allLabel : axis.options.find((opt) => opt.value === v)?.label ?? v;
+        })()}
         czTerm={czTerm}
         ceilingText={profile.ceiling}
         profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
@@ -301,23 +310,9 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
       {hasRatePairs ? <RateSelector rates={grouped.rates} value={activeRate} onChange={setActiveRate} /> : null}
       {hasEvFilter && !isPending ? (
         <EvFilter
-          tailOptions={evTailOptions}
-          dayOptions={evDayOptions}
-          czOptions={hasCzFilter ? evCzOptions : undefined}
-          czLabelFn={czLabelOf}
-          czTerm={czTerm}
-          czAllLabel={useFilters ? (evFilters?.czAll ?? czLabelOf("0")) : "全部"}
-          payOptions={evPayOptions.length > 0 ? evPayOptions : undefined}
-          payLabelFn={payLabelOf}
-          payAllLabel={evFilters?.payAll ?? "前ATを問わない"}
-          pay={evPay}
-          onPayChange={setEvPay}
-          tail={evTail}
-          day={evDay}
-          cz={evCz}
-          onTailChange={setEvTail}
-          onDayChange={setEvDay}
-          onCzChange={setEvCz}
+          axes={evAxes}
+          values={evSel}
+          onChange={setAxis}
           units={evFilterStats.units}
           hits={evFilterStats.hits}
           hitUnit={displayProfile.sessionUnit}

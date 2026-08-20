@@ -99,6 +99,18 @@ export type EvFilterTable = {
   hits: number;
 };
 
+/** 絞り込み1軸ぶんの定義。軸を足してもサイト側は無改修で描ける。
+ *  キーは axes の並び順に key+値 を連結して作る（例 't7' + 'c0' → 't7c0'）。 */
+export type FilterAxis = {
+  /** キーの接頭辞（'t'=末尾 / 'd'=つく日 / 'c'=道中CZ / 'p'=前回AT）. */
+  key: string;
+  /** セレクタの見出し. */
+  label: string;
+  /** 未選択のときのラベル（その軸で絞らない＝既定表が何を指すか）. */
+  allLabel: string;
+  options: Array<{ value: string; label: string }>;
+};
+
 /** 末尾/日/CZ の絞り込みを“公開前に集計済み”で持つ（生サンプルは公開しない）。
  *  サイトは選択からキー（例 't7c1'＝末尾7×CZ1回、順序 t→d→c）を作って tables を引くだけ。
  *  素の全体（絞り込み無し）は profile.baseAnchors 側なので tables には入れない。 */
@@ -119,6 +131,8 @@ export type EvFilters = {
   payLabels?: Record<string, string>;
   /** 前回AT獲得セレクタの「未選択」ラベル。 */
   payAll?: string;
+  /** 絞り込みの軸（新形式）。これがあれば tails/days/cz/pay は見ない。 */
+  axes?: FilterAxis[];
   /** キー→集計済みテーブル。該当キーが無い＝データ不足. */
   tables: Record<string, EvFilterTable>;
 };

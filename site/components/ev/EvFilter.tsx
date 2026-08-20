@@ -1,30 +1,13 @@
 "use client";
 
+import type { FilterAxis } from "@/lib/ev/types";
+
 type EvFilterProps = {
-  tailOptions: string[];
-  dayOptions: string[];
-  /** 道中CZ回数の候補（AT間区切り機種のみ）。無い機種は undefined でセレクタ非表示. */
-  czOptions?: string[];
-  /** CZバケット値→表示ラベル（"1"→"CZ1回後" 等）. */
-  czLabelFn?: (v: string) => string;
-  /** CZセレクタの未選択ラベル（新形式＝CZ0回(天井狙い)。旧形式＝全部）. */
-  czAllLabel?: string;
-  /** 道中の当たりの呼び名（既定CZ / マギレコはBB）。セレクタの見出しに使う. */
-  czTerm?: string;
-  /** 前回AT獲得の候補（帯の下限）。無い機種は undefined でセレクタ非表示. */
-  payOptions?: string[];
-  /** 帯の下限→表示ラベル. */
-  payLabelFn?: (v: string) => string;
-  /** 前回AT獲得セレクタの未選択ラベル. */
-  payAllLabel?: string;
-  tail: string | null;
-  day: string | null;
-  cz?: string | null;
-  pay?: string | null;
-  onTailChange: (v: string | null) => void;
-  onDayChange: (v: string | null) => void;
-  onCzChange?: (v: string | null) => void;
-  onPayChange?: (v: string | null) => void;
+  /** 絞り込みの軸（データ側が並び順ごと配る）。軸が増えてもここは無改修. */
+  axes: FilterAxis[];
+  /** 軸key→選択値（未選択は null）. */
+  values: Record<string, string | null>;
+  onChange: (key: string, value: string | null) => void;
   /** 絞り込み後の台数（実台数の概算）と当たり件数. */
   units: number;
   hits: number;
@@ -66,81 +49,30 @@ function Select({
   );
 }
 
-export function EvFilter({
-  tailOptions,
-  dayOptions,
-  czOptions,
-  czLabelFn,
-  czAllLabel = "全部",
-  czTerm = "CZ",
-  payOptions,
-  payLabelFn,
-  payAllLabel = "前ATを問わない",
-  tail,
-  day,
-  cz = null,
-  pay = null,
-  onTailChange,
-  onDayChange,
-  onCzChange,
-  onPayChange,
-  units,
-  hits,
-  hitUnit
-}: EvFilterProps) {
-  const hasCz = Boolean(czOptions && czOptions.length > 0 && onCzChange);
-  const hasPay = Boolean(payOptions && payOptions.length > 0 && onPayChange);
-  const active = tail !== null || day !== null || cz !== null || pay !== null;
+export function EvFilter({ axes, values, onChange, units, hits, hitUnit }: EvFilterProps) {
+  const active = axes.some((axis) => values[axis.key] != null);
+  if (axes.length === 0) return null;
   return (
     <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-line bg-panel px-3 py-2">
       <span className="mono shrink-0 text-[9px] tracking-[0.14em] text-muted">絞り込み</span>
-      <Select
-        label="末尾"
-        allLabel="全部"
-        options={tailOptions}
-        value={tail}
-        onChange={onTailChange}
-        fmt={(v) => `末尾${v}`}
-      />
-      <Select
-        label="つく日"
-        allLabel="全日"
-        options={dayOptions}
-        value={day}
-        onChange={onDayChange}
-        fmt={(v) => `${v}のつく日`}
-      />
-      {hasCz ? (
+      {axes.map((axis) => (
         <Select
-          label={`道中${czTerm}`}
-          allLabel={czAllLabel}
-          options={czOptions ?? []}
-          value={cz}
-          onChange={onCzChange ?? (() => undefined)}
-          fmt={(v) => (czLabelFn ? czLabelFn(v) : v)}
+          key={axis.key}
+          label={axis.label}
+          allLabel={axis.allLabel}
+          options={axis.options.map((option) => option.value)}
+          value={values[axis.key] ?? null}
+          onChange={(v) => onChange(axis.key, v)}
+          fmt={(v) => axis.options.find((option) => option.value === v)?.label ?? v}
         />
-      ) : null}
-      {hasPay ? (
-        <Select
-          label="前回AT"
-          allLabel={payAllLabel}
-          options={payOptions ?? []}
-          value={pay}
-          onChange={onPayChange ?? (() => undefined)}
-          fmt={(v) => (payLabelFn ? payLabelFn(v) : v)}
-        />
-      ) : null}
+      ))}
       {active ? (
         <span className="mono text-[10px] text-muted">
-          {units}台 / {hits}{hitUnit ? `${hitUnit}区間` : "AT"}
+          {units}台 / {hits}
+          {hitUnit ? `${hitUnit}区間` : "AT"}
           <button
             type="button"
-            onClick={() => {
-              onTailChange(null);
-              onDayChange(null);
-              onCzChange?.(null);
-              onPayChange?.(null);
-            }}
+            onClick={() => axes.forEach((axis) => onChange(axis.key, null))}
             className="mono ml-2 rounded border border-line px-2 py-0.5 text-[10px] text-ink-soft"
           >
             解除
