@@ -7,10 +7,13 @@ describe("machine validation", () => {
     expect(validateMachine(machineData).id).toBe("vvv2");
   });
 
-  test("rejects EV/RTP sign mismatches", () => {
+  // 機械割は OUT÷IN（枚ベース）で換金率に依存しない。46/52 は交換ギャップぶん
+  // 損益分岐が約113%になるので、100%と期待値の符号は一致しない＝符号の縛りは持たない。
+  // 代わりに機械割が正の数であることだけ担保する。
+  test("rejects non-positive rtp", () => {
     const invalid = structuredClone(machineData);
-    invalid.profiles[0].baseAnchors[0].rtp = 101;
-    expect(() => validateMachine(invalid)).toThrow(/sign mismatch/);
+    invalid.profiles[0].baseAnchors[0].rtp = 0;
+    expect(() => validateMachine(invalid)).toThrow(/rtp must be positive/);
   });
 
   test("rejects negative anchor inv", () => {

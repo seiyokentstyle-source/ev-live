@@ -63,7 +63,7 @@ export function ConditionsBar({
     if (ev.preg) rows.push({ k: "前兆", v: `${ev.preg}G（打ち始めから自力当選しない前提）` });
     if (czLabel) rows.push({ k: `道中${czTerm ?? "CZ"}`, v: `${czLabel} の状態から次のボーナスまで` });
     rows.push({ k: "時給換算", v: `${machine.economics.gamesPerHour}G/時` });
-    rows.push({ k: "機械割", v: "回収円÷投資円（46/52なら46枚投資=52枚回収で100%）" });
+    rows.push({ k: "機械割", v: "OUT÷IN（枚ベース・公表値と同じ定義）。100%は損益分岐ではない" });
   } else if (mode === "setting") {
     rows.push({ k: "出率", v: "OUT÷IN（3枚掛け・即やめ想定）" });
     if (ev?.junzou) rows.push({ k: "AT中G", v: `総獲得÷${ev.junzou}枚/G で推定` });
