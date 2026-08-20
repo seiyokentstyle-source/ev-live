@@ -84,38 +84,39 @@ export function computeAnchors(
   return anchors;
 }
 
-export function baseEV(g: number, profile: Profile): number {
+/** アンカー列を g で線形補間して field の値を返す。範囲外は端の値で頭打ち。
+ *  ev/rtp/inv/playG/be はどれも同じ補間なので、1本にまとめてある。
+ *  field が全アンカーで未定義なら undefined（古いデータ向け）。 */
+function interpolate(
+  g: number,
+  profile: Profile,
+  field: "ev" | "rtp" | "inv" | "playG"
+): number | undefined {
   const anchors = profile.baseAnchors;
-  if (g <= anchors[0].g) return anchors[0].ev;
-  if (g >= anchors[anchors.length - 1].g) return anchors[anchors.length - 1].ev;
+  if (anchors.length === 0) return undefined;
+  const at = (anchor: BaseAnchor) => anchor[field];
+  if (at(anchors[0]) === undefined) return undefined;
+  if (g <= anchors[0].g) return at(anchors[0]);
+  const last = anchors[anchors.length - 1];
+  if (g >= last.g) return at(last);
 
   for (let i = 0; i < anchors.length - 1; i += 1) {
     const current = anchors[i];
     const next = anchors[i + 1];
     if (g >= current.g && g <= next.g) {
       const t = (g - current.g) / (next.g - current.g);
-      return current.ev + (next.ev - current.ev) * t;
+      return (at(current) ?? 0) + ((at(next) ?? 0) - (at(current) ?? 0)) * t;
     }
   }
+  return undefined;
+}
 
-  return 0;
+export function baseEV(g: number, profile: Profile): number {
+  return interpolate(g, profile, "ev") ?? 0;
 }
 
 export function baseRtp(g: number, profile: Profile): number {
-  const anchors = profile.baseAnchors;
-  if (g <= anchors[0].g) return anchors[0].rtp;
-  if (g >= anchors[anchors.length - 1].g) return anchors[anchors.length - 1].rtp;
-
-  for (let i = 0; i < anchors.length - 1; i += 1) {
-    const current = anchors[i];
-    const next = anchors[i + 1];
-    if (g >= current.g && g <= next.g) {
-      const t = (g - current.g) / (next.g - current.g);
-      return current.rtp + (next.rtp - current.rtp) * t;
-    }
-  }
-
-  return 100;
+  return interpolate(g, profile, "rtp") ?? 100;
 }
 
 export function calcEV(g: number, conditions: Conditions, profile: Profile, machine: Machine): number {
@@ -164,20 +165,7 @@ export function adjustedRtp(
 }
 
 export function basePlayG(g: number, profile: Profile): number {
-  const anchors = profile.baseAnchors;
-  if (g <= anchors[0].g) return anchors[0].playG ?? 0;
-  if (g >= anchors[anchors.length - 1].g) return anchors[anchors.length - 1].playG ?? 0;
-
-  for (let i = 0; i < anchors.length - 1; i += 1) {
-    const current = anchors[i];
-    const next = anchors[i + 1];
-    if (g >= current.g && g <= next.g) {
-      const t = (g - current.g) / (next.g - current.g);
-      return (current.playG ?? 0) + ((next.playG ?? 0) - (current.playG ?? 0)) * t;
-    }
-  }
-
-  return 0;
+  return interpolate(g, profile, "playG") ?? 0;
 }
 
 export function hourlyEV(g: number, ev: number, profile: Profile, machine: Machine): number {
@@ -192,20 +180,7 @@ export function hourlyEV(g: number, ev: number, profile: Profile, machine: Machi
 }
 
 export function baseInv(g: number, profile: Profile): number {
-  const anchors = profile.baseAnchors;
-  if (g <= anchors[0].g) return anchors[0].inv ?? 0;
-  if (g >= anchors[anchors.length - 1].g) return anchors[anchors.length - 1].inv ?? 0;
-
-  for (let i = 0; i < anchors.length - 1; i += 1) {
-    const current = anchors[i];
-    const next = anchors[i + 1];
-    if (g >= current.g && g <= next.g) {
-      const t = (g - current.g) / (next.g - current.g);
-      return (current.inv ?? 0) + ((next.inv ?? 0) - (current.inv ?? 0)) * t;
-    }
-  }
-
-  return 0;
+  return interpolate(g, profile, "inv") ?? 0;
 }
 
 export function avgMedals(g: number, profile: Profile, machine: Machine): number {
