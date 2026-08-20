@@ -88,13 +88,6 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
           <EmptyState>{view === "date" ? "日付別データがありません" : "該当する台がありません"}</EmptyState>
         ) : (
           <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
-            <colgroup>
-              <col className="w-[18%]" />
-              <col className="w-[26%]" />
-              <col className="w-[18%]" />
-              <col className="w-[19%]" />
-              <col className="w-[19%]" />
-            </colgroup>
             <thead>
               <tr>
                 <Th corner>{view === "date" ? "日付" : "台番号"}</Th>

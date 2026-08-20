@@ -36,26 +36,9 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
     >
         {/* 列が6本あり、狭い画面で%指定だと全列が潰れて読めなくなる。
             最小幅をpxで確保し、足りない分は横スクロール（G列はsticky）。 */}
-        <table className={`mono table-fixed border-separate border-spacing-0 text-xs ${pivot ? "w-full" : "w-full min-w-[468px]"}`}>
-          {pivot ? (
-            <colgroup>
-              <col className="w-[72px]" />
-              {pivotColumns.map((column) => (
-                <col key={column.value} className="w-[92px]" />
-              ))}
-              <col className="w-[88px]" />
-            </colgroup>
-          ) : (
-            <colgroup>
-              {/* G数は4桁止まり（"1,500"＝5文字）。pt併記の "≒2,809pt" が実質の下限。 */}
-              <col className="w-[72px]" />
-              <col className="w-[72px]" />
-              <col className="w-[92px]" />
-              <col className="w-[80px]" />
-              <col className="w-[76px]" />
-              <col className="w-[76px]" />
-            </colgroup>
-          )}
+        {/* table-fixed で列幅を指定しなければ、全列が等幅で画面幅ぴったりに割り付けられる。
+          横スクロールは無くなる。G数は4桁までなので1/6の幅で足りる。 */}
+      <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
           <thead>
             <tr>
               <Th corner>
@@ -79,7 +62,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                   </Th>
                   <Th unit="円/h">時給</Th>
                   <Th unit="枚">平均投入</Th>
-                  <Th unit="件">サンプル数</Th>
+                  <Th unit="件">サンプル</Th>
                 </>
               )}
             </tr>

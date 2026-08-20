@@ -22,13 +22,6 @@ export function AtPayoutTable({ data }: AtPayoutTableProps) {
       <TableNote>{data.note}</TableNote>
       <TableScroll>
         <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
-          <colgroup>
-            <col className="w-[24%]" />
-            <col className="w-[20%]" />
-            <col className="w-[20%]" />
-            <col className="w-[18%]" />
-            <col className="w-[18%]" />
-          </colgroup>
           <thead>
             <tr>
               <Th corner>
@@ -48,9 +41,8 @@ export function AtPayoutTable({ data }: AtPayoutTableProps) {
               const alt = stripe(index);
               return (
                 <tr key={band.lo}>
-                  <RowHead>
-                    {band.lo.toLocaleString("ja-JP")}–{(band.hi - 1).toLocaleString("ja-JP")}
-                  </RowHead>
+                  {/* 帯は連続しているので開始Gだけ出す（"1,200–1,249" は等幅の列に入らない）。 */}
+                  <RowHead>{band.lo.toLocaleString("ja-JP")}〜</RowHead>
                   <Td alt={alt} tone={band.hit === undefined || band.hit === null ? "text-muted" : "text-ink"}>
                     {band.hit === undefined || band.hit === null ? (
                       "—"
