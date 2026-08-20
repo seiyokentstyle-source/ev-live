@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import type { Theoretical } from "@/lib/ev/types";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
+import { RowHead, TableFoot, TableNote, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
 /** ボーダー判定に使う機械割（%）。これを下回る行が残っている間はボーダーとしない。 */
 const BORDER_RTP = 106;
@@ -14,8 +15,6 @@ type TheoreticalTableProps = {
 };
 
 export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) {
-  const blockEvent = (event: { preventDefault: () => void }) => event.preventDefault();
-
   // 行間隔はデータ側の gRange.step に従う（生成側が10G刻みなら10G刻みで全部出す）。
   // 最終行（天井手前の最深G）は step で割り切れなくても必ず残す。
   const rows = useMemo(() => {
@@ -36,98 +35,77 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-bg">
-      <p className="shrink-0 border-b border-line bg-panel-2 px-3 py-2 text-[10px] leading-relaxed text-muted">
-        {data.note}
-      </p>
-      <div className="flex shrink-0 items-center justify-between border-b border-line bg-panel px-3 py-2 text-[11px]">
-        <span className="mono text-muted">
-          ボーダー<span className="text-[9px]">（機械割{BORDER_RTP}%）</span>
-          <span className="ml-2 font-bold text-highlight">
+      <TableNote>{data.note}</TableNote>
+      {/* 左右2段組にすると右側が3行に折り返して読みづらかったので、
+          他のバーと同じ「見出し＋本文」の縦積みにする。 */}
+      <div className="mono shrink-0 border-b border-line bg-panel px-3 py-2">
+        <div className="flex items-baseline gap-2">
+          <span className="w-12 shrink-0 text-[9px] tracking-[0.14em] text-muted">ボーダー</span>
+          <span className="text-sm font-bold text-highlight">
             {border === null ? "—" : `${border.toLocaleString("ja-JP")}G〜`}
           </span>
-        </span>
+          <span className="text-[10px] text-muted">機械割{BORDER_RTP}%以上</span>
+        </div>
         {/* 初当りGは表が実際に使っている値＝当店実測。公表の設定1とは別物なので分けて出す。 */}
-        <span className="mono flex flex-col items-end text-right text-muted">
+        <div className="mt-1 flex flex-wrap gap-x-3 pl-14 text-[10px] text-muted">
           <span>
-            当店実測 平均初当り {data.firstHitG.toLocaleString("ja-JP")}G ／ 平均獲得{" "}
+            当店実測 初当り {data.firstHitG.toLocaleString("ja-JP")}G ／ 獲得{" "}
             {data.avgPayout.toLocaleString("ja-JP")}枚
           </span>
           {data.specFirstHitG ? (
-            <span className="text-[10px] text-ink-soft">
+            <span className="text-ink-soft">
               公表 設定1 1/{data.specFirstHitG.toLocaleString("ja-JP")}
               {data.specRtp ? ` ・ ${data.specRtp.toFixed(1)}%` : ""}
             </span>
           ) : null}
-        </span>
+        </div>
       </div>
-      <div
-        className="min-h-0 flex-1 select-none overflow-auto [-webkit-touch-callout:none]"
-        onCopy={blockEvent}
-        onCut={blockEvent}
-        onContextMenu={blockEvent}
-      >
+      <TableScroll>
         <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
           <colgroup>
-            <col className="w-[18%]" />
-            <col className="w-[22%]" />
             <col className="w-[20%]" />
+            <col className="w-[22%]" />
+            <col className="w-[18%]" />
             <col className="w-[20%]" />
             <col className="w-[20%]" />
           </colgroup>
           <thead>
             <tr>
-              <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
-                G数
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
+              <Th corner>G数</Th>
+              <Th unit="円" primary>
                 期待値
-                <span className="block text-[9px] text-muted">円</span>
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                機械割
-                <span className="block text-[9px] text-muted">%</span>
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                時給
-                <span className="block text-[9px] text-muted">円/h</span>
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                平均投入
-                <span className="block text-[9px] text-muted">枚</span>
-              </th>
+              </Th>
+              <Th unit="%">機械割</Th>
+              <Th unit="円/h">時給</Th>
+              <Th unit="枚">平均投入</Th>
             </tr>
           </thead>
           <tbody>
             {rows.map((a, index) => {
-              const alt = index % 2 === 1 ? "bg-[var(--row-alt)]" : "";
+              const alt = stripe(index);
               const hourly = a.playG ? Math.round((a.ev * gamesPerHour) / a.playG) : 0;
               return (
                 <tr key={a.g}>
-                  <td className="sticky left-0 z-10 border-b border-r border-line-soft bg-panel px-3 py-2 text-left font-bold text-ink-soft">
-                    {a.g.toLocaleString("ja-JP")}
-                  </td>
-                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right font-bold ${toneClass(a.ev)} ${alt}`}>
+                  <RowHead>{a.g.toLocaleString("ja-JP")}</RowHead>
+                  <Td alt={alt} bold tone={toneClass(a.ev)}>
                     {formatSigned(a.ev)}
-                  </td>
-                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${rtpToneClass(a.rtp)} ${alt}`}>
+                  </Td>
+                  <Td alt={alt} tone={rtpToneClass(a.rtp)}>
                     {a.rtp.toFixed(1)}
-                  </td>
-                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${toneClass(hourly)} ${alt}`}>
+                  </Td>
+                  <Td alt={alt} tone={toneClass(hourly)}>
                     {formatSigned(hourly)}
-                  </td>
-                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-muted ${alt}`}>
+                  </Td>
+                  <Td alt={alt} tone="text-muted">
                     {a.inv?.toLocaleString("ja-JP") ?? "—"}
-                  </td>
+                  </Td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-      </div>
-      <div className="flex shrink-0 items-center justify-between border-t border-line bg-panel-2 px-3 py-2 text-[11px]">
-        <span className="mono text-muted">{data.label}</span>
-        <span className="mono truncate pl-2 text-ink-soft">{data.source}</span>
-      </div>
+      </TableScroll>
+      <TableFoot left={data.label} right={data.source} />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { normalizeSearchText } from "@/lib/search/normalize";
 import { MachineCard, type MachineSearchMatch } from "@/components/machine-list/MachineCard";
 import { MakerFilter } from "@/components/machine-list/MakerFilter";
 import { SearchInput } from "@/components/machine-list/SearchInput";
+import { EmptyState, TableFoot } from "@/components/ui/DataTable";
 
 type MachineListClientProps = {
   machines: Machine[];
@@ -76,18 +77,17 @@ export function MachineListClient({ machines }: MachineListClientProps) {
 
   return (
     <div className="app-shell">
-      <header className="shrink-0 border-b border-line bg-panel px-4 py-3">
-        <div className="flex items-end justify-between gap-3">
-          <div>
-            <p className="mono text-[10px] tracking-[0.22em] text-highlight">EV LIVE</p>
-            <h1 className="mt-1 text-lg font-black">機種一覧</h1>
-          </div>
-          <p className="mono text-xs text-ink-soft">{results.length}件</p>
+      {/* 詳細ページのヘッダーと同じ骨格・同じ余白。件数は他ページと揃えてフッターの左に出す。 */}
+      <header className="flex shrink-0 items-end justify-between gap-3 border-b border-line bg-panel px-4 py-2.5">
+        <div>
+          <p className="mono text-[10px] tracking-[0.22em] text-highlight">EV LIVE</p>
+          <h1 className="mt-0.5 text-base font-black">機種一覧</h1>
         </div>
+        <p className="mono text-[10px] text-muted">期待値ガチ勢向け</p>
       </header>
 
-      <main className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-        <div className="sticky top-0 z-20 -mx-4 -mt-4 border-b border-line bg-bg px-4 pb-3 pt-4">
+      <main className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
+        <div className="sticky top-0 z-20 -mx-4 -mt-3 border-b border-line bg-bg px-4 pb-3 pt-3">
           <SearchInput value={query} onChange={setQuery} />
           <div className="mt-3">
             <MakerFilter makers={makers} value={maker} favoriteCount={favoriteCount} onChange={setMaker} />
@@ -95,7 +95,7 @@ export function MachineListClient({ machines }: MachineListClientProps) {
         </div>
 
         {results.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 py-4">
+          <div className="grid grid-cols-2 gap-3 pb-2 pt-4">
             {results.map((result) => (
               <MachineCard
                 key={result.machine.id}
@@ -108,15 +108,14 @@ export function MachineListClient({ machines }: MachineListClientProps) {
             ))}
           </div>
         ) : (
-          <div className="grid h-56 place-items-center text-center">
-            <p className="text-sm text-ink-soft">{emptyText}</p>
-          </div>
+          <EmptyState>{emptyText}</EmptyState>
         )}
       </main>
 
-      <footer className="mono shrink-0 border-t border-line bg-panel px-4 py-3 text-[10px] text-muted">
-        EV LIVE / 登録不要で閲覧可
-      </footer>
+      <TableFoot
+        left={`${results.length.toLocaleString("ja-JP")}件 / 全${machines.length.toLocaleString("ja-JP")}機種`}
+        right="登録不要で閲覧可"
+      />
     </div>
   );
 }

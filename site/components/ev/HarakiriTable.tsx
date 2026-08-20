@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 import type { Harakiri } from "@/lib/ev/types";
 import { MonthTabs, monthOf } from "./MonthTabs";
+import { ControlBar, FilterSelect, SegmentedControl } from "@/components/ui/Controls";
+import { EmptyState, RowHead, TableFoot, TableNote, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
 type HarakiriTableProps = {
   harakiri: Harakiri;
@@ -29,9 +31,6 @@ function shortDate(date: string): string {
 type HarakiriView = "unit" | "date";
 
 export function HarakiriTable({ harakiri }: HarakiriTableProps) {
-  // 期待値表と同様にコピーを軽く抑止（選択/コピー/右クリックを無効化）。
-  const blockEvent = (event: { preventDefault: () => void }) => event.preventDefault();
-
   const [view, setView] = useState<HarakiriView>("unit");
   const [tailFilter, setTailFilter] = useState<string | null>(null);
   const [monthFilter, setMonthFilter] = useState<string | null>(null); // 月タブ（日付別のみ）
@@ -55,61 +54,38 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-bg">
-      <p className="shrink-0 border-b border-line bg-panel-2 px-3 py-2 text-[10px] leading-relaxed text-muted">
-        {harakiri.note}
-      </p>
-      <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-line bg-panel px-3 py-2">
-        {hasByDate ? (
-          <div className="flex overflow-hidden rounded border border-line">
-            <button
-              type="button"
-              onClick={() => setView("unit")}
-              className={`mono px-3 py-1 text-[11px] ${view === "unit" ? "bg-panel-2 text-highlight" : "text-muted"}`}
-            >
-              台番号別
-            </button>
-            <button
-              type="button"
-              onClick={() => setView("date")}
-              className={`mono border-l border-line px-3 py-1 text-[11px] ${view === "date" ? "bg-panel-2 text-highlight" : "text-muted"}`}
-            >
-              日付別
-            </button>
-          </div>
-        ) : null}
-        {view === "unit" ? (
-          <label className="flex items-center gap-2">
-            <span className="mono w-12 shrink-0 text-[9px] tracking-[0.08em] text-muted">末尾</span>
-            <select
-              value={tailFilter ?? ""}
-              onChange={(e) => setTailFilter(e.target.value === "" ? null : e.target.value)}
-              className="mono w-[128px] rounded border border-line bg-panel-2 px-2 py-1 text-[11px] text-ink-soft [color-scheme:dark]"
-            >
-              <option value="">全部</option>
-              {tailOptions.map((v) => (
-                <option key={v} value={v}>
-                  末尾{v}
-                </option>
-              ))}
-            </select>
-          </label>
-        ) : null}
-      </div>
-      {view === "date" && hasByDate ? (
-        <div className="shrink-0 border-b border-line bg-panel px-3 py-2">
-          <MonthTabs dates={allDates} value={monthFilter} onChange={setMonthFilter} />
-        </div>
+      <TableNote>{harakiri.note}</TableNote>
+      {hasByDate ? (
+        <ControlBar label="集計">
+          <SegmentedControl
+            segments={[
+              { value: "unit", label: "台番号別" },
+              { value: "date", label: "日付別" }
+            ]}
+            value={view}
+            onChange={setView}
+          />
+        </ControlBar>
       ) : null}
-      <div
-        className="min-h-0 flex-1 select-none overflow-auto [-webkit-touch-callout:none]"
-        onCopy={blockEvent}
-        onCut={blockEvent}
-        onContextMenu={blockEvent}
-      >
+      {view === "date" && hasByDate ? (
+        <ControlBar>
+          <MonthTabs dates={allDates} value={monthFilter} onChange={setMonthFilter} />
+        </ControlBar>
+      ) : (
+        <ControlBar label="絞り込み">
+          <FilterSelect
+            label="末尾"
+            allLabel="全部"
+            options={tailOptions}
+            value={tailFilter}
+            onChange={setTailFilter}
+            fmt={(v) => `末尾${v}`}
+          />
+        </ControlBar>
+      )}
+      <TableScroll>
         {empty ? (
-          <p className="px-3 py-6 text-center text-xs text-muted">
-            {view === "date" ? "日付別データがありません" : "該当する台がありません"}
-          </p>
+          <EmptyState>{view === "date" ? "日付別データがありません" : "該当する台がありません"}</EmptyState>
         ) : (
           <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
             <colgroup>
@@ -121,77 +97,51 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
             </colgroup>
             <thead>
               <tr>
-                <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
-                  {view === "date" ? "日付" : "台番号"}
-                </th>
-                <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
+                <Th corner>{view === "date" ? "日付" : "台番号"}</Th>
+                <Th unit="%・最大100" primary>
                   ドライブ発生率
-                  <span className="block text-[9px] text-muted">%（推定・最大100）</span>
-                </th>
-                <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                  発生
-                  <span className="block text-[9px] text-muted">ラッシュ</span>
-                </th>
-                <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                  ラッシュ
-                  <span className="block text-[9px] text-muted">回</span>
-                </th>
-                <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                  初当り
-                  <span className="block text-[9px] text-muted">回</span>
-                </th>
+                </Th>
+                <Th unit="ラッシュ">発生</Th>
+                <Th unit="回">ラッシュ</Th>
+                <Th unit="回">初当り</Th>
               </tr>
             </thead>
             <tbody>
-              {view === "date"
-                ? dateRows.map((d, index) => {
-                    const alt = index % 2 === 1 ? "bg-[var(--row-alt)]" : "";
-                    return (
-                      <tr key={d.date}>
-                        <td className="sticky left-0 z-10 border-b border-r border-line-soft bg-panel px-3 py-2 text-left font-bold text-ink-soft">
-                          {shortDate(d.date)}
-                        </td>
-                        <td className={`border-b border-r border-line-soft px-2 py-2 text-right font-bold ${rateToneClass(d.rate, d.rush)} ${alt}`}>
-                          {d.rush === 0 ? "—" : d.rate.toFixed(1)}
-                        </td>
-                        <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-ink-soft ${alt}`}>{d.hits}</td>
-                        <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-muted ${alt}`}>{d.rush}</td>
-                        <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-muted ${alt}`}>{d.sessions}</td>
-                      </tr>
-                    );
-                  })
-                : rows.map((unit, index) => {
-                    const alt = index % 2 === 1 ? "bg-[var(--row-alt)]" : "";
-                    return (
-                      <tr key={unit.unit}>
-                        <td className="sticky left-0 z-10 border-b border-r border-line-soft bg-panel px-3 py-2 text-left font-bold text-ink-soft">
-                          {unit.unit}
-                        </td>
-                        <td className={`border-b border-r border-line-soft px-2 py-2 text-right font-bold ${rateToneClass(unit.rate, unit.rush)} ${alt}`}>
-                          {unit.rush === 0 ? "—" : unit.rate.toFixed(1)}
-                        </td>
-                        <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-ink-soft ${alt}`}>{unit.hits}</td>
-                        <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-muted ${alt}`}>{unit.rush}</td>
-                        <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-muted ${alt}`}>{unit.sessions}</td>
-                      </tr>
-                    );
-                  })}
+              {(view === "date" ? dateRows : rows).map((row, index) => {
+                const alt = stripe(index);
+                const key = "date" in row ? row.date : row.unit;
+                return (
+                  <tr key={key}>
+                    <RowHead>{"date" in row ? shortDate(row.date) : row.unit}</RowHead>
+                    <Td alt={alt} bold tone={rateToneClass(row.rate, row.rush)}>
+                      {row.rush === 0 ? "—" : row.rate.toFixed(1)}
+                    </Td>
+                    <Td alt={alt}>{row.hits}</Td>
+                    <Td alt={alt} tone="text-muted">
+                      {row.rush}
+                    </Td>
+                    <Td alt={alt} tone="text-muted">
+                      {row.sessions}
+                    </Td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
-      </div>
-      <div className="flex shrink-0 items-center justify-between border-t border-line bg-panel-2 px-3 py-2 text-[11px]">
-        <span className="mono text-muted">
-          {view === "date" ? `${dateRows.length}日` : `${rows.length}台`} / しきい値 {harakiri.threshold}枚
-        </span>
-        <span className="mono text-ink-soft">
-          機種全体
-          <span className="ml-2 font-bold text-highlight">{harakiri.total.rate.toFixed(1)}%</span>
-          <span className="ml-1 text-muted">
-            （{harakiri.total.hits}回/{harakiri.total.rush}ラッシュ）
-          </span>
-        </span>
-      </div>
+      </TableScroll>
+      <TableFoot
+        left={`${view === "date" ? `${dateRows.length}日` : `${rows.length}台`} / しきい値 ${harakiri.threshold}枚`}
+        right={
+          <>
+            機種全体
+            <span className="ml-2 font-bold text-highlight">{harakiri.total.rate.toFixed(1)}%</span>
+            <span className="ml-1 text-muted">
+              （{harakiri.total.hits}回/{harakiri.total.rush}ラッシュ）
+            </span>
+          </>
+        }
+      />
     </div>
   );
 }

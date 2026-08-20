@@ -1,5 +1,7 @@
 "use client";
 
+import { SEGMENT_OFF, SEGMENT_ON } from "@/components/ui/Controls";
+
 import type { Axis, Conditions } from "@/lib/ev/types";
 
 type ConditionsPanelProps = {
@@ -45,20 +47,24 @@ export function ConditionsPanel({
 
   return (
     <section className="max-h-[50dvh] shrink-0 overflow-y-auto border-b border-line bg-panel">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-line-soft bg-panel px-4 py-3">
-        <span className="mono text-[10px] tracking-[0.14em] text-muted">▍ 条件</span>
-        <span className="mono text-[10px] text-accent">
+      <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-line-soft bg-panel px-3 py-2">
+        <span className="mono w-12 shrink-0 text-[9px] tracking-[0.14em] text-muted">条件</span>
+        <span className="mono flex-1 truncate text-[10px] text-accent">
           {activeCount > 0 ? `${activeCount}件適用中` : ""}
           {pivotLabel ? ` / 列展開: ${pivotLabel}` : ""}
         </span>
-        <button type="button" onClick={onToggleCollapsed} className="mono rounded border border-line px-3 py-1 text-[11px] text-ink-soft">
+        <button
+          type="button"
+          onClick={onToggleCollapsed}
+          className="mono shrink-0 rounded-md border border-line bg-panel-2 px-3 py-1 text-[11px] text-ink-soft"
+        >
           {collapsed ? "展開" : "折りたたみ"}
         </button>
       </header>
 
       {!collapsed ? (
         <>
-          <div className="mx-4 my-3 border-l-2 border-highlight bg-[rgba(255,204,68,0.06)] px-3 py-2 text-[11px] leading-relaxed text-ink-soft">
+          <div className="mx-3 my-3 border-l-2 border-highlight bg-[rgba(255,204,68,0.06)] px-3 py-2 text-[11px] leading-relaxed text-ink-soft">
             <strong className="mono text-highlight">↔</strong> をタップで <strong className="text-highlight">列展開</strong>。
             複数値を表に並べて比較できる。
           </div>
@@ -66,12 +72,12 @@ export function ConditionsPanel({
             {axes.map((axis) => {
               const isPivot = pivotAxis === axis.key;
               return (
-                <div key={axis.key} className="grid grid-cols-[1fr_auto_auto] items-center gap-2 border-b border-line-soft px-4 py-2">
+                <div key={axis.key} className="grid grid-cols-[1fr_auto_auto] items-center gap-2 border-b border-line-soft px-3 py-2">
                   <div className="truncate text-xs text-ink-soft">{axis.label}</div>
                   <button
                     type="button"
                     onClick={() => onOpenPicker(axis, isPivot ? "pivot" : "select")}
-                    className={`mono min-w-[112px] rounded-md border px-3 py-2 text-center text-xs ${
+                    className={`mono min-w-[112px] rounded-md border px-3 py-1.5 text-center text-xs ${
                       isPivot ? "border-accent bg-[var(--accent-soft)] text-accent" : "border-line bg-panel-2 text-accent"
                     }`}
                   >
@@ -83,11 +89,7 @@ export function ConditionsPanel({
                     aria-label={`${axis.label}を列展開`}
                     onClick={() => onOpenPicker(axis, "pivot")}
                     className={`mono grid h-[30px] w-9 place-items-center rounded-md border text-xs font-bold ${
-                      isPivot
-                        ? "border-highlight bg-highlight text-black"
-                        : axis.pivotable
-                          ? "border-line text-muted"
-                          : "border-line text-muted opacity-30"
+                      isPivot ? SEGMENT_ON : axis.pivotable ? SEGMENT_OFF : `${SEGMENT_OFF} opacity-30`
                     }`}
                   >
                     ↔

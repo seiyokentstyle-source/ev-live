@@ -19,9 +19,9 @@ export function SearchInput({ value, onChange }: SearchInputProps) {
           type="button"
           aria-label="検索をクリア"
           onClick={() => onChange("")}
-          className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-md border border-line text-ink-soft active:bg-panel"
+          className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-md border border-line bg-panel-2 text-ink-soft active:bg-panel"
         >
-          x
+          ×
         </button>
       ) : null}
     </div>

@@ -2,6 +2,7 @@
 
 import type { Machine, PivotConfig, Profile, TableRow } from "@/lib/ev/types";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
+import { ROW_HEIGHT, RowHead, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
 type EvTableProps = {
   machine: Machine;
@@ -26,165 +27,116 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
   // 「今何pt」から表を引けるようにするため。EVの計算はG基準のまま＝表示だけの話。
   const ptPerG = profile.ptPerG;
 
-  // Discourage casual copying of the EV numbers: block text selection, the
-  // right-click/long-press menu, and copy/cut. This only deters; screenshots and
-  // devtools can still read the values. Scoped to the table container so the rest
-  // of the page stays selectable.
-  const blockEvent = (event: { preventDefault: () => void }) => event.preventDefault();
-
   return (
-    <div
-      className="min-h-0 flex-1 select-none overflow-auto bg-bg [-webkit-touch-callout:none]"
-      onCopy={blockEvent}
-      onCut={blockEvent}
-      onContextMenu={blockEvent}
-      onScroll={(event) => {
-        const container = event.currentTarget;
-        const rowHeight = 34;
-        const index = Math.max(0, Math.min(rows.length - 1, Math.floor(container.scrollTop / rowHeight)));
+    <TableScroll
+      onScroll={(scrollTop) => {
+        const index = Math.max(0, Math.min(rows.length - 1, Math.floor(scrollTop / ROW_HEIGHT)));
         onViewGChange(rows[index]?.g ?? profile.gRange.start);
       }}
     >
-      <table className={`mono table-fixed border-separate border-spacing-0 text-xs ${
-        pivot ? "w-full" : "w-full min-w-[464px]"
-      }`}>
-        {pivot ? (
-          <colgroup>
-            <col className="w-[70px]" />
-            {pivotColumns.map((column) => (
-              <col key={column.value} className="w-[92px]" />
-            ))}
-            <col className="w-[88px]" />
-          </colgroup>
-        ) : (
-          <colgroup>
-            {/* 列が6本あり、狭い画面で%指定だと全列が潰れて読めなくなる。
-                最小幅をpxで確保し、足りない分は横スクロール（G列はsticky）。 */}
-            <col className="w-[76px]" />
-            <col className="w-[72px]" />
-            <col className="w-[92px]" />
-            <col className="w-[84px]" />
-            <col className="w-[72px]" />
-            <col className="w-[68px]" />
-          </colgroup>
-        )}
-        <thead>
+        {/* 列が6本あり、狭い画面で%指定だと全列が潰れて読めなくなる。
+            最小幅をpxで確保し、足りない分は横スクロール（G列はsticky）。 */}
+        <table className={`mono table-fixed border-separate border-spacing-0 text-xs ${pivot ? "w-full" : "w-full min-w-[480px]"}`}>
           {pivot ? (
-            <tr>
-              <th className="sticky left-0 top-0 z-30 border-b-2 border-r border-line bg-panel-2 px-2 py-2 text-left text-[10px] text-ink-soft">
-                G数
-                {ptPerG ? <span className="block text-[9px] text-muted">≒pt</span> : null}
-              </th>
+            <colgroup>
+              <col className="w-[84px]" />
               {pivotColumns.map((column) => (
-                <th
-                  key={column.value}
-                  className="sticky top-0 z-20 truncate border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-highlight"
-                >
-                  {column.label}
-                  <span className="block text-[9px] text-muted">期待値(円)</span>
-                </th>
+                <col key={column.value} className="w-[92px]" />
               ))}
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
-                平均投入
-                <span className="block text-[9px] text-muted">枚</span>
-              </th>
-            </tr>
+              <col className="w-[88px]" />
+            </colgroup>
           ) : (
-            <tr>
-              <th className="sticky left-0 top-0 z-30 border-b-2 border-r border-line bg-panel-2 px-2 py-2 text-left text-[10px] text-ink-soft">
-                G数
-                {ptPerG ? <span className="block text-[9px] text-muted">≒pt</span> : null}
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
-                機械割
-                <span className="block text-[9px] text-muted">%</span>
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
-                期待値
-                <span className="block text-[9px] text-muted">円</span>
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
-                時給
-                <span className="block text-[9px] text-muted">円/h</span>
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
-                平均投入
-                <span className="block text-[9px] text-muted">枚</span>
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-1.5 py-2 text-right text-[10px] text-ink-soft">
-                サンプル数
-                <span className="block text-[9px] text-muted">件</span>
-              </th>
-            </tr>
+            <colgroup>
+              <col className="w-[84px]" />
+              <col className="w-[72px]" />
+              <col className="w-[92px]" />
+              <col className="w-[80px]" />
+              <col className="w-[76px]" />
+              <col className="w-[76px]" />
+            </colgroup>
           )}
-        </thead>
-        <tbody>
-          {rows.map((row, index) => {
-            const alt = index % 2 === 1 ? "bg-[var(--row-alt)]" : "";
-            return (
-              <tr key={row.g}>
-                <td className="sticky left-0 z-10 border-b border-r border-line-soft bg-panel px-2 py-2 text-left text-ink-soft">
-                  <span className={row.zoneLabel ? "font-bold text-highlight" : ""}>
-                    {row.zoneLabel ? "▸ " : ""}
-                    {row.g}
-                  </span>
-                  {ptPerG ? (
-                    <span className="block text-[9px] leading-tight text-muted">
-                      ≒{Math.round(row.g * ptPerG).toLocaleString("ja-JP")}pt
+          <thead>
+            <tr>
+              <Th corner>
+                G数
+                {ptPerG ? <span className="block text-[9px] font-normal text-muted">≒pt</span> : null}
+              </Th>
+              {pivot ? (
+                <>
+                  {pivotColumns.map((column) => (
+                    <Th key={column.value} unit="期待値(円)" primary>
+                      {column.label}
+                    </Th>
+                  ))}
+                  <Th unit="枚">平均投入</Th>
+                </>
+              ) : (
+                <>
+                  <Th unit="%">機械割</Th>
+                  <Th unit="円" primary>
+                    期待値
+                  </Th>
+                  <Th unit="円/h">時給</Th>
+                  <Th unit="枚">平均投入</Th>
+                  <Th unit="件">サンプル数</Th>
+                </>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => {
+              const alt = stripe(index);
+              const dash = row.noData;
+              return (
+                <tr key={row.g}>
+                  <RowHead
+                    sub={
+                      <>
+                        {ptPerG ? <span className="block">≒{Math.round(row.g * ptPerG).toLocaleString("ja-JP")}pt</span> : null}
+                        {/* ゾーン名は狭い列に入るので折り返す（切り詰めると「ゾーン〜」しか読めない）。 */}
+                        {row.zoneLabel ? <span className="block text-highlight opacity-70">{row.zoneLabel}</span> : null}
+                      </>
+                    }
+                  >
+                    <span className={row.zoneLabel ? "text-highlight" : ""}>
+                      {row.zoneLabel ? "▸ " : ""}
+                      {row.g.toLocaleString("ja-JP")}
                     </span>
-                  ) : null}
-                  {/* ゾーン名は狭い列に入るので折り返す（切り詰めると「ゾーン〜」しか読めない）。 */}
-                  {row.zoneLabel ? <span className="block text-[9px] leading-tight text-highlight opacity-70">{row.zoneLabel}</span> : null}
-                </td>
-                {pivot ? (
-                  <>
-                    {pivotColumns.map((column) => {
-                      const ev = row.pivotValues?.[column.value] ?? 0;
-                      return (
-                        <td
-                          key={column.value}
-                          className={`border-b border-r border-line-soft px-1.5 py-2 text-right ${
-                            row.noData ? "text-muted" : toneClass(ev)
-                          } ${alt}`}
-                        >
-                          {row.noData ? "—" : formatSigned(ev)}
-                        </td>
-                      );
-                    })}
-                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right text-ink-soft ${alt}`}>
-                      {row.noData ? "—" : row.medals.toLocaleString("ja-JP")}
-                    </td>
-                  </>
-                ) : (
-                  <>
-                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right ${
-                      row.noData ? "text-muted" : rtpToneClass(row.rtp)
-                    } ${alt}`}>
-                      {row.noData ? "—" : `${row.rtp.toFixed(1)}%`}
-                    </td>
-                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right ${
-                      row.noData ? "text-muted" : toneClass(row.ev)
-                    } ${alt}`}>
-                      {row.noData ? "—" : formatSigned(row.ev)}
-                    </td>
-                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right ${
-                      row.noData ? "text-muted" : toneClass(row.hourly)
-                    } ${alt}`}>
-                      {row.noData ? "—" : formatSigned(row.hourly)}
-                    </td>
-                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right text-ink-soft ${alt}`}>
-                      {row.noData ? "—" : row.medals.toLocaleString("ja-JP")}
-                    </td>
-                    <td className={`border-b border-r border-line-soft px-1.5 py-2 text-right text-muted ${alt}`}>
-                      {row.n === undefined ? "—" : row.n.toLocaleString("ja-JP")}
-                    </td>
-                  </>
-                )}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+                  </RowHead>
+                  {pivot ? (
+                    <>
+                      {pivotColumns.map((column) => {
+                        const ev = row.pivotValues?.[column.value] ?? 0;
+                        return (
+                          <Td key={column.value} alt={alt} bold={!dash} tone={dash ? "text-muted" : toneClass(ev)}>
+                            {dash ? "—" : formatSigned(ev)}
+                          </Td>
+                        );
+                      })}
+                      <Td alt={alt}>{dash ? "—" : row.medals.toLocaleString("ja-JP")}</Td>
+                    </>
+                  ) : (
+                    <>
+                      <Td alt={alt} tone={dash ? "text-muted" : rtpToneClass(row.rtp)}>
+                        {dash ? "—" : row.rtp.toFixed(1)}
+                      </Td>
+                      <Td alt={alt} bold={!dash} tone={dash ? "text-muted" : toneClass(row.ev)}>
+                        {dash ? "—" : formatSigned(row.ev)}
+                      </Td>
+                      <Td alt={alt} tone={dash ? "text-muted" : toneClass(row.hourly)}>
+                        {dash ? "—" : formatSigned(row.hourly)}
+                      </Td>
+                      <Td alt={alt}>{dash ? "—" : row.medals.toLocaleString("ja-JP")}</Td>
+                      <Td alt={alt} tone="text-muted">
+                        {row.n === undefined ? "—" : row.n.toLocaleString("ja-JP")}
+                      </Td>
+                    </>
+                  )}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+    </TableScroll>
   );
 }

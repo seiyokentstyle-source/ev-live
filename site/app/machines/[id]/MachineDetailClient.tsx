@@ -18,6 +18,8 @@ import { ModeSelector, type AimMode } from "@/components/ev/ModeSelector";
 import { SettingAimTable } from "@/components/ev/SettingAimTable";
 import { AtPayoutTable } from "@/components/ev/AtPayoutTable";
 import { HarakiriTable } from "@/components/ev/HarakiriTable";
+import { ControlBar, SegmentedControl } from "@/components/ui/Controls";
+import { EmptyState } from "@/components/ui/DataTable";
 
 type PickerState = {
   axis: Axis;
@@ -244,36 +246,27 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
 
   return (
     <div className="app-shell">
-      <header className="flex h-11 shrink-0 items-center justify-between border-b border-line bg-panel px-4">
-        <Link href="/machines" className="text-xs text-ink-soft">
+      {/* 一覧ページのヘッダーと同じ骨格（左＝所在、中央＝見出し、右＝補助情報）にする。
+          以前は右端に押しても何も起きない「...」が置かれていた。 */}
+      <header className="grid h-12 shrink-0 grid-cols-[4rem_1fr_4rem] items-center border-b border-line bg-panel px-4">
+        <Link href="/machines" className="mono text-[11px] text-ink-soft">
           ← 一覧
         </Link>
-        <div className="truncate px-3 text-center text-xs font-bold">{machine.name}</div>
-        <div className="mono text-lg text-ink-soft">...</div>
+        <h1 className="truncate px-2 text-center text-sm font-bold">{machine.name}</h1>
+        <span className="mono truncate text-right text-[10px] text-muted">{machine.manufacturer}</span>
       </header>
 
       {machine.theoretical ? (
-        <div className="flex shrink-0 items-center gap-2 border-b border-line bg-panel px-3 py-2">
-          <span className="mono shrink-0 text-[9px] tracking-[0.14em] text-muted">データ</span>
-          <div className="flex overflow-hidden rounded-md border border-line">
-            <button
-              type="button"
-              aria-pressed={dataView === "hall"}
-              onClick={() => setDataView("hall")}
-              className={`px-3 py-1 text-xs font-bold ${dataView === "hall" ? "bg-[rgba(255,204,68,0.12)] text-highlight" : "bg-panel-2 text-ink-soft"}`}
-            >
-              店舗別データ
-            </button>
-            <button
-              type="button"
-              aria-pressed={dataView === "theory"}
-              onClick={() => setDataView("theory")}
-              className={`border-l border-line px-3 py-1 text-xs font-bold ${dataView === "theory" ? "bg-[rgba(255,204,68,0.12)] text-highlight" : "bg-panel-2 text-ink-soft"}`}
-            >
-              設定1想定
-            </button>
-          </div>
-        </div>
+        <ControlBar label="データ">
+          <SegmentedControl
+            segments={[
+              { value: "hall", label: "店舗別データ", hint: "実戦値" },
+              { value: "theory", label: "設定1想定", hint: "スペック理論値" }
+            ]}
+            value={dataView}
+            onChange={setDataView}
+          />
+        </ControlBar>
       ) : null}
 
       {dataView === "theory" && machine.theoretical ? (
@@ -320,24 +313,17 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
       ) : null}
 
       {isPending ? (
-        <div className="flex min-h-0 flex-1 items-center justify-center px-8 text-center">
-          <div>
-            <div className="text-sm font-bold text-neg">実戦データなし</div>
-            <p className="mt-2 text-xs leading-relaxed text-ink-soft">
-              「{group.label}」の実戦データはまだありません。
-              <br />
-              集計でき次第、期待値を表示します。
-            </p>
-          </div>
-        </div>
+        <EmptyState title="実戦データなし">
+          「{group.label}」の実戦データはまだありません。
+          <br />
+          集計でき次第、期待値を表示します。
+        </EmptyState>
       ) : evEmpty ? (
-        <div className="flex min-h-0 flex-1 items-center justify-center px-8 text-center">
-          <p className="text-xs leading-relaxed text-muted">
-            該当する台／日のデータが足りません。
-            <br />
-            （アンカーを作るには当たり{evSamples?.minSess ?? 15}件以上が必要です）
-          </p>
-        </div>
+        <EmptyState>
+          該当する台／日のデータが足りません。
+          <br />
+          （アンカーを作るには当たり{evSamples?.minSess ?? 15}件以上が必要です）
+        </EmptyState>
       ) : (
         <>
           {activeAxes.length > 0 ? (

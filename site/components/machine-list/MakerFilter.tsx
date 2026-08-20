@@ -1,5 +1,7 @@
 "use client";
 
+import { SEGMENT_OFF, SEGMENT_ON } from "@/components/ui/Controls";
+
 type MakerFilterProps = {
   makers: string[];
   value: string;
@@ -7,14 +9,9 @@ type MakerFilterProps = {
   onChange: (value: string) => void;
 };
 
-function chipClasses(active: boolean, favorite = false): string {
-  if (favorite && active) {
-    return "border-highlight bg-highlight text-black";
-  }
-  if (active) {
-    return "border-accent bg-[var(--accent-soft)] text-accent";
-  }
-  return "border-line bg-panel-2 text-ink-soft";
+// 選択中の見た目は詳細ページのタブと共通にする（ページごとに色が変わると別アプリに見える）。
+function chipClasses(active: boolean): string {
+  return active ? SEGMENT_ON : SEGMENT_OFF;
 }
 
 export function MakerFilter({ makers, value, favoriteCount, onChange }: MakerFilterProps) {
@@ -23,14 +20,14 @@ export function MakerFilter({ makers, value, favoriteCount, onChange }: MakerFil
       <button
         type="button"
         onClick={() => onChange("all")}
-        className={`mono shrink-0 rounded-full border px-3 py-2 text-xs ${chipClasses(value === "all")}`}
+        className={`shrink-0 rounded-md border px-3 py-1.5 text-xs font-bold transition-colors ${chipClasses(value === "all")}`}
       >
         すべて
       </button>
       <button
         type="button"
         onClick={() => onChange("favorites")}
-        className={`mono shrink-0 rounded-full border px-3 py-2 text-xs ${chipClasses(value === "favorites", true)}`}
+        className={`shrink-0 rounded-md border px-3 py-1.5 text-xs font-bold transition-colors ${chipClasses(value === "favorites")}`}
       >
         ★ お気に入り{favoriteCount > 0 ? ` (${favoriteCount})` : ""}
       </button>
@@ -39,7 +36,7 @@ export function MakerFilter({ makers, value, favoriteCount, onChange }: MakerFil
           key={maker}
           type="button"
           onClick={() => onChange(maker)}
-          className={`mono shrink-0 rounded-full border px-3 py-2 text-xs ${chipClasses(value === maker)}`}
+          className={`shrink-0 rounded-md border px-3 py-1.5 text-xs font-bold transition-colors ${chipClasses(value === maker)}`}
         >
           {maker}
         </button>

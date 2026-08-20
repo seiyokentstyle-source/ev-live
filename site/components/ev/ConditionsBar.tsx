@@ -100,9 +100,9 @@ export function ConditionsBar({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center gap-2 px-3 py-2 text-left"
+        className="flex w-full items-center gap-3 px-3 py-2 text-left"
       >
-        <span className="mono shrink-0 text-[9px] tracking-[0.14em] text-muted">算出条件</span>
+        <span className="mono w-12 shrink-0 text-[9px] tracking-[0.14em] text-muted">算出条件</span>
         <span className="mono flex-1 truncate text-[10px] text-ink-soft">{summary}</span>
         <span className="mono shrink-0 text-[10px] text-muted">{open ? "閉じる ▲" : "詳細 ▼"}</span>
       </button>

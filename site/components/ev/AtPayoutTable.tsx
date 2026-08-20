@@ -2,15 +2,13 @@
 
 import { useMemo } from "react";
 import type { AtPayout } from "@/lib/ev/types";
+import { RowHead, TableFoot, TableNote, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
 type AtPayoutTableProps = {
   data: AtPayout;
 };
 
 export function AtPayoutTable({ data }: AtPayoutTableProps) {
-  // 期待値表と同様にコピーを軽く抑止。
-  const blockEvent = (event: { preventDefault: () => void }) => event.preventDefault();
-
   const totals = useMemo(() => {
     const count = data.bands.reduce((sum, b) => sum + b.count, 0);
     const mean = count
@@ -21,61 +19,44 @@ export function AtPayoutTable({ data }: AtPayoutTableProps) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-bg">
-      <p className="shrink-0 border-b border-line bg-panel-2 px-3 py-2 text-[10px] leading-relaxed text-muted">
-        {data.note}
-      </p>
-      <div
-        className="min-h-0 flex-1 select-none overflow-auto [-webkit-touch-callout:none]"
-        onCopy={blockEvent}
-        onCut={blockEvent}
-        onContextMenu={blockEvent}
-      >
+      <TableNote>{data.note}</TableNote>
+      <TableScroll>
         <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
           <colgroup>
-            <col className="w-[22%]" />
+            <col className="w-[24%]" />
             <col className="w-[20%]" />
-            <col className="w-[21%]" />
-            <col className="w-[19%]" />
+            <col className="w-[20%]" />
+            <col className="w-[18%]" />
             <col className="w-[18%]" />
           </colgroup>
           <thead>
             <tr>
-              <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
+              <Th corner>
                 当選G
-                <span className="block text-[9px] text-muted">ハマりG</span>
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
-                当選率
-                <span className="block text-[9px] text-muted">%</span>
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
+                <span className="block text-[9px] font-normal text-muted">ハマりG</span>
+              </Th>
+              <Th unit="%">当選率</Th>
+              <Th unit="枚" primary>
                 平均獲得
-                <span className="block text-[9px] text-muted">枚</span>
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                中央値
-                <span className="block text-[9px] text-muted">枚</span>
-              </th>
-              <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                サンプル
-                <span className="block text-[9px] text-muted">件</span>
-              </th>
+              </Th>
+              <Th unit="枚">中央値</Th>
+              <Th unit="件">サンプル</Th>
             </tr>
           </thead>
           <tbody>
             {data.bands.map((band, index) => {
-              const alt = index % 2 === 1 ? "bg-[var(--row-alt)]" : "";
+              const alt = stripe(index);
               return (
                 <tr key={band.lo}>
-                  <td className="sticky left-0 z-10 border-b border-r border-line-soft bg-panel px-3 py-2 text-left font-bold text-ink-soft">
-                    {band.lo}–{band.hi - 1}
-                  </td>
-                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right ${alt}`}>
+                  <RowHead>
+                    {band.lo.toLocaleString("ja-JP")}–{(band.hi - 1).toLocaleString("ja-JP")}
+                  </RowHead>
+                  <Td alt={alt} tone={band.hit === undefined || band.hit === null ? "text-muted" : "text-ink"}>
                     {band.hit === undefined || band.hit === null ? (
-                      <span className="text-muted">—</span>
+                      "—"
                     ) : (
                       <>
-                        <span className="font-bold text-highlight">{band.hit.toFixed(1)}%</span>
+                        {band.hit.toFixed(1)}
                         {/* 分母＝その帯に到達した件数。薄い帯を見分けられるように併記する。 */}
                         {band.alive ? (
                           <span className="block text-[9px] leading-tight text-muted">
@@ -84,29 +65,29 @@ export function AtPayoutTable({ data }: AtPayoutTableProps) {
                         ) : null}
                       </>
                     )}
-                  </td>
-                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right font-bold text-pos ${alt}`}>
+                  </Td>
+                  <Td alt={alt} bold tone="text-pos">
                     {band.mean.toLocaleString("ja-JP")}
-                  </td>
-                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-ink-soft ${alt}`}>
-                    {band.median.toLocaleString("ja-JP")}
-                  </td>
-                  <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-muted ${alt}`}>
+                  </Td>
+                  <Td alt={alt}>{band.median.toLocaleString("ja-JP")}</Td>
+                  <Td alt={alt} tone="text-muted">
                     {band.count.toLocaleString("ja-JP")}
-                  </td>
+                  </Td>
                 </tr>
               );
             })}
           </tbody>
         </table>
-      </div>
-      <div className="flex shrink-0 items-center justify-between border-t border-line bg-panel-2 px-3 py-2 text-[11px]">
-        <span className="mono text-muted">全{totals.count.toLocaleString("ja-JP")}AT</span>
-        <span className="mono text-ink-soft">
-          平均獲得
-          <span className="ml-2 font-bold text-pos">{totals.mean.toLocaleString("ja-JP")}枚</span>
-        </span>
-      </div>
+      </TableScroll>
+      <TableFoot
+        left={`全${totals.count.toLocaleString("ja-JP")}AT`}
+        right={
+          <>
+            平均獲得
+            <span className="ml-2 font-bold text-pos">{totals.mean.toLocaleString("ja-JP")}枚</span>
+          </>
+        }
+      />
     </div>
   );
 }

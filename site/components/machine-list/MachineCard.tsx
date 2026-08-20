@@ -33,21 +33,20 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
           {match.label}
         </span>
       ) : null}
-      <div className="grid aspect-square place-items-center bg-gradient-to-br from-panel-2 to-panel">
-        {machine.thumb ? (
+      {/* 画像は今のところ全機種 null。正方形の枠を常に置くとカードの6割が空白になり、
+          1画面に4機種しか入らない。画像があるときだけ枠を出す。 */}
+      {machine.thumb ? (
+        <div className="grid aspect-square place-items-center border-b border-line-soft bg-gradient-to-br from-panel-2 to-panel">
           <img src={machine.thumb} alt="" className="h-full w-full object-cover" />
-        ) : (
-          <div className="text-center">
-            <div className="mono text-xl font-bold tracking-wide text-ink">{machine.manufacturer}</div>
-            <div className="mono mt-2 text-[10px] tracking-[0.2em] text-muted">IMG</div>
-          </div>
-        )}
-      </div>
-      <div className="min-h-[78px] border-t border-line-soft p-3">
+        </div>
+      ) : null}
+      <div className={`min-h-[84px] p-3 ${machine.thumb ? "" : "pr-12"}`}>
         <h2 className={`line-clamp-2 text-sm font-bold leading-snug ${match.type === "name" ? "text-accent" : "text-ink"}`}>
           {machine.name}
         </h2>
-        <p className="mono mt-2 text-[11px] text-muted">{machine.manufacturer}</p>
+        <p className="mono mt-2 truncate text-[11px] text-muted">{machine.manufacturer}</p>
+        {/* 空いた場所には飾りではなく、機種を選ぶ材料（母数）を出す。 */}
+        <p className="mono mt-1 text-[10px] text-muted">サンプル {machine.meta.samples}件</p>
       </div>
     </article>
   );

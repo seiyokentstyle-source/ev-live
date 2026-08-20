@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import type { SettingAim } from "@/lib/ev/types";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
 import { MonthTabs, monthOf } from "./MonthTabs";
+import { ControlBar, FilterSelect, SegmentedControl } from "@/components/ui/Controls";
+import { EmptyState, RowHead, TableFoot, TableNote, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
 type SettingAimTableProps = {
   aim: SettingAim;
@@ -42,44 +44,7 @@ function stdev(values: number[]): number | null {
   return Math.round(Math.sqrt(mean(values.map((v) => (v - m) ** 2))) * 10) / 10;
 }
 
-function FilterSelect({
-  label,
-  allLabel,
-  options,
-  value,
-  onChange,
-  fmt
-}: {
-  label: string;
-  allLabel: string;
-  options: string[];
-  value: string | null;
-  onChange: (v: string | null) => void;
-  fmt: (v: string) => string;
-}) {
-  return (
-    <label className="flex items-center gap-2">
-      <span className="mono w-12 shrink-0 text-[9px] tracking-[0.08em] text-muted">{label}</span>
-      <select
-        value={value ?? ""}
-        onChange={(e) => onChange(e.target.value === "" ? null : e.target.value)}
-        className="mono w-[128px] rounded border border-line bg-panel-2 px-2 py-1 text-[11px] text-ink-soft [color-scheme:dark]"
-      >
-        <option value="">{allLabel}</option>
-        {options.map((v) => (
-          <option key={v} value={v}>
-            {fmt(v)}
-          </option>
-        ))}
-      </select>
-    </label>
-  );
-}
-
 export function SettingAimTable({ aim }: SettingAimTableProps) {
-  // 期待値表と同様にコピーを軽く抑止（選択/コピー/右クリックを無効化）。
-  const blockEvent = (event: { preventDefault: () => void }) => event.preventDefault();
-
   const [view, setView] = useState<AimView>("date");
   const [tailFilter, setTailFilter] = useState<string | null>(null); // 台番号末尾
   const [dayDigit, setDayDigit] = useState<string | null>(null); // 日にちに含まれる数字（○のつく日）
@@ -164,34 +129,26 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-bg">
-      <p className="shrink-0 border-b border-line bg-panel-2 px-3 py-2 text-[10px] leading-relaxed text-muted">
+      <TableNote>
         {aim.note}
         {view === "date"
           ? "　※高設定＝出率100%超だった日数、ブレ＝出率の標準偏差（小さいほど安定）。"
           : "　※各セルは「その数字のつく日」の平均出率。特定日に強い台を探す用。"}
-      </p>
-      <div className="shrink-0 border-b border-line bg-panel px-3 py-2">
+      </TableNote>
+      <ControlBar label="集計">
+        <SegmentedControl
+          segments={[
+            { value: "date", label: "日付別" },
+            { value: "day", label: "つく日別" }
+          ]}
+          value={view}
+          onChange={setView}
+        />
+      </ControlBar>
+      <ControlBar>
         <MonthTabs dates={aim.dates} value={monthFilter} onChange={setMonthFilter} />
-      </div>
-      <div className="flex shrink-0 items-center border-b border-line bg-panel px-3 py-2">
-        <div className="flex overflow-hidden rounded border border-line">
-          <button
-            type="button"
-            onClick={() => setView("date")}
-            className={`mono px-3 py-1 text-[11px] ${view === "date" ? "bg-panel-2 text-highlight" : "text-muted"}`}
-          >
-            日付別
-          </button>
-          <button
-            type="button"
-            onClick={() => setView("day")}
-            className={`mono border-l border-line px-3 py-1 text-[11px] ${view === "day" ? "bg-panel-2 text-highlight" : "text-muted"}`}
-          >
-            つく日別
-          </button>
-        </div>
-      </div>
-      <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-line bg-panel px-3 py-2">
+      </ControlBar>
+      <ControlBar label="絞り込み">
         <FilterSelect
           label="末尾"
           allLabel="全部"
@@ -210,16 +167,11 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
             fmt={(v) => `${v}のつく日`}
           />
         ) : null}
-      </div>
-      <div
-        className="min-h-0 flex-1 select-none overflow-auto [-webkit-touch-callout:none]"
-        onCopy={blockEvent}
-        onCut={blockEvent}
-        onContextMenu={blockEvent}
-      >
+      </ControlBar>
+      <TableScroll>
         {view === "day" ? (
           crossRows.length === 0 ? (
-            <p className="px-3 py-6 text-center text-xs text-muted">該当する台がありません</p>
+            <EmptyState>該当する台がありません</EmptyState>
           ) : (
             <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
               <colgroup>
@@ -231,45 +183,33 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
               </colgroup>
               <thead>
                 <tr>
-                  <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
-                    台番号
-                  </th>
-                  <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
+                  <Th corner>台番号</Th>
+                  <Th unit="出率%" primary>
                     平均
-                    <span className="block text-[9px] text-muted">出率%</span>
-                  </th>
+                  </Th>
                   {dayOptions.map((d) => (
-                    <th
-                      key={d}
-                      className="sticky top-0 z-20 whitespace-nowrap border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft"
-                    >
+                    <Th key={d} unit="%">
                       {d}のつく日
-                      <span className="block text-[9px] text-muted">%</span>
-                    </th>
+                    </Th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {crossRows.map((unit, index) => {
-                  const alt = index % 2 === 1 ? "bg-[var(--row-alt)]" : "";
+                  const alt = stripe(index);
                   return (
                     <tr key={unit.unit}>
-                      <td className="sticky left-0 z-10 border-b border-r border-line-soft bg-panel px-3 py-2 text-left font-bold text-ink-soft">
-                        {unit.unit}
-                      </td>
-                      <td className={`border-b border-r border-line-soft px-2 py-2 text-right font-bold ${unit.avg === null ? "text-muted" : rtpToneClass(unit.avg)} ${alt}`}>
+                      <RowHead>{unit.unit}</RowHead>
+                      <Td alt={alt} bold tone={unit.avg === null ? "text-muted" : rtpToneClass(unit.avg)}>
                         {unit.avg === null ? "—" : unit.avg.toFixed(1)}
-                      </td>
+                      </Td>
                       {unit.cells.map((cell) => (
-                        <td
-                          key={cell.digit}
-                          className={`border-b border-r border-line-soft px-2 py-2 text-right ${cell.avg === null ? "text-muted" : rtpToneClass(cell.avg)} ${alt}`}
-                        >
+                        <Td key={cell.digit} alt={alt} tone={cell.avg === null ? "text-muted" : rtpToneClass(cell.avg)}>
                           {cell.avg === null ? "—" : cell.avg.toFixed(1)}
                           {cell.avg !== null ? (
-                            <span className="block text-[9px] font-normal text-muted">{cell.days}日</span>
+                            <span className="block text-[9px] font-normal leading-tight text-muted">{cell.days}日</span>
                           ) : null}
-                        </td>
+                        </Td>
                       ))}
                     </tr>
                   );
@@ -278,7 +218,7 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
             </table>
           )
         ) : rows.length === 0 ? (
-          <p className="px-3 py-6 text-center text-xs text-muted">該当する台がありません</p>
+          <EmptyState>該当する台がありません</EmptyState>
         ) : (
           <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
             <colgroup>
@@ -294,78 +234,53 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
             </colgroup>
             <thead>
               <tr>
-                <th className="sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-3 py-2 text-left text-[10px] text-ink-soft">
-                  台番号
-                </th>
-                <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-highlight">
+                <Th corner>台番号</Th>
+                <Th unit="出率%" primary>
                   平均
-                  <span className="block text-[9px] text-muted">出率%</span>
-                </th>
-                <th className="sticky top-0 z-20 whitespace-nowrap border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                  高設定
-                  <span className="block text-[9px] text-muted">100%超/日</span>
-                </th>
-                <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                  ブレ
-                  <span className="block text-[9px] text-muted">σ</span>
-                </th>
-                <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                  日数
-                  <span className="block text-[9px] text-muted">日</span>
-                </th>
-                <th className="sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft">
-                  総回転
-                  <span className="block text-[9px] text-muted">G</span>
-                </th>
+                </Th>
+                <Th unit="100%超/日">高設定</Th>
+                <Th unit="σ">ブレ</Th>
+                <Th unit="日">日数</Th>
+                <Th unit="G">総回転</Th>
                 {visibleDateIdx.map((i) => (
-                  <th
-                    key={aim.dates[i]}
-                    className="sticky top-0 z-20 whitespace-nowrap border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px] text-ink-soft"
-                  >
+                  <Th key={aim.dates[i]} unit="%">
                     {shortDate(aim.dates[i])}
-                    <span className="block text-[9px] text-muted">%</span>
-                  </th>
+                  </Th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {rows.map((unit, index) => {
-                const alt = index % 2 === 1 ? "bg-[var(--row-alt)]" : "";
+                const alt = stripe(index);
                 return (
                   <tr key={unit.unit}>
-                    <td className="sticky left-0 z-10 border-b border-r border-line-soft bg-panel px-3 py-2 text-left font-bold text-ink-soft">
-                      {unit.unit}
-                      <span className="block text-[9px] font-normal text-muted">{formatSigned(unit.net)}枚</span>
-                    </td>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right font-bold ${unit.avg === null ? "text-muted" : rtpToneClass(unit.avg)} ${alt}`}>
+                    <RowHead sub={`${formatSigned(unit.net)}枚`}>{unit.unit}</RowHead>
+                    <Td alt={alt} bold tone={unit.avg === null ? "text-muted" : rtpToneClass(unit.avg)}>
                       {unit.avg === null ? "—" : unit.avg.toFixed(1)}
-                    </td>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-ink-soft ${alt}`}>
+                    </Td>
+                    <Td alt={alt}>
                       {unit.hi100}/{unit.days}
-                    </td>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-muted ${alt}`}>
+                    </Td>
+                    <Td alt={alt} tone="text-muted">
                       {unit.std === null ? "—" : unit.std.toFixed(1)}
-                    </td>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-muted ${alt}`}>
+                    </Td>
+                    <Td alt={alt} tone="text-muted">
                       {unit.days}
-                    </td>
-                    <td className={`border-b border-r border-line-soft px-2 py-2 text-right text-ink-soft ${alt}`}>
-                      {unit.games === null ? "—" : unit.games.toLocaleString("ja-JP")}
-                    </td>
+                    </Td>
+                    <Td alt={alt}>{unit.games === null ? "—" : unit.games.toLocaleString("ja-JP")}</Td>
                     {unit.visRates.map((rate, i) => (
-                      <td
+                      <Td
                         key={aim.dates[visibleDateIdx[i]]}
-                        className={`border-b border-r border-line-soft px-2 py-2 text-right ${
-                          rate === null ? "text-muted" : rtpToneClass(rate)
-                        } ${alt}`}
+                        alt={alt}
+                        tone={rate === null ? "text-muted" : rtpToneClass(rate)}
                       >
                         {rateCell(rate)}
                         {rate !== null && unit.visGames[i] !== null ? (
-                          <span className="block text-[9px] font-normal text-muted">
+                          <span className="block text-[9px] font-normal leading-tight text-muted">
                             {unit.visGames[i]!.toLocaleString("ja-JP")}G
                           </span>
                         ) : null}
-                      </td>
+                      </Td>
                     ))}
                   </tr>
                 );
@@ -373,16 +288,16 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
             </tbody>
           </table>
         )}
-      </div>
-      <div className="flex shrink-0 items-center justify-between border-t border-line bg-panel-2 px-3 py-2 text-[11px]">
-        <span className="mono text-muted">
-          {view === "day" ? `${crossRows.length}台` : `${rows.length}台 / 総回転 ${totals.games.toLocaleString("ja-JP")}G`}
-        </span>
-        <span className="mono text-ink-soft">
-          トータル獲得（差枚）
-          <span className={`ml-2 font-bold ${toneClass(totals.net)}`}>{formatSigned(totals.net)}枚</span>
-        </span>
-      </div>
+      </TableScroll>
+      <TableFoot
+        left={view === "day" ? `${crossRows.length}台` : `${rows.length}台 / 総回転 ${totals.games.toLocaleString("ja-JP")}G`}
+        right={
+          <>
+            トータル獲得（差枚）
+            <span className={`ml-2 font-bold ${toneClass(totals.net)}`}>{formatSigned(totals.net)}枚</span>
+          </>
+        }
+      />
     </div>
   );
 }
