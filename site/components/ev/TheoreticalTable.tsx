@@ -2,8 +2,11 @@
 
 import { useMemo } from "react";
 import type { Theoretical } from "@/lib/ev/types";
-import { formatSigned, toneClass } from "./format";
+import { formatSigned, rtpToneClass, toneClass } from "./format";
 import { RowHead, TableFoot, TableNote, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
+
+/** ボーダー判定に使う機械割（%）。これを下回る行が残っている間はボーダーとしない。 */
+const BORDER_RTP = 106;
 
 
 type TheoreticalTableProps = {
@@ -21,15 +24,13 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
     return data.baseAnchors.filter((a) => a.g % step === 0 || a.g === last?.g);
   }, [data.baseAnchors, data.gRange]);
 
-  // ボーダー＝ここから先が全部プラス期待値になる最初のG。
-  // 「最初にプラスになったG」だと浅い側のブレを拾って早すぎるボーダーが出るので、
-  // マイナスの一番深い行を探して、その次の行を採る（＝深い側のクロス点）。
-  // ★機械割ではなく期待値の符号で判定する。機械割をOUT÷IN（枚ベース）にしたので
-  //   100%は損益分岐ではなくなり、しきい値を定数で置くとレートによってズレる。
+  // ボーダー＝ここから先が全部 BORDER_RTP% 以上になる最初のG。
+  // 「最初に超えたG」だと浅い側のブレを拾って早すぎるボーダーが出るので、
+  // 基準を割る一番深い行を探して、その次の行を採る（＝深い側のクロス点）。
   const border = useMemo(() => {
     const anchors = data.baseAnchors;
     let i = anchors.length - 1;
-    while (i >= 0 && anchors[i].ev >= 0) i--;
+    while (i >= 0 && anchors[i].rtp >= BORDER_RTP) i--;
     return i + 1 < anchors.length ? anchors[i + 1].g : null;
   }, [data.baseAnchors]);
 
@@ -44,7 +45,7 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
           <span className="text-sm font-bold text-highlight">
             {border === null ? "—" : `${border.toLocaleString("ja-JP")}G〜`}
           </span>
-          <span className="text-[10px] text-muted">ここから先は期待値プラス</span>
+          <span className="text-[10px] text-muted">機械割{BORDER_RTP}%以上</span>
         </div>
         {/* 初当りGは表が実際に使っている値＝当店実測。公表の設定1とは別物なので分けて出す。 */}
         <div className="mt-1 flex flex-wrap gap-x-3 pl-14 text-[10px] text-muted">
@@ -83,8 +84,7 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
                   <Td alt={alt} bold tone={toneClass(a.ev)}>
                     {formatSigned(a.ev)}
                   </Td>
-                  {/* 機械割はOUT÷IN。100%＝損益分岐ではないので期待値の符号で塗る。 */}
-                  <Td alt={alt} tone={toneClass(a.ev)}>
+                  <Td alt={alt} tone={rtpToneClass(a.rtp)}>
                     {a.rtp.toFixed(1)}
                   </Td>
                   <Td alt={alt} tone={toneClass(hourly)}>

@@ -90,9 +90,7 @@ export function validateMachine(data: unknown): Machine {
     for (let i = 0; i < profile.baseAnchors.length; i += 1) {
       const anchor = profile.baseAnchors[i];
       assert(anchor.g >= profile.gRange.start && anchor.g <= profile.gRange.end, `anchor ${anchor.g} is out of range`);
-      // 機械割は OUT÷IN（枚ベース）で換金率に依存しない。46/52 は交換ギャップぶん
-      // 損益分岐が約113%になるため、100%と期待値の符号は一致しない。
-      assert(anchor.rtp > 0, `anchor ${anchor.g} rtp must be positive`);
+      assert((anchor.rtp >= 100) === (anchor.ev >= 0), `anchor ${anchor.g} EV/RTP sign mismatch`);
       // Sample size is optional (older data omits it); when present it must be a non-negative number.
       assert(
         anchor.n === undefined || (typeof anchor.n === "number" && Number.isFinite(anchor.n) && anchor.n >= 0),

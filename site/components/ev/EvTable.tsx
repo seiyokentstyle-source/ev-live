@@ -1,7 +1,7 @@
 "use client";
 
 import type { Machine, PivotConfig, Profile, TableRow } from "@/lib/ev/types";
-import { formatSigned, toneClass } from "./format";
+import { formatSigned, rtpToneClass, toneClass } from "./format";
 import { ROW_HEIGHT, RowHead, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
 type EvTableProps = {
@@ -98,9 +98,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                     </>
                   ) : (
                     <>
-                      {/* 機械割はOUT÷INなので100%は損益分岐ではない（46/52は約113%）。
-                          勝ち負けは期待値の符号で塗る。 */}
-                      <Td alt={alt} tone={dash ? "text-muted" : toneClass(row.ev)}>
+                      <Td alt={alt} tone={dash ? "text-muted" : rtpToneClass(row.rtp)}>
                         {dash ? "—" : row.rtp.toFixed(1)}
                       </Td>
                       <Td alt={alt} bold={!dash} tone={dash ? "text-muted" : toneClass(row.ev)}>
