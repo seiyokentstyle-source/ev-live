@@ -63,10 +63,11 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
       <TableScroll>
         <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
           <colgroup>
-            <col className="w-[20%]" />
-            <col className="w-[22%]" />
+            {/* G数は4桁止まり。空けた分は期待値と時給に回す。 */}
+            <col className="w-[16%]" />
+            <col className="w-[24%]" />
             <col className="w-[18%]" />
-            <col className="w-[20%]" />
+            <col className="w-[22%]" />
             <col className="w-[20%]" />
           </colgroup>
           <thead>

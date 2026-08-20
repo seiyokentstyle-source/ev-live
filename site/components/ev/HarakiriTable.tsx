@@ -89,11 +89,11 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
         ) : (
           <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
             <colgroup>
-              <col className="w-[22%]" />
-              <col className="w-[24%]" />
               <col className="w-[18%]" />
+              <col className="w-[26%]" />
               <col className="w-[18%]" />
-              <col className="w-[18%]" />
+              <col className="w-[19%]" />
+              <col className="w-[19%]" />
             </colgroup>
             <thead>
               <tr>

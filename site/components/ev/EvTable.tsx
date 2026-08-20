@@ -36,10 +36,10 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
     >
         {/* 列が6本あり、狭い画面で%指定だと全列が潰れて読めなくなる。
             最小幅をpxで確保し、足りない分は横スクロール（G列はsticky）。 */}
-        <table className={`mono table-fixed border-separate border-spacing-0 text-xs ${pivot ? "w-full" : "w-full min-w-[480px]"}`}>
+        <table className={`mono table-fixed border-separate border-spacing-0 text-xs ${pivot ? "w-full" : "w-full min-w-[468px]"}`}>
           {pivot ? (
             <colgroup>
-              <col className="w-[84px]" />
+              <col className="w-[72px]" />
               {pivotColumns.map((column) => (
                 <col key={column.value} className="w-[92px]" />
               ))}
@@ -47,7 +47,8 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
             </colgroup>
           ) : (
             <colgroup>
-              <col className="w-[84px]" />
+              {/* G数は4桁止まり（"1,500"＝5文字）。pt併記の "≒2,809pt" が実質の下限。 */}
+              <col className="w-[72px]" />
               <col className="w-[72px]" />
               <col className="w-[92px]" />
               <col className="w-[80px]" />
@@ -98,10 +99,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                       </>
                     }
                   >
-                    <span className={row.zoneLabel ? "text-highlight" : ""}>
-                      {row.zoneLabel ? "▸ " : ""}
-                      {row.g.toLocaleString("ja-JP")}
-                    </span>
+                    <span className={row.zoneLabel ? "text-highlight" : ""}>{row.g.toLocaleString("ja-JP")}</span>
                   </RowHead>
                   {pivot ? (
                     <>
