@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Machine } from "@/lib/ev/types";
 import { validateMachine } from "@/lib/ev/validate";
 import { MachineDetailClient } from "@/app/machines/[id]/MachineDetailClient";
+import { DEFAULT_HALL_ID, getHall } from "@/lib/halls";
 import machineJson from "./machine.json";
 import settingAimJson from "../setting-aim/settingAim.json";
 
@@ -20,5 +21,5 @@ export default function EvTablePreviewPage() {
   } catch {
     notFound();
   }
-  return <MachineDetailClient machine={machine} />;
+  return <MachineDetailClient machine={machine} hall={getHall(DEFAULT_HALL_ID)!} />;
 }

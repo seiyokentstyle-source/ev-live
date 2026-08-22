@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
+import type { Hall } from "@/lib/halls";
 import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
 import { groupProfiles, resolveProfile } from "@/lib/ev/profiles";
 import { AxisPicker } from "@/components/ev/AxisPicker";
@@ -54,9 +55,11 @@ function czLabel(bucket: string, term: string): string {
 
 type MachineDetailClientProps = {
   machine: Machine;
+  /** どの店舗のデータを見ているか。ヘッダーの表示と戻り先に使う. */
+  hall: Hall;
 };
 
-export function MachineDetailClient({ machine }: MachineDetailClientProps) {
+export function MachineDetailClient({ machine, hall }: MachineDetailClientProps) {
   const grouped = useMemo(() => groupProfiles(machine.profiles), [machine.profiles]);
   const hasRatePairs = grouped.rates.length >= 2;
   const settingAim = machine.settingAim;
@@ -249,11 +252,13 @@ export function MachineDetailClient({ machine }: MachineDetailClientProps) {
       {/* 一覧ページのヘッダーと同じ骨格（左＝所在、中央＝見出し、右＝補助情報）にする。
           以前は右端に押しても何も起きない「...」が置かれていた。 */}
       <header className="grid h-12 shrink-0 grid-cols-[4rem_1fr_4rem] items-center border-b border-line bg-panel px-4">
-        <Link href="/machines" className="mono text-[11px] text-ink-soft">
-          ← 一覧
+        {/* 戻り先は機種一覧ではなく店舗選択。機種選択→店舗選択→各表 の順路をそのまま戻れるようにする。 */}
+        <Link href={`/machines/${machine.id}`} className="mono text-[11px] text-ink-soft">
+          ← 店舗
         </Link>
         <h1 className="truncate px-2 text-center text-sm font-bold">{machine.name}</h1>
-        <span className="mono truncate text-right text-[10px] text-muted">{machine.manufacturer}</span>
+        {/* 右端はメーカーではなく店舗名。どの店のデータを見ているかが常に見えるようにする。 */}
+        <span className="mono truncate text-right text-[10px] text-muted">{hall.name}</span>
       </header>
 
       {machine.theoretical ? (
