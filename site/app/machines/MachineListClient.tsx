@@ -86,16 +86,21 @@ export function MachineListClient({ machines }: MachineListClientProps) {
         <p className="mono text-[10px] text-muted">期待値ガチ勢向け</p>
       </header>
 
-      <main className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
-        <div className="sticky top-0 z-20 -mx-4 -mt-3 border-b border-line bg-bg px-4 pb-3 pt-3">
-          <SearchInput value={query} onChange={setQuery} />
-          <div className="mt-3">
-            <MakerFilter makers={makers} value={maker} favoriteCount={favoriteCount} onChange={setMaker} />
-          </div>
+      {/* 検索＋メーカー絞り込みはヘッダーの直下に密着させる。詳細ページの ControlBar と
+          同じ「バーを積む」骨格に揃える形。以前は main の中で sticky にしており、
+          main の py-3 を -mt-3 で打ち消してから pt-3 で入れ直していたため、
+          ヘッダーの境界線と検索欄の間に背景色だけの帯が12px残っていた。
+          main の外＝スクロール領域の外に出すので、sticky を使わずに常時表示のままになる。 */}
+      <div className="shrink-0 border-b border-line bg-panel px-4 py-2.5">
+        <SearchInput value={query} onChange={setQuery} />
+        <div className="mt-2.5">
+          <MakerFilter makers={makers} value={maker} favoriteCount={favoriteCount} onChange={setMaker} />
         </div>
+      </div>
 
+      <main className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
         {results.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 pb-2 pt-4">
+          <div className="grid grid-cols-2 gap-3 pb-2">
             {results.map((result) => (
               <MachineCard
                 key={result.machine.id}
