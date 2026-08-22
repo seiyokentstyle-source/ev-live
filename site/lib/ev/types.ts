@@ -156,7 +156,7 @@ export type Profile = {
   /** sessions の単位（『BB間』等）。CZ間天井の表は『BB間の区間』で、機種全体の
    *  『AT間セッション』とは別物なので混ぜない。undefined＝ATセッション（従来どおり）。 */
   sessionUnit?: string;
-  /** 平均初当りG（AT・RB間のハマりGの平均）。確率ではないので 1/X 表記にはしない。 */
+  /** 主表の平均初当りG。確率ではないので 1/X 表記にはしない。 */
   firstHitRate?: number;
   /** 生サンプル（旧形式・後方互換）。台番号末尾/特定日の絞り込みで再集計に使う。新データでは undefined。 */
   ev?: EvSamples;
@@ -164,9 +164,6 @@ export type Profile = {
   evFilters?: EvFilters;
   /** When true, this profile has no 実戦 data yet: the tab is shown but no numbers are rendered. */
   dataPending?: boolean;
-  /** ptカウンタ機（マギレコ）のG→pt換算率。あるときだけ表のG列に「≒何pt」を添える。
-   *  ptはBB間のカウンタなので、この値はBB間のプロファイルにしか入らない。 */
-  ptPerG?: number;
 };
 
 export type SettingAimUnit = {
@@ -226,7 +223,7 @@ export type AtPayout = {
 export type HarakiriUnit = {
   /** 台番号. */
   unit: string;
-  /** セッション（AT・RB間の初当り）数. */
+  /** 主表と同じ区切りのセッション数. */
   sessions: number;
   /** ラッシュ突入（連チャンが1回以上続いたセッション）数. */
   rush: number;
@@ -295,6 +292,8 @@ export type CalcSpec = {
 };
 
 export type Machine = {
+  /** 生成側の天井仕様・信号マップ版。旧JSONでは省略される。 */
+  specVersion?: string;
   id: string;
   name: string;
   manufacturer: string;

@@ -70,8 +70,9 @@ export function ConditionsBar({
     rows.push({ k: "差枚", v: "グラフ校正があれば優先、無ければ履歴推定" });
     rows.push({ k: "高設定/ブレ", v: "出率100%超の日数 ／ 出率の標準偏差" });
   } else if (mode === "payout") {
-    rows.push({ k: "1AT", v: "初当たり〜引き戻し終了の総獲得" });
-    rows.push({ k: "当選G帯", v: "0-70 / 71-99 / 以降100Gから50G帯" });
+    const payout = machine.atPayout;
+    rows.push({ k: "集計軸", v: payout?.label ?? "主表と同じ区切りの獲得分布" });
+    if (payout?.note) rows.push({ k: "集計条件", v: payout.note });
   } else if (mode === "harakiri") {
     const th = machine.harakiri?.threshold;
     if (th) rows.push({ k: "判定", v: `ラッシュ中の1回の当たりで獲得${th}枚以上（推定）` });

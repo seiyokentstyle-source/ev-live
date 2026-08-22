@@ -23,9 +23,6 @@ function pivotHeader(machine: Machine, pivot: PivotConfig): Array<{ value: strin
 
 export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTableProps) {
   const pivotColumns = pivot ? pivotHeader(machine, pivot) : [];
-  // ptカウンタ機（マギレコ）はG列にpt目盛りを併記する。実機はptしか見えないので、
-  // 「今何pt」から表を引けるようにするため。EVの計算はG基準のまま＝表示だけの話。
-  const ptPerG = profile.ptPerG;
 
   return (
     <TableScroll
@@ -43,7 +40,6 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
             <tr>
               <Th corner>
                 G数
-                {ptPerG ? <span className="block text-[9px] font-normal text-muted">≒pt</span> : null}
               </Th>
               {pivot ? (
                 <>
@@ -76,7 +72,6 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                   <RowHead
                     sub={
                       <>
-                        {ptPerG ? <span className="block">≒{Math.round(row.g * ptPerG).toLocaleString("ja-JP")}pt</span> : null}
                         {/* ゾーン名は狭い列に入るので折り返す（切り詰めると「ゾーン〜」しか読めない）。 */}
                         {row.zoneLabel ? <span className="block text-highlight opacity-70">{row.zoneLabel}</span> : null}
                       </>
