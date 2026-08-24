@@ -6,8 +6,9 @@
 
 ## リポジトリ構成（データ中心）
 - `data/machines/*.json` … 主役。期待値データ（スクレイパーが毎晩生成・上書き）。
-- `scraper/` … データ生成スクリプト（独立。サイトとは分離）。※統合予定
+  店舗別は `data/machines/<店舗id>/`。生成側は外部リポジトリ `777site-scraper`。
 - `site/` … 表示用 Next.js（おまけ）。ビルド/テスト/設定は全て `site/` 配下で完結。
+- `docs/data-contract.md` … 生成されるJSONが満たすべき形（サイト側からの契約）。
 - `.github/workflows/nextjs.yml` … `site/` をビルドして Pages へデプロイ。
 - `.github/workflows/data-guard.yml` … データの巻き戻りを止める（下記）。
 - `scripts/check-data-regression.mjs` … 同上の実体。ローカルでも走らせられる。
@@ -17,7 +18,11 @@
 公開中のライブURLを案内する**こと:
 
 - トップ（機種一覧）: https://seiyokentstyle-source.github.io/ev-live/
-- 機種詳細: https://seiyokentstyle-source.github.io/ev-live/machines/<id>/ （例: `.../machines/hokuto/`）
+- 店舗選択: https://seiyokentstyle-source.github.io/ev-live/machines/<機種id>/ （例: `.../machines/hokuto/`）
+- 期待値表: https://seiyokentstyle-source.github.io/ev-live/machines/<機種id>/<店舗id>/ （例: `.../machines/hokuto/shinjuku/`）
+
+画面の流れは 機種一覧 → 店舗選択 → 期待値稼働/設定狙い/AT獲得。店舗は `site/lib/halls.ts`
+で定義し、未収集の店舗は「準備中」を出す（他店のデータを代わりに見せない）。
 
 注意: ライブサイトは `main` ブランチのデプロイ結果。PR の変更を実機で見せたい場合はマージ後に反映される。
 
