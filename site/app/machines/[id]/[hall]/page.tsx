@@ -20,13 +20,18 @@ export async function generateStaticParams() {
 
 export default async function MachineDetailPage({ params }: MachineDetailPageProps) {
   const { id, hall: hallId } = await params;
-  const machine = await getMachine(id);
   const hall = getHall(hallId);
-  if (!machine || !hall) notFound();
+  if (!hall) notFound();
 
-  // ★未集計の店舗に既存データ（新宿）を出さないこと。別店舗の設定配分を
-  //   その店のものとして見せることになり、期待値の判断を誤らせる。
-  if (!hall.ready) return <HallPendingClient machine={machine} hall={hall} />;
+  // 機種一覧そのものは既定店舗のJSONから引く（URLの機種idを解決するため）。
+  // 表に出す数字は必ずその店舗のフォルダから読み直す（下の hallMachine）。
+  const machine = await getMachine(id);
+  if (!machine) notFound();
 
-  return <MachineDetailClient machine={machine} hall={hall} />;
+  // ★その店舗のデータだけを見ること。既存（新宿）のJSONを他店の名前で出すと、
+  //   別店舗の設定配分をその店のものとして見せることになり、判断を誤らせる。
+  const hallMachine = hall.dataSubdir ? await getMachine(id, hall.dataSubdir) : machine;
+  if (!hall.ready || !hallMachine) return <HallPendingClient machine={machine} hall={hall} />;
+
+  return <MachineDetailClient machine={hallMachine} hall={hall} />;
 }

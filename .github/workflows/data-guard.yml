@@ -1,0 +1,54 @@
+# 期待値データ（data/machines/**/*.json）が巻き戻っていないか見張る。
+#
+# 期待値データは毎晩の収集で前へ進むだけの資産で、後ろへ動くことはない。
+# ところが古い土台で再生成したJSONを新しい main へマージすると、1日ぶんが黙って消える。
+# 実際に一度そうなりかけた（8/22のCSVから作ったJSONを、8/23ぶんが入った main へ）。
+# make_evlive_data.py の「大幅減なら上書きしない」ガードは再生成時にしか効かず、
+# git のマージは素通りするので、ここで止める。
+#
+# PR       … マージ先と比べる。落ちればマージ前に気づける（本命）
+# main push … 直前のコミットと比べる。集計PCからの直接pushを事後に検知する
+name: data-guard
+on:
+  pull_request:
+    paths:
+      - "data/machines/**"
+  push:
+    branches: [main]
+    paths:
+      - "data/machines/**"
+
+jobs:
+  no-rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # 比較のために履歴が要る。浅いcloneだと比較先を解決できない。
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 比較先を決める
+        id: base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch origin "${{ github.base_ref }}" --depth=0
+            echo "ref=origin/${{ github.base_ref }}" >> "$GITHUB_OUTPUT"
+          else
+            # push の直前のコミット。ブランチ新規作成時は 000... になるので、その時は見送る。
+            before="${{ github.event.before }}"
+            if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ]; then
+              echo "ref=" >> "$GITHUB_OUTPUT"
+            else
+              echo "ref=$before" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+      - name: データ巻き戻りチェック
+        # 依存なしの素のnodeで動く。
+        run: |
+          if [ -z "${{ steps.base.outputs.ref }}" ]; then
+            echo "比較先が無いので見送ります（ブランチ新規作成など）"
+            exit 0
+          fi
+          node scripts/check-data-regression.mjs --base "${{ steps.base.outputs.ref }}"

@@ -1,41 +1,61 @@
 # EV Live
 
-EV Live is a **data-centric** repository for Japanese pachislot expected-value data.
-The data (`data/machines/*.json`) is the core; the mobile-first Next.js viewer is a
-secondary piece that lives under `site/`.
+パチスロ期待値の**データ中心**リポジトリ。主役は `data/machines/**/*.json` で、
+表示用の Next.js サイトは従属物として `site/` に置いている。
 
-Source spec: Notion `EV Live - 開発仕様書 v1.4`.
+公開先: <https://seiyokentstyle-source.github.io/ev-live/>
 
-## Layout
+## 構成
 
-- `data/machines/*.json` — expected-value data (generated/overwritten by the scraper).
-- `scraper/` — data-generation script (kept separate from the site). _planned_
-- `site/` — Next.js viewer. All site build/test/config lives here.
-- `.github/workflows/nextjs.yml` — builds `site/` and deploys to GitHub Pages.
+```
+data/machines/*.json          期待値データ（外部の 777site-scraper が生成・上書き）
+data/machines/<店舗id>/*.json 店舗別のデータ
+site/                         表示用 Next.js。ビルド/テスト/設定は全てこの下で完結
+scripts/                      データの巻き戻りチェック
+docs/                         データの契約
+.github/workflows/
+├─ nextjs.yml                 site/ をビルドして GitHub Pages へデプロイ
+├─ site-test.yml              テストと本番相当ビルド
+└─ data-guard.yml             データの巻き戻りを止める
+```
 
-## Phase 1 Scope
+## 画面の流れ
 
-- Machine list at `/machines`
-- Machine detail / EV table at `/machines/[id]`
-- JSON-driven machine data
-- Four strategy profiles
-- Four table metrics: RTP, EV, hourly EV, average medals
-- Pivot columns for comparing select-axis EV values
-- Favorite machines via `localStorage`
+```
+機種一覧  →  店舗選択  →  期待値稼働 / 設定狙い / AT獲得
+/machines    /machines/<機種id>    /machines/<機種id>/<店舗id>
+```
 
-## Development
+店舗はサイト側の `site/lib/halls.ts` で定義する。データ未収集の店舗は
+「準備中」を出し、**他店のデータを代わりに見せることはしない**
+（店舗ごとに設定配分が違うため、そのまま当てはめると期待値の判断を誤る）。
+
+## ドキュメントの読み分け
+
+| 知りたいこと | 見る場所 |
+|---|---|
+| このリポジトリで守ること、データの扱い | **[CLAUDE.md](CLAUDE.md)** |
+| 生成されるJSONが満たすべき形 | **[docs/data-contract.md](docs/data-contract.md)** |
+| 収集の仕組み・計算式・機種スペック | 外部リポジトリ `777site-scraper` の `仕様.md` |
+
+## 開発
 
 ```bash
 cd site
 npm install
-npm run dev
+npm run dev          # http://localhost:3000/
+npm test             # vitest
 ```
 
-Open `http://localhost:3000/`.
-
-Production-equivalent static export:
+本番相当の静的書き出し:
 
 ```bash
 cd site
 PAGES_BASE_PATH=/ev-live STATIC_EXPORT=true npm run build   # → site/out
+```
+
+データを触るブランチでは、マージ前に巻き戻りが無いか確認する:
+
+```bash
+node scripts/check-data-regression.mjs
 ```

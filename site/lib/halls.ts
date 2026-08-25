@@ -18,6 +18,9 @@ export type Hall = {
   note: string;
   /** 集計済みデータがあるか。false は選べるが中身は「準備中」. */
   ready: boolean;
+  /** data/machines 配下のどこを読むか。'' は直下（既存＝新宿）.
+   *  スクレイパー側 halls.py の「データ小分け」と必ず同じ値にすること. */
+  dataSubdir: string;
 };
 
 export const HALLS: Hall[] = [
@@ -26,21 +29,24 @@ export const HALLS: Hall[] = [
     area: "新宿",
     name: "ゴジラのお店",
     note: "現在集計中。既存の実戦データは全てこの店舗のもの",
-    ready: true
+    ready: true,
+    dataSubdir: ""
   },
   {
     id: "akihabara",
     area: "秋葉原",
     name: "萌えスロのお店",
     note: "集計対象に追加予定",
-    ready: false
+    ready: false,
+    dataSubdir: "akihabara"
   },
   {
     id: "mixed",
     area: "混合",
     name: "低設定想定店舗混合",
     note: "複数店舗をまとめた低設定想定のデータ",
-    ready: false
+    ready: false,
+    dataSubdir: "mixed"
   }
 ];
 
