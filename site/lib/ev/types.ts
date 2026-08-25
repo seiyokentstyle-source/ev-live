@@ -102,7 +102,7 @@ export type EvFilterTable = {
 /** 絞り込み1軸ぶんの定義。軸を足してもサイト側は無改修で描ける。
  *  キーは axes の並び順に key+値 を連結して作る（例 't7' + 'c0' → 't7c0'）。 */
 export type FilterAxis = {
-  /** キーの接頭辞（'t'=末尾 / 'd'=つく日 / 'c'=道中CZ / 'p'=前回AT / 'f'=前回AT後1本目のCZが当たったG）. */
+  /** キーの接頭辞（'t'=末尾 / 'd'=特定日 / 'c'=道中CZ / 'p'=前回AT / 'f'=前回AT後1本目のCZが当たったG）. */
   key: string;
   /** セレクタの見出し. */
   label: string;

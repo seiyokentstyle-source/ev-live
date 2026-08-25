@@ -139,7 +139,7 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
         <SegmentedControl
           segments={[
             { value: "date", label: "日付別" },
-            { value: "day", label: "つく日別" }
+            { value: "day", label: "特定日別" }
           ]}
           value={view}
           onChange={setView}
@@ -159,7 +159,7 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
         />
         {view === "date" ? (
           <FilterSelect
-            label="つく日"
+            label="特定日"
             allLabel="全日"
             options={dayOptions}
             value={dayDigit}
