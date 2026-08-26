@@ -117,7 +117,7 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
       ? evFilters!.cz
       : Array.from(new Set((evSamples?.hits ?? []).map((h) => czBucket(h[4])))).filter(Boolean).sort();
     if (tails.length) out.push({ key: "t", label: "末尾", allLabel: "全部", options: tails.map((v) => ({ value: v, label: `末尾${v}` })) });
-    if (days.length) out.push({ key: "d", label: "つく日", allLabel: "全日", options: days.map((v) => ({ value: v, label: `${v}のつく日` })) });
+    if (days.length) out.push({ key: "d", label: "特定日", allLabel: "全日", options: days.map((v) => ({ value: v, label: `${v}のつく日` })) });
     if (czs.length) {
       out.push({
         key: "c",
