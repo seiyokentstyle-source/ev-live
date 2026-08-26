@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
 import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
-import { groupProfiles, resolveProfile } from "@/lib/ev/profiles";
+import { groupProfiles, resolveProfile, rewriteAxisLabel } from "@/lib/ev/profiles";
 import { AxisPicker } from "@/components/ev/AxisPicker";
 import { ConditionsBar } from "@/components/ev/ConditionsBar";
 import { TheoreticalTable } from "@/components/ev/TheoreticalTable";
@@ -105,7 +105,10 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
 
   // 軸の一覧。新形式は axes をそのまま使い、旧データは従来のフィールドから組み立てる。
   const evAxes: FilterAxis[] = useMemo(() => {
-    if (evFilters?.axes?.length) return evFilters.axes;
+    // 見出しだけ現在の表記に直す（データ再生成を待たずに文言を反映するため）。
+    if (evFilters?.axes?.length) {
+      return evFilters.axes.map((axis) => ({ ...axis, label: rewriteAxisLabel(axis.label) }));
+    }
     const out: FilterAxis[] = [];
     const tails = useFilters
       ? evFilters!.tails

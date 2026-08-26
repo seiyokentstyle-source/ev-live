@@ -48,6 +48,21 @@ const SAMPLE_SUFFIX_RE = /（n=\d+）/g;
 const LABEL_REWRITES: Array<[RegExp, string]> = [
   [/据え置き/g, "通常"]
 ];
+// 絞り込み軸の見出しも同じ扱い。軸のラベルはデータ側（evFilters.axes）が配るので、
+// 生成側だけ直しても夜間の再生成まで古い文言が出続ける。ここを通して即時に反映する。
+// ★選択肢（「3のつく日」＝3/13/23）は言い換えない。「3の特定日」では意味が通らず、
+//   「3の日」だと3日だけに読めてしまうため、見出しだけを特定日にする。
+const AXIS_LABEL_REWRITES: Array<[RegExp, string]> = [
+  [/^つく日$/, "特定日"]
+];
+
+/** 軸の見出しを現在の表記に直して返す。中身（key/options）はデータのまま. */
+export function rewriteAxisLabel(label: string): string {
+  let out = label;
+  for (const [from, to] of AXIS_LABEL_REWRITES) out = out.replace(from, to);
+  return out;
+}
+
 const SINGLE = "_single";
 
 function parseProfile(profile: Profile): { baseKey: string; baseLabel: string; rate: string | null } {
