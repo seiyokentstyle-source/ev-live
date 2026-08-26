@@ -28,12 +28,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # 巻き戻りチェックのために履歴が要る（比較先を解決できない浅いcloneだと落ちる）。
+          fetch-depth: 0
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
           cache-dependency-path: site/package-lock.json
+      # データが巻き戻ったまま公開しないための関門。
+      # data-guard は main への直接pushでも鳴るが、それ自体はデプロイを止められない
+      # （別のワークフローなので）。実際 2026-08-26 に5機種で14〜26%減ったJSONが
+      # data-guard 5連続failureのまま公開された。ここで同じ判定を通してから出す。
+      - name: データ巻き戻りチェック（赤ければ公開しない）
+        if: github.event_name == 'push'
+        working-directory: .
+        run: |
+          before="${{ github.event.before }}"
+          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ]; then
+            echo "比較先が無いので見送ります（ブランチ新規作成など）"
+            exit 0
+          fi
+          node scripts/check-data-regression.mjs --base "$before"
       - name: Install dependencies
         run: npm ci
       - name: Build (static export under basePath /ev-live)
