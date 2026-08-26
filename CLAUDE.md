@@ -46,6 +46,35 @@ node scripts/check-data-regression.mjs
 - 件数の1割超の減少・機種JSONの消失は、コミットメッセージに `[allow-data-regression]` が
   あれば通る（スペック変更で正しく減る／獲得データ不良の機種を外した場合）
 
+## 並行作業のルール ★重要
+このリポジトリは**同時に3者が書く**。競合させないこと。
+
+1. **収集PC**（`seiyokentstyle-source`）… 生成した機種JSONを `main` へ直接pushする
+   （`data: update <機種> <日付>`）。収集中は15分おきに来る。止まらない
+2. **Codex** … 別途作業している。担当範囲が重なる可能性がある
+3. **Claude Code**
+
+守ること:
+- **push の直前に必ず `git pull --rebase origin main`**。収集PCのpushと必ず競合する
+- **作業単位を小さく、こまめにpush**。ローカルに長時間ためない
+- **`force push` しない**。他の2者の作業を消す
+- **触る前に `git log --format='%h %ad %an %s' -15 origin/main` で直近の変更を見る**
+- `data/machines/**` はスクレイパーの生成物。**サイト側の作業では絶対に触らない**
+- 生成側（`777site-scraper`）と両方直す変更は、**先にスクレイパー側をpush**してから
+  サイト側を出す（サイトだけ先に出ても、データが来るまで表示が変わらないため）
+
+## 公開が止まる仕組み（覚えておく）
+`nextjs.yml` は公開前に `scripts/check-data-regression.mjs` を通す。
+**データが巻き戻っていたらデプロイしない**（2026-08-26 に5機種で14〜26%減ったJSONが
+data-guard 5連続failureのまま公開されたため入れた）。
+サイトが更新されないときは、まずこのステップが赤くなっていないか見ること。
+
+## 文言はサイト側で言い換えられる（データ再生成を待たない）
+軸やプロファイルの見出しはデータ側（`evFilters.axes` / `profile.label`）が配るので、
+生成側だけ直しても夜間の再生成まで古い文言が出続ける。
+`site/lib/ev/profiles.ts` の `LABEL_REWRITES` / `AXIS_LABEL_REWRITES` を通せば即時に反映される。
+**数値はデータが正・文言はサイトが正**、という役割分担。
+
 ## 制約
 - `data/machines/*.json` は編集しない（スクレイパーが毎晩上書きする）。表示の都合はサイト側で吸収する。
 - `site/lib/ev/validate.ts` のバリデーションを壊さない。
