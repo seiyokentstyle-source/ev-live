@@ -49,7 +49,7 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
         </div>
       ) : null}
 
-      <div className={`relative flex min-h-[116px] flex-1 flex-col p-3.5 ${machine.thumb ? "" : "pr-14"}`}>
+      <div className={`relative flex min-h-[116px] flex-1 flex-col p-3.5 ${machine.thumb ? "" : "pr-[60px]"}`}>
         {/* 1. 機種名 */}
         <h2
           className={`line-clamp-2 text-[13px] font-bold leading-snug ${

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
@@ -250,8 +250,37 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
     setPicker(null);
   }
 
+  /* 表をスクロールしている間だけ上の操作バーを畳み、期待値表の可視領域を広げる。
+     scroll イベントは bubble しないが capture 段では祖先にも届くので、どの表
+     （期待値／設定狙い／AT獲得／ハラキリ／設定1想定）でも1か所で拾える。
+     表側の onScroll（視点Gの追従）には触れないので、既存の挙動は変わらない。
+     しきい値に差を付けているのは、境界でバーが開閉を繰り返さないため。 */
+  const [barsCollapsed, setBarsCollapsed] = useState(false);
+  const shellRef = useRef<HTMLDivElement>(null);
+
+  const handleScrollDepth = useCallback((top: number) => {
+    setBarsCollapsed((collapsed) => (collapsed ? top > 24 : top > 88));
+  }, []);
+
+  useEffect(() => {
+    const shell = shellRef.current;
+    if (!shell) return;
+    const onScroll = (event: Event) => {
+      const target = event.target as HTMLElement | null;
+      if (!target || typeof target.scrollTop !== "number") return;
+      handleScrollDepth(target.scrollTop);
+    };
+    shell.addEventListener("scroll", onScroll, true);
+    return () => shell.removeEventListener("scroll", onScroll, true);
+  }, [handleScrollDepth]);
+
+  /* 表を切り替えた直後は必ず開いた状態から始める（新しい表は先頭に居るため）。 */
+  useEffect(() => {
+    setBarsCollapsed(false);
+  }, [mode, dataView, activeGroupKey, activeRate]);
+
   return (
-    <div className="app-shell">
+    <div ref={shellRef} className={`app-shell ${barsCollapsed ? "bars-collapsed" : ""}`}>
       {/* 一覧ページのヘッダーと同じ骨格（左＝所在、中央＝見出し、右＝補助情報）にする。
           以前は右端に押しても何も起きない「...」が置かれていた。 */}
       <header className="grid h-12 shrink-0 grid-cols-[4rem_1fr_4rem] items-center border-b border-line bg-panel px-4">
