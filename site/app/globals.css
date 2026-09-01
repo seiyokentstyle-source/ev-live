@@ -74,6 +74,9 @@
   --font-sans: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
 
+  /* ---- 角丸 ----
+     面（カード・シート・検索欄）= 8px ／ 操作子（chip・タブ・セレクト）= 6px。
+     お気に入りと検索クリアの円だけは形が別種なので円のまま。 */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-collapse: cubic-bezier(0.33, 0, 0.2, 1);
 }
@@ -236,7 +239,8 @@ button {
 
   /* Layer 2 — 機種カード。今回いちばん重要な物体。 */
   .glass-card {
-    border-radius: 24px;
+    /* 面は8px（店舗カードに合わせる）。 */
+    border-radius: 8px;
     border-color: var(--glass-border);
     box-shadow: var(--shadow-2);
     transition:
@@ -253,7 +257,8 @@ button {
 
   /* Layer 2 — 検索欄・chip の非選択など、面としての操作要素 */
   .glass-control {
-    border-radius: 20px;
+    /* 操作子は6px（月タブに合わせる）。 */
+    border-radius: 6px;
     box-shadow: var(--shadow-1);
     transition:
       transform 160ms var(--ease),

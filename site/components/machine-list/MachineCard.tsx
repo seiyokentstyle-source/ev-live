@@ -36,7 +36,7 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
       <FavoriteButton active={isFavorite} onToggle={onToggleFavorite} />
 
       {match.type === "alias" && match.label ? (
-        <span className="glass-control mono absolute left-2.5 top-2.5 z-10 rounded-full px-2.5 py-1 text-[10px] font-bold text-ice">
+        <span className="glass-control mono absolute left-2.5 top-2.5 z-10 rounded-md px-2.5 py-1 text-[10px] font-bold text-ice">
           {match.label}
         </span>
       ) : null}

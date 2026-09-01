@@ -86,7 +86,7 @@ export function SegmentedControl<T extends string>({
             type="button"
             aria-pressed={active}
             onClick={() => onChange(segment.value)}
-            className={`min-h-[36px] shrink-0 rounded-xl px-3 py-1.5 text-left text-xs font-bold ${
+            className={`min-h-[36px] shrink-0 rounded-md px-3 py-1.5 text-left text-xs font-bold ${
               active ? SEGMENT_ON : SEGMENT_OFF
             }`}
           >
@@ -135,7 +135,7 @@ export function FilterSelect({
       <select
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value === "" ? null : event.target.value)}
-        className="glass-control mono w-full min-w-0 rounded-xl px-2.5 py-1.5 text-[11px] text-ink-soft [color-scheme:dark]"
+        className="glass-control mono w-full min-w-0 rounded-md px-2.5 py-1.5 text-[11px] text-ink-soft [color-scheme:dark]"
       >
         <option value="">{allLabel}</option>
         {options.map((option) => (

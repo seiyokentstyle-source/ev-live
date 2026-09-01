@@ -15,7 +15,7 @@ function chipClasses(active: boolean): string {
 }
 
 const CHIP_BASE =
-  "shrink-0 rounded-full px-3.5 py-2 text-xs font-bold min-h-[36px] whitespace-nowrap";
+  "shrink-0 rounded-md px-3.5 py-2 text-xs font-bold min-h-[36px] whitespace-nowrap";
 
 export function MakerFilter({ makers, value, favoriteCount, onChange }: MakerFilterProps) {
   return (
