@@ -75,6 +75,7 @@
   --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-collapse: cubic-bezier(0.33, 0, 0.2, 1);
 }
 
 * {
@@ -314,28 +315,36 @@ button {
 
   /* 表をスクロールしている間、上の操作バー（データ／目的／算出条件／狙い方／
      レート／絞り込み）を畳んで表の可視領域を広げる。先頭へ戻すと元に戻る。
-     高さと不透明度だけを動かすので、表側のスクロール位置は影響を受けない。 */
+
+     ★max-height では滑らかにならない。上限（50vh）と実際の高さ（40〜90px）の
+       差が大きく、時間の大半が「見えない範囲の縮小」に使われて、最後に
+       カクッと落ちる。grid-template-rows: 1fr → 0fr なら実測の高さが
+       そのまま補間されるので、等速で上へ吸い込まれるように動く。
+       子には min-height:0 と overflow:hidden が必須（無いと縮まない）。
+     ★glass-surface の内側ハイライトは position:absolute なので grid item に
+       ならず、行数に影響しない。 */
   .collapsible-bar {
-    max-height: 50vh;
-    opacity: 1;
-    transform: translateY(0);
+    display: grid;
+    grid-template-rows: 1fr;
     transition:
-      max-height 220ms var(--ease),
-      padding-block 220ms var(--ease),
-      opacity 150ms var(--ease),
-      transform 220ms var(--ease);
+      grid-template-rows 320ms var(--ease-collapse),
+      opacity 200ms var(--ease),
+      border-block-width 320ms var(--ease-collapse);
+  }
+
+  /* ★grid item 自身に padding があると 0fr へ潰れない（padding は行の高さに
+     縛られず残るため、バー1本あたり py-2＝16px が居座る）。
+     利用側は「padding を持たない中間層」を1枚挟むこと。 */
+  .collapsible-bar > * {
+    min-height: 0;
+    overflow: hidden;
   }
 
   .bars-collapsed .collapsible-bar {
-    max-height: 0;
+    grid-template-rows: 0fr;
     opacity: 0;
-    transform: translateY(-6px);
-    overflow: hidden;
-    pointer-events: none;
     border-block-width: 0;
-    /* max-height だけでは padding が残り、畳んだバーが1本あたり16px居座る
-       （5本で80px）。padding も一緒に畳む。 */
-    padding-block: 0;
+    pointer-events: none;
   }
 
   /* ロゴ。発光させず、屈折で色が変わったように見せる。 */
