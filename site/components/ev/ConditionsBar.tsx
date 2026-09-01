@@ -97,6 +97,8 @@ export function ConditionsBar({
 
   return (
     <div className="collapsible-bar shrink-0 border-b border-line bg-panel">
+      {/* 折りたたみ（grid-template-rows）のため、中身は1枚のdivにまとめる。 */}
+      <div>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -117,6 +119,7 @@ export function ConditionsBar({
           ))}
         </dl>
       ) : null}
+      </div>
     </div>
   );
 }

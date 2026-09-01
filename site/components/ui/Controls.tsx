@@ -29,7 +29,12 @@ export function ControlBar({
   scroll?: boolean;
 }) {
   return (
-    <div className="glass-surface collapsible-bar flex shrink-0 items-center gap-x-3 px-3 py-2">
+    // ★中身を1枚のdivで包むのは、折りたたみが grid-template-rows を使うため。
+    //   grid item が1つでないと 0fr へ潰れない。
+    <div className="glass-surface collapsible-bar shrink-0">
+      {/* padding を持たない中間層。これが無いと折りたたみが 0 まで縮まない。 */}
+      <div>
+      <div className="flex items-center gap-x-3 px-3 py-2">
       {label ? (
         // 幅を固定して、どのバーでも操作部の左端が同じ位置から始まるようにする。
         <span className="mono w-12 shrink-0 text-[9px] leading-tight tracking-[0.14em] text-muted">{label}</span>
@@ -42,6 +47,8 @@ export function ControlBar({
         }`}
       >
         {children}
+      </div>
+      </div>
       </div>
     </div>
   );
