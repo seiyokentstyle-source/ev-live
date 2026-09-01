@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Machine } from "@/lib/ev/types";
 import { readFavorites, writeFavorites, type FavoriteMap } from "@/lib/favorites";
 import { normalizeSearchText } from "@/lib/search/normalize";
+import { rewriteManufacturer } from "@/lib/ev/profiles";
 import { MachineCard, type MachineSearchMatch } from "@/components/machine-list/MachineCard";
 import { MakerFilter } from "@/components/machine-list/MakerFilter";
 import { SearchInput } from "@/components/machine-list/SearchInput";
@@ -31,8 +32,17 @@ function getSearchMatch(machine: Machine, query: string): MachineSearchMatch | n
   return null;
 }
 
-export function MachineListClient({ machines }: MachineListClientProps) {
+export function MachineListClient({ machines: rawMachines }: MachineListClientProps) {
   const router = useRouter();
+  /* メーカー名は1か所で直す。カードと絞り込みで別々に直すと食い違う。 */
+  const machines = useMemo(
+    () =>
+      rawMachines.map((machine) => ({
+        ...machine,
+        manufacturer: rewriteManufacturer(machine.name, machine.manufacturer)
+      })),
+    [rawMachines]
+  );
   const [query, setQuery] = useState("");
   const [maker, setMaker] = useState("all");
   const [favorites, setFavorites] = useState<FavoriteMap>(() => readFavorites());
