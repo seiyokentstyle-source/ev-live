@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { Harakiri } from "@/lib/ev/types";
 import { MonthTabs, monthOf } from "./MonthTabs";
-import { ControlBar, FilterSelect, SegmentedControl } from "@/components/ui/Controls";
+import { ControlBar, FilterGroup, FilterSelect, SegmentedControl } from "@/components/ui/Controls";
 import { EmptyState, RowHead, TableFoot, TableNote, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
 type HarakiriTableProps = {
@@ -73,6 +73,7 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
         </ControlBar>
       ) : (
         <ControlBar label="絞り込み">
+          <FilterGroup>
           <FilterSelect
             label="末尾"
             allLabel="全部"
@@ -81,6 +82,7 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
             onChange={setTailFilter}
             fmt={(v) => `末尾${v}`}
           />
+        </FilterGroup>
         </ControlBar>
       )}
       <TableScroll>

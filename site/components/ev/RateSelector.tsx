@@ -11,7 +11,7 @@ type RateSelectorProps = {
 
 export function RateSelector({ rates, value, onChange }: RateSelectorProps) {
   return (
-    <ControlBar label="レート">
+    <ControlBar label="レート" collapsible>
       <SegmentedControl
         segments={rates.map((rate) => ({ value: rate.value, label: rate.label }))}
         value={value ?? rates[0]?.value ?? ""}

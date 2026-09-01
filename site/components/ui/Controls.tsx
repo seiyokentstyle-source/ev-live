@@ -22,16 +22,21 @@ export const SEGMENT_OFF = "glass-control text-ink-soft";
 export function ControlBar({
   label,
   children,
-  scroll = false
+  scroll = false,
+  collapsible = false
 }: {
   label?: string;
   children: ReactNode;
   scroll?: boolean;
+  /** 表をスクロールしたとき畳むページ共通のバーか。
+   *  ★既定は false。表が内側で使う操作バー（集計・月・絞り込み等）まで
+   *    畳むと、表を送るたびに表自身の操作が消えてしまう。 */
+  collapsible?: boolean;
 }) {
   return (
     // ★中身を1枚のdivで包むのは、折りたたみが grid-template-rows を使うため。
     //   grid item が1つでないと 0fr へ潰れない。
-    <div className="glass-surface collapsible-bar shrink-0">
+    <div className={`glass-surface shrink-0 ${collapsible ? "collapsible-bar" : ""}`}>
       {/* padding を持たない中間層。これが無いと折りたたみが 0 まで縮まない。 */}
       <div>
       <div className="flex items-center gap-x-3 px-3 py-2">
@@ -96,6 +101,14 @@ export function SegmentedControl<T extends string>({
   );
 }
 
+/** 絞り込みセレクトの入れ物。見出し列と選択欄列を揃える。
+ *  中の FilterSelect は display:contents なので、この grid の列に直接乗る。 */
+export function FilterGroup({ children }: { children: ReactNode }) {
+  return (
+    <div className="grid min-w-0 grid-cols-[auto_1fr] items-center gap-x-2 gap-y-2">{children}</div>
+  );
+}
+
 /** 絞り込みセレクト。期待値表・設定狙い・ハラキリで同じ物を使う。 */
 export function FilterSelect({
   label,
@@ -113,14 +126,16 @@ export function FilterSelect({
   fmt: (value: string) => string;
 }) {
   return (
-    <label className="flex items-center gap-2">
-      {/* ★見出し幅を固定する。「末尾」と「特定日」で文字数が違うため、
-          折り返して縦に並んだときに選択欄の左端が左右へズレていた。 */}
-      <span className="mono w-12 shrink-0 text-[9px] leading-tight tracking-[0.08em] text-muted">{label}</span>
+    // ★display:contents で、見出しと選択欄を親の grid の列へ直接並べる。
+    //   見出し幅を固定すると、長い軸名（前回連チャン等）が溢れる一方で
+    //   短い軸名では選択欄が無駄に右へ寄る。grid の auto 列なら、
+    //   いちばん長い見出しに合わせて全部の左端が自動で揃う。
+    <label className="contents">
+      <span className="mono whitespace-nowrap text-[9px] leading-tight tracking-[0.08em] text-muted">{label}</span>
       <select
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value === "" ? null : event.target.value)}
-        className="glass-control mono min-w-[124px] rounded-xl px-2.5 py-1.5 text-[11px] text-ink-soft [color-scheme:dark]"
+        className="glass-control mono w-full min-w-0 rounded-xl px-2.5 py-1.5 text-[11px] text-ink-soft [color-scheme:dark]"
       >
         <option value="">{allLabel}</option>
         {options.map((option) => (

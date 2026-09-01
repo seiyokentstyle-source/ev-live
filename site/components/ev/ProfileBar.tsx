@@ -16,7 +16,7 @@ type ProfileBarProps = {
 
 export function ProfileBar({ tabs, activeKey, onChange }: ProfileBarProps) {
   return (
-    <ControlBar label="狙い方" scroll>
+    <ControlBar label="狙い方" scroll collapsible>
       <SegmentedControl
         segments={tabs.map((tab) => ({ value: tab.key, label: tab.label, hint: tab.ceiling }))}
         value={activeKey}
