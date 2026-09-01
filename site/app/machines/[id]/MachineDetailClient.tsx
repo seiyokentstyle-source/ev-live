@@ -267,6 +267,9 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
   const shellRef = useRef<HTMLDivElement>(null);
   const lastTopRef = useRef(0);
   const lastMaxRef = useRef(-1);
+  /* 見出し行を掴んで手で開閉したか。手で決めた状態は、先頭へ戻すまで
+     自動判定で上書きしない（下へ少し送っただけで元に戻ると操作にならない）。 */
+  const manualRef = useRef(false);
   const collapsedRef = useRef(false);
   const lockUntilRef = useRef(0);
 
@@ -314,7 +317,10 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
          戻る向きのスクロールを一切解釈しないので、慣性の跳ね返りや
          scrollTop の切り詰めが判定に混ざる余地も無くなる。 */
       if (top <= 24) {
+        manualRef.current = false;
         applyCollapsed(false);
+      } else if (manualRef.current) {
+        /* 手で決めた状態を保つ。先頭まで戻せば自動判定に戻る。 */
       } else if (top > 88 && maxTop - top >= barsHeight) {
         /* ★畳むと表の領域が barsHeight ぶん広がる。残りのスクロール量が
            それより少ないと scrollTop が切り詰められ、見ている行が飛ぶ。
@@ -347,9 +353,48 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
     return () => shell.removeEventListener("scroll", onScroll, true);
   }, [handleScrollDepth]);
 
+  /* ★見出し行（G数／機械割／…）を掴んで上下に振ると開閉する。
+     0Gまで戻さなくても、いま見ている位置のまま狙い方や絞り込みを出せる。
+     見出しは touch-action:none にしてあるので、掴んでいる間は表が動かない。
+     component を1つずつ触らずに済むよう、shell 側で thead を拾う。 */
+  useEffect(() => {
+    const shell = shellRef.current;
+    if (!shell) return;
+    let startY: number | null = null;
+
+    const onDown = (event: PointerEvent) => {
+      const target = event.target as HTMLElement | null;
+      startY = target?.closest("thead") ? event.clientY : null;
+    };
+    const onMove = (event: PointerEvent) => {
+      if (startY === null) return;
+      const dy = event.clientY - startY;
+      if (Math.abs(dy) < 20) return;
+      startY = null;
+      manualRef.current = true;
+      /* 下へ下げる＝バーを引き出す（表は小さくなる）。上へ払う＝畳む。 */
+      applyCollapsed(dy < 0);
+    };
+    const onEnd = () => {
+      startY = null;
+    };
+
+    shell.addEventListener("pointerdown", onDown);
+    shell.addEventListener("pointermove", onMove);
+    shell.addEventListener("pointerup", onEnd);
+    shell.addEventListener("pointercancel", onEnd);
+    return () => {
+      shell.removeEventListener("pointerdown", onDown);
+      shell.removeEventListener("pointermove", onMove);
+      shell.removeEventListener("pointerup", onEnd);
+      shell.removeEventListener("pointercancel", onEnd);
+    };
+  }, [applyCollapsed]);
+
   /* 表を切り替えた直後は必ず開いた状態から始める（新しい表は先頭に居るため）。 */
   useEffect(() => {
     collapsedRef.current = false;
+    manualRef.current = false;
     lastTopRef.current = 0;
     lastMaxRef.current = -1;
     lockUntilRef.current = 0;

@@ -347,6 +347,13 @@ button {
     pointer-events: none;
   }
 
+  /* 表の見出し行（G数／機械割／期待値…）は、掴んで上下に振ると操作バーを
+     開閉する「つまみ」として使う。touch-action:none にして、ここを掴んだ
+     ときはブラウザに表をスクロールさせない（サイズは変えるが表は動かない）。 */
+  .app-shell thead {
+    touch-action: none;
+  }
+
   /* ロゴ。発光させず、屈折で色が変わったように見せる。 */
   .logo-gradient {
     background: linear-gradient(100deg, var(--ice) 0%, var(--cyan) 38%, var(--pink-pale) 100%);
