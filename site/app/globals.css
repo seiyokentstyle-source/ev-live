@@ -148,10 +148,12 @@ button {
 }
 
 /* Glassmorphism は輪郭が甘くなる。数値と機種名は必ず読めるほうへ倒す。 */
+/* ★border-radius をここへ書かないこと。outline の形ではなく要素自身の角丸を
+   書き換えてしまい、フォーカスした瞬間だけ角が変わる（22pxの検索欄が12pxに
+   なって、光の縁だけ形が合っていなかった）。outline は要素の角丸に自動で従う。 */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 12px;
 }
 
 .mono {
