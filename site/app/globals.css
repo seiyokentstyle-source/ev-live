@@ -350,7 +350,9 @@ button {
   /* 表の見出し行（G数／機械割／期待値…）は、掴んで上下に振ると操作バーを
      開閉する「つまみ」として使う。touch-action:none にして、ここを掴んだ
      ときはブラウザに表をスクロールさせない（サイズは変えるが表は動かない）。 */
-  .app-shell thead {
+  .app-shell thead,
+  .app-shell thead tr,
+  .app-shell thead th {
     touch-action: none;
   }
 
