@@ -355,39 +355,80 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
 
   /* ★見出し行（G数／機械割／…）を掴んで上下に振ると開閉する。
      0Gまで戻さなくても、いま見ている位置のまま狙い方や絞り込みを出せる。
-     見出しは touch-action:none にしてあるので、掴んでいる間は表が動かない。
-     component を1つずつ触らずに済むよう、shell 側で thead を拾う。 */
+
+     ★iOS Safari では touch-action:none だけでは表のスクロールが止まらない。
+       touchmove を passive:false で受けて preventDefault する必要がある
+       （Safari は touchmove を既定で passive 扱いにするので、明示しないと
+       preventDefault が無視される）。しかも iOS はスクロールが始まった後の
+       preventDefault を受け付けないため、最初の1回目から止める。
+     ★マウスは pointerType で選り分ける。touch と両方を処理すると二重に走る。
+
+     component を1つずつ触らずに済むよう、shell 側で thead を判定する。 */
   useEffect(() => {
     const shell = shellRef.current;
     if (!shell) return;
-    let startY: number | null = null;
+    let touchY: number | null = null;
+    let mouseY: number | null = null;
 
-    const onDown = (event: PointerEvent) => {
-      const target = event.target as HTMLElement | null;
-      startY = target?.closest("thead") ? event.clientY : null;
-    };
-    const onMove = (event: PointerEvent) => {
-      if (startY === null) return;
-      const dy = event.clientY - startY;
-      if (Math.abs(dy) < 20) return;
-      startY = null;
+    const onHeader = (target: EventTarget | null) =>
+      Boolean((target as HTMLElement | null)?.closest?.("thead"));
+
+    const decide = (dy: number) => {
       manualRef.current = true;
       /* 下へ下げる＝バーを引き出す（表は小さくなる）。上へ払う＝畳む。 */
       applyCollapsed(dy < 0);
     };
-    const onEnd = () => {
-      startY = null;
+
+    const onTouchStart = (event: TouchEvent) => {
+      touchY = onHeader(event.target) ? event.touches[0]?.clientY ?? null : null;
+    };
+    const onTouchMove = (event: TouchEvent) => {
+      if (touchY === null) return;
+      /* 掴んでいる間は表を動かさない。1回目から止めないと iOS は聞かない。 */
+      if (event.cancelable) event.preventDefault();
+      const y = event.touches[0]?.clientY;
+      if (y === undefined) return;
+      const dy = y - touchY;
+      if (Math.abs(dy) < 20) return;
+      touchY = null;
+      decide(dy);
+    };
+    const onTouchEnd = () => {
+      touchY = null;
     };
 
-    shell.addEventListener("pointerdown", onDown);
-    shell.addEventListener("pointermove", onMove);
-    shell.addEventListener("pointerup", onEnd);
-    shell.addEventListener("pointercancel", onEnd);
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
+      mouseY = onHeader(event.target) ? event.clientY : null;
+    };
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch" || mouseY === null) return;
+      const dy = event.clientY - mouseY;
+      if (Math.abs(dy) < 20) return;
+      mouseY = null;
+      decide(dy);
+    };
+    const onPointerEnd = () => {
+      mouseY = null;
+    };
+
+    shell.addEventListener("touchstart", onTouchStart, { passive: true });
+    shell.addEventListener("touchmove", onTouchMove, { passive: false });
+    shell.addEventListener("touchend", onTouchEnd);
+    shell.addEventListener("touchcancel", onTouchEnd);
+    shell.addEventListener("pointerdown", onPointerDown);
+    shell.addEventListener("pointermove", onPointerMove);
+    shell.addEventListener("pointerup", onPointerEnd);
+    shell.addEventListener("pointercancel", onPointerEnd);
     return () => {
-      shell.removeEventListener("pointerdown", onDown);
-      shell.removeEventListener("pointermove", onMove);
-      shell.removeEventListener("pointerup", onEnd);
-      shell.removeEventListener("pointercancel", onEnd);
+      shell.removeEventListener("touchstart", onTouchStart);
+      shell.removeEventListener("touchmove", onTouchMove);
+      shell.removeEventListener("touchend", onTouchEnd);
+      shell.removeEventListener("touchcancel", onTouchEnd);
+      shell.removeEventListener("pointerdown", onPointerDown);
+      shell.removeEventListener("pointermove", onPointerMove);
+      shell.removeEventListener("pointerup", onPointerEnd);
+      shell.removeEventListener("pointercancel", onPointerEnd);
     };
   }, [applyCollapsed]);
 
