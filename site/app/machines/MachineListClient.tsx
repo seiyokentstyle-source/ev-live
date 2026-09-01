@@ -6,6 +6,7 @@ import type { Machine } from "@/lib/ev/types";
 import { readFavorites, writeFavorites, type FavoriteMap } from "@/lib/favorites";
 import { normalizeSearchText } from "@/lib/search/normalize";
 import { rewriteManufacturer } from "@/lib/ev/profiles";
+import { compareMachines } from "@/lib/machine-order";
 import { MachineCard, type MachineSearchMatch } from "@/components/machine-list/MachineCard";
 import { MakerFilter } from "@/components/machine-list/MakerFilter";
 import { SearchInput } from "@/components/machine-list/SearchInput";
@@ -65,7 +66,7 @@ export function MachineListClient({ machines: rawMachines }: MachineListClientPr
       })
       .sort((a, b) => {
         if (a.isFavorite !== b.isFavorite) return a.isFavorite ? -1 : 1;
-        return b.machine.releaseDate.localeCompare(a.machine.releaseDate);
+        return compareMachines(a.machine, b.machine);
       });
   }, [favorites, maker, machines, normalizedQuery]);
 
