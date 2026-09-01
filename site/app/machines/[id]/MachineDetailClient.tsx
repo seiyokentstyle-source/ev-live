@@ -251,16 +251,49 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
   }
 
   /* 表をスクロールしている間だけ上の操作バーを畳み、期待値表の可視領域を広げる。
+
+     ★開き直すのに「0Gまで戻す」を強いない。指を下へ払って（＝表を戻る向きに
+       スクロールして）少し動かせば、その場でバーが戻る。狙い方やレートを
+       触りたくなるのは表の途中なので、先頭まで戻す操作は無駄が大きい。
+
      scroll イベントは bubble しないが capture 段では祖先にも届くので、どの表
      （期待値／設定狙い／AT獲得／ハラキリ／設定1想定）でも1か所で拾える。
      表側の onScroll（視点Gの追従）には触れないので、既存の挙動は変わらない。
-     しきい値に差を付けているのは、境界でバーが開閉を繰り返さないため。 */
+
+     ★開閉の直後に短い錠を掛けている。バーが畳まれると表の領域が広がり、
+       末尾に居るときは scrollTop がブラウザに切り詰められて「戻る向き」の
+       scroll が発生する。錠が無いと、それを操作と誤読して開閉を繰り返す。 */
   const [barsCollapsed, setBarsCollapsed] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
+  const lastTopRef = useRef(0);
+  const collapsedRef = useRef(false);
+  const lockUntilRef = useRef(0);
 
-  const handleScrollDepth = useCallback((top: number) => {
-    setBarsCollapsed((collapsed) => (collapsed ? top > 24 : top > 88));
+  const applyCollapsed = useCallback((next: boolean) => {
+    if (next === collapsedRef.current) return;
+    collapsedRef.current = next;
+    lockUntilRef.current = Date.now() + 360;
+    setBarsCollapsed(next);
   }, []);
+
+  const handleScrollDepth = useCallback(
+    (top: number) => {
+      const now = Date.now();
+      if (now < lockUntilRef.current) {
+        lastTopRef.current = top;
+        return;
+      }
+      const delta = top - lastTopRef.current;
+      /* 指の微細な揺れで開閉しないよう、一定量動いてから判断する。 */
+      if (Math.abs(delta) < 8) return;
+      lastTopRef.current = top;
+
+      if (top <= 24) applyCollapsed(false);
+      else if (delta > 0 && top > 88) applyCollapsed(true);
+      else if (delta < 0) applyCollapsed(false);
+    },
+    [applyCollapsed]
+  );
 
   useEffect(() => {
     const shell = shellRef.current;
@@ -276,6 +309,9 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
 
   /* 表を切り替えた直後は必ず開いた状態から始める（新しい表は先頭に居るため）。 */
   useEffect(() => {
+    collapsedRef.current = false;
+    lastTopRef.current = 0;
+    lockUntilRef.current = 0;
     setBarsCollapsed(false);
   }, [mode, dataView, activeGroupKey, activeRate]);
 

@@ -11,7 +11,7 @@ export function FavoriteButton({ active, onToggle }: FavoriteButtonProps) {
   const ref = useRef<HTMLButtonElement>(null);
 
   return (
-    // ★ボタン本体は44pxのまま透明にし、見えるガラス円だけ36pxにする。
+    // ★ボタン本体は44pxのまま透明にし、見えるガラス円だけ33pxにする。
     //   円を小さくしてもタップ判定は落とさない（指の当たり判定は44pxが下限）。
     <button
       ref={ref}
@@ -28,8 +28,8 @@ export function FavoriteButton({ active, onToggle }: FavoriteButtonProps) {
       className="group absolute right-1.5 top-1.5 z-20 grid h-11 w-11 place-items-center"
     >
       <span
-        // Layer 3。カード面から浮いた小さなガラス。星は円の中で主役になる大きさ。
-        className={`glass-floating mono grid h-9 w-9 place-items-center text-[31px] leading-none transition-transform duration-150 group-active:scale-90 ${
+        // Layer 3。カード面から浮いた小さなガラス。
+        className={`glass-floating grid h-[33px] w-[33px] place-items-center transition-transform duration-150 group-active:scale-90 ${
           active ? "text-favorite" : "text-ink-soft"
         }`}
         style={
@@ -43,7 +43,17 @@ export function FavoriteButton({ active, onToggle }: FavoriteButtonProps) {
             : undefined
         }
       >
-        {active ? "★" : "☆"}
+        {/* ★☆ の文字は上下の余白が非対称で、どう揃えても円の中心へ来ない
+            （グリフがベースラインの上に乗るため）。図形なら幾何中心で揃う。 */}
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[21px] w-[21px]" fill="none">
+          <path
+            d="M12 3.1l2.72 5.51 6.08.88-4.4 4.29 1.04 6.06L12 16.98l-5.44 2.86 1.04-6.06-4.4-4.29 6.08-.88z"
+            fill={active ? "currentColor" : "none"}
+            stroke="currentColor"
+            strokeWidth={active ? 0 : 1.7}
+            strokeLinejoin="round"
+          />
+        </svg>
       </span>
     </button>
   );
