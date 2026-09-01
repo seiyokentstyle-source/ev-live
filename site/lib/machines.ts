@@ -2,6 +2,7 @@ import { existsSync, promises as fs } from "node:fs";
 import path from "node:path";
 import type { Machine } from "./ev/types";
 import { validateMachine } from "./ev/validate";
+import { compareMachines } from "./machine-order";
 
 // Data lives at the repository root (data/machines), while the site builds from
 // site/. Resolve against the repo root so it works whether the cwd is site/
@@ -35,7 +36,7 @@ export async function getMachines(dataSubdir?: string): Promise<Machine[]> {
     })
   );
 
-  return machines.sort((a, b) => b.releaseDate.localeCompare(a.releaseDate));
+  return machines.sort(compareMachines);
 }
 
 export async function getAvailableMachines(dataSubdir?: string): Promise<Machine[]> {
