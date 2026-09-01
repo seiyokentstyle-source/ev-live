@@ -1,7 +1,7 @@
 "use client";
 
 import type { FilterAxis } from "@/lib/ev/types";
-import { ControlBar, FilterSelect } from "@/components/ui/Controls";
+import { ControlBar, FilterGroup, FilterSelect } from "@/components/ui/Controls";
 
 type EvFilterProps = {
   /** 絞り込みの軸（データ側が並び順ごと配る）。軸が増えてもここは無改修. */
@@ -20,18 +20,20 @@ export function EvFilter({ axes, values, onChange, units, hits, hitUnit }: EvFil
   const active = axes.some((axis) => values[axis.key] != null);
   if (axes.length === 0) return null;
   return (
-    <ControlBar label="絞り込み">
-      {axes.map((axis) => (
-        <FilterSelect
-          key={axis.key}
-          label={axis.label}
-          allLabel={axis.allLabel}
-          options={axis.options.map((option) => option.value)}
-          value={values[axis.key] ?? null}
-          onChange={(value) => onChange(axis.key, value)}
-          fmt={(value) => axis.options.find((option) => option.value === value)?.label ?? value}
-        />
-      ))}
+    <ControlBar label="絞り込み" collapsible>
+      <FilterGroup>
+        {axes.map((axis) => (
+          <FilterSelect
+            key={axis.key}
+            label={axis.label}
+            allLabel={axis.allLabel}
+            options={axis.options.map((option) => option.value)}
+            value={values[axis.key] ?? null}
+            onChange={(value) => onChange(axis.key, value)}
+            fmt={(value) => axis.options.find((option) => option.value === value)?.label ?? value}
+          />
+        ))}
+      </FilterGroup>
       {active ? (
         <span className="mono flex items-center gap-2 text-[10px] text-muted">
           <span>

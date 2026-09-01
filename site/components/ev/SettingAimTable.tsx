@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import type { SettingAim } from "@/lib/ev/types";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
 import { MonthTabs, monthOf } from "./MonthTabs";
-import { ControlBar, FilterSelect, SegmentedControl } from "@/components/ui/Controls";
+import { ControlBar, FilterSelect, SegmentedControl, FilterGroup } from "@/components/ui/Controls";
 import { EmptyState, RowHead, TableFoot, TableNote, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
 type SettingAimTableProps = {
@@ -149,6 +149,7 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
         <MonthTabs dates={aim.dates} value={monthFilter} onChange={setMonthFilter} />
       </ControlBar>
       <ControlBar label="絞り込み">
+        <FilterGroup>
         <FilterSelect
           label="末尾"
           allLabel="全部"
@@ -167,6 +168,7 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
             fmt={(v) => `${v}のつく日`}
           />
         ) : null}
+        </FilterGroup>
       </ControlBar>
       <TableScroll>
         {view === "day" ? (

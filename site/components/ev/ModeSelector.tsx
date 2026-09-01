@@ -20,7 +20,7 @@ const MODES: Array<Segment<AimMode>> = [
 
 export function ModeSelector({ value, onChange, modes }: ModeSelectorProps) {
   return (
-    <ControlBar label="目的" scroll>
+    <ControlBar label="目的" scroll collapsible>
       <SegmentedControl segments={MODES.filter((mode) => modes.includes(mode.value))} value={value} onChange={onChange} />
     </ControlBar>
   );

@@ -266,6 +266,7 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
   const [barsCollapsed, setBarsCollapsed] = useState(false);
   const shellRef = useRef<HTMLDivElement>(null);
   const lastTopRef = useRef(0);
+  const lastMaxRef = useRef(-1);
   const collapsedRef = useRef(false);
   const lockUntilRef = useRef(0);
 
@@ -279,13 +280,20 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
   }, []);
 
   const handleScrollDepth = useCallback(
-    (top: number, maxTop: number) => {
-      /* ★末尾に着いている間は向きを見ない。ここが伸び縮みの原因だった。
-         - バーを畳むと表の領域が広がり、scrollTop がブラウザに切り詰められる
-         - iOS は末尾で引っ張れる（ラバーバンド）ので、指を離すと戻る向きの
-           scroll が連続して出る
-         どちらも「戻る操作」ではないのに戻ったと読まれ、開く→領域が狭まる→
-         また末尾へ→畳む、を往復していた。末尾では現状を保つ。 */
+    (top: number, maxTop: number, barsHeight: number) => {
+      /* ★高さが変わった瞬間の scroll は「操作」ではない。
+         バーを畳むと表の領域が広がり、スクロールできる量（maxTop）が縮む。
+         ブラウザはそのぶん scrollTop を切り詰めるので、戻る向きの scroll が
+         発生する。これを操作と読むと、畳む→切り詰め→開く→…… と往復する。
+         maxTop が動いた回は基準を取り直すだけにする。 */
+      if (maxTop !== lastMaxRef.current) {
+        lastMaxRef.current = maxTop;
+        lastTopRef.current = top;
+        return;
+      }
+
+      /* 末尾に着いている間も向きを見ない。iOS は末尾で引っ張れる（ラバーバンド）
+         ため、指を離すと戻る向きの scroll が連続して出る。 */
       if (maxTop > 0 && top >= maxTop - 4) {
         lastTopRef.current = top;
         return;
@@ -302,9 +310,17 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
       if (Math.abs(delta) < 8) return;
       lastTopRef.current = top;
 
-      if (top <= 24) applyCollapsed(false);
-      else if (delta > 0 && top > 88) applyCollapsed(true);
-      else if (delta <= -14) applyCollapsed(false);
+      if (top <= 24) {
+        applyCollapsed(false);
+      } else if (delta > 0 && top > 88) {
+        /* ★畳むと表の領域が barsHeight ぶん広がる。残りのスクロール量が
+           それより少ないと scrollTop が切り詰められ、見ている行が飛ぶ。
+           「サイズは変わってよいが、表は動かない」を守るため、
+           飛ばずに畳めるときだけ畳む。 */
+        if (maxTop - top >= barsHeight) applyCollapsed(true);
+      } else if (delta <= -14) {
+        applyCollapsed(false);
+      }
     },
     [applyCollapsed]
   );
@@ -315,7 +331,16 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
     const onScroll = (event: Event) => {
       const target = event.target as HTMLElement | null;
       if (!target || typeof target.scrollTop !== "number") return;
-      handleScrollDepth(target.scrollTop, target.scrollHeight - target.clientHeight);
+      const bars = shell.querySelectorAll<HTMLElement>(".collapsible-bar");
+      let barsHeight = 0;
+      bars.forEach((bar) => {
+        barsHeight += bar.offsetHeight;
+      });
+      handleScrollDepth(
+        target.scrollTop,
+        target.scrollHeight - target.clientHeight,
+        barsHeight
+      );
     };
     shell.addEventListener("scroll", onScroll, true);
     return () => shell.removeEventListener("scroll", onScroll, true);
@@ -325,6 +350,7 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
   useEffect(() => {
     collapsedRef.current = false;
     lastTopRef.current = 0;
+    lastMaxRef.current = -1;
     lockUntilRef.current = 0;
     setBarsCollapsed(false);
   }, [mode, dataView, activeGroupKey, activeRate]);
@@ -344,7 +370,7 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
       </header>
 
       {machine.theoretical ? (
-        <ControlBar label="データ">
+        <ControlBar label="データ" collapsible>
           <SegmentedControl
             segments={[
               { value: "hall", label: "店舗別データ", hint: "実戦値" },
