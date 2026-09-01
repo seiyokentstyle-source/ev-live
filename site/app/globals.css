@@ -312,6 +312,32 @@ button {
     backdrop-filter: blur(var(--glass-blur)) saturate(150%);
   }
 
+  /* 表をスクロールしている間、上の操作バー（データ／目的／算出条件／狙い方／
+     レート／絞り込み）を畳んで表の可視領域を広げる。先頭へ戻すと元に戻る。
+     高さと不透明度だけを動かすので、表側のスクロール位置は影響を受けない。 */
+  .collapsible-bar {
+    max-height: 50vh;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      max-height 220ms var(--ease),
+      padding-block 220ms var(--ease),
+      opacity 150ms var(--ease),
+      transform 220ms var(--ease);
+  }
+
+  .bars-collapsed .collapsible-bar {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-6px);
+    overflow: hidden;
+    pointer-events: none;
+    border-block-width: 0;
+    /* max-height だけでは padding が残り、畳んだバーが1本あたり16px居座る
+       （5本で80px）。padding も一緒に畳む。 */
+    padding-block: 0;
+  }
+
   /* ロゴ。発光させず、屈折で色が変わったように見せる。 */
   .logo-gradient {
     background: linear-gradient(100deg, var(--ice) 0%, var(--cyan) 38%, var(--pink-pale) 100%);

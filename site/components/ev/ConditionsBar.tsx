@@ -96,7 +96,7 @@ export function ConditionsBar({
   const summary = rows.slice(0, 3).map((r) => r.v.split("（")[0]).join(" / ");
 
   return (
-    <div className="shrink-0 border-b border-line bg-panel">
+    <div className="collapsible-bar shrink-0 border-b border-line bg-panel">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

@@ -29,7 +29,7 @@ export function ControlBar({
   scroll?: boolean;
 }) {
   return (
-    <div className="glass-surface flex shrink-0 items-center gap-x-3 px-3 py-2">
+    <div className="glass-surface collapsible-bar flex shrink-0 items-center gap-x-3 px-3 py-2">
       {label ? (
         // 幅を固定して、どのバーでも操作部の左端が同じ位置から始まるようにする。
         <span className="mono w-12 shrink-0 text-[9px] leading-tight tracking-[0.14em] text-muted">{label}</span>
@@ -107,7 +107,9 @@ export function FilterSelect({
 }) {
   return (
     <label className="flex items-center gap-2">
-      <span className="mono shrink-0 text-[9px] tracking-[0.08em] text-muted">{label}</span>
+      {/* ★見出し幅を固定する。「末尾」と「特定日」で文字数が違うため、
+          折り返して縦に並んだときに選択欄の左端が左右へズレていた。 */}
+      <span className="mono w-12 shrink-0 text-[9px] leading-tight tracking-[0.08em] text-muted">{label}</span>
       <select
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value === "" ? null : event.target.value)}

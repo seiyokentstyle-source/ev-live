@@ -24,7 +24,8 @@ export function FavoriteButton({ active, onToggle }: FavoriteButtonProps) {
         onToggle();
       }}
       /* Layer 3。カード面から浮いた小さなガラス。44px確保してタップ判定を稼ぐ。 */
-      className={`glass-floating mono absolute right-2 top-2 z-20 grid h-11 w-11 place-items-center text-[17px] leading-none ${
+      /* 円は機種名2行ぶんの高さに合わせる。星はその中で主役になる大きさにする。 */
+      className={`glass-floating mono absolute right-2 top-2 z-20 grid h-12 w-12 place-items-center text-[26px] leading-none ${
         active ? "text-favorite" : "text-ink-soft"
       }`}
       style={
