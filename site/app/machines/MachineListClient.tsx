@@ -78,13 +78,16 @@ export function MachineListClient({ machines }: MachineListClientProps) {
   return (
     <div className="app-shell">
       {/* 詳細ページのヘッダーと同じ骨格・同じ余白。件数は他ページと揃えてフッターの左に出す。 */}
-      <header className="glass-surface flex shrink-0 items-end justify-between gap-3 px-4 py-3">
-        <div>
+      <header className="glass-surface flex shrink-0 items-center justify-between gap-3 px-4 py-3">
+        <div className="min-w-0">
           {/* ロゴは発光させず、Ice Blue → Pale Pink の屈折で色が変わったように見せる。 */}
-          <p className="logo-gradient mono text-[11px] font-bold tracking-[0.24em]">EV LIVE</p>
-          <h1 className="mt-0.5 text-base font-black tracking-tight text-ink">機種一覧</h1>
+          <p className="flex items-baseline gap-1.5 text-[22px] font-black leading-none tracking-tight">
+            <span className="logo-gradient">EV</span>
+            <span className="text-ink">Live</span>
+          </p>
+          <p className="mt-1.5 truncate text-[11px] text-ink-soft">期待値ガチ勢向け</p>
         </div>
-        <p className="mono pb-0.5 text-[10px] text-muted">期待値ガチ勢向け</p>
+        <h1 className="shrink-0 text-sm font-bold text-ink-soft">機種一覧</h1>
       </header>
 
       {/* 検索＋メーカー絞り込みはヘッダーの直下に密着させる。詳細ページの ControlBar と

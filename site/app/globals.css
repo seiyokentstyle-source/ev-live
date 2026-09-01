@@ -29,7 +29,7 @@
   /* ---- 文字 ---- */
   --ink: #f6f9ff;
   --ink-soft: #b8c3d4;
-  --muted: #748096;
+  --muted: #97a4ba;
 
   /* ---- semantic（意味は据え置き、色だけ新しい系統へ）---- */
   --accent: var(--ice);
@@ -43,25 +43,25 @@
   /* ---- 旧トークンの受け皿 ----
      panel / line 系は詳細ページの表が広く使っている。名前は残し、
      値だけガラス側へ寄せる。ここを消すと表の罫線が全部飛ぶ。 */
-  --panel: rgba(18, 27, 42, 0.72);
-  --panel-2: rgba(26, 38, 57, 0.62);
+  --panel: rgba(14, 22, 38, 0.6);
+  --panel-2: rgba(20, 30, 50, 0.52);
   --line: rgba(200, 224, 255, 0.14);
   --line-soft: rgba(200, 224, 255, 0.08);
   --row-alt: rgba(169, 231, 255, 0.035);
 
   /* ---- ガラスの材質 ---- */
-  --glass-blur: 22px;
+  --glass-blur: 26px;
   --glass-blur-strong: 30px;
   --glass-fill: linear-gradient(
     152deg,
-    rgba(169, 231, 255, 0.2) 0%,
-    rgba(150, 200, 240, 0.085) 32%,
-    rgba(120, 150, 195, 0.045) 60%,
-    rgba(255, 184, 218, 0.12) 100%
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(214, 236, 255, 0.075) 32%,
+    rgba(190, 208, 240, 0.05) 60%,
+    rgba(255, 210, 234, 0.1) 100%
   );
-  --glass-border: rgba(220, 240, 255, 0.28);
-  --glass-border-soft: rgba(220, 240, 255, 0.16);
-  --glass-inner: rgba(255, 255, 255, 0.18);
+  --glass-border: rgba(232, 244, 255, 0.34);
+  --glass-border-soft: rgba(232, 244, 255, 0.2);
+  --glass-inner: rgba(255, 255, 255, 0.26);
 
   /* ---- 影。黒1枚で終わらせず、落ち影＋環境光＋アクセント光の3枚 ---- */
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 14px -6px rgba(0, 0, 0, 0.55),
@@ -104,14 +104,36 @@ body {
 body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  inset: -10%;
+  z-index: 0;
+  pointer-events: none;
+  /* 大きいボケ玉。円の輪郭を出すため、透明への落ち込みを急にする。
+     ここ1枚に光を集約するので、カード側は発光を持たなくてよい。
+     fixed + アニメーションなしなので合成レイヤーは1枚だけ増える。 */
+  background:
+    radial-gradient(circle at 80% 10%, rgba(196, 166, 255, 0.4) 0%, rgba(180, 158, 242, 0.24) 26%, rgba(150, 140, 220, 0) 44%),
+    radial-gradient(circle at 100% 31%, rgba(255, 168, 210, 0.36) 0%, rgba(255, 176, 214, 0.2) 25%, rgba(255, 176, 214, 0) 42%),
+    radial-gradient(circle at 2% 24%, rgba(110, 196, 255, 0.32) 0%, rgba(120, 200, 255, 0.17) 26%, rgba(120, 200, 255, 0) 44%),
+    radial-gradient(circle at -2% 62%, rgba(255, 158, 204, 0.36) 0%, rgba(255, 166, 208, 0.2) 25%, rgba(255, 166, 208, 0) 42%),
+    radial-gradient(circle at 96% 76%, rgba(140, 190, 255, 0.32) 0%, rgba(150, 190, 255, 0.17) 26%, rgba(150, 190, 255, 0) 44%),
+    radial-gradient(circle at 44% 100%, rgba(170, 205, 255, 0.18) 0%, rgba(180, 210, 255, 0) 44%),
+    radial-gradient(circle at 26% 2%, rgba(150, 215, 255, 0.18) 0%, rgba(160, 220, 255, 0) 40%),
+    linear-gradient(170deg, #0b1222 0%, #080d18 40%, #070b14 70%, #0a1020 100%);
+}
+
+/* 小さく明るいボケ玉をもう1枚だけ重ねて、奥行きを作る。
+   DOMは増やさない（擬似要素2枚で完結させる）。 */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -10%;
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(88% 46% at 16% 4%, rgba(120, 223, 255, 0.5) 0%, rgba(120, 223, 255, 0.14) 40%, rgba(120, 223, 255, 0) 72%),
-    radial-gradient(78% 40% at 88% 62%, rgba(255, 184, 218, 0.42) 0%, rgba(255, 184, 218, 0.11) 40%, rgba(255, 184, 218, 0) 72%),
-    radial-gradient(70% 34% at 44% 96%, rgba(169, 231, 255, 0.16) 0%, rgba(169, 231, 255, 0) 70%),
-    linear-gradient(168deg, #101c30 0%, #0a1120 38%, #080d16 70%, #0d1422 100%);
+    radial-gradient(circle at 71% 18%, rgba(226, 208, 255, 0.26) 0%, rgba(226, 208, 255, 0) 19%),
+    radial-gradient(circle at 93% 44%, rgba(255, 214, 234, 0.22) 0%, rgba(255, 214, 234, 0) 16%),
+    radial-gradient(circle at 9% 50%, rgba(206, 236, 255, 0.2) 0%, rgba(206, 236, 255, 0) 16%),
+    radial-gradient(circle at 64% 90%, rgba(214, 226, 255, 0.16) 0%, rgba(214, 226, 255, 0) 15%);
 }
 
 button,
@@ -171,7 +193,7 @@ button {
   .glass-floating {
     position: relative;
     background-image: var(--glass-fill);
-    background-color: rgba(10, 16, 27, 0.34);
+    background-color: rgba(9, 15, 26, 0.34);
     border: 1px solid var(--glass-border-soft);
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
     backdrop-filter: blur(var(--glass-blur)) saturate(150%);
@@ -267,8 +289,9 @@ button {
     box-shadow:
       0 2px 4px rgba(0, 0, 0, 0.3),
       0 10px 24px -12px rgba(0, 0, 0, 0.6),
-      0 0 22px -6px rgba(169, 231, 255, 0.45),
-      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+      0 0 0 1px rgba(169, 231, 255, 0.28),
+      0 0 26px -4px rgba(120, 205, 255, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
   .glass-active:active {
