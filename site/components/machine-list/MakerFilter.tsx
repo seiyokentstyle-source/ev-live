@@ -14,29 +14,39 @@ function chipClasses(active: boolean): string {
   return active ? SEGMENT_ON : SEGMENT_OFF;
 }
 
+const CHIP_BASE =
+  "shrink-0 rounded-full px-3.5 py-2 text-xs font-bold min-h-[36px] whitespace-nowrap";
+
 export function MakerFilter({ makers, value, favoriteCount, onChange }: MakerFilterProps) {
   return (
-    <div className="scrollbar-none flex gap-2 overflow-x-auto py-1">
+    /* 横スクロール。両端に余白を持たせて、chip が画面端に貼りつかないようにする。 */
+    <div className="scrollbar-none -mx-1 flex gap-2 overflow-x-auto px-1 py-1.5">
       <button
         type="button"
+        aria-pressed={value === "all"}
         onClick={() => onChange("all")}
-        className={`shrink-0 rounded-md border px-3 py-1.5 text-xs font-bold transition-colors ${chipClasses(value === "all")}`}
+        className={`${CHIP_BASE} ${chipClasses(value === "all")}`}
       >
         すべて
       </button>
       <button
         type="button"
+        aria-pressed={value === "favorites"}
         onClick={() => onChange("favorites")}
-        className={`shrink-0 rounded-md border px-3 py-1.5 text-xs font-bold transition-colors ${chipClasses(value === "favorites")}`}
+        className={`${CHIP_BASE} ${chipClasses(value === "favorites")}`}
       >
-        ★ お気に入り{favoriteCount > 0 ? ` (${favoriteCount})` : ""}
+        <span className={value === "favorites" ? "text-favorite" : ""}>★</span> お気に入り
+        {favoriteCount > 0 ? (
+          <span className="mono ml-1 text-[11px] opacity-80">{favoriteCount}</span>
+        ) : null}
       </button>
       {makers.map((maker) => (
         <button
           key={maker}
           type="button"
+          aria-pressed={value === maker}
           onClick={() => onChange(maker)}
-          className={`shrink-0 rounded-md border px-3 py-1.5 text-xs font-bold transition-colors ${chipClasses(value === maker)}`}
+          className={`${CHIP_BASE} ${chipClasses(value === maker)}`}
         >
           {maker}
         </button>

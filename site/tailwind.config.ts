@@ -14,7 +14,13 @@ const config: Config = {
         "ink-soft": "var(--ink-soft)",
         muted: "var(--muted)",
         accent: "var(--accent)",
+        "accent-2": "var(--accent-2)",
         highlight: "var(--highlight)",
+        favorite: "var(--favorite)",
+        ice: "var(--ice)",
+        cyan: "var(--cyan)",
+        pink: "var(--pink)",
+        "pink-pale": "var(--pink-pale)",
         pos: "var(--pos)",
         neg: "var(--neg)"
       },

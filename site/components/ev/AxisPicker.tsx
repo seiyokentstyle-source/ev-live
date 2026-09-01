@@ -137,7 +137,7 @@ export function AxisPicker({
                   <span>{option.label}</span>
                   <span
                     className={`grid h-5 w-5 place-items-center rounded border text-xs ${
-                      selected ? "border-accent bg-accent text-white" : "border-line text-transparent"
+                      selected ? "border-accent bg-accent text-[#06131f]" : "border-line text-transparent"
                     }`}
                   >
                     ✓
@@ -166,7 +166,7 @@ export function AxisPicker({
         </div>
 
         <footer className="border-t border-line p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-          <button type="button" onClick={confirm} className="w-full rounded-lg bg-accent py-3 text-sm font-bold text-white">
+          <button type="button" onClick={confirm} className="w-full rounded-2xl bg-accent py-3.5 text-sm font-bold text-[#06131f] shadow-[0_8px_28px_-10px_rgba(169,231,255,0.6)]">
             適用
           </button>
         </footer>

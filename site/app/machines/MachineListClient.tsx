@@ -78,12 +78,13 @@ export function MachineListClient({ machines }: MachineListClientProps) {
   return (
     <div className="app-shell">
       {/* 詳細ページのヘッダーと同じ骨格・同じ余白。件数は他ページと揃えてフッターの左に出す。 */}
-      <header className="flex shrink-0 items-end justify-between gap-3 border-b border-line bg-panel px-4 py-2.5">
+      <header className="glass-surface flex shrink-0 items-end justify-between gap-3 px-4 py-3">
         <div>
-          <p className="mono text-[10px] tracking-[0.22em] text-highlight">EV LIVE</p>
-          <h1 className="mt-0.5 text-base font-black">機種一覧</h1>
+          {/* ロゴは発光させず、Ice Blue → Pale Pink の屈折で色が変わったように見せる。 */}
+          <p className="logo-gradient mono text-[11px] font-bold tracking-[0.24em]">EV LIVE</p>
+          <h1 className="mt-0.5 text-base font-black tracking-tight text-ink">機種一覧</h1>
         </div>
-        <p className="mono text-[10px] text-muted">期待値ガチ勢向け</p>
+        <p className="mono pb-0.5 text-[10px] text-muted">期待値ガチ勢向け</p>
       </header>
 
       {/* 検索＋メーカー絞り込みはヘッダーの直下に密着させる。詳細ページの ControlBar と
@@ -91,16 +92,18 @@ export function MachineListClient({ machines }: MachineListClientProps) {
           main の py-3 を -mt-3 で打ち消してから pt-3 で入れ直していたため、
           ヘッダーの境界線と検索欄の間に背景色だけの帯が12px残っていた。
           main の外＝スクロール領域の外に出すので、sticky を使わずに常時表示のままになる。 */}
-      <div className="shrink-0 border-b border-line bg-panel px-4 py-2.5">
+      <div className="glass-surface shrink-0 px-4 pb-2.5 pt-3">
         <SearchInput value={query} onChange={setQuery} />
         <div className="mt-2.5">
           <MakerFilter makers={makers} value={maker} favoriteCount={favoriteCount} onChange={setMaker} />
         </div>
       </div>
 
-      <main className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
+      {/* Layer 2 が並ぶ面。overscroll-contain で iOS の rubber-band が
+          背景ごと動くのを止める。 */}
+      <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-4 py-4 [-webkit-overflow-scrolling:touch]">
         {results.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 pb-2">
+          <div className="grid grid-cols-2 items-stretch gap-3 pb-2">
             {results.map((result) => (
               <MachineCard
                 key={result.machine.id}
