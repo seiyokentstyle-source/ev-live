@@ -73,13 +73,13 @@ const MANUFACTURER_REWRITES: Array<[string, string]> = [
   ["ゾンビランドサガ", "大都技研"],
   ["ロ革命機ヴァルヴレイヴ", "SANKYO"],
   ["喰霊", "オーイズミ"],
-  ["コードギアス", "サミー"],
+  ["コードギアス", "Sammy"],
   ["ストリートファイター", "レオスター"],
   ["ひぐらし", "オーイズミ"],
   ["ハイパーラッシュ", "セブンリーグ"],
-  ["かるてっと", "サミー"],
+  ["かるてっと", "Sammy"],
   ["邪神ちゃん", "三洋物産"],
-  ["転生の章", "サミー"],
+  ["転生の章", "Sammy"],
   ["禁書目録", "藤商事"],
   ["かぐや様", "SANKYO"],
   ["タクトオーパス", "平和"],
@@ -89,17 +89,27 @@ const MANUFACTURER_REWRITES: Array<[string, string]> = [
   ["超電磁砲", "藤商事"],
   ["シャーマンキング", "エレコ"],
   ["モンスターハンター", "エンターライズ"],
-  ["化物語", "サミー"],
+  ["化物語", "Sammy"],
   ["グランベルム", "北電子"],
   ["戦国コレクション", "コナミアミューズメント"],
   ["吉宗", "大都技研"]
 ];
 
-/** メーカー名。データが「未登録」のときだけ、機種名から引いて補う。 */
+// メーカー名の表記ゆれ。同じメーカーが2つの綴りで入ると、メーカー絞り込みの
+// chip が割れて別会社のように見える（'Sammy' と 'サミー' で実際に割れていた）。
+// ★こちらは「未登録」でなくても常に通す。既にJSONへ載っている表記も寄せるため。
+const MANUFACTURER_ALIASES: Record<string, string> = {
+  サミー: "Sammy"
+};
+
+/** メーカー名。「未登録」なら機種名から補い、表記ゆれは1つに寄せて返す。 */
 export function rewriteManufacturer(name: string, manufacturer: string): string {
-  if (manufacturer !== "未登録") return manufacturer;
-  const hit = MANUFACTURER_REWRITES.find(([key]) => name.includes(key));
-  return hit ? hit[1] : manufacturer;
+  let out = manufacturer;
+  if (out === "未登録") {
+    const hit = MANUFACTURER_REWRITES.find(([key]) => name.includes(key));
+    if (hit) out = hit[1];
+  }
+  return MANUFACTURER_ALIASES[out] ?? out;
 }
 
 /** 軸の見出しを現在の表記に直して返す。中身（key/options）はデータのまま. */
