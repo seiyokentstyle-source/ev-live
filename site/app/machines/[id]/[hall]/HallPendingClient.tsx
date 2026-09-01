@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Machine } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
 import { EmptyState, TableFoot } from "@/components/ui/DataTable";
+import { rewriteManufacturer } from "@/lib/ev/profiles";
 
 type HallPendingClientProps = {
   machine: Machine;
@@ -21,7 +22,7 @@ export function HallPendingClient({ machine, hall }: HallPendingClientProps) {
           ← 店舗
         </Link>
         <h1 className="truncate px-2 text-center text-sm font-bold">{machine.name}</h1>
-        <span className="mono truncate text-right text-[10px] text-muted">{machine.manufacturer}</span>
+        <span className="mono truncate text-right text-[10px] text-muted">{rewriteManufacturer(machine.name, machine.manufacturer)}</span>
       </header>
 
       <div className="shrink-0 border-b border-line bg-panel px-4 py-2.5">

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Machine } from "@/lib/ev/types";
 import { HALLS } from "@/lib/halls";
 import { TableFoot } from "@/components/ui/DataTable";
+import { rewriteManufacturer } from "@/lib/ev/profiles";
 
 type HallSelectClientProps = {
   machine: Machine;
@@ -24,7 +25,7 @@ export function HallSelectClient({ machine }: HallSelectClientProps) {
           ← 一覧
         </Link>
         <h1 className="truncate px-2 text-center text-sm font-bold">{machine.name}</h1>
-        <span className="mono truncate text-right text-[10px] text-muted">{machine.manufacturer}</span>
+        <span className="mono truncate text-right text-[10px] text-muted">{rewriteManufacturer(machine.name, machine.manufacturer)}</span>
       </header>
 
       {/* 検索バーと同じ「ヘッダー直下に密着するバー」。何を選ぶ画面かをここで示す。 */}
