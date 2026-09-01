@@ -272,25 +272,39 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
   const applyCollapsed = useCallback((next: boolean) => {
     if (next === collapsedRef.current) return;
     collapsedRef.current = next;
-    lockUntilRef.current = Date.now() + 360;
+    /* 折りたたみは320msかけて動く。動いている最中の高さ変化を操作と
+       読まないよう、少し長めに錠を掛ける。 */
+    lockUntilRef.current = Date.now() + 420;
     setBarsCollapsed(next);
   }, []);
 
   const handleScrollDepth = useCallback(
-    (top: number) => {
+    (top: number, maxTop: number) => {
+      /* ★末尾に着いている間は向きを見ない。ここが伸び縮みの原因だった。
+         - バーを畳むと表の領域が広がり、scrollTop がブラウザに切り詰められる
+         - iOS は末尾で引っ張れる（ラバーバンド）ので、指を離すと戻る向きの
+           scroll が連続して出る
+         どちらも「戻る操作」ではないのに戻ったと読まれ、開く→領域が狭まる→
+         また末尾へ→畳む、を往復していた。末尾では現状を保つ。 */
+      if (maxTop > 0 && top >= maxTop - 4) {
+        lastTopRef.current = top;
+        return;
+      }
+
       const now = Date.now();
       if (now < lockUntilRef.current) {
         lastTopRef.current = top;
         return;
       }
       const delta = top - lastTopRef.current;
-      /* 指の微細な揺れで開閉しないよう、一定量動いてから判断する。 */
+      /* 指の微細な揺れで開閉しないよう、一定量動いてから判断する。
+         戻る側を少し重くしてあるのは、慣性の跳ね返りで開かないため。 */
       if (Math.abs(delta) < 8) return;
       lastTopRef.current = top;
 
       if (top <= 24) applyCollapsed(false);
       else if (delta > 0 && top > 88) applyCollapsed(true);
-      else if (delta < 0) applyCollapsed(false);
+      else if (delta <= -14) applyCollapsed(false);
     },
     [applyCollapsed]
   );
@@ -301,7 +315,7 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
     const onScroll = (event: Event) => {
       const target = event.target as HTMLElement | null;
       if (!target || typeof target.scrollTop !== "number") return;
-      handleScrollDepth(target.scrollTop);
+      handleScrollDepth(target.scrollTop, target.scrollHeight - target.clientHeight);
     };
     shell.addEventListener("scroll", onScroll, true);
     return () => shell.removeEventListener("scroll", onScroll, true);
