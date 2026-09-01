@@ -10,9 +10,13 @@ import type { ReactNode } from "react";
  *   見出し幅を固定して縦に揃える。トグルも3種類の書き方が混在していたのを1つにする。
  */
 
-/** 選択中／非選択のボタン配色。タブ・トグル・月タブで共有する。 */
-export const SEGMENT_ON = "border-highlight bg-[rgba(255,204,68,0.12)] text-highlight";
-export const SEGMENT_OFF = "border-line bg-panel-2 text-ink-soft";
+/** 選択中／非選択のボタンの面。タブ・トグル・月タブ・メーカーchipで共有する。
+ *
+ * ★選択中を単色で塗り替えず、ガラスを「少し浮かせて Ice Blue の光を当てる」で表す
+ *   （.glass-active）。押下時は逆に沈む。境界線・影・内側ハイライトは
+ *   globals.css の primitive 側に集約してあるので、ここでは面の種類だけを指す。 */
+export const SEGMENT_ON = "glass-control glass-active text-ink";
+export const SEGMENT_OFF = "glass-control text-ink-soft";
 
 /** 見出し付きの操作バー。scroll=true で折り返さず横スクロール（タブが多い時）。 */
 export function ControlBar({
@@ -25,7 +29,7 @@ export function ControlBar({
   scroll?: boolean;
 }) {
   return (
-    <div className="flex shrink-0 items-center gap-x-3 border-b border-line bg-panel px-3 py-2">
+    <div className="glass-surface flex shrink-0 items-center gap-x-3 px-3 py-2">
       {label ? (
         // 幅を固定して、どのバーでも操作部の左端が同じ位置から始まるようにする。
         <span className="mono w-12 shrink-0 text-[9px] leading-tight tracking-[0.14em] text-muted">{label}</span>
@@ -70,7 +74,7 @@ export function SegmentedControl<T extends string>({
             type="button"
             aria-pressed={active}
             onClick={() => onChange(segment.value)}
-            className={`shrink-0 rounded-md border px-3 py-1 text-left text-xs font-bold transition-colors ${
+            className={`min-h-[36px] shrink-0 rounded-xl px-3 py-1.5 text-left text-xs font-bold ${
               active ? SEGMENT_ON : SEGMENT_OFF
             }`}
           >
@@ -107,7 +111,7 @@ export function FilterSelect({
       <select
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value === "" ? null : event.target.value)}
-        className="mono min-w-[124px] rounded-md border border-line bg-panel-2 px-2 py-1 text-[11px] text-ink-soft [color-scheme:dark]"
+        className="glass-control mono min-w-[124px] rounded-xl px-2.5 py-1.5 text-[11px] text-ink-soft [color-scheme:dark]"
       >
         <option value="">{allLabel}</option>
         {options.map((option) => (

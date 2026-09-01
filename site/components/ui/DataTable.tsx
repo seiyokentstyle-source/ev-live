@@ -14,11 +14,11 @@ import { useState, type ReactNode } from "react";
 export const ROW_HEIGHT = 34;
 
 const HEAD_BASE =
-  "sticky top-0 z-20 border-b-2 border-r border-line-soft bg-panel-2 px-2 py-2 text-right text-[10px]";
+  "sticky top-0 z-20 border-b-2 border-r border-line-soft bg-[#101826] px-2 py-2 text-right text-[10px]";
 const CORNER_BASE =
-  "sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-panel-2 px-2 py-2 text-left text-[10px] text-ink-soft";
+  "sticky left-0 top-0 z-30 whitespace-nowrap border-b-2 border-r border-line bg-[#101826] px-2 py-2 text-left text-[10px] text-ink-soft";
 const ROW_HEAD_BASE =
-  "sticky left-0 z-10 border-b border-r border-line-soft bg-panel px-2 py-2 text-left font-bold text-ink-soft";
+  "sticky left-0 z-10 border-b border-r border-line-soft bg-[#0c131e] px-2 py-2 text-left font-bold text-ink-soft";
 const CELL_BASE = "border-b border-r border-line-soft px-2 py-2 text-right";
 
 /** 偶数行の地色。1行おきに敷いて目を横に滑らせやすくする。 */
@@ -38,7 +38,7 @@ export function TableScroll({
   const block = (event: { preventDefault: () => void }) => event.preventDefault();
   return (
     <div
-      className="min-h-0 flex-1 select-none overflow-auto bg-bg [-webkit-touch-callout:none]"
+      className="min-h-0 flex-1 select-none overflow-auto [-webkit-touch-callout:none]"
       onCopy={block}
       onCut={block}
       onContextMenu={block}
@@ -105,7 +105,7 @@ export function Td({
 export function TableNote({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="shrink-0 border-b border-line bg-panel-2">
+    <div className="glass-surface shrink-0">
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
@@ -125,7 +125,7 @@ export function TableNote({ children }: { children: ReactNode }) {
 /** 表の下に出す合計行。左＝母数、右＝その表の代表値。 */
 export function TableFoot({ left, right }: { left: ReactNode; right: ReactNode }) {
   return (
-    <div className="mono flex shrink-0 items-center justify-between gap-3 border-t border-line bg-panel-2 px-3 py-2 text-[11px]">
+    <div className="glass-surface mono flex shrink-0 items-center justify-between gap-3 px-4 py-2.5 text-[11px]">
       <span className="min-w-0 shrink-0 text-muted">{left}</span>
       {/* 右側は長い出典が入ることがある。shrink-0 のままだと枠から溢れて折り返しが乱れる。 */}
       <span className="min-w-0 text-right text-ink-soft">{right}</span>

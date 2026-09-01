@@ -59,7 +59,7 @@ export function HallSelectClient({ machine }: HallSelectClientProps) {
                       （構造を先に作っておき、収集が始まったら ready を立てるだけにする）。 */}
                   <span
                     className={`mono shrink-0 rounded px-2 py-1 text-[10px] font-bold ${
-                      hall.ready ? "bg-accent text-white" : "border border-line text-muted"
+                      hall.ready ? "bg-accent font-bold text-[#06131f]" : "border border-line text-muted"
                     }`}
                   >
                     {hall.ready ? "データあり" : "準備中"}

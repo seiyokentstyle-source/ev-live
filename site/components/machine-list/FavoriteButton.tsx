@@ -15,6 +15,7 @@ export function FavoriteButton({ active, onToggle }: FavoriteButtonProps) {
       ref={ref}
       type="button"
       aria-label={active ? "お気に入り解除" : "お気に入り登録"}
+      aria-pressed={active}
       onClick={(event) => {
         event.stopPropagation();
         ref.current?.classList.remove("bump");
@@ -22,11 +23,20 @@ export function FavoriteButton({ active, onToggle }: FavoriteButtonProps) {
         ref.current?.classList.add("bump");
         onToggle();
       }}
-      className={`mono absolute right-2 top-2 z-10 grid h-9 w-9 place-items-center rounded-full border text-lg backdrop-blur ${
-        active
-          ? "border-highlight bg-black/60 text-highlight shadow-[0_0_18px_rgba(255,204,68,0.35)]"
-          : "border-white/10 bg-black/50 text-ink-soft"
+      /* Layer 3。カード面から浮いた小さなガラス。44px確保してタップ判定を稼ぐ。 */
+      className={`glass-floating mono absolute right-2 top-2 z-20 grid h-11 w-11 place-items-center text-[17px] leading-none ${
+        active ? "text-favorite" : "text-ink-soft"
       }`}
+      style={
+        active
+          ? {
+              /* お気に入りだけ Soft Pink の光を持たせる。他の状態は Ice Blue 側なので混ざらない。 */
+              borderColor: "rgba(255, 184, 218, 0.45)",
+              boxShadow:
+                "0 4px 10px rgba(0,0,0,0.4), 0 14px 34px -18px rgba(0,0,0,0.7), 0 0 20px -4px rgba(255,184,218,0.5), inset 0 1px 0 rgba(255,255,255,0.24)"
+            }
+          : undefined
+      }
     >
       {active ? "★" : "☆"}
     </button>

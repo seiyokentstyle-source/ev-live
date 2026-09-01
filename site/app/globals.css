@@ -2,23 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   EV Live — Dark Glass visual system
+
+   考え方は3つだけ。
+
+   1. 光は背景（Layer 0）に置く。カードごとに発光させない。
+      左上から Ice Blue、右下から Soft Pink の弱い光を1枚だけ敷き、
+      ガラス面はその光を「透かす」役にまわる。ネオンで縁取らない。
+   2. 奥行きは4階層で固定する（--z-*）。同じ平面にカードを並べない。
+   3. ガラスは1か所で定義して使い回す（.glass-*）。各componentへ
+      同じ影と縁を書き写さない。
+   ========================================================================== */
+
 :root {
-  --bg: #0b0d10;
-  --panel: #14181d;
-  --panel-2: #1c2128;
-  --line: #2a3038;
-  --line-soft: #1f242b;
-  --ink: #e8ebf0;
-  --ink-soft: #9aa3ad;
-  --muted: #5c6470;
-  --accent: #4a9eff;
-  --accent-soft: rgba(74, 158, 255, 0.12);
-  --highlight: #ffcc44;
-  --pos: #4a9eff;
-  --neg: #ff5d5d;
-  --row-alt: rgba(255, 255, 255, 0.02);
+  /* ---- Layer 0 / 背景 ---- */
+  --bg: #070a10;
+  --bg-sub: #0d1420;
+
+  /* ---- アクセント（光源の色）---- */
+  --ice: #a9e7ff;
+  --cyan: #78dfff;
+  --pink: #ffb8da;
+  --pink-pale: #ffd4e8;
+
+  /* ---- 文字 ---- */
+  --ink: #f6f9ff;
+  --ink-soft: #b8c3d4;
+  --muted: #97a4ba;
+
+  /* ---- semantic（意味は据え置き、色だけ新しい系統へ）---- */
+  --accent: var(--ice);
+  --accent-2: var(--cyan);
+  --accent-soft: rgba(169, 231, 255, 0.14);
+  --highlight: var(--pink-pale); /* 表の主役の列・見出し */
+  --favorite: var(--pink); /* お気に入りだけに使う */
+  --pos: var(--ice);
+  --neg: #ff9ba8;
+
+  /* ---- 旧トークンの受け皿 ----
+     panel / line 系は詳細ページの表が広く使っている。名前は残し、
+     値だけガラス側へ寄せる。ここを消すと表の罫線が全部飛ぶ。 */
+  --panel: rgba(14, 22, 38, 0.6);
+  --panel-2: rgba(20, 30, 50, 0.52);
+  --line: rgba(200, 224, 255, 0.14);
+  --line-soft: rgba(200, 224, 255, 0.08);
+  --row-alt: rgba(169, 231, 255, 0.035);
+
+  /* ---- ガラスの材質 ---- */
+  --glass-blur: 26px;
+  --glass-blur-strong: 30px;
+  --glass-fill: linear-gradient(
+    152deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(214, 236, 255, 0.075) 32%,
+    rgba(190, 208, 240, 0.05) 60%,
+    rgba(255, 210, 234, 0.1) 100%
+  );
+  --glass-border: rgba(232, 244, 255, 0.34);
+  --glass-border-soft: rgba(232, 244, 255, 0.2);
+  --glass-inner: rgba(255, 255, 255, 0.26);
+
+  /* ---- 影。黒1枚で終わらせず、落ち影＋環境光＋アクセント光の3枚 ---- */
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 14px -6px rgba(0, 0, 0, 0.55),
+    0 0 0 0.5px rgba(255, 255, 255, 0.04);
+  --shadow-2: 0 2px 4px rgba(0, 0, 0, 0.35), 0 10px 26px -12px rgba(0, 0, 0, 0.7),
+    0 6px 30px -18px rgba(120, 223, 255, 0.35);
+  --shadow-3: 0 4px 10px rgba(0, 0, 0, 0.4), 0 18px 44px -20px rgba(0, 0, 0, 0.75),
+    0 10px 36px -18px rgba(169, 231, 255, 0.3);
+
   --font-sans: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 * {
@@ -30,6 +86,7 @@ html,
 body {
   height: 100%;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 body {
@@ -38,10 +95,50 @@ body {
   color: var(--ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Layer 0 — 画面全体にかかる環境光。
+   ここ1枚に光を集約するので、カード側は発光を持たなくてよくなる。
+   fixed + アニメーションなしで、合成レイヤーを1枚だけ増やす。 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  z-index: 0;
+  pointer-events: none;
+  /* 大きいボケ玉。円の輪郭を出すため、透明への落ち込みを急にする。
+     ここ1枚に光を集約するので、カード側は発光を持たなくてよい。
+     fixed + アニメーションなしなので合成レイヤーは1枚だけ増える。 */
+  background:
+    radial-gradient(circle at 80% 10%, rgba(196, 166, 255, 0.4) 0%, rgba(180, 158, 242, 0.24) 26%, rgba(150, 140, 220, 0) 44%),
+    radial-gradient(circle at 100% 31%, rgba(255, 168, 210, 0.36) 0%, rgba(255, 176, 214, 0.2) 25%, rgba(255, 176, 214, 0) 42%),
+    radial-gradient(circle at 2% 24%, rgba(110, 196, 255, 0.32) 0%, rgba(120, 200, 255, 0.17) 26%, rgba(120, 200, 255, 0) 44%),
+    radial-gradient(circle at -2% 62%, rgba(255, 158, 204, 0.36) 0%, rgba(255, 166, 208, 0.2) 25%, rgba(255, 166, 208, 0) 42%),
+    radial-gradient(circle at 96% 76%, rgba(140, 190, 255, 0.32) 0%, rgba(150, 190, 255, 0.17) 26%, rgba(150, 190, 255, 0) 44%),
+    radial-gradient(circle at 44% 100%, rgba(170, 205, 255, 0.18) 0%, rgba(180, 210, 255, 0) 44%),
+    radial-gradient(circle at 26% 2%, rgba(150, 215, 255, 0.18) 0%, rgba(160, 220, 255, 0) 40%),
+    linear-gradient(170deg, #0b1222 0%, #080d18 40%, #070b14 70%, #0a1020 100%);
+}
+
+/* 小さく明るいボケ玉をもう1枚だけ重ねて、奥行きを作る。
+   DOMは増やさない（擬似要素2枚で完結させる）。 */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 71% 18%, rgba(226, 208, 255, 0.26) 0%, rgba(226, 208, 255, 0) 19%),
+    radial-gradient(circle at 93% 44%, rgba(255, 214, 234, 0.22) 0%, rgba(255, 214, 234, 0) 16%),
+    radial-gradient(circle at 9% 50%, rgba(206, 236, 255, 0.2) 0%, rgba(206, 236, 255, 0) 16%),
+    radial-gradient(circle at 64% 90%, rgba(214, 226, 255, 0.16) 0%, rgba(214, 226, 255, 0) 15%);
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -49,18 +146,31 @@ button {
   cursor: pointer;
 }
 
+/* Glassmorphism は輪郭が甘くなる。数値と機種名は必ず読めるほうへ倒す。 */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
 .mono {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
+/* Layer 1 — アプリの土台。safe-area はここで一括して吸う。 */
 .app-shell {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   height: 100dvh;
   max-width: 480px;
   margin: 0 auto;
-  background: var(--bg);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  overflow: hidden;
 }
 
 .scrollbar-none {
@@ -69,6 +179,164 @@ button {
 
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+@layer components {
+  /* ==========================================================================
+     Glass primitives
+     ========================================================================== */
+
+  /* 共通の下地。ここに blur と縁と内側ハイライトをまとめる。 */
+  .glass-surface,
+  .glass-card,
+  .glass-control,
+  .glass-floating {
+    position: relative;
+    background-image: var(--glass-fill);
+    background-color: rgba(9, 15, 26, 0.34);
+    border: 1px solid var(--glass-border-soft);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  }
+
+  /* 上辺の内側ハイライト＝厚みのある物体に見せる1本。
+     ::before は各primitiveで共通なので、ここで1回だけ定義する。 */
+  .glass-surface::before,
+  .glass-card::before,
+  .glass-control::before,
+  .glass-floating::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 0, rgba(255, 255, 255, 0) 1.5px),
+      linear-gradient(
+        170deg,
+        var(--glass-inner) 0%,
+        rgba(255, 255, 255, 0.05) 24%,
+        rgba(255, 255, 255, 0) 48%
+      );
+    mix-blend-mode: screen;
+    /* 上辺のハイライトは角丸に沿わせる。直線のままだと角で切れて板に見える。 */
+    -webkit-mask-image: radial-gradient(#000, #000);
+  }
+
+  /* Layer 1 — ヘッダー・操作バー・フッターの帯 */
+  .glass-surface {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    box-shadow: var(--shadow-1);
+  }
+
+  /* Layer 2 — 機種カード。今回いちばん重要な物体。 */
+  .glass-card {
+    border-radius: 24px;
+    border-color: var(--glass-border);
+    box-shadow: var(--shadow-2);
+    transition:
+      transform 180ms var(--ease),
+      box-shadow 180ms var(--ease),
+      border-color 180ms var(--ease);
+  }
+
+  .glass-card:active {
+    transform: translateY(1px) scale(0.985);
+    box-shadow: var(--shadow-1);
+    border-color: var(--glass-border-soft);
+  }
+
+  /* Layer 2 — 検索欄・chip の非選択など、面としての操作要素 */
+  .glass-control {
+    border-radius: 20px;
+    box-shadow: var(--shadow-1);
+    transition:
+      transform 160ms var(--ease),
+      box-shadow 160ms var(--ease),
+      border-color 160ms var(--ease);
+  }
+
+  /* Layer 3 — お気に入り等、面から浮いている小さな操作子 */
+  .glass-floating {
+    border-radius: 999px;
+    border-color: var(--glass-border);
+    -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur-strong)) saturate(160%);
+    box-shadow: var(--shadow-3);
+    transition:
+      transform 160ms var(--ease),
+      box-shadow 160ms var(--ease);
+  }
+
+  .glass-floating:active {
+    transform: scale(0.92);
+    box-shadow: var(--shadow-1);
+  }
+
+  /* Layer 3 — 選択状態。色を塗り替えるのではなく「浮かせて光を当てる」。 */
+  .glass-active {
+    border-color: rgba(169, 231, 255, 0.58) !important;
+    background-image: linear-gradient(
+      155deg,
+      rgba(169, 231, 255, 0.32) 0%,
+      rgba(140, 205, 245, 0.16) 45%,
+      rgba(255, 212, 232, 0.14) 100%
+    ) !important;
+    color: var(--ink);
+    transform: translateY(-1px);
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.3),
+      0 10px 24px -12px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(169, 231, 255, 0.28),
+      0 0 26px -4px rgba(120, 205, 255, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .glass-active:active {
+    transform: translateY(1px) scale(0.97);
+    box-shadow:
+      inset 0 2px 6px rgba(0, 0, 0, 0.4),
+      0 0 12px -6px rgba(169, 231, 255, 0.4);
+  }
+
+  /* 詳細ページの各バー・シートは旧トークン（bg-panel / bg-panel-2）で塗られている。
+     componentを1つずつ書き換える代わりに、そのutility自体へガラスの材質を足して
+     視覚システムごと移行する。背景色はTailwind側、blurはここ、と役割が割れるので
+     衝突しない。半透明にした分だけ blur が無いと文字が読みにくくなるため、
+     この2つは必ずセットで扱う。 */
+  .bg-panel,
+  .bg-panel-2 {
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  }
+
+  /* ロゴ。発光させず、屈折で色が変わったように見せる。 */
+  .logo-gradient {
+    background: linear-gradient(100deg, var(--ice) 0%, var(--cyan) 38%, var(--pink-pale) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* text-shadow はクリップ後の文字には乗らないため、極薄の環境光を drop-shadow で。 */
+    filter: drop-shadow(0 0 10px rgba(169, 231, 255, 0.22));
+  }
+}
+
+@keyframes bump {
+  0% {
+    transform: scale(1);
+  }
+  55% {
+    transform: scale(1.28);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.bump {
+  animation: bump 300ms var(--ease);
 }
 
 @keyframes slideUp {
@@ -80,18 +348,29 @@ button {
   }
 }
 
-@keyframes bump {
-  0% {
-    transform: scale(1);
+/* 動きを減らす設定では、装飾のtransformを止める。状態の色は残す。 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
-  55% {
-    transform: scale(1.35);
-  }
-  100% {
-    transform: scale(1);
+
+  .glass-active,
+  .glass-card:active,
+  .glass-floating:active {
+    transform: none;
   }
 }
 
-.bump {
-  animation: bump 320ms ease-out;
+/* backdrop-filter が無い環境では、透けない代わりに不透明度を上げて可読性を守る。 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-surface,
+  .glass-card,
+  .glass-control,
+  .glass-floating {
+    background-color: rgba(13, 20, 32, 0.92);
+  }
 }

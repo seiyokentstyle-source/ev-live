@@ -21,32 +21,58 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
     <article
       role="button"
       tabIndex={0}
+      aria-label={machine.name}
       onClick={onOpen}
       onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") onOpen();
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpen();
+        }
       }}
-      className="relative overflow-hidden rounded-lg border border-line bg-panel active:bg-panel-2"
+      /* Layer 2。押下時の見た目は .glass-card:active（沈む＋影が縮む）に任せる。
+         モバイル主体なので hover に情報を載せない。 */
+      className="glass-card group relative flex flex-col overflow-hidden text-left"
     >
       <FavoriteButton active={isFavorite} onToggle={onToggleFavorite} />
+
       {match.type === "alias" && match.label ? (
-        <span className="mono absolute left-2 top-2 z-10 rounded bg-accent px-2 py-1 text-[10px] font-bold text-white">
+        <span className="glass-control mono absolute left-2.5 top-2.5 z-10 rounded-full px-2.5 py-1 text-[10px] font-bold text-ice">
           {match.label}
         </span>
       ) : null}
+
       {/* 画像は今のところ全機種 null。正方形の枠を常に置くとカードの6割が空白になり、
           1画面に4機種しか入らない。画像があるときだけ枠を出す。 */}
       {machine.thumb ? (
-        <div className="grid aspect-square place-items-center border-b border-line-soft bg-gradient-to-br from-panel-2 to-panel">
+        <div className="relative grid aspect-square place-items-center overflow-hidden border-b border-line-soft">
           <img src={machine.thumb} alt="" className="h-full w-full object-cover" />
         </div>
       ) : null}
-      <div className={`min-h-[84px] p-3 ${machine.thumb ? "" : "pr-12"}`}>
-        <h2 className={`line-clamp-2 text-sm font-bold leading-snug ${match.type === "name" ? "text-accent" : "text-ink"}`}>
+
+      <div className={`relative flex min-h-[116px] flex-1 flex-col p-3.5 ${machine.thumb ? "" : "pr-14"}`}>
+        {/* 1. 機種名 */}
+        <h2
+          className={`line-clamp-2 text-[13px] font-bold leading-snug ${
+            match.type === "name" ? "text-ice" : "text-ink"
+          }`}
+        >
           {machine.name}
         </h2>
-        <p className="mono mt-2 truncate text-[11px] text-muted">{machine.manufacturer}</p>
-        {/* 空いた場所には飾りではなく、機種を選ぶ材料（母数）を出す。 */}
-        <p className="mono mt-1 text-[10px] text-muted">サンプル {machine.meta.samples}件</p>
+
+        {/* 2. サンプル件数。EV Live の信頼性はここに出るので、
+              カード内でいちばん読ませる数値にする。ただし期待値と誤読されない大きさに留める。 */}
+        <div className="mt-auto pt-3">
+          <p className="text-[9px] font-medium tracking-[0.16em] text-muted">サンプル</p>
+          <p className="mono mt-0.5 flex items-baseline gap-0.5 text-[17px] font-bold leading-none text-ink">
+            {machine.meta.samples}
+            <span className="text-[10px] font-normal text-ink-soft">件</span>
+          </p>
+        </div>
+
+        {/* 3. メーカー */}
+        <p className="mono mt-2 truncate border-t border-line-soft pt-2 text-[10px] text-muted">
+          {machine.manufacturer}
+        </p>
       </div>
     </article>
   );

@@ -12,7 +12,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#14181d"
+  // safe-area-inset-* は viewport-fit=cover を宣言しないと常に 0 を返す。
+  // ノッチ／ホームバーの下へヘッダーとフッターが潜り込むのを防ぐ。
+  viewportFit: "cover",
+  themeColor: "#070a10"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
