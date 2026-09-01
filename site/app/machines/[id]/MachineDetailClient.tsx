@@ -304,22 +304,23 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
         lastTopRef.current = top;
         return;
       }
-      const delta = top - lastTopRef.current;
-      /* 指の微細な揺れで開閉しないよう、一定量動いてから判断する。
-         戻る側を少し重くしてあるのは、慣性の跳ね返りで開かないため。 */
-      if (Math.abs(delta) < 8) return;
+      /* 指の微細な揺れで判定を走らせないよう、一定量動いてから見る。 */
+      if (Math.abs(top - lastTopRef.current) < 8) return;
       lastTopRef.current = top;
 
+      /* ★向きは見ない。位置だけで決める。
+         「少し戻しただけで開く」方式は、天井から戻る途中で意図せず開いてしまう。
+         開くのは先頭（0G付近）まで戻したときだけにする。
+         戻る向きのスクロールを一切解釈しないので、慣性の跳ね返りや
+         scrollTop の切り詰めが判定に混ざる余地も無くなる。 */
       if (top <= 24) {
         applyCollapsed(false);
-      } else if (delta > 0 && top > 88) {
+      } else if (top > 88 && maxTop - top >= barsHeight) {
         /* ★畳むと表の領域が barsHeight ぶん広がる。残りのスクロール量が
            それより少ないと scrollTop が切り詰められ、見ている行が飛ぶ。
            「サイズは変わってよいが、表は動かない」を守るため、
            飛ばずに畳めるときだけ畳む。 */
-        if (maxTop - top >= barsHeight) applyCollapsed(true);
-      } else if (delta <= -14) {
-        applyCollapsed(false);
+        applyCollapsed(true);
       }
     },
     [applyCollapsed]
