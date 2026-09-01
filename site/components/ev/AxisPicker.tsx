@@ -56,7 +56,7 @@ export function AxisPicker({
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70" onClick={onClose}>
       <div
-        className="max-h-[75dvh] w-full max-w-[480px] overflow-hidden rounded-t-2xl border-t border-line bg-panel"
+        className="max-h-[75dvh] w-full max-w-[480px] overflow-hidden rounded-t-lg border-t border-line bg-panel"
         style={{ animation: "slideUp 180ms ease-out" }}
         onClick={(event) => event.stopPropagation()}
       >
@@ -166,7 +166,7 @@ export function AxisPicker({
         </div>
 
         <footer className="border-t border-line p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-          <button type="button" onClick={confirm} className="w-full rounded-2xl bg-accent py-3.5 text-sm font-bold text-[#06131f] shadow-[0_8px_28px_-10px_rgba(169,231,255,0.6)]">
+          <button type="button" onClick={confirm} className="w-full rounded-lg bg-accent py-3.5 text-sm font-bold text-[#06131f] shadow-[0_8px_28px_-10px_rgba(169,231,255,0.6)]">
             適用
           </button>
         </footer>
