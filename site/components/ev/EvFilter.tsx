@@ -14,9 +14,12 @@ type EvFilterProps = {
   hits: number;
   /** hits の単位（『BB間』等）。CZ間天井の表は区間数なのでATと書かない. */
   hitUnit?: string;
+  /** 軸key→いま選べる値。生成側は軸の全組み合わせぶんの表を持っていないので、
+   *  組み合わせた表が無い選択肢はここから外れる。 */
+  enabled?: Record<string, Set<string>>;
 };
 
-export function EvFilter({ axes, values, onChange, units, hits, hitUnit }: EvFilterProps) {
+export function EvFilter({ axes, values, onChange, units, hits, hitUnit, enabled }: EvFilterProps) {
   const active = axes.some((axis) => values[axis.key] != null);
   if (axes.length === 0) return null;
   return (
@@ -31,6 +34,7 @@ export function EvFilter({ axes, values, onChange, units, hits, hitUnit }: EvFil
             value={values[axis.key] ?? null}
             onChange={(value) => onChange(axis.key, value)}
             fmt={(value) => axis.options.find((option) => option.value === value)?.label ?? value}
+            enabled={enabled?.[axis.key]}
           />
         ))}
       </FilterGroup>

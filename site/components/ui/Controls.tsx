@@ -39,7 +39,7 @@ export function ControlBar({
     <div className={`glass-surface shrink-0 ${collapsible ? "collapsible-bar" : ""}`}>
       {/* padding を持たない中間層。これが無いと折りたたみが 0 まで縮まない。 */}
       <div>
-      <div className="flex items-center gap-x-3 px-3 py-2">
+      <div className="flex items-center gap-x-2 px-3 py-1.5">
       {label ? (
         // 幅を固定して、どのバーでも操作部の左端が同じ位置から始まるようにする。
         <span className="mono w-12 shrink-0 text-[9px] leading-tight tracking-[0.14em] text-muted">{label}</span>
@@ -47,7 +47,7 @@ export function ControlBar({
       {/* ★横スクロールするのは操作部だけ。バー全体をスクロールさせると、
           選択中のタブが右にある機種で見出しごと画面外へ流れて消える。 */}
       <div
-        className={`flex min-w-0 flex-1 items-center gap-x-3 ${
+        className={`flex min-w-0 flex-1 items-center gap-x-2 ${
           scroll ? "scrollbar-none overflow-x-auto" : "flex-wrap gap-y-2"
         }`}
       >
@@ -86,7 +86,7 @@ export function SegmentedControl<T extends string>({
             type="button"
             aria-pressed={active}
             onClick={() => onChange(segment.value)}
-            className={`min-h-[36px] shrink-0 rounded-md px-3 py-1.5 text-left text-xs font-bold ${
+            className={`min-h-[34px] shrink-0 rounded-md px-2.5 py-1 text-left text-xs font-bold ${
               active ? SEGMENT_ON : SEGMENT_OFF
             }`}
           >
@@ -110,7 +110,7 @@ export function SegmentedControl<T extends string>({
  *    長い軸名が、幅が半分になった列に入らない。 */
 export function FilterGroup({ children }: { children: ReactNode }) {
   return (
-    <div className="grid min-w-0 grid-cols-2 items-end gap-x-2 gap-y-1.5">{children}</div>
+    <div className="grid min-w-0 grid-cols-2 items-end gap-x-2 gap-y-1">{children}</div>
   );
 }
 
@@ -121,7 +121,8 @@ export function FilterSelect({
   options,
   value,
   onChange,
-  fmt
+  fmt,
+  enabled
 }: {
   label: string;
   allLabel: string;
@@ -129,23 +130,32 @@ export function FilterSelect({
   value: string | null;
   onChange: (value: string | null) => void;
   fmt: (value: string) => string;
+  /** 選べる値。省略時は全部選べる。ここに無い値は
+   *  「今の他の軸の選択と組み合わせた表が無い」＝選んでも「データ不足」に
+   *  なるだけなので、選択肢として殺す（選べるのに引けない、を作らない）。 */
+  enabled?: Set<string>;
 }) {
   return (
     // 親は grid-cols-2。1軸ぶんが1セルに収まるよう、見出しを選択欄の上へ積む。
     // 見出しは折り返させる（truncate すると長い軸名が判別できなくなる）。
-    <label className="flex min-w-0 flex-col gap-0.5">
+    <label className="flex min-w-0 flex-col">
       <span className="mono text-[9px] leading-tight tracking-[0.06em] text-muted">{label}</span>
       <select
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value === "" ? null : event.target.value)}
-        className="glass-control mono w-full min-w-0 rounded-md px-2.5 py-1.5 text-[11px] text-ink-soft [color-scheme:dark]"
+        className="glass-control mono w-full min-w-0 rounded-md px-2 py-1 text-[11px] text-ink-soft [color-scheme:dark]"
       >
         <option value="">{allLabel}</option>
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {fmt(option)}
-          </option>
-        ))}
+        {options.map((option) => {
+          // 今選んでいる値は必ず残す（消すとセレクトの表示が空になる）。
+          const ng = enabled != null && !enabled.has(option) && option !== value;
+          return (
+            <option key={option} value={option} disabled={ng}>
+              {fmt(option)}
+              {ng ? "（データなし）" : ""}
+            </option>
+          );
+        })}
       </select>
     </label>
   );

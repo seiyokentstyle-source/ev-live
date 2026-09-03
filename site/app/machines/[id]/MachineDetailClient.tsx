@@ -147,6 +147,28 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
   // 選択→キー。axes の並び順に key+値 を連結する（生成側も同じ順で作っている）。
   const filterKey = evAxes.map((axis) => (evSel[axis.key] ? `${axis.key}${evSel[axis.key]}` : "")).join("");
   const anySelected = evAxes.some((axis) => evSel[axis.key] != null);
+
+  // 軸ごとに『いま選べる値』を出す。
+  // ★生成側は軸の全組み合わせぶんの表を持っていない（末尾×特定日×道中CZ の総当たりと、
+  //   c×z / c×n だけ。標準4軸や RB スルーは単独の表しか無い）。UIは全部選べてしまうので、
+  //   組み合わせた表が実在しない選択肢は殺す。放っておくと2軸45通りのうち40通りが
+  //   「選べるのに必ずデータ不足」になる。
+  const enabledOptions = useMemo(() => {
+    const out: Record<string, Set<string>> = {};
+    if (!useFilters || !evFilters) return out;   // 旧形式は生サンプルから再集計するので制限しない
+    const keys = Object.keys(evFilters.tables);
+    const has = new Set(keys);
+    for (const axis of evAxes) {
+      const ok = new Set<string>();
+      for (const option of axis.options) {
+        const trial = { ...evSel, [axis.key]: option.value };
+        const key = evAxes.map((a) => (trial[a.key] ? `${a.key}${trial[a.key]}` : "")).join("");
+        if (has.has(key)) ok.add(option.value);
+      }
+      out[axis.key] = ok;
+    }
+    return out;
+  }, [evAxes, evSel, evFilters, useFilters]);
   const selOf = (key: string) => evSel[key] ?? null;
 
   // 絞り込みが効いていれば、その条件の表示用プロファイルを作る。
@@ -509,6 +531,7 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
           units={evFilterStats.units}
           hits={evFilterStats.hits}
           hitUnit={displayProfile.sessionUnit}
+          enabled={enabledOptions}
         />
       ) : null}
 
