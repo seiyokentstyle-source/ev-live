@@ -101,11 +101,16 @@ export function SegmentedControl<T extends string>({
   );
 }
 
-/** 絞り込みセレクトの入れ物。見出し列と選択欄列を揃える。
- *  中の FilterSelect は display:contents なので、この grid の列に直接乗る。 */
+/** 絞り込みセレクトの入れ物。
+ *
+ *  ★2列に並べる。軸は機種によって11本まで増える（ヴヴヴ2）。1行1軸だと
+ *    絞り込みバーだけで11行ぶんの高さを取り、期待値表が画面外へ押し出される。
+ *    2列なら6行で収まる。
+ *  ★見出しは選択欄の上に積む。横に並べると『前回CZまでのハマりG』のような
+ *    長い軸名が、幅が半分になった列に入らない。 */
 export function FilterGroup({ children }: { children: ReactNode }) {
   return (
-    <div className="grid min-w-0 grid-cols-[auto_1fr] items-center gap-x-2 gap-y-2">{children}</div>
+    <div className="grid min-w-0 grid-cols-2 items-end gap-x-2 gap-y-1.5">{children}</div>
   );
 }
 
@@ -126,12 +131,10 @@ export function FilterSelect({
   fmt: (value: string) => string;
 }) {
   return (
-    // ★display:contents で、見出しと選択欄を親の grid の列へ直接並べる。
-    //   見出し幅を固定すると、長い軸名（前回連チャン等）が溢れる一方で
-    //   短い軸名では選択欄が無駄に右へ寄る。grid の auto 列なら、
-    //   いちばん長い見出しに合わせて全部の左端が自動で揃う。
-    <label className="contents">
-      <span className="mono whitespace-nowrap text-[9px] leading-tight tracking-[0.08em] text-muted">{label}</span>
+    // 親は grid-cols-2。1軸ぶんが1セルに収まるよう、見出しを選択欄の上へ積む。
+    // 見出しは折り返させる（truncate すると長い軸名が判別できなくなる）。
+    <label className="flex min-w-0 flex-col gap-0.5">
+      <span className="mono text-[9px] leading-tight tracking-[0.06em] text-muted">{label}</span>
       <select
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value === "" ? null : event.target.value)}
