@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { AimMode } from "./ModeSelector";
 import type { Machine } from "@/lib/ev/types";
+import { visibleCalcSpecItems } from "@/lib/ev/profiles";
 
 type ConditionsBarProps = {
   machine: Machine;
@@ -51,7 +52,7 @@ export function ConditionsBar({
     if (rateLabel) rows.push({ k: "レート（表示中）", v: rateLabel });
     if (czLabel) rows.push({ k: `道中${czTerm ?? "CZ"}（表示中）`, v: `${czLabel} の状態から次のボーナスまで` });
     if (ceilingText) rows.push({ k: "天井（表示中のタブ）", v: ceilingText });
-    rows.push(...calcSpec.items);
+    rows.push(...visibleCalcSpecItems(calcSpec.items));
     rows.push({ k: "時給換算", v: `${machine.economics.gamesPerHour}G/時で消化する前提` });
   } else if (mode === "ev" && ev) {
     // 旧データ（calcSpec 未生成）向けのフォールバック。

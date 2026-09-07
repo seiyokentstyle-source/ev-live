@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { Profile } from "../lib/ev/types";
-import { groupProfiles } from "../lib/ev/profiles";
+import { groupProfiles, visibleCalcSpecItems } from "../lib/ev/profiles";
 
 // Synthetic fixtures so the test does not depend on nightly-scraped numbers.
 function makeProfile(key: string, label: string): Profile {
@@ -46,5 +46,42 @@ describe("groupProfiles label cleanup", () => {
     ]);
     expect(groups).toHaveLength(1);
     expect(groups[0].label).toBe("AT・RB間天井（通常）");
+  });
+});
+
+// 算出条件のうち画面に出さない項目。文言の言い換えと同じくサイト側で即時に落とす。
+describe("visibleCalcSpecItems", () => {
+  // Synthetic fixtures so the test does not depend on nightly-scraped values.
+  const items = [
+    { k: "賭け枚数", v: "3枚掛け" },
+    { k: "仕様出典", v: "https://example.invalid/a / https://example.invalid/b" },
+    { k: "アンカー間隔", v: "10G刻み" }
+  ];
+
+  test("drops 仕様出典 from the conditions bar", () => {
+    const got = visibleCalcSpecItems(items);
+    expect(got.map((i) => i.k)).toEqual(["賭け枚数", "アンカー間隔"]);
+  });
+
+  test("keeps every other item in the original order", () => {
+    // 並びは生成側が決める。落とす以外のことをしない。
+    const got = visibleCalcSpecItems(items);
+    expect(got).toEqual([items[0], items[2]]);
+  });
+
+  test("does not mutate the input", () => {
+    const before = items.length;
+    visibleCalcSpecItems(items);
+    expect(items).toHaveLength(before);
+  });
+
+  test("is a no-op once the generator stops emitting it", () => {
+    // 生成側から消えても壊れない（データが正・ここは表示の都合、という関係）。
+    const withoutSource = [{ k: "賭け枚数", v: "3枚掛け" }];
+    expect(visibleCalcSpecItems(withoutSource)).toEqual(withoutSource);
+  });
+
+  test("handles an empty list", () => {
+    expect(visibleCalcSpecItems([])).toEqual([]);
   });
 });

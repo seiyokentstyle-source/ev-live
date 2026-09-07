@@ -119,6 +119,18 @@ export function rewriteAxisLabel(label: string): string {
   return out;
 }
 
+// 算出条件に出さない項目。文言の言い換えと同じ扱いで、データ再生成を待たず
+// ここで即時に反映する。
+// ★「仕様出典」はスペックの裏取りに使ったURLで、読む人が期待値を判断する材料では
+//   ない。生成側（777site-scraper の ev_calc.py）は記録として持ち続けるが、
+//   画面には出さない。生成側だけ直すと夜間の再生成まで古い表示が残る。
+const HIDDEN_CALC_SPEC_KEYS = new Set(["仕様出典"]);
+
+/** 算出条件のうち画面に出す項目だけを返す。並びと中身はデータのまま. */
+export function visibleCalcSpecItems<T extends { k: string }>(items: T[]): T[] {
+  return items.filter((item) => !HIDDEN_CALC_SPEC_KEYS.has(item.k));
+}
+
 const SINGLE = "_single";
 
 function parseProfile(profile: Profile): { baseKey: string; baseLabel: string; rate: string | null } {
