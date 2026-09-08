@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { EvCalc, EvSamples, Machine, Profile } from "../lib/ev/types";
-import { avgMedals, baseEV, baseRtp, calcEV, computeAnchors, defaultConditions, generateRows } from "../lib/ev/calc";
+import { avgMedals, baseEV, baseRtp, calcEV, computeAnchors, defaultConditions, generateGValues, generateRows } from "../lib/ev/calc";
 import { groupProfiles, resolveProfile } from "../lib/ev/profiles";
 import { validateMachine } from "../lib/ev/validate";
 import vvv2Data from "../../data/machines/vvv2.json";
@@ -263,6 +263,38 @@ describe("real machine data", () => {
     expect(grouped.groups.length).toBeGreaterThan(0);
     for (const group of grouped.groups) {
       expect(resolveProfile(group, grouped.defaultRate)).toBeDefined();
+    }
+  });
+});
+
+// 行のG。先頭だけ start、その先は step の倍数へ乗せ換える。
+// 生成側（make_evlive_data.anchor_gs）と同じ規則。ズレるとアンカーの無いGを
+// 補間しただけの行が並ぶ。
+describe("generateGValues", () => {
+  const profile = (start: number, end: number, step = 10) =>
+    ({ gRange: { start, end, step } } as Profile);
+
+  test("first row is the start, then round numbers", () => {
+    // ★ヴヴヴ2は引き戻しを見終わる72Gから。72/82/92 ではなく 72/80/90。
+    expect(generateGValues(profile(72, 120))).toEqual([72, 80, 90, 100, 110, 120]);
+  });
+
+  test("a start already on the grid is not duplicated", () => {
+    expect(generateGValues(profile(0, 30))).toEqual([0, 10, 20, 30]);
+    expect(generateGValues(profile(40, 70))).toEqual([40, 50, 60, 70]);
+  });
+
+  test("keeps the end even when it is off the grid", () => {
+    expect(generateGValues(profile(72, 115))).toEqual([72, 80, 90, 100, 110, 115]);
+  });
+
+  test("only the start fits", () => {
+    expect(generateGValues(profile(72, 75))).toEqual([72, 75]);
+  });
+
+  test("never goes past the end", () => {
+    for (const g of generateGValues(profile(38, 137))) {
+      expect(g).toBeLessThanOrEqual(137);
     }
   });
 });

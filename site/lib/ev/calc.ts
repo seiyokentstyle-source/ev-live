@@ -208,9 +208,16 @@ export function calcRow(g: number, conditions: Conditions, profile: Profile, mac
 }
 
 export function generateGValues(profile: Profile): number[] {
+  // 先頭だけ start、その先は step の倍数へ乗せ換える。
+  // ★start が半端な数（引き戻しを見終わるG。ヴヴヴ2=72）でも
+  //   72/82/92 と全部半端にせず 72/80/90 と読める形にする。
+  //   生成側（make_evlive_data.anchor_gs）と同じ規則。ズレると
+  //   アンカーの無いGを補間しただけの行が並ぶ。
   const values: number[] = [];
   const { start, end, step } = profile.gRange;
-  for (let g = start; g <= end; g += step) {
+  if (step <= 0 || end < start) return [start];
+  values.push(start);
+  for (let g = (Math.floor(start / step) + 1) * step; g <= end; g += step) {
     values.push(g);
   }
   if (values[values.length - 1] !== end) {
