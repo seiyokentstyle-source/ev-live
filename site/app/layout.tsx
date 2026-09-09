@@ -4,7 +4,8 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "EV Live",
   description: "期待値ガチ勢向け 実戦EVチェッカー",
-  manifest: "/manifest.json"
+  // Metadata URLs do not automatically inherit Next.js's basePath.
+  manifest: `${process.env.PAGES_BASE_PATH || ""}/manifest.json`
 };
 
 export const viewport: Viewport = {

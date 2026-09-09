@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
 import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
-import { groupProfiles, resolveProfile, rewriteAxisLabel } from "@/lib/ev/profiles";
+import { compatibleFilterSelection, groupProfiles, resolveProfile, rewriteAxisLabel } from "@/lib/ev/profiles";
 import { AxisPicker } from "@/components/ev/AxisPicker";
 import { ConditionsBar } from "@/components/ev/ConditionsBar";
 import { TheoreticalTable } from "@/components/ev/TheoreticalTable";
@@ -250,11 +250,18 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
     setActiveGroupKey(key);
     const nextGroup = grouped.groups.find((candidate) => candidate.key === key);
     const nextProfile = nextGroup ? resolveProfile(nextGroup, activeRate) : undefined;
+    if (nextProfile) setEvSel((current) => compatibleFilterSelection(nextProfile, current));
     if (pivotAxis && nextProfile && !nextProfile.activeAxes.includes(pivotAxis)) {
       setPivotAxis(null);
       setPivotValues([]);
     }
     setCurrentG(nextProfile?.gRange.start ?? 0);
+  }
+
+  function switchRate(rate: string): void {
+    setActiveRate(rate);
+    const nextProfile = resolveProfile(group, rate);
+    setEvSel((current) => compatibleFilterSelection(nextProfile, current));
   }
 
   function applyValue(axis: Axis, value: AxisValue): void {
@@ -522,7 +529,7 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
       ) : (
         <>
       <ProfileBar tabs={tabs} activeKey={activeGroupKey} onChange={switchGroup} />
-      {hasRatePairs ? <RateSelector rates={grouped.rates} value={activeRate} onChange={setActiveRate} /> : null}
+      {hasRatePairs ? <RateSelector rates={grouped.rates} value={activeRate} onChange={switchRate} /> : null}
       {hasEvFilter && !isPending ? (
         <EvFilter
           axes={evAxes}

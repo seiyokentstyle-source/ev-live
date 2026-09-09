@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Machine } from "@/lib/ev/types";
 import { readFavorites, writeFavorites, type FavoriteMap } from "@/lib/favorites";
@@ -46,7 +46,12 @@ export function MachineListClient({ machines: rawMachines }: MachineListClientPr
   );
   const [query, setQuery] = useState("");
   const [maker, setMaker] = useState("all");
-  const [favorites, setFavorites] = useState<FavoriteMap>(() => readFavorites());
+  const [favorites, setFavorites] = useState<FavoriteMap>({});
+
+  // 静的HTMLと初回描画の順序を揃え、保存済みのお気に入りはマウント後に復元する。
+  useEffect(() => {
+    setFavorites(readFavorites());
+  }, []);
 
   const makers = useMemo(() => Array.from(new Set(machines.map((machine) => machine.manufacturer))).sort(), [machines]);
   const favoriteCount = useMemo(() => machines.filter((machine) => favorites[machine.id]).length, [favorites, machines]);

@@ -24,6 +24,8 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
       aria-label={machine.name}
       onClick={onOpen}
       onKeyDown={(event) => {
+        // 子のお気に入りボタンの Enter / Space はボタン自身に処理させる。
+        if (event.target !== event.currentTarget) return;
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           onOpen();

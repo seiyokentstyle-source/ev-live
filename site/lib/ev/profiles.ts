@@ -179,3 +179,25 @@ export function resolveProfile(group: ProfileGroup, rate: string | null): Profil
   if (group.variants[SINGLE]) return group.variants[SINGLE];
   return group.order[0];
 }
+
+/** 狙い方・レート切替後も適用できる絞り込みだけを引き継ぐ。 */
+export function compatibleFilterSelection(
+  profile: Profile,
+  selection: Record<string, string | null>
+): Record<string, string | null> {
+  const filters = profile.evFilters;
+  const axes = filters?.axes;
+  // 軸の対応を確認できない旧形式は、切替先の既定表から始める。
+  if (!filters || !axes?.length) return {};
+
+  const next: Record<string, string | null> = {};
+  for (const axis of axes) {
+    const value = selection[axis.key];
+    if (value != null && axis.options.some((option) => option.value === value)) {
+      next[axis.key] = value;
+    }
+  }
+  const key = axes.map((axis) => next[axis.key] != null ? `${axis.key}${next[axis.key]}` : "").join("");
+  // 選択肢が個別に存在しても、切替先にその組み合わせの表があるとは限らない。
+  return key && !filters.tables[key] ? {} : next;
+}

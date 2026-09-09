@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { SettingAim } from "@/lib/ev/types";
+import { settingAimTotals } from "@/lib/ev/setting-aim";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
 import { MonthTabs, monthOf } from "./MonthTabs";
 import { ControlBar, FilterSelect, SegmentedControl, FilterGroup } from "@/components/ui/Controls";
@@ -119,12 +120,8 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
 
   // 表示中（絞り込み後）の台の合計。差枚＝即やめ想定の収支＝トータルの獲得枚数。
   const totals = useMemo(
-    () =>
-      rows.reduce(
-        (acc, r) => ({ net: acc.net + r.net, games: acc.games + (r.games ?? 0) }),
-        { net: 0, games: 0 }
-      ),
-    [rows]
+    () => settingAimTotals(view, rows, crossRows),
+    [view, rows, crossRows]
   );
 
   return (
