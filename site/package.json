@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/export-interval-feed.mjs && next build",
+    "build": "node scripts/export-interval-feed.mjs && node scripts/export-saved-targets.mjs && next build",
     "start": "next start",
     "test": "vitest run"
   },

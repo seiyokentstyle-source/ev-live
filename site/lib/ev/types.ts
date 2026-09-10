@@ -1,3 +1,5 @@
+import type { MachineSavedTarget } from '../saved-targets.mjs';
+
 export type AxisValue = string | number;
 
 export type Conditions = Record<string, AxisValue>;
@@ -307,6 +309,8 @@ export type Machine = {
     source: string;
   };
   profiles: Profile[];
+  /** 公開を選んだ狙い目の再集計。掲載の有無・名称は別の公開カタログが決める。 */
+  savedTargets?: MachineSavedTarget[];
   /** 設定狙いモードのデータ。スクレイパーが対応機種にのみ出力する（古い/未対応データでは undefined）。 */
   settingAim?: SettingAim;
   /** AT獲得モードのデータ。古い/未生成データでは undefined。 */

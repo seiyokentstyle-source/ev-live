@@ -3,6 +3,8 @@ import { getMachine, getMachines } from "@/lib/machines";
 import { HALLS, getHall } from "@/lib/halls";
 import { MachineDetailClient } from "../MachineDetailClient";
 import { HallPendingClient } from "./HallPendingClient";
+import { getSavedTargetCatalog, getSavedTargetRefreshes } from "@/lib/saved-target-catalog";
+import { selectSavedTargets } from "@/lib/saved-targets.mjs";
 
 type MachineDetailPageProps = {
   params: Promise<{
@@ -33,5 +35,7 @@ export default async function MachineDetailPage({ params }: MachineDetailPagePro
   const hallMachine = hall.dataSubdir ? await getMachine(id, hall.dataSubdir) : machine;
   if (!hall.ready || !hallMachine) return <HallPendingClient machine={machine} hall={hall} />;
 
-  return <MachineDetailClient machine={hallMachine} hall={hall} />;
+  const [catalog, refreshed] = await Promise.all([getSavedTargetCatalog(), getSavedTargetRefreshes(id, hall.dataSubdir)]);
+  const savedTargets = selectSavedTargets(catalog, id, hall.id, refreshed);
+  return <MachineDetailClient machine={hallMachine} hall={hall} savedTargets={savedTargets} />;
 }

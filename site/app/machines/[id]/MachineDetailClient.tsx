@@ -21,6 +21,8 @@ import { AtPayoutTable } from "@/components/ev/AtPayoutTable";
 import { HarakiriTable } from "@/components/ev/HarakiriTable";
 import { ControlBar, SegmentedControl } from "@/components/ui/Controls";
 import { EmptyState } from "@/components/ui/DataTable";
+import { SavedTargets } from "@/components/ev/SavedTargets";
+import type { DisplayTarget } from "@/lib/saved-targets.mjs";
 
 type PickerState = {
   axis: Axis;
@@ -57,9 +59,10 @@ type MachineDetailClientProps = {
   machine: Machine;
   /** どの店舗のデータを見ているか。ヘッダーの表示と戻り先に使う. */
   hall: Hall;
+  savedTargets?: DisplayTarget[];
 };
 
-export function MachineDetailClient({ machine, hall }: MachineDetailClientProps) {
+export function MachineDetailClient({ machine, hall, savedTargets = [] }: MachineDetailClientProps) {
   const grouped = useMemo(() => groupProfiles(machine.profiles), [machine.profiles]);
   const hasRatePairs = grouped.rates.length >= 2;
   const settingAim = machine.settingAim;
@@ -71,6 +74,7 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
   const availableModes = useMemo<AimMode[]>(
     () => [
       "ev",
+      "targets",
       ...(hasSettingAim ? (["setting"] as const) : []),
       ...(hasAtPayout ? (["payout"] as const) : []),
       ...(hasHarakiri ? (["harakiri"] as const) : [])
@@ -79,6 +83,11 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
   );
 
   const [mode, setMode] = useState<AimMode>("ev");
+  const [targetId, setTargetId] = useState('');
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('target');
+    if (id && savedTargets.some(target => target.id === id)) { setTargetId(id); setMode('targets'); }
+  }, [savedTargets]);
   // 上位の切替: 店舗別データ（実戦データ）/ 設定1想定（スペックからの理論値）
   const [dataView, setDataView] = useState<"hall" | "theory">("hall");
   const [activeGroupKey, setActiveGroupKey] = useState(grouped.groups[0].key);
@@ -504,7 +513,7 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
         <>
       {availableModes.length > 1 ? <ModeSelector value={mode} onChange={setMode} modes={availableModes} /> : null}
 
-      <ConditionsBar
+      {mode !== 'targets' ? <ConditionsBar
         machine={machine}
         mode={mode}
         rateLabel={grouped.rates.find((r) => r.value === activeRate)?.label ?? activeRate}
@@ -518,9 +527,11 @@ export function MachineDetailClient({ machine, hall }: MachineDetailClientProps)
         ceilingText={profile.ceiling}
         profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
         profileSessionUnit={displayProfile.sessionUnit}
-      />
+      /> : null}
 
-      {mode === "setting" && settingAim ? (
+      {mode === 'targets' ? (
+        <SavedTargets targets={savedTargets} selectedId={targetId} onSelect={setTargetId} />
+      ) : mode === "setting" && settingAim ? (
         <SettingAimTable aim={settingAim} />
       ) : mode === "payout" && atPayout ? (
         <AtPayoutTable data={atPayout} />
