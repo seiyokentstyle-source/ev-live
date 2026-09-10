@@ -10,3 +10,4 @@ npm-debug.log*
 next-dev.*.log
 
 tsconfig.tsbuildinfo
+/site/public/interval-feed/

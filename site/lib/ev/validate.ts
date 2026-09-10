@@ -34,7 +34,10 @@ function getSelectAxis(axis: Axis): SelectAxis | undefined {
 
 export function validateMachine(data: unknown): Machine {
   assert(isRecord(data), "root must be an object");
-  const machine = data as Machine;
+  // The encrypted private explorer is delivered separately, not embedded in
+  // every public machine page or React payload.
+  const { intervalExplorer: _privateExplorer, ...publicData } = data;
+  const machine = publicData as Machine;
 
   assert(typeof machine.id === "string" && machine.id.length > 0, "id is required");
   assert(typeof machine.name === "string" && machine.name.length > 0, "name is required");
