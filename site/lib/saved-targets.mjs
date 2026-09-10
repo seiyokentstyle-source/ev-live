@@ -11,6 +11,34 @@ const date = (value) => matching(value, /^\d{4}-\d{2}-\d{2}$/);
 const time = (value) => { string(value, 40); if (!Number.isFinite(Date.parse(value))) fail(); return value; };
 const integer = (value, max = 100000000) => { if (!Number.isSafeInteger(value) || value < 0 || value > max) fail(); return value; };
 const filterKeys = new Set(['h', 'y', 'n', 'm', 'g', 'past_y', 'cz', 'bb', 'rb', 'prev_cz']);
+const categoryFilterKeys = new Set(['prev_first_raw_type', 'prev_second_raw_type', 'prev_third_raw_type', 'prev_last_raw_type', 'prev_raw_signature']);
+const ordinalFilterKeys = new Set(['next_ordinal', 'recorded_next_ordinal']);
+const numericFilterKeys = new Set(['next_ordinal', 'recorded_next_ordinal', 'prev_first_main_payout', 'prev_main_count', 'daily_single_count', 'daily_intermediate_failures', 'previous_same_first_type_run', 'sessions_since_single']);
+
+function hypothesisFilter(key, item) {
+  if ((!categoryFilterKeys.has(key) && !numericFilterKeys.has(key)) || !record(item)) fail();
+  const lo = string(item.lo, 24, true), hi = string(item.hi, 24, true);
+  if (item.mode === 'all' || item.mode === 'missing') {
+    if (lo || hi) fail();
+    return { mode: item.mode, lo: '', hi: '' };
+  }
+  if (item.mode === 'category') {
+    if (!categoryFilterKeys.has(key) || lo || hi) fail();
+    const value = string(item.value, 200);
+    if (/[\u007f-\u009f]/.test(value)) fail();
+    return { mode: 'category', lo: '', hi: '', value };
+  }
+  if (item.mode === 'modulo') {
+    if (!ordinalFilterKeys.has(key) || lo || hi) fail();
+    const period = integer(item.period, 6), remainder = integer(item.remainder, period - 1);
+    if (period < 2) fail();
+    return { mode: 'modulo', lo: '', hi: '', period, remainder };
+  }
+  if (item.mode !== 'range' || !numericFilterKeys.has(key)) fail();
+  if ([lo, hi].some(v => v && (!Number.isFinite(Number(v)) || Number(v) < 0 || Number(v) > 100000000 ||
+      key !== 'prev_first_main_payout' && !Number.isSafeInteger(Number(v)))) || lo && hi && Number(lo) >= Number(hi)) fail();
+  return { mode: 'range', lo, hi };
+}
 
 function definition(value) {
   if (!record(value) || value.schema !== 'interval-target/v1' || value.hallId !== 'shinjuku' || value.rate !== '46/52' || value.stopRule !== 'evlive' || !record(value.filters)) fail();
@@ -19,7 +47,8 @@ function definition(value) {
   const filters = {};
   for (const key of Object.keys(value.filters).sort()) {
     const item = value.filters[key];
-    if (!filterKeys.has(key) || !record(item) || !['all', 'range', 'missing'].includes(item.mode)) fail();
+    if (!filterKeys.has(key)) { filters[key] = hypothesisFilter(key, item); continue; }
+    if (!record(item) || !['all', 'range', 'missing'].includes(item.mode)) fail();
     const lo = string(item.lo, 24, true), hi = string(item.hi, 24, true);
     if ([lo, hi].some(v => v && !Number.isFinite(Number(v))) || lo && hi && Number(lo) >= Number(hi)) fail();
     filters[key] = { mode: item.mode, lo, hi };

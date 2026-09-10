@@ -1,8 +1,12 @@
 export type TargetRow = { g: number; ev: number | null; n: number; days: number };
+export type TargetFilter =
+  | { mode: 'all' | 'range' | 'missing'; lo: string; hi: string }
+  | { mode: 'category'; lo: ''; hi: ''; value: string }
+  | { mode: 'modulo'; lo: ''; hi: ''; period: number; remainder: number };
 export type TargetDefinition = {
   schema: 'interval-target/v1'; machineId: string; hallId: 'shinjuku'; profileKey: string;
   startG: number; endG: number | null;
-  filters: Record<string, { mode: 'all' | 'range' | 'missing'; lo: string; hi: string }>;
+  filters: Record<string, TargetFilter>;
   rate: '46/52'; stopRule: 'evlive';
 };
 export type MachineSavedTarget = { id: string; conditionKey: string; sourceRevision: string; dataThrough: string; rows: TargetRow[] };
