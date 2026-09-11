@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { existsSync } from 'node:fs';
-import { parseMachineSavedTargets, parseSavedTargetCatalog } from './saved-targets.mjs';
+import { parseMachineSavedTargets, parseSavedTargetCatalog, savedTargetReplaySource } from './saved-targets.mjs';
 
 export async function getSavedTargetCatalog() {
   const paths = [path.join(process.cwd(), 'data', 'saved-targets', 'targets.json'), path.join(process.cwd(), '..', 'data', 'saved-targets', 'targets.json')];
@@ -11,7 +11,7 @@ export async function getSavedTargetCatalog() {
 }
 
 /** Kept on the server: only current catalog members reach a client page. */
-export async function getSavedTargetRefreshes(machineId: string, dataSubdir = '') {
+export async function getSavedTargetSnapshot(machineId: string, dataSubdir = '', hallId = 'shinjuku') {
   if (!/^[a-z0-9]{1,40}$/.test(machineId) || (dataSubdir && !/^[a-z0-9_-]+$/.test(dataSubdir))) throw new Error('Invalid saved target source');
   const roots = [path.join(process.cwd(), 'data', 'machines'), path.join(process.cwd(), '..', 'data', 'machines')];
   const root = roots.find(candidate => existsSync(candidate));
@@ -20,7 +20,14 @@ export async function getSavedTargetRefreshes(machineId: string, dataSubdir = ''
   // 低設定想定店舗混合のように、店舗の一覧がサイト側の導出でできている場合は実ファイルが無い
   // （lib/ev/low-setting.ts）。公開狙い目は実測側にしか付かないので、無ければ空で返す。
   // 実在する店舗のファイルが欠けていれば、その手前の getMachine が undefined を返して止まる。
-  if (!existsSync(file)) return [];
+  if (!existsSync(file)) return { refreshed: [], replaySource: null };
   const machine = JSON.parse(await fs.readFile(file, 'utf8'));
-  return machine.savedTargets === undefined ? [] : parseMachineSavedTargets(machine.savedTargets);
+  return {
+    refreshed: machine.savedTargets === undefined ? [] : parseMachineSavedTargets(machine.savedTargets),
+    replaySource: savedTargetReplaySource(machine, hallId),
+  };
+}
+
+export async function getSavedTargetRefreshes(machineId: string, dataSubdir = '') {
+  return (await getSavedTargetSnapshot(machineId, dataSubdir)).refreshed;
 }

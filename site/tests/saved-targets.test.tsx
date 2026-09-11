@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { parseMachineSavedTargets, parseSavedTargetCatalog, selectSavedTargets, type PublishedTarget, type TargetFilter } from '../lib/saved-targets.mjs';
+import { parseMachineSavedTargets, parseSavedTargetCatalog, savedTargetReplaySource, selectSavedTargets, type PublishedTarget, type TargetFilter } from '../lib/saved-targets.mjs';
 import { SavedTargets } from '../components/ev/SavedTargets';
 import { validateMachine } from '../lib/ev/validate';
 import fixture from '../app/preview/ev-table/machine.json';
@@ -31,6 +31,14 @@ afterEach(async () => { for (const root of roots.splice(0)) await fs.rm(root, { 
 describe('published target contract', () => {
   it('preserves negative bounds, exclusive upper bounds, missing and recorded-only filters', () => {
     expect(parseSavedTargetCatalog(catalog()).targets[0].definition.filters).toEqual(target().definition.filters);
+  });
+  it('preserves equal-exchange rates and rejects disagreement between label and calculation', () => {
+    const value = target(); value.rate = '50/50'; value.definition.rate = '50/50';
+    const parsed = parseSavedTargetCatalog(catalog([value])).targets[0];
+    expect(parsed.rate).toBe('50/50'); expect(parsed.definition.rate).toBe('50/50');
+    expect(parsed.conditionKey).toBe(value.conditionKey);
+    expect(() => parseSavedTargetCatalog(catalog([{ ...value, rate: '46/52' }]))).toThrow();
+    expect(() => parseSavedTargetCatalog(catalog([{ ...value, rate: '45/50' } as unknown as PublishedTarget]))).toThrow();
   });
   it('publishes only allowlisted fields, including nested rows and definitions', async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), 'evlive-targets-')); roots.push(root);
@@ -149,6 +157,33 @@ describe('published membership and refreshed values', () => {
     const result = selectSavedTargets(parseSavedTargetCatalog(catalog()), 'test', 'shinjuku', [{ ...refreshed(), rows: [] }])[0];
     expect(result.rows).toEqual([]); expect(result.refreshed).toBe(true);
   });
+  it('hides skipped stale targets when EVLIVE publishes a different source revision', () => {
+    const parsed = parseSavedTargetCatalog(catalog());
+    expect(selectSavedTargets(parsed, 'test', 'shinjuku', [], 'd'.repeat(64))).toEqual([]);
+    expect(selectSavedTargets(parsed, 'test', 'shinjuku', [refreshed()], 'e'.repeat(64))).toEqual([]);
+    const current = selectSavedTargets(parsed, 'test', 'shinjuku', [refreshed()], 'd'.repeat(64));
+    expect(current[0]).toMatchObject({ name: target().name, sourceRevision: 'd'.repeat(64), refreshed: true });
+  });
+  it('allows a just-attached snapshot from the current source but never reattaches a removed target', () => {
+    const current = selectSavedTargets(parseSavedTargetCatalog(catalog()), 'test', 'shinjuku', [], target().sourceRevision);
+    expect(current[0]).toMatchObject({ rows: target().rows, refreshed: false });
+    expect(selectSavedTargets(parseSavedTargetCatalog(catalog([])), 'test', 'shinjuku', [refreshed()], 'd'.repeat(64))).toEqual([]);
+  });
+  it('does not resurrect a prior table when the current revision has zero valid samples', () => {
+    const current = selectSavedTargets(parseSavedTargetCatalog(catalog()), 'test', 'shinjuku', [{ ...refreshed(), rows: [] }], 'd'.repeat(64));
+    expect(current[0]).toMatchObject({ rows: [], refreshed: true });
+  });
+  it('fails closed for unsupported metadata without copying private data', () => {
+    const envelope = { schema: 'evlive-interval-envelope/v1', id: 'test', hallId: 'shinjuku',
+      sourceRevision: 'd'.repeat(64), ciphertext: 'private' };
+    expect(savedTargetReplaySource({ id: 'test', intervalExplorer: envelope }, 'shinjuku')).toBe('d'.repeat(64));
+    expect(savedTargetReplaySource({ id: 'test' }, 'shinjuku')).toBeUndefined();
+    for (const patch of [{ schema: 'future' }, { id: 'other' }, { hallId: 'other' }, { sourceRevision: 'bad' }]) {
+      const source = savedTargetReplaySource({ id: 'test', intervalExplorer: { ...envelope, ...patch } }, 'shinjuku');
+      expect(source).toBeNull();
+      expect(selectSavedTargets(parseSavedTargetCatalog(catalog()), 'test', 'shinjuku', [refreshed()], source)).toEqual([]);
+    }
+  });
 });
 
 it('renders only aggregate columns, escaped names, snapshot date, missing values and assumed payout notice', () => {
@@ -158,4 +193,12 @@ it('renders only aggregate columns, escaped names, snapshot date, missing values
   expect(html).toContain('推定平均収支'); expect(html).toContain('件数'); expect(html).toContain('2026-09-03');
   expect(html).toContain('追加時の集計'); expect(html).toContain('設定1の想定値'); expect(html).toContain('—');
   expect(html).not.toContain('<img'); expect(html).not.toContain('機械割'); expect(html).not.toContain('時給');
+});
+
+it('renders the selected target equal-exchange rate', () => {
+  const value = target(); value.rate = '50/50'; value.definition.rate = '50/50';
+  const targets = selectSavedTargets(parseSavedTargetCatalog(catalog([value])), 'test', 'shinjuku');
+  const html = renderToStaticMarkup(createElement(SavedTargets, { targets, selectedId: value.id, onSelect: () => {} }));
+  expect(html).toContain('50枚貸し／50枚交換');
+  expect(html).not.toContain('46枚貸し／52枚交換');
 });

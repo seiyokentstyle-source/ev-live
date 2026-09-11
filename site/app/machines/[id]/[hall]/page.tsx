@@ -3,7 +3,7 @@ import { getMachine, getMachineHallSummaries, getMachineIds } from "@/lib/machin
 import { HALLS, getHall } from "@/lib/halls";
 import { MachineDetailClient } from "../MachineDetailClient";
 import { HallPendingClient } from "./HallPendingClient";
-import { getSavedTargetCatalog, getSavedTargetRefreshes } from "@/lib/saved-target-catalog";
+import { getSavedTargetCatalog, getSavedTargetSnapshot } from "@/lib/saved-target-catalog";
 import { buildLiveMachine } from "@/lib/live-data";
 
 type MachineDetailPageProps = {
@@ -34,7 +34,7 @@ export default async function MachineDetailPage({ params }: MachineDetailPagePro
     return <HallPendingClient machine={machine} hall={hall} />;
   }
 
-  const [catalog, refreshed] = await Promise.all([getSavedTargetCatalog(), getSavedTargetRefreshes(id, hall.dataSubdir)]);
-  const snapshot = buildLiveMachine(hallMachine, hall.id, catalog, refreshed);
+  const [catalog, targets] = await Promise.all([getSavedTargetCatalog(), getSavedTargetSnapshot(id, hall.dataSubdir, hall.id)]);
+  const snapshot = buildLiveMachine(hallMachine, hall.id, catalog, targets.refreshed, targets.replaySource);
   return <MachineDetailClient machine={snapshot.machine} hall={hall} savedTargets={snapshot.savedTargets} revision={snapshot.revision} />;
 }

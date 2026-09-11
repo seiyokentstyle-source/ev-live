@@ -41,7 +41,7 @@ function hypothesisFilter(key, item) {
 }
 
 function definition(value) {
-  if (!record(value) || value.schema !== 'interval-target/v1' || value.hallId !== 'shinjuku' || value.rate !== '46/52' || value.stopRule !== 'evlive' || !record(value.filters)) fail();
+  if (!record(value) || value.schema !== 'interval-target/v1' || value.hallId !== 'shinjuku' || !['46/52', '50/50'].includes(value.rate) || value.stopRule !== 'evlive' || !record(value.filters)) fail();
   const startG = integer(value.startG, 100000), endG = value.endG === null ? null : integer(value.endG, 100000);
   if (endG !== null && endG <= startG) fail();
   const filters = {};
@@ -53,7 +53,7 @@ function definition(value) {
     if ([lo, hi].some(v => v && !Number.isFinite(Number(v))) || lo && hi && Number(lo) >= Number(hi)) fail();
     filters[key] = { mode: item.mode, lo, hi };
   }
-  return { schema: 'interval-target/v1', machineId: matching(value.machineId, /^[a-z0-9]{1,40}$/), hallId: 'shinjuku', profileKey: matching(value.profileKey, /^[a-z0-9_]{1,40}$/), startG, endG, filters, rate: '46/52', stopRule: 'evlive' };
+  return { schema: 'interval-target/v1', machineId: matching(value.machineId, /^[a-z0-9]{1,40}$/), hallId: 'shinjuku', profileKey: matching(value.profileKey, /^[a-z0-9_]{1,40}$/), startG, endG, filters, rate: value.rate, stopRule: 'evlive' };
 }
 
 /** Only aggregate values cross into the public feed or a rendered page. */
@@ -83,17 +83,17 @@ export function parseSavedTargetCatalog(value) {
   if (!record(value) || value.schema !== 'evlive-saved-targets/v1' || !Array.isArray(value.targets) || value.targets.length > 1000) fail();
   const seen = new Set();
   const targets = value.targets.map(item => {
-    if (!record(item) || seen.has(item.id) || item.rate !== '46/52' || (item.assumedPayout !== undefined && typeof item.assumedPayout !== 'boolean')) fail();
+    if (!record(item) || seen.has(item.id) || !['46/52', '50/50'].includes(item.rate) || (item.assumedPayout !== undefined && typeof item.assumedPayout !== 'boolean')) fail();
     seen.add(item.id);
     const config = definition(item.definition);
-    if (item.machineId !== config.machineId || item.hallId !== config.hallId) fail();
+    if (item.machineId !== config.machineId || item.hallId !== config.hallId || item.rate !== config.rate) fail();
     const rows = parseTargetRows(item.rows);
     if (config.endG !== null && rows.some(row => row.g >= config.endG)) fail();
     return {
       id: id(item.id), name: string(item.name, 80), machineId: config.machineId, hallId: config.hallId,
       conditionKey: hash(item.conditionKey), publicationKey: hash(item.publicationKey), definition: config,
       machine: string(item.machine, 150), profile: string(item.profile, 200), conditions: string(item.conditions, 3000, true),
-      stopping: string(item.stopping, 3000), rate: '46/52', dataThrough: date(item.dataThrough),
+      stopping: string(item.stopping, 3000), rate: config.rate, dataThrough: date(item.dataThrough),
       sourceRevision: hash(item.sourceRevision), updatedAt: time(item.updatedAt), rows,
       ...(item.assumedPayout === undefined ? {} : { assumedPayout: item.assumedPayout }),
     };
@@ -102,10 +102,27 @@ export function parseSavedTargetCatalog(value) {
 }
 
 /** The catalog alone controls membership; stale collector entries cannot reattach a target. */
-export function selectSavedTargets(catalog, machineId, hallId, refreshed = []) {
-  return catalog.targets.filter(target => target.machineId === machineId && target.hallId === hallId).map(target => {
+export function selectSavedTargets(catalog, machineId, hallId, refreshed = [], replaySource) {
+  // null means an advertised source could not be validated. undefined is only
+  // for historical machines which have never supplied an interval attachment.
+  if (replaySource === null) return [];
+  return catalog.targets.filter(target => target.machineId === machineId && target.hallId === hallId).flatMap(target => {
     const latest = refreshed.find(item => item.id === target.id && item.conditionKey === target.conditionKey && item.dataThrough >= target.dataThrough &&
+      (replaySource === undefined || item.sourceRevision === replaySource) &&
       (target.definition.endG === null || item.rows.every(row => row.g < target.definition.endG)));
-    return { ...target, rows: latest?.rows ?? target.rows, dataThrough: latest?.dataThrough ?? target.dataThrough, sourceRevision: latest?.sourceRevision ?? target.sourceRevision, refreshed: Boolean(latest) };
+    // A skipped refresh can mean that the EVLIVE rule or selected condition is
+    // no longer supported. Never replace it with cashflows from an older rule.
+    if (!latest && replaySource !== undefined && target.sourceRevision !== replaySource) return [];
+    return [{ ...target, rows: latest?.rows ?? target.rows, dataThrough: latest?.dataThrough ?? target.dataThrough, sourceRevision: latest?.sourceRevision ?? target.sourceRevision, refreshed: Boolean(latest) }];
   });
+}
+
+/** Read only public revision metadata; ciphertext is never copied to the page. */
+export function savedTargetReplaySource(machine, hallId) {
+  if (!record(machine) || machine.intervalExplorer === undefined) return undefined;
+  const source = machine.intervalExplorer;
+  if (!record(source) || source.schema !== 'evlive-interval-envelope/v1' ||
+      source.id !== machine.id || source.hallId !== hallId ||
+      typeof source.sourceRevision !== 'string' || !/^[a-f0-9]{64}$/.test(source.sourceRevision)) return null;
+  return source.sourceRevision;
 }

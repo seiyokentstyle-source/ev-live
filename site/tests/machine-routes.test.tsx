@@ -5,7 +5,7 @@ import { validateMachine } from "../lib/ev/validate";
 import { machineSummary } from "../lib/ev/summary";
 import { getMachine, getMachineHallSummaries, getMachineIds } from "../lib/machines";
 import { HALLS } from "../lib/halls";
-import { getSavedTargetCatalog, getSavedTargetRefreshes } from "../lib/saved-target-catalog";
+import { getSavedTargetCatalog, getSavedTargetSnapshot } from "../lib/saved-target-catalog";
 import MachineHallPage, { generateStaticParams as hallParams } from "../app/machines/[id]/page";
 import MachineDetailPage, { generateStaticParams as detailParams } from "../app/machines/[id]/[hall]/page";
 import { MachineDetailClient } from "../app/machines/[id]/MachineDetailClient";
@@ -14,7 +14,7 @@ import { HallPendingClient } from "../app/machines/[id]/[hall]/HallPendingClient
 vi.mock("../lib/machines", () => ({
   getMachine: vi.fn(), getMachineIds: vi.fn(), getMachineHallSummaries: vi.fn()
 }));
-vi.mock("../lib/saved-target-catalog", () => ({ getSavedTargetCatalog: vi.fn(), getSavedTargetRefreshes: vi.fn() }));
+vi.mock("../lib/saved-target-catalog", () => ({ getSavedTargetCatalog: vi.fn(), getSavedTargetSnapshot: vi.fn() }));
 vi.mock("../app/machines/[id]/MachineDetailClient", () => ({ MachineDetailClient: () => null }));
 vi.mock("next/navigation", () => ({
   notFound: () => { throw new Error("NOT_FOUND"); },
@@ -30,7 +30,7 @@ beforeEach(() => {
   vi.mocked(getMachine).mockImplementation(async (id, hall) => id === mixed.id && hall === "mixed" ? mixed : undefined);
   vi.mocked(getMachineHallSummaries).mockImplementation(async (id) => id === mixed.id ? summaries : []);
   vi.mocked(getSavedTargetCatalog).mockResolvedValue({ schema: "evlive-saved-targets/v1", updatedAt: "2026-09-14T00:00:00Z", targets: [] });
-  vi.mocked(getSavedTargetRefreshes).mockResolvedValue([]);
+  vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: null });
 });
 
 describe("machines collected only outside the default hall", () => {
@@ -46,6 +46,7 @@ describe("machines collected only outside the default hall", () => {
     expect(page.props.machine).toEqual(mixed);
     expect(page.props.hall.id).toBe("mixed");
     expect(getMachine).toHaveBeenCalledExactlyOnceWith(mixed.id, "mixed");
+    expect(getSavedTargetSnapshot).toHaveBeenCalledExactlyOnceWith(mixed.id, "mixed", "mixed");
     expect(getMachineHallSummaries).not.toHaveBeenCalled();
   });
 

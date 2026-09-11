@@ -2,14 +2,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import fixture from "../app/preview/ev-table/machine.json";
 import { validateMachine } from "../lib/ev/validate";
 import { getAvailableMachines, getMachine } from "../lib/machines";
-import { getSavedTargetCatalog, getSavedTargetRefreshes } from "../lib/saved-target-catalog";
+import { getSavedTargetCatalog, getSavedTargetSnapshot } from "../lib/saved-target-catalog";
 import { buildLiveMachine, getLiveIndex, getLiveMachine, liveIndexEntry } from "../lib/live-data";
 import { GET as indexGET } from "../app/live-data/index.json/route";
 import { GET as machineGET, generateStaticParams } from "../app/live-data/[hall]/[id]/route";
 import type { PublishedTarget, SavedTargetCatalog } from "../lib/saved-targets.mjs";
 
 vi.mock("../lib/machines", () => ({ getAvailableMachines: vi.fn(), getMachine: vi.fn() }));
-vi.mock("../lib/saved-target-catalog", () => ({ getSavedTargetCatalog: vi.fn(), getSavedTargetRefreshes: vi.fn() }));
+vi.mock("../lib/saved-target-catalog", () => ({ getSavedTargetCatalog: vi.fn(), getSavedTargetSnapshot: vi.fn() }));
 
 const target: PublishedTarget = {
   id: "7de93a9e-0830-4995-a6dc-8e8bfb451460", name: "狙い目", machineId: fixture.id, hallId: "shinjuku",
@@ -29,7 +29,7 @@ beforeEach(() => {
   vi.mocked(getAvailableMachines).mockResolvedValue([machine]);
   vi.mocked(getMachine).mockImplementation(async (id) => id === machine.id ? machine : undefined);
   vi.mocked(getSavedTargetCatalog).mockResolvedValue(catalog());
-  vi.mocked(getSavedTargetRefreshes).mockResolvedValue([]);
+  vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: undefined });
 });
 
 describe("live data publication", () => {
@@ -72,6 +72,24 @@ describe("live data publication", () => {
     ].sort());
     expect(entry.summary.meta.samples).toBe(fixture.meta.samples);
     expect(entry.summary).not.toHaveProperty("profiles");
+  });
+
+  it("uses the raw source revision even after public Machine validation strips its envelope", async () => {
+    vi.mocked(getSavedTargetCatalog).mockResolvedValue(catalog([target]));
+    vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: "d".repeat(64) });
+    const stale = await getLiveMachine(fixture.id, "shinjuku");
+    expect(stale?.savedTargets).toEqual([]);
+    expect((await getLiveIndex()).machines[0].revision).toBe(stale?.revision);
+    vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: target.sourceRevision });
+    const current = await getLiveMachine(fixture.id, "shinjuku");
+    expect(current?.savedTargets).toHaveLength(1);
+    expect(current?.revision).not.toBe(stale?.revision);
+  });
+
+  it("does not display prior cashflows when a new envelope format is unsupported", () => {
+    const data = { ...fixture, intervalExplorer: { schema: "future-envelope", id: fixture.id,
+      hallId: "shinjuku", sourceRevision: target.sourceRevision } };
+    expect(buildLiveMachine(data, "shinjuku", catalog([target])).savedTargets).toEqual([]);
   });
 
   it("publishes matching index and detail revisions through static JSON routes", async () => {

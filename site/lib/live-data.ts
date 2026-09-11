@@ -4,9 +4,10 @@ import { validateMachine } from "./ev/validate";
 import { machineSummary } from "./ev/summary";
 import { getHall, getReadyHalls } from "./halls";
 import { getAvailableMachines, getMachine } from "./machines";
-import { getSavedTargetCatalog, getSavedTargetRefreshes } from "./saved-target-catalog";
+import { getSavedTargetCatalog, getSavedTargetSnapshot } from "./saved-target-catalog";
 import {
   selectSavedTargets,
+  savedTargetReplaySource,
   type DisplayTarget,
   type MachineSavedTarget,
   type SavedTargetCatalog
@@ -36,10 +37,11 @@ export function buildLiveMachine(
   data: unknown,
   hallId: string,
   catalog: SavedTargetCatalog,
-  refreshed: MachineSavedTarget[] = []
+  refreshed: MachineSavedTarget[] = [],
+  replaySource: string | null | undefined = savedTargetReplaySource(data, hallId)
 ): LiveMachine {
   const machine = validateMachine(data);
-  const savedTargets = selectSavedTargets(catalog, machine.id, hallId, refreshed);
+  const savedTargets = selectSavedTargets(catalog, machine.id, hallId, refreshed, replaySource);
   // Hash the complete public payload: same-day recalculation and target removal
   // must update an open table even when the headline sample count is unchanged.
   const revision = createHash("sha256").update(JSON.stringify({ machine, savedTargets })).digest("hex");
@@ -69,11 +71,11 @@ export async function getLiveMachine(machineId: string, hallId: string): Promise
   if (!hall?.ready || !/^[a-z0-9]{1,40}$/.test(machineId)) return undefined;
   const machine = await getMachine(machineId, hall.dataSubdir);
   if (!machine?.available) return undefined;
-  const [catalog, refreshed] = await Promise.all([
+  const [catalog, targets] = await Promise.all([
     getSavedTargetCatalog(),
-    getSavedTargetRefreshes(machineId, hall.dataSubdir)
+    getSavedTargetSnapshot(machineId, hall.dataSubdir, hall.id)
   ]);
-  return buildLiveMachine(machine, hall.id, catalog, refreshed);
+  return buildLiveMachine(machine, hall.id, catalog, targets.refreshed, targets.replaySource);
 }
 
 export async function getLiveIndex(): Promise<LiveIndex> {
@@ -81,8 +83,8 @@ export async function getLiveIndex(): Promise<LiveIndex> {
   const halls = await Promise.all(getReadyHalls().map(async (hall) => {
     const machines = await getAvailableMachines(hall.dataSubdir);
     return Promise.all(machines.map(async (machine) => {
-      const refreshed = await getSavedTargetRefreshes(machine.id, hall.dataSubdir);
-      return liveIndexEntry(hall.id, buildLiveMachine(machine, hall.id, catalog, refreshed));
+      const targets = await getSavedTargetSnapshot(machine.id, hall.dataSubdir, hall.id);
+      return liveIndexEntry(hall.id, buildLiveMachine(machine, hall.id, catalog, targets.refreshed, targets.replaySource));
     }));
   }));
   return { schema: "evlive-live-index/v1", machines: halls.flat() };

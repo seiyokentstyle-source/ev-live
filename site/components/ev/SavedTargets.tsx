@@ -12,7 +12,7 @@ export function SavedTargets({ targets, selectedId, onSelect }: { targets: Displ
   const rows = target.rows.filter((row, index) => row.g === target.definition.startG || row.g % step === 0 || index === target.rows.length - 1);
   return <section className="flex min-h-0 flex-1 flex-col" aria-labelledby="saved-target-heading">
     <div className="shrink-0 border-b border-line px-3 py-2">
-      <div className="flex items-center justify-between gap-3"><h2 id="saved-target-heading" className="text-sm font-bold">狙い目</h2><span className="mono text-[10px] text-muted">46枚貸し／52枚交換</span></div>
+      <div className="flex items-center justify-between gap-3"><h2 id="saved-target-heading" className="text-sm font-bold">狙い目</h2><span className="mono text-[10px] text-muted">{target.rate === '50/50' ? '50枚貸し／50枚交換' : '46枚貸し／52枚交換'}</span></div>
       <label htmlFor="saved-target-choice" className="sr-only">狙い目を選ぶ</label>
       <select id="saved-target-choice" value={target.id} onChange={event => onSelect(event.target.value)} className="mt-2 w-full rounded-md border border-line bg-bg px-2 py-2 text-xs text-ink">
         {targets.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
