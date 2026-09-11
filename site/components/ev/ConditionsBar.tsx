@@ -82,7 +82,7 @@ export function ConditionsBar({
   if (range) rows.push({ k: "データ範囲", v: range });
   // サンプルは表示中のタブの母数を出す（meta.samples は機種全体なのでタブによってはズレる）。
   rows.push(
-    mode === "ev" && profileSessions
+    mode === "ev" && profileSessions != null
       ? {
           k: "サンプル",
           v: profileSessionUnit

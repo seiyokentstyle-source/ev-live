@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getMachine, getMachines } from "@/lib/machines";
+import { machineSummary } from "@/lib/ev/summary";
 import { HallSelectClient } from "./HallSelectClient";
 
 type MachineHallPageProps = {
@@ -19,5 +20,5 @@ export default async function MachineHallPage({ params }: MachineHallPageProps) 
   const { id } = await params;
   const machine = await getMachine(id);
   if (!machine) notFound();
-  return <HallSelectClient machine={machine} />;
+  return <HallSelectClient machine={machineSummary(machine)} />;
 }

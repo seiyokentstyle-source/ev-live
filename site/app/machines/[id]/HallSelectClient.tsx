@@ -2,18 +2,21 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { Machine } from "@/lib/ev/types";
-import { HALLS } from "@/lib/halls";
+import type { MachineSummary } from "@/lib/ev/types";
+import { DEFAULT_HALL_ID, HALLS } from "@/lib/halls";
+import { useLiveIndex } from "@/lib/use-live-data";
 import { TableFoot } from "@/components/ui/DataTable";
 import { rewriteManufacturer } from "@/lib/ev/profiles";
 
 type HallSelectClientProps = {
-  machine: Machine;
+  machine: MachineSummary;
 };
 
 /** 機種を選んだあとの「どの店舗で見るか」を選ぶページ。
  *  機種選択 → ここ → 期待値稼働／設定狙い／AT獲得 の順になる。 */
-export function HallSelectClient({ machine }: HallSelectClientProps) {
+export function HallSelectClient({ machine: initialMachine }: HallSelectClientProps) {
+  const index = useLiveIndex();
+  const machine = index?.machines.find(item => item.id === initialMachine.id && item.hallId === DEFAULT_HALL_ID)?.summary ?? initialMachine;
   const router = useRouter();
   const readyCount = HALLS.filter((hall) => hall.ready).length;
 
@@ -38,6 +41,9 @@ export function HallSelectClient({ machine }: HallSelectClientProps) {
         <div className="flex flex-col gap-3 pb-2">
           {HALLS.map((hall) => {
             const href = `/machines/${machine.id}/${hall.id}`;
+            const hallMachine = index
+              ? index.machines.find(item => item.id === machine.id && item.hallId === hall.id)?.summary
+              : hall.id === DEFAULT_HALL_ID ? machine : undefined;
             return (
               <article
                 key={hall.id}
@@ -67,8 +73,8 @@ export function HallSelectClient({ machine }: HallSelectClientProps) {
                   </span>
                 </div>
                 <p className="mono mt-2 text-[10px] leading-relaxed text-muted">{hall.note}</p>
-                {hall.ready ? (
-                  <p className="mono mt-1 text-[10px] text-muted">サンプル {machine.meta.samples}件</p>
+                {hall.ready && hallMachine ? (
+                  <p className="mono mt-1 text-[10px] text-muted">サンプル {hallMachine.meta.samples}件</p>
                 ) : null}
               </article>
             );

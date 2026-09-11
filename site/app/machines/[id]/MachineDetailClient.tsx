@@ -23,6 +23,8 @@ import { ControlBar, SegmentedControl } from "@/components/ui/Controls";
 import { EmptyState } from "@/components/ui/DataTable";
 import { SavedTargets } from "@/components/ev/SavedTargets";
 import type { DisplayTarget } from "@/lib/saved-targets.mjs";
+import { useLiveMachine } from "@/lib/use-live-data";
+import type { LiveMachine } from "@/lib/live-data";
 
 type PickerState = {
   axis: Axis;
@@ -60,9 +62,16 @@ type MachineDetailClientProps = {
   /** どの店舗のデータを見ているか。ヘッダーの表示と戻り先に使う. */
   hall: Hall;
   savedTargets?: DisplayTarget[];
+  revision?: string;
 };
 
-export function MachineDetailClient({ machine, hall, savedTargets = [] }: MachineDetailClientProps) {
+const NO_SAVED_TARGETS: DisplayTarget[] = [];
+
+export function MachineDetailClient({ machine: initialMachine, hall, savedTargets: initialTargets = NO_SAVED_TARGETS, revision = "" }: MachineDetailClientProps) {
+  const initial = useMemo<LiveMachine>(() => ({
+    schema: "evlive-live-machine/v1", revision, machine: initialMachine, savedTargets: initialTargets
+  }), [revision, initialMachine, initialTargets]);
+  const { machine, savedTargets } = useLiveMachine(initial, hall.id);
   const grouped = useMemo(() => groupProfiles(machine.profiles), [machine.profiles]);
   const hasRatePairs = grouped.rates.length >= 2;
   const settingAim = machine.settingAim;
@@ -84,10 +93,18 @@ export function MachineDetailClient({ machine, hall, savedTargets = [] }: Machin
 
   const [mode, setMode] = useState<AimMode>("ev");
   const [targetId, setTargetId] = useState('');
+  const restoredTargetFor = useRef("");
   useEffect(() => {
+    const page = `${hall.id}/${machine.id}`;
+    if (restoredTargetFor.current === page) return;
     const id = new URLSearchParams(window.location.search).get('target');
-    if (id && savedTargets.some(target => target.id === id)) { setTargetId(id); setMode('targets'); }
-  }, [savedTargets]);
+    if (!id) restoredTargetFor.current = page;
+    else if (savedTargets.some(target => target.id === id)) {
+      restoredTargetFor.current = page;
+      setTargetId(id);
+      setMode('targets');
+    }
+  }, [hall.id, machine.id, savedTargets]);
   // 上位の切替: 店舗別データ（実戦データ）/ 設定1想定（スペックからの理論値）
   const [dataView, setDataView] = useState<"hall" | "theory">("hall");
   const [activeGroupKey, setActiveGroupKey] = useState(grouped.groups[0].key);
@@ -103,6 +120,14 @@ export function MachineDetailClient({ machine, hall, savedTargets = [] }: Machin
 
   const group = grouped.groups.find((candidate) => candidate.key === activeGroupKey) ?? grouped.groups[0];
   const profile = resolveProfile(group, activeRate);
+
+  useEffect(() => {
+    // Keep the chosen tab/rate/filters when samples grow; drop only filters absent in new data.
+    setEvSel(current => {
+      const next = compatibleFilterSelection(profile, current);
+      return JSON.stringify(next) === JSON.stringify(current) ? current : next;
+    });
+  }, [profile]);
 
   // 絞り込みは公開前に集計済みの evFilters テーブルを引くだけ（生サンプルは公開しない）。
   // 軸の定義（並び順・ラベル・候補）はデータ側が配るので、軸が増えてもここは無改修。

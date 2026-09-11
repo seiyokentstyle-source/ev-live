@@ -1,8 +1,8 @@
-import type { Machine } from "./ev/types";
+import type { MachineSummary } from "./ev/types";
 
 /** meta.samples は表示用に桁区切りの入った文字列（"4,807"）で来る。
  *  並べ替えに使うので数値へ戻す。読めない値は 0 として最後尾に送る。 */
-export function sampleCount(machine: Machine): number {
+export function sampleCount(machine: MachineSummary): number {
   const n = Number(String(machine.meta.samples).replace(/[^0-9]/g, ""));
   return Number.isFinite(n) ? n : 0;
 }
@@ -17,7 +17,7 @@ export function sampleCount(machine: Machine): number {
  *
  *  同数のときは導入日の新しい順、それも同じなら id で固定して
  *  ビルドごとに並びが揺れないようにする。 */
-export function compareMachines(a: Machine, b: Machine): number {
+export function compareMachines(a: MachineSummary, b: MachineSummary): number {
   const bySamples = sampleCount(b) - sampleCount(a);
   if (bySamples !== 0) return bySamples;
   const byDate = b.releaseDate.localeCompare(a.releaseDate);

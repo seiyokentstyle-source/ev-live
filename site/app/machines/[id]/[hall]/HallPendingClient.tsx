@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import type { Machine } from "@/lib/ev/types";
+import type { MachineSummary } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
 import { EmptyState, TableFoot } from "@/components/ui/DataTable";
 import { rewriteManufacturer } from "@/lib/ev/profiles";
 
 type HallPendingClientProps = {
-  machine: Machine;
+  machine: MachineSummary;
   hall: Hall;
 };
 

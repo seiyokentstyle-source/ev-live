@@ -2,7 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Machine } from "@/lib/ev/types";
+import type { MachineSummary } from "@/lib/ev/types";
+import { useLiveMachines } from "@/lib/use-live-data";
+import { DEFAULT_HALL_ID } from "@/lib/halls";
 import { readFavorites, writeFavorites, type FavoriteMap } from "@/lib/favorites";
 import { normalizeSearchText } from "@/lib/search/normalize";
 import { rewriteManufacturer } from "@/lib/ev/profiles";
@@ -13,16 +15,16 @@ import { SearchInput } from "@/components/machine-list/SearchInput";
 import { EmptyState, TableFoot } from "@/components/ui/DataTable";
 
 type MachineListClientProps = {
-  machines: Machine[];
+  machines: MachineSummary[];
 };
 
 type MachineResult = {
-  machine: Machine;
+  machine: MachineSummary;
   match: MachineSearchMatch;
   isFavorite: boolean;
 };
 
-function getSearchMatch(machine: Machine, query: string): MachineSearchMatch | null {
+function getSearchMatch(machine: MachineSummary, query: string): MachineSearchMatch | null {
   if (query.length === 0) return { type: "none" };
   const normalizedName = normalizeSearchText(machine.name);
   if (normalizedName.includes(query)) return { type: "name" };
@@ -33,7 +35,8 @@ function getSearchMatch(machine: Machine, query: string): MachineSearchMatch | n
   return null;
 }
 
-export function MachineListClient({ machines: rawMachines }: MachineListClientProps) {
+export function MachineListClient({ machines: initialMachines }: MachineListClientProps) {
+  const rawMachines = useLiveMachines(initialMachines, DEFAULT_HALL_ID);
   const router = useRouter();
   /* メーカー名は1か所で直す。カードと絞り込みで別々に直すと食い違う。 */
   const machines = useMemo(

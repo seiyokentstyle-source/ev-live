@@ -329,6 +329,10 @@ export type Machine = {
   economics: Economics;
 };
 
+export type MachineSummary = Pick<Machine,
+  "id" | "name" | "manufacturer" | "aliases" | "thumb" | "available" | "releaseDate" | "lastUpdated" | "meta"
+>;
+
 export type PivotConfig = {
   axisKey: string;
   values: string[];

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Machine } from "@/lib/ev/types";
+import type { MachineSummary } from "@/lib/ev/types";
 import { FavoriteButton } from "./FavoriteButton";
 
 export type MachineSearchMatch = {
@@ -9,7 +9,7 @@ export type MachineSearchMatch = {
 };
 
 type MachineCardProps = {
-  machine: Machine;
+  machine: MachineSummary;
   isFavorite: boolean;
   match: MachineSearchMatch;
   onOpen: () => void;

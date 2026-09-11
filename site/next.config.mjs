@@ -38,6 +38,7 @@ const staticExport = process.env.STATIC_EXPORT === "true";
 
 const nextConfig = {
   reactStrictMode: true,
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
   // GitHub Pages serves /foo/ from foo/index.html. Without this, the static
   // export emits foo.html (no per-route index.html), so trailing-slash URLs
   // (the convention documented in CLAUDE.md) 404. Emit foo/index.html instead.

@@ -45,6 +45,17 @@ data/machines/<店舗id>/*.json     他店。店舗idは site/lib/halls.ts と�
 将来このリポジトリへ生成スクリプトを統合する場合は、`.github/workflows/` に
 `schedule`＋`workflow_dispatch` のジョブを置いて同じことをさせる想定。
 
+## 公開画面のサンプル更新
+
+ビルド時に `/live-data/index.json` と `/live-data/<店舗id>/<機種id>.json` を静的出力する。
+一覧は機種の表示用情報と更新判定用の `revision`、詳細は検証済みの `machine` と
+掲載中の `savedTargets` を持つ。`intervalExplorer` や掲載対象外の狙い目は含めない。
+`revision` は公開する内容全体のSHA-256とし、同じ更新日内のサンプル増加・再計算も検知する。
+
+画面表示中は60秒ごと、および画面に戻ったときに一覧を取得し、変更のあった機種の詳細だけを
+取得する。選択中の狙い方・レート・利用可能な絞り込みは保持する。通信失敗や一覧と詳細の
+版が揃わない場合は表示中のデータを保持し、次回に再試行する。
+
 ## 手動で掲載する狙い目
 
 `data/saved-targets/targets.json` が掲載対象・名称の正本。狙い目探しツールで利用者が
