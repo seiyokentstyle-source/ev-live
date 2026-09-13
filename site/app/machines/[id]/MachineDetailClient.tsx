@@ -523,10 +523,14 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
         <ControlBar label="データ" collapsible>
           <SegmentedControl
             /* theoretical は低設定想定店舗混合のJSONにしか入っていない（店舗別は実測だけ）。
-               なので、ここで切り替わるのは「実測を補正した推定」と「スペックだけの理論値」。 */
+               ★どちらが補正でどちらが理論値、ではない。theoretical も実測に補正を掛けた表で
+                 （note に「実測の獲得を○%に落として」と書いてある）、公表スペックだけで作るのは
+                 補正版を作れないときのフォールバックだけ。違うのは切り口＝打ち方別か全体平均か。
+                 何を元にした数字かは TheoreticalTable が note と source で出すので、
+                 ここのラベルで出所を名乗らない。 */
             segments={[
-              { value: "hall", label: "実測を補正", hint: "当店の当たり方×設定1獲得" },
-              { value: "theory", label: "スペック理論値", hint: "公表値のみ" }
+              { value: "hall", label: "打ち方別", hint: "天井狙い・CZ後など" },
+              { value: "theory", label: "全体平均", hint: "0G〜天井を通しで" }
             ]}
             value={dataView}
             onChange={setDataView}
