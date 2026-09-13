@@ -24,8 +24,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # 比較のために履歴が要る。浅いcloneだと比較先を解決できない。
-          fetch-depth: 0
+          # ★全履歴は6.8GBある（機種JSONを毎晩まるごと書き直すため）。
+          #   比較に要るのは比較先の1コミットだけで、サイトセブンが出すのは7日ぶん＝
+          #   それより前のデータは取り直せない。下で8日窓だけ深める。
+          #   解決できなければ見送らずに落とす（素通りさせない）。
+          fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -33,7 +36,9 @@ jobs:
         id: base
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            git fetch origin "${{ github.base_ref }}" --depth=0
+            git fetch --shallow-since="8 days ago" origin "${{ github.base_ref }}" \
+              || git fetch --unshallow origin "${{ github.base_ref }}"
+            git cat-file -e "origin/${{ github.base_ref }}^{commit}"
             echo "ref=origin/${{ github.base_ref }}" >> "$GITHUB_OUTPUT"
           else
             # push の直前のコミット。ブランチ新規作成時は 000... になるので、その時は見送る。
@@ -41,6 +46,13 @@ jobs:
             if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ]; then
               echo "ref=" >> "$GITHUB_OUTPUT"
             else
+              git fetch --shallow-since="8 days ago" origin main || true
+              if ! git cat-file -e "${before}^{commit}" 2>/dev/null; then
+                echo "比較先が8日窓の外にある。深く取り直します"
+                git fetch --deepen=1000 origin main || git fetch --unshallow origin main
+              fi
+              # 解決できないまま進むと比較なしで通ってしまう。必ず落とす。
+              git cat-file -e "${before}^{commit}"
               echo "ref=$before" >> "$GITHUB_OUTPUT"
             fi
           fi
