@@ -94,3 +94,28 @@ describe("低設定想定店舗混合の表示（onlyLowSetting）", () => {
     expect(onlyLowSetting(machine([REAL], { theoretical: THEORY }))).toBeNull();
   });
 });
+
+describe("算出条件の振り分け", () => {
+  const calcSpec = {
+    items: [
+      { k: "通常時使用枚数", v: "1.5" },
+      { k: "設定1想定の補正", v: "メーカー公表の機械割は枚ベース…" }
+    ]
+  };
+
+  it("店舗別からは補正の説明を外す（出していない表の説明は読めない）", () => {
+    const out = withoutLowSetting(machine([REAL, EST], { calcSpec }));
+    expect(out.calcSpec?.items.map((i) => i.k)).toEqual(["通常時使用枚数"]);
+  });
+
+  it("混合は補正の説明だけ持つ", () => {
+    const out = onlyLowSetting(machine([REAL, EST], { calcSpec }));
+    expect(out?.calcSpec?.items.map((i) => i.k)).toEqual(["設定1想定の補正"]);
+  });
+
+  it("補正の説明が無ければ算出条件はそのまま", () => {
+    const plain = { items: [{ k: "通常時使用枚数", v: "1.5" }] };
+    const out = withoutLowSetting(machine([REAL, EST], { calcSpec: plain }));
+    expect(out.calcSpec).toBe(plain);
+  });
+});

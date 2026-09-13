@@ -21,6 +21,15 @@ function isLowSetting(profile: Profile): boolean {
   return profile.label.includes(LOW_SETTING_MARK);
 }
 
+/** 算出条件のうち「設定1想定の補正」の説明。表を出す側だけが持つ。 */
+function splitCalcSpec(machine: Machine): { stay?: Machine["calcSpec"]; moved?: Machine["calcSpec"] } {
+  const items = machine.calcSpec?.items;
+  if (!items) return {};
+  const moved = items.filter((item) => item.k.includes(LOW_SETTING_MARK));
+  if (moved.length === 0) return { stay: machine.calcSpec };
+  return { stay: { items: items.filter((item) => !item.k.includes(LOW_SETTING_MARK)) }, moved: { items: moved } };
+}
+
 /** 店舗別の表示。推定の表を外す。 */
 export function withoutLowSetting(machine: Machine): Machine {
   const stay = machine.profiles.filter((profile) => !isLowSetting(profile));
@@ -30,6 +39,9 @@ export function withoutLowSetting(machine: Machine): Machine {
   // 機種ページが丸ごと消える。消すくらいならそのまま見せる。
   const next = { ...machine, profiles: stay.length > 0 ? stay : machine.profiles };
   delete next.theoretical;
+  // 出していない表の補正の説明が算出条件に残ると、何の話か分からない。
+  const { stay: calcSpec } = splitCalcSpec(machine);
+  if (calcSpec) next.calcSpec = calcSpec;
   return next;
 }
 
@@ -40,6 +52,9 @@ export function onlyLowSetting(machine: Machine): Machine | null {
   // profiles が空だと validate と同じ理由で描画できない。理論表しか無い機種は諦める。
   if (moved.length === 0) return null;
   const next: Machine = { ...machine, profiles: moved };
+  // 補正の説明はこちらが持つ。表を出す側に無いと、何をどう補正したのか読めない。
+  const { moved: calcSpec } = splitCalcSpec(machine);
+  if (calcSpec) next.calcSpec = calcSpec;
   // 実測でしか出せないものは持って行かない（この店舗は推定だけを置く場所）。
   delete next.settingAim;
   delete next.atPayout;

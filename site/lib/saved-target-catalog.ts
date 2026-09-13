@@ -16,6 +16,11 @@ export async function getSavedTargetRefreshes(machineId: string, dataSubdir = ''
   const roots = [path.join(process.cwd(), 'data', 'machines'), path.join(process.cwd(), '..', 'data', 'machines')];
   const root = roots.find(candidate => existsSync(candidate));
   if (!root) throw new Error('Machine data is missing');
-  const machine = JSON.parse(await fs.readFile(path.join(root, dataSubdir, `${machineId}.json`), 'utf8'));
+  const file = path.join(root, dataSubdir, `${machineId}.json`);
+  // 低設定想定店舗混合のように、店舗の一覧がサイト側の導出でできている場合は実ファイルが無い
+  // （lib/ev/low-setting.ts）。公開狙い目は実測側にしか付かないので、無ければ空で返す。
+  // 実在する店舗のファイルが欠けていれば、その手前の getMachine が undefined を返して止まる。
+  if (!existsSync(file)) return [];
+  const machine = JSON.parse(await fs.readFile(file, 'utf8'));
   return machine.savedTargets === undefined ? [] : parseMachineSavedTargets(machine.savedTargets);
 }
