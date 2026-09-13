@@ -84,7 +84,12 @@ describe("live data publication", () => {
     expect(detail.schema).toBe("evlive-live-machine/v1");
     expect(index.machines[0].revision).toBe(detail.revision);
     expect(detail.machine.meta.samples).toBe(index.machines[0].summary.meta.samples);
-    expect(await generateStaticParams()).toEqual([{ hall: "shinjuku", id: `${fixture.id}.json` }]);
+    // 低設定想定店舗混合は ready=true で、設定1想定を持つ機種だけが並ぶ。
+    // 店舗が増えればここも増える＝ready の店舗×機種ぶんのルートが出る、を固定する。
+    expect(await generateStaticParams()).toEqual([
+      { hall: "shinjuku", id: `${fixture.id}.json` },
+      { hall: "mixed", id: `${fixture.id}.json` }
+    ]);
   });
 
   it("does not publish pending halls, unavailable machines, or arbitrary paths", async () => {

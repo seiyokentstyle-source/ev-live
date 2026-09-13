@@ -47,9 +47,9 @@ export const HALLS: Hall[] = [
     // ★ここだけ性格が違う。実測ではなく「実測を設定1相当に補正した推定」を置く場所。
     //   店舗別の表に推定が混ざると、どれが実戦値か見て分からないので分けている。
     note: "実測を設定1相当に補正した推定値（実戦値ではない）",
-    // ★data/machines/mixed/ が生成されてから true にする。先に立てると
-    //   「データあり」と出るのに中身が無く、静的書き出しでページも作られない。
-    ready: false,
+    // data/machines/mixed/ がまだ無くても、lib/ev/low-setting.ts が既定店舗の
+    // JSONから設定1想定の表を拾って組み立てる＝再生成を待たずに中身がある。
+    ready: true,
     dataSubdir: "mixed"
   }
 ];
