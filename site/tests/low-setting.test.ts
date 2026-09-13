@@ -119,3 +119,29 @@ describe("算出条件の振り分け", () => {
     expect(out.calcSpec).toBe(plain);
   });
 });
+
+describe("獲得が実測でない機種（カウンターに獲得が出ない）", () => {
+  const noPayout = {
+    items: [
+      { k: "AT純増", v: "3.6枚/G" },
+      { k: "★獲得は実測ではない", v: "1回あたりの獲得を公表の設定1機械割から逆算した定数で置いている" }
+    ]
+  };
+
+  it("実測の棚には出さない（期待値が獲得側で決まるので表全体が理論値）", () => {
+    expect(withoutLowSetting(machine([REAL], { calcSpec: noPayout }))).toBeNull();
+  });
+
+  it("混合にはそのまま全部出す", () => {
+    const input = machine([REAL], { calcSpec: noPayout });
+    const out = onlyLowSetting(input);
+    expect(out).toBe(input);
+    expect(out?.profiles.map((p) => p.label)).toEqual([REAL.label]);
+  });
+
+  it("印が無ければ従来どおり（実測の棚に残る）", () => {
+    const input = machine([REAL], { calcSpec: { items: [{ k: "AT純増", v: "3.6枚/G" }] } });
+    expect(withoutLowSetting(input)).toBe(input);
+    expect(onlyLowSetting(input)).toBeNull();
+  });
+});

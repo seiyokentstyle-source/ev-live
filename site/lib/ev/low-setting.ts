@@ -17,6 +17,18 @@ export const LOW_SETTING_HALL_SUBDIR = "mixed";
 
 const LOW_SETTING_MARK = "設定1想定";
 
+/**
+ * 獲得がデータカウンターに出ない機種の印（生成側 make_evlive_data.py が算出条件に立てる）。
+ * 初当りG分布は実測だが、1回あたりの獲得は公表の設定1機械割からの逆算。
+ * 期待値は獲得側で決まるので、表そのものが理論値になる＝実測の棚に並べない。
+ */
+const NO_MEASURED_PAYOUT_MARK = "獲得は実測ではない";
+
+/** その機種の期待値が丸ごと理論値か（獲得が実測でない）。 */
+function hasNoMeasuredPayout(machine: Machine): boolean {
+  return (machine.calcSpec?.items ?? []).some((item) => item.k.includes(NO_MEASURED_PAYOUT_MARK));
+}
+
 function isLowSetting(profile: Profile): boolean {
   return profile.label.includes(LOW_SETTING_MARK);
 }
@@ -31,7 +43,9 @@ function splitCalcSpec(machine: Machine): { stay?: Machine["calcSpec"]; moved?: 
 }
 
 /** 店舗別の表示。推定の表を外す。 */
-export function withoutLowSetting(machine: Machine): Machine {
+export function withoutLowSetting(machine: Machine): Machine | null {
+  // 獲得が実測でない機種は表全体が理論値。実測の棚には置かない。
+  if (hasNoMeasuredPayout(machine)) return null;
   const stay = machine.profiles.filter((profile) => !isLowSetting(profile));
   const hasEstimate = stay.length !== machine.profiles.length || Boolean(machine.theoretical);
   if (!hasEstimate) return machine;
@@ -47,6 +61,8 @@ export function withoutLowSetting(machine: Machine): Machine {
 
 /** 低設定想定店舗混合の表示。推定の表だけにする。無ければ null（一覧に出さない）。 */
 export function onlyLowSetting(machine: Machine): Machine | null {
+  // 獲得が実測でない機種は表が丸ごと理論値なので、そのまま全部こちらへ。
+  if (hasNoMeasuredPayout(machine)) return machine;
   const moved = machine.profiles.filter(isLowSetting);
   if (moved.length === 0 && !machine.theoretical) return null;
   // profiles が空だと validate と同じ理由で描画できない。理論表しか無い機種は諦める。

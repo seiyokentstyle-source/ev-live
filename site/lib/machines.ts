@@ -52,7 +52,10 @@ export async function getMachines(dataSubdir?: string): Promise<Machine[]> {
     return machines.sort(compareMachines);
   }
   const machines = await readMachines(dir);
-  return machines.map(withoutLowSetting).sort(compareMachines);
+  return machines
+    .map(withoutLowSetting)
+    .filter((machine): machine is Machine => machine !== null)
+    .sort(compareMachines);
 }
 
 export async function getAvailableMachines(dataSubdir?: string): Promise<Machine[]> {
