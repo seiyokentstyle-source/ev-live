@@ -522,9 +522,11 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
       {machine.theoretical ? (
         <ControlBar label="データ" collapsible>
           <SegmentedControl
+            /* theoretical は低設定想定店舗混合のJSONにしか入っていない（店舗別は実測だけ）。
+               なので、ここで切り替わるのは「実測を補正した推定」と「スペックだけの理論値」。 */
             segments={[
-              { value: "hall", label: "店舗別データ", hint: "実戦値" },
-              { value: "theory", label: "設定1想定", hint: "スペック理論値" }
+              { value: "hall", label: "実測を補正", hint: "当店の当たり方×設定1獲得" },
+              { value: "theory", label: "スペック理論値", hint: "公表値のみ" }
             ]}
             value={dataView}
             onChange={setDataView}
