@@ -19,6 +19,7 @@ type ConditionsBarProps = {
   profileSessions?: number | null;
   /** profileSessions の単位（『BB間』等）。CZ間天井の表は区間数なのでATと混ぜない. */
   profileSessionUnit?: string;
+  profileSampleNote?: string;
   /** 道中の当たりの呼び名（既定CZ / マギレコはBB）. */
   czTerm?: string;
 };
@@ -39,6 +40,7 @@ export function ConditionsBar({
   ceilingText,
   profileSessions,
   profileSessionUnit,
+  profileSampleNote,
   czTerm
 }: ConditionsBarProps) {
   const [open, setOpen] = useState(false);
@@ -95,6 +97,7 @@ export function ConditionsBar({
       k: "この狙い方のサンプル",
       v: `${profileSessions.toLocaleString("ja-JP")}件（${profileSessionUnit ? `${profileSessionUnit}の` : ""}狙い目があった回数。開始Gごとの件数は表に表示）`
     });
+    if (mode === "ev" && profileSampleNote) rows.push({ k: "この狙い方の数え方", v: profileSampleNote });
   }
 
   if (rows.length === 0) return null;

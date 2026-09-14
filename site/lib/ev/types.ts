@@ -158,6 +158,8 @@ export type Profile = {
   /** sessions の単位（『BB間』等）。CZ間天井の表は『BB間の区間』で、機種全体の
    *  『AT間セッション』とは別物なので混ぜない。undefined＝ATセッション（従来どおり）。 */
   sessionUnit?: string;
+  /** 公開元が指定する、この狙い方のサンプルの数え方。 */
+  sampleNote?: string;
   /** 主表の平均初当りG。確率ではないので 1/X 表記にはしない。 */
   firstHitRate?: number;
   /** 生サンプル（旧形式・後方互換）。台番号末尾/特定日の絞り込みで再集計に使う。新データでは undefined。 */

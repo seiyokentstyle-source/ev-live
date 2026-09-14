@@ -569,6 +569,7 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
         ceilingText={rewriteCeiling(profile.ceiling, machine.id, group.key)}
         profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
         profileSessionUnit={displayProfile.sessionUnit}
+        profileSampleNote={displayProfile.sampleNote}
       /> : null}
 
       {mode === 'targets' ? (
