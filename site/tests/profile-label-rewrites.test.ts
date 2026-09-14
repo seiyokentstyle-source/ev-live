@@ -135,3 +135,20 @@ describe("ヴヴヴ2の表示（指定どおりの6行）", () => {
       .toBe("リセット天井 650G");
   });
 });
+
+describe("再生成後（生成側が リセットCZ間天井 を出す）でも表示が変わらない", () => {
+  function tab(key: string, label: string, ceiling: string) {
+    return { ...profile(`${key}_4652`, `${label}・46/52`), ceiling };
+  }
+
+  it("cz_reset は再生成の前後どちらの表記でも同じ6行目になる", () => {
+    const before = groupProfiles([
+      tab("cz_reset", "CZ間天井（CZ1回でやめ・朝一リセット想定）", "CZ間 999G")
+    ], "vvv2").groups[0];
+    const after = groupProfiles([
+      tab("cz_reset", "CZ間（リセット時 3周期）（CZ1回でやめ・朝一リセット想定）", "CZ間 3周期")
+    ], "vvv2").groups[0];
+    expect([before.label, before.ceiling]).toEqual(["CZ間天井（CZ1回・リセ）", "リセット天井 3周期"]);
+    expect([after.label, after.ceiling]).toEqual(["CZ間天井（CZ1回・リセ）", "リセット天井 3周期"]);
+  });
+});
