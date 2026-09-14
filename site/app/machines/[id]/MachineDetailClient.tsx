@@ -72,7 +72,7 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
     schema: "evlive-live-machine/v1", revision, machine: initialMachine, savedTargets: initialTargets
   }), [revision, initialMachine, initialTargets]);
   const { machine, savedTargets } = useLiveMachine(initial, hall.id);
-  const grouped = useMemo(() => groupProfiles(machine.profiles), [machine.profiles]);
+  const grouped = useMemo(() => groupProfiles(machine.profiles, machine.id), [machine.profiles, machine.id]);
   const hasRatePairs = grouped.rates.length >= 2;
   const settingAim = machine.settingAim;
   const hasSettingAim = Boolean(settingAim && settingAim.units.length > 0);
@@ -555,7 +555,7 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
           return v === null ? axis.allLabel : axis.options.find((opt) => opt.value === v)?.label ?? v;
         })()}
         czTerm={czTerm}
-        ceilingText={rewriteCeiling(profile.ceiling)}
+        ceilingText={rewriteCeiling(profile.ceiling, machine.id, group.key)}
         profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
         profileSessionUnit={displayProfile.sessionUnit}
       /> : null}

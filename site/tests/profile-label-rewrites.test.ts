@@ -38,7 +38,8 @@ describe("タブ名の言い換え", () => {
      "CZ間（リセ500）（CZ1回・リセ）"],
     ["ボーナス間天井（前回種別で999/499G）（前回BIG/ST後・通常）",
      "ボーナス間天井（999/499G）（前回BIG/ST後）"],
-    ["引き戻しゾーン（AT後16Gだけ打つ）", "引き戻しゾーン（AT後16G）"],
+    // 何G打つかは2行目に出るので、名前は「引き戻し狙い」だけにする
+    ["引き戻しゾーン（AT後16Gだけ打つ）", "引き戻し狙い"],
     ["AT間（1536あべし・実G実測）（通常（下位AT後））", "AT間（1536あべし）（通常（下位AT後））"]
   ])("%s → %s", (raw, expected) => {
     expect(labelOf(raw)).toBe(expected);
@@ -76,9 +77,9 @@ describe("タブ名の言い換え", () => {
 });
 
 describe("天井表記の言い換え", () => {
-  it("引き戻しゾーンの説明は落とす（言わなくても分かる）", () => {
+  it("引き戻しゾーンの説明は落とし、G数だけ短く出す", () => {
     expect(rewriteCeiling("AT終了から16G／当選したらその連チャンを消化してやめ"))
-      .toBe("AT終了から16G");
+      .toBe("AT後16G");
   });
 
   it("リセット仕様は落とす（算出条件の「リセット仕様」と同じ文字列の重複）", () => {
@@ -96,5 +97,41 @@ describe("天井表記の言い換え", () => {
   it("空や未定義でも落ちない", () => {
     expect(rewriteCeiling("")).toBe("");
     expect(rewriteCeiling(undefined as unknown as string)).toBe("");
+  });
+});
+
+describe("ヴヴヴ2の表示（指定どおりの6行）", () => {
+  function tab(key: string, label: string, ceiling: string) {
+    return { ...profile(`${key}_4652`, `${label}・46/52`), ceiling };
+  }
+
+  it("名前と2行目が指定どおりになる", () => {
+    const groups = groupProfiles([
+      tab("game_ceiling", "AT・RB間天井（通常）", "1500G／BB・RB当選でやめ"),
+      tab("bb_ceiling", "BB間天井（BBまでツッパ・通常）", "1500G／他種別は流してBBまで"),
+      tab("cz_ceiling", "CZ間天井（CZ1回でやめ・通常）", "CZ間 999G"),
+      tab("reset", "朝一（リセット想定・実測）", "リセット天井 1000G／AT/RB間1000G/ラッシュ間最大3周期"),
+      tab("pullback", "引き戻しゾーン（AT後71Gだけ打つ）", "AT終了から71G"),
+      tab("cz_reset", "CZ間天井（CZ1回でやめ・朝一リセット想定）", "CZ間 999G")
+    ], "vvv2").groups;
+    expect(groups.map((g) => [g.label, g.ceiling])).toEqual([
+      ["BB・RB間天井", "1500G／BB・RB当選でやめ"],
+      ["BB間天井期待値", "1500G／BBまでツッパ"],
+      ["CZ間天井（CZ1回）", "CZ間 999G"],
+      ["朝一（リセット）", "リセット天井 1000G"],
+      ["引き戻し狙い", "AT後71G"],
+      ["CZ間天井（CZ1回・リセ）", "リセット天井 3周期"]
+    ]);
+  });
+
+  it("機種別の上書きは他機種に漏れない", () => {
+    // cz_reset の「リセット天井 3周期」はヴヴヴ2のリセット仕様。別機種には当てない。
+    const other = groupProfiles([tab("cz_reset", "CZ間天井（CZ1回でやめ・朝一リセット想定）", "CZ間 500G")], "hokuto").groups;
+    expect(other[0].ceiling).toBe("CZ間 500G");
+  });
+
+  it("リセット天井は数字だけ残る（内訳は算出条件に出る）", () => {
+    expect(rewriteCeiling("リセット天井 650G／ボーナス間最大650G+α、炎炎ループ間1500G+α"))
+      .toBe("リセット天井 650G");
   });
 });

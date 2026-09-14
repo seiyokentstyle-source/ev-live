@@ -27,9 +27,12 @@ describe("groupProfiles label cleanup", () => {
     expect(groups[0].label).toBe("通常");
   });
 
+  // 「AT・RB間天井」は区切りがBBとRBなので「BB・RB間天井」に言い換える（LABEL_REWRITES）。
+  // ここで見たいのは（n=◯◯）が落ちることなので、言い換え後の表記で確かめる。
   test("strips（n=◯◯）from unsuffixed labels", () => {
     const { groups } = groupProfiles([makeProfile("game_ceiling", "AT・RB間天井（n=743）")]);
-    expect(groups[0].label).toBe("AT・RB間天井");
+    expect(groups[0].label).toBe("BB・RB間天井");
+    expect(groups[0].label).not.toContain("n=");
   });
 
   test("leaves labels without the suffix unchanged", () => {
@@ -47,7 +50,7 @@ describe("groupProfiles label cleanup", () => {
       makeProfile("game_ceiling_5050", "AT・RB間天井（据え置き）・50/50（n=822）")
     ]);
     expect(groups).toHaveLength(1);
-    expect(groups[0].label).toBe("AT・RB間天井");
+    expect(groups[0].label).toBe("BB・RB間天井");
     expect(groups[0].label).not.toContain("据え置き");
   });
 });

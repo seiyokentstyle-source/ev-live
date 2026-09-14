@@ -70,6 +70,13 @@ const LABEL_REWRITES: Array<[RegExp, string]> = [
   // 「通常」は既定の狙い方なので書かない（他と並んだときだけ意味を持つ語）
   [/・通常）/g, "）"],
   [/（通常）/g, ""],
+  // ヴヴヴ2。区切りはBBとRBなので「AT・RB」ではなく「BB・RB」。
+  // 2番目は「BBまでツッパ」を2行目へ回し、名前は短くする。
+  // ★「・通常）」を落とした後に当てるのでこの位置（順序依存）。
+  [/AT・RB間天井/g, "BB・RB間天井"],
+  [/BB間天井（BBまでツッパ）/g, "BB間天井期待値"],
+  // 引き戻しは「狙い」で伝わる。何G打つかは2行目に出る。
+  [/引き戻しゾーン（AT後\d+G）/g, "引き戻し狙い"],
   // 空になった括弧と余った空白を掃除
   [/（\s*）/g, ""],
   [/\s{2,}/g, " "]
@@ -81,11 +88,25 @@ const LABEL_REWRITES: Array<[RegExp, string]> = [
 // ★引き戻しゾーンの「当選したらその連チャンを消化してやめ」は言わなくても分かる。
 const CEILING_REWRITES: Array<[RegExp, string]> = [
   [/／当選したらその連チャンを消化してやめ/g, ""],
-  [/^リセット仕様：.*$/, ""]
+  [/^リセット仕様：.*$/, ""],
+  // リセット天井は数字だけでよい。内訳は算出条件に出る。
+  [/^(リセット天井 \d+G)／.*$/, "$1"],
+  [/^AT終了から(\d+G)$/, "AT後$1"],
+  [/／他種別は流して(.+?)まで$/, "／$1までツッパ"]
 ];
 
+// 機種ごとの上書き。データ側の文言が実態と違うものだけをここで直す。
+// ★ヴヴヴ2の cz_reset は、リセット後の表なのに通常時の「CZ間 999G」が入っている。
+//   リセット後はラッシュ間最大3周期（ev_calc の リセット天井メモ）。
+//   生成側が正しい値を出すようになったらこの行を消す。
+const CEILING_OVERRIDES: Record<string, Record<string, string>> = {
+  vvv2: { cz_reset: "リセット天井 3周期" }
+};
+
 /** 天井表記。算出条件で読めることは出さない。 */
-export function rewriteCeiling(text: string): string {
+export function rewriteCeiling(text: string, machineId?: string, profileKey?: string): string {
+  const override = machineId && profileKey ? CEILING_OVERRIDES[machineId]?.[profileKey] : undefined;
+  if (override !== undefined) return override;
   let out = text ?? "";
   for (const [from, to] of CEILING_REWRITES) out = out.replace(from, to);
   return out.trim();
@@ -190,7 +211,7 @@ function parseProfile(profile: Profile): { baseKey: string; baseLabel: string; r
   };
 }
 
-export function groupProfiles(profiles: Profile[]): GroupedProfiles {
+export function groupProfiles(profiles: Profile[], machineId?: string): GroupedProfiles {
   const order: string[] = [];
   const map = new Map<string, ProfileGroup>();
   const rateSet = new Set<string>();
@@ -201,7 +222,7 @@ export function groupProfiles(profiles: Profile[]): GroupedProfiles {
 
     let group = map.get(baseKey);
     if (!group) {
-      group = { key: baseKey, label: baseLabel, ceiling: rewriteCeiling(profile.ceiling), variants: {}, order: [] };
+      group = { key: baseKey, label: baseLabel, ceiling: rewriteCeiling(profile.ceiling, machineId, baseKey), variants: {}, order: [] };
       map.set(baseKey, group);
       order.push(baseKey);
     }
