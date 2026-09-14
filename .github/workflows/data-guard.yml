@@ -13,10 +13,14 @@ on:
   pull_request:
     paths:
       - "data/machines/**"
+      - "scripts/**"
+      - ".github/workflows/data-guard.yml"
   push:
     branches: [main]
     paths:
       - "data/machines/**"
+      - "scripts/**"
+      - ".github/workflows/data-guard.yml"
 
 jobs:
   no-rollback:
@@ -24,38 +28,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # ★全履歴は6.8GBある（機種JSONを毎晩まるごと書き直すため）。
-          #   比較に要るのは比較先の1コミットだけで、サイトセブンが出すのは7日ぶん＝
-          #   それより前のデータは取り直せない。下で8日窓だけ深める。
-          #   解決できなければ見送らずに落とす（素通りさせない）。
-          fetch-depth: 1
+          fetch-depth: 2
       - uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: 比較先を決める
         id: base
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            git fetch --shallow-since="8 days ago" origin "${{ github.base_ref }}" \
-              || git fetch --unshallow origin "${{ github.base_ref }}"
-            git cat-file -e "origin/${{ github.base_ref }}^{commit}"
-            echo "ref=origin/${{ github.base_ref }}" >> "$GITHUB_OUTPUT"
-          else
-            # push の直前のコミット。ブランチ新規作成時は 000... になるので、その時は見送る。
-            before="${{ github.event.before }}"
-            if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ]; then
-              echo "ref=" >> "$GITHUB_OUTPUT"
-            else
-              git fetch --shallow-since="8 days ago" origin main || true
-              if ! git cat-file -e "${before}^{commit}" 2>/dev/null; then
-                echo "比較先が8日窓の外にある。深く取り直します"
-                git fetch --deepen=1000 origin main || git fetch --unshallow origin main
-              fi
-              # 解決できないまま進むと比較なしで通ってしまう。必ず落とす。
-              git cat-file -e "${before}^{commit}"
-              echo "ref=$before" >> "$GITHUB_OUTPUT"
-            fi
+          before="$PUSH_BEFORE"
+          if [ "$EVENT_NAME" = "pull_request" ]; then before="$PR_BASE"; fi
+          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ]; then
+            echo "ref=" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          node scripts/ensure-comparison-history.mjs --base "$before"
+          echo "ref=$before" >> "$GITHUB_OUTPUT"
       - name: データ巻き戻りチェック
         # 依存なしの素のnodeで動く。
         run: |

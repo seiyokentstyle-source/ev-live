@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { MachineSummary } from "@/lib/ev/types";
+import type { MachineHallSummary } from "@/lib/machines";
 import { DEFAULT_HALL_ID, HALLS } from "@/lib/halls";
 import { useLiveIndex } from "@/lib/use-live-data";
 import { TableFoot } from "@/components/ui/DataTable";
@@ -10,15 +11,19 @@ import { rewriteManufacturer } from "@/lib/ev/profiles";
 
 type HallSelectClientProps = {
   machine: MachineSummary;
+  hallMachines: MachineHallSummary[];
 };
 
 /** 機種を選んだあとの「どの店舗で見るか」を選ぶページ。
  *  機種選択 → ここ → 期待値稼働／設定狙い／AT獲得 の順になる。 */
-export function HallSelectClient({ machine: initialMachine }: HallSelectClientProps) {
+export function HallSelectClient({ machine: initialMachine, hallMachines }: HallSelectClientProps) {
   const index = useLiveIndex();
   const machine = index?.machines.find(item => item.id === initialMachine.id && item.hallId === DEFAULT_HALL_ID)?.summary ?? initialMachine;
   const router = useRouter();
-  const readyCount = HALLS.filter((hall) => hall.ready).length;
+  const hallSummary = (hallId: string) => index
+    ? index.machines.find(item => item.id === machine.id && item.hallId === hallId)?.summary
+    : hallMachines.find(item => item.hallId === hallId)?.summary;
+  const readyCount = HALLS.filter((hall) => hall.ready && hallSummary(hall.id)?.available).length;
 
   return (
     <div className="app-shell">
@@ -41,9 +46,8 @@ export function HallSelectClient({ machine: initialMachine }: HallSelectClientPr
         <div className="flex flex-col gap-3 pb-2">
           {HALLS.map((hall) => {
             const href = `/machines/${machine.id}/${hall.id}`;
-            const hallMachine = index
-              ? index.machines.find(item => item.id === machine.id && item.hallId === hall.id)?.summary
-              : hall.id === DEFAULT_HALL_ID ? machine : undefined;
+            const hallMachine = hallSummary(hall.id);
+            const hasData = hall.ready && Boolean(hallMachine?.available);
             return (
               <article
                 key={hall.id}
@@ -54,7 +58,7 @@ export function HallSelectClient({ machine: initialMachine }: HallSelectClientPr
                   if (event.key === "Enter" || event.key === " ") router.push(href);
                 }}
                 className={`rounded-lg border border-line bg-panel p-3 active:bg-panel-2 ${
-                  hall.ready ? "" : "opacity-60"
+                  hasData ? "" : "opacity-60"
                 }`}
               >
                 <div className="flex items-center justify-between gap-3">
@@ -66,14 +70,14 @@ export function HallSelectClient({ machine: initialMachine }: HallSelectClientPr
                       （構造を先に作っておき、収集が始まったら ready を立てるだけにする）。 */}
                   <span
                     className={`mono shrink-0 rounded px-2 py-1 text-[10px] font-bold ${
-                      hall.ready ? "bg-accent font-bold text-[#06131f]" : "border border-line text-muted"
+                      hasData ? "bg-accent font-bold text-[#06131f]" : "border border-line text-muted"
                     }`}
                   >
-                    {hall.ready ? "データあり" : "準備中"}
+                    {hasData ? "データあり" : "準備中"}
                   </span>
                 </div>
                 <p className="mono mt-2 text-[10px] leading-relaxed text-muted">{hall.note}</p>
-                {hall.ready && hallMachine ? (
+                {hasData && hallMachine ? (
                   <p className="mono mt-1 text-[10px] text-muted">サンプル {hallMachine.meta.samples}件</p>
                 ) : null}
               </article>

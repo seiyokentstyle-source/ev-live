@@ -1,9 +1,11 @@
 import { existsSync, promises as fs } from "node:fs";
 import path from "node:path";
-import type { Machine } from "./ev/types";
+import type { Machine, MachineSummary } from "./ev/types";
 import { validateMachine } from "./ev/validate";
 import { LOW_SETTING_HALL_SUBDIR, onlyLowSetting, withoutLowSetting } from "./ev/low-setting";
 import { compareMachines } from "./machine-order";
+import { getReadyHalls } from "./halls";
+import { machineSummary } from "./ev/summary";
 
 // Data lives at the repository root (data/machines), while the site builds from
 // site/. Resolve against the repo root so it works whether the cwd is site/
@@ -64,6 +66,42 @@ export async function getAvailableMachines(dataSubdir?: string): Promise<Machine
 }
 
 export async function getMachine(id: string, dataSubdir?: string): Promise<Machine | undefined> {
-  const machines = await getMachines(dataSubdir);
-  return machines.find((machine) => machine.id === id);
+  // IDs are JSON basenames, not aliases or paths. Detail pages must not read
+  // every machine again: each static route otherwise reparses the whole data set.
+  if (!/^[a-z0-9_-]+$/.test(id) || (dataSubdir && !/^[a-z0-9_-]+$/.test(dataSubdir))) {
+    return undefined;
+  }
+  const dir = hallDir(dataSubdir);
+  const isLowSetting = dataSubdir === LOW_SETTING_HALL_SUBDIR;
+  // Match getMachines: derive mixed data only when the entire folder is absent,
+  // never when one machine is missing from an existing mixed folder.
+  const deriveLowSetting = isLowSetting && !existsSync(dir);
+  const file = path.join(deriveLowSetting ? hallDir() : dir, `${id}.json`);
+  let raw: string;
+  try {
+    raw = await fs.readFile(file, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+    throw error;
+  }
+  const machine = validateMachine(JSON.parse(raw));
+  if (machine.id !== id) return undefined;
+  return (deriveLowSetting ? onlyLowSetting(machine) : isLowSetting ? machine : withoutLowSetting(machine)) ?? undefined;
+}
+
+/** Route IDs include machines collected only in a non-default hall. */
+export async function getMachineIds(): Promise<string[]> {
+  const halls = await Promise.all(getReadyHalls().map((hall) => getMachines(hall.dataSubdir)));
+  return [...new Set(halls.flatMap((machines) => machines.map((machine) => machine.id)))];
+}
+
+export type MachineHallSummary = { hallId: string; summary: MachineSummary };
+
+/** Metadata for navigation; each summary keeps the hall its counts came from. */
+export async function getMachineHallSummaries(id: string): Promise<MachineHallSummary[]> {
+  const summaries = await Promise.all(getReadyHalls().map(async (hall) => {
+    const machine = await getMachine(id, hall.dataSubdir);
+    return machine ? { hallId: hall.id, summary: machineSummary(machine) } : undefined;
+  }));
+  return summaries.filter((item): item is MachineHallSummary => item !== undefined);
 }

@@ -2,7 +2,14 @@
 # ローカルで検証できない環境からの変更も、ここが通れば安全にマージできる。
 # 本番ビルドは data/machines/*.json を validate.ts で検証するので、実データとの整合も担保される。
 name: site-test
-on: [push, pull_request]
+on:
+  # main は公開workflow内でテスト後に一度だけ本番ビルドする。
+  push:
+    branches-ignore: [main, gh-pages]
+  pull_request:
+concurrency:
+  group: site-test-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,6 +22,8 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
+      - name: Test data guard and history boundaries
+        run: node --test ../scripts/tests/*.test.mjs
       - run: npm test
       - name: production build (validates machine JSONs too)
         run: PAGES_BASE_PATH=/ev-live STATIC_EXPORT=true npm run build

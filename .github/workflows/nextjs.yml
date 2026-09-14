@@ -6,6 +6,7 @@ on:
     paths:
       - "site/**"
       - "data/**"
+      - "scripts/**"
       - ".github/workflows/nextjs.yml"
   workflow_dispatch:
 
@@ -29,35 +30,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # ★全履歴は6.8GBある。data/machines/*.json を毎晩まるごと書き直し、
-          #   1機種1コミットで1日40〜70件入るため。毎回引くとCheckoutだけで数分かかる。
-          #   巻き戻りチェックに要るのは比較先の1コミットだけ。しかもサイトセブンが
-          #   出すのは7日ぶんで、それより前のデータは取り直せない＝変わりようがない。
-          #   次のステップで8日窓だけ深める（実測 6.8GB → 0.1GB / 261コミット）。
-          fetch-depth: 1
-      # 浅いcloneのままだと比較先を解決できず、下の関門が素通りして公開されてしまう。
-      # 必要なぶんだけ深め、それでも解決できなければ落とす（見送らない）。
-      - name: 比較先の履歴だけ取る
-        if: github.event_name == 'push'
-        run: |
-          before="${{ github.event.before }}"
-          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ]; then
-            echo "比較先が無いので深掘り不要（ブランチ新規作成など）"
-            exit 0
-          fi
-          git fetch --shallow-since="8 days ago" origin main || true
-          if ! git cat-file -e "${before}^{commit}" 2>/dev/null; then
-            echo "比較先が8日窓の外にある。深く取り直します"
-            git fetch --deepen=1000 origin main || git fetch --unshallow origin main
-          fi
-          # ここで解決できないまま進むと比較なしで公開される。必ず落とす。
-          git cat-file -e "${before}^{commit}"
+          # 通常の1コミット更新は親までで十分。複数コミット/マージは下で
+          # 比較範囲の完全性を検証し、不足する祖先だけ追加取得する。
+          fetch-depth: 2
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
           cache-dependency-path: site/package-lock.json
+      - name: 比較範囲の履歴を確認
+        if: github.event_name == 'push'
+        working-directory: .
+        env:
+          BASE_SHA: ${{ github.event.before }}
+        run: |
+          if [ -z "$BASE_SHA" ] || [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            echo "比較先が無いので深掘り不要（ブランチ新規作成など）"
+            exit 0
+          fi
+          node scripts/ensure-comparison-history.mjs --base "$BASE_SHA"
       # データが巻き戻ったまま公開しないための関門。
       # data-guard は main への直接pushでも鳴るが、それ自体はデプロイを止められない
       # （別のワークフローなので）。実際 2026-08-26 に5機種で14〜26%減ったJSONが
@@ -74,6 +66,10 @@ jobs:
           node scripts/check-data-regression.mjs --base "$before"
       - name: Install dependencies
         run: npm ci
+      - name: Test data guard and history boundaries
+        run: node --test ../scripts/tests/*.test.mjs
+      - name: Test site
+        run: npm test
       - name: Build (static export under basePath /ev-live)
         run: npm run build
         env:

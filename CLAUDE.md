@@ -42,7 +42,10 @@ gitのマージは素通りする。そのため `data-guard` workflow が PR �
 ```
 node scripts/check-data-regression.mjs
 ```
-- `lastUpdated` が古くなったら**必ず失敗**（意図して古くする場面が無いため、合図でも通さない）
+- データ対象末日が古くなったら**必ず失敗**（合図でも通さない）。通常は `lastUpdated` で比較する。
+  2026-09-13の既知の再生成出力だけは、生成日を誤記したため、完全JSONハッシュが
+  `scripts/legacy-data-dates.json` と一致する場合に限り対象末日2026-09-05で比較する。
+  詳しい移行条件は [データ契約](docs/data-contract.md#生成日を誤記した旧データの互換比較) を参照。
 - 件数の1割超の減少・機種JSONの消失は、コミットメッセージに `[allow-data-regression]` が
   あれば通る（スペック変更で正しく減る／獲得データ不良の機種を外した場合）
 
