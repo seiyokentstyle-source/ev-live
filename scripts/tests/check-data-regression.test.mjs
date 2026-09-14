@@ -15,6 +15,14 @@ const machine = (day = "2026-09-07", count = "1,000") => ({
   meta: { samples: count, source: `実戦データ自動収集（2026-06-09〜${day}・全データ）／注記` },
   anchors: [{ g: 0, ev: 123 }]
 });
+const pendingMachine = () => {
+  const data = machine("2026-09-07", "0");
+  data.meta.collection = {
+    rows: 100, events: 90, units: 4, days: 2,
+    firstDate: "2026-09-06", lastDate: "2026-09-07"
+  };
+  return data;
+};
 const old = { ...machine("2026-09-05"), lastUpdated: "2026-09-13" };
 const manifest = {
   recordedLastUpdated: "2026-09-13", dataThrough: "2026-09-05",
@@ -188,4 +196,120 @@ test("sample parsing rejects invalid values instead of bypassing the loss compar
   }
   assert.equal(samplesOf({ meta: { samples: "1,234" } }), 1234);
   assert.equal(samplesOf({ meta: { samples: 0 } }), 0);
+});
+
+test("unchanged and growing collection observations pass with zero EV samples", (t) => {
+  const r = repo(t, pendingMachine());
+  assert.equal(r.check(), 0);
+  const data = pendingMachine();
+  data.lastUpdated = "2026-09-08";
+  Object.assign(data.meta.collection, {
+    rows: 140, events: 125, units: 5, days: 4,
+    firstDate: "2026-09-05", lastDate: "2026-09-08"
+  });
+  r.write(data);
+  assert.equal(r.check(), 0);
+});
+
+test("every collection count decrease fails even with an allow signal and full tolerance", (t) => {
+  const r = repo(t, pendingMachine());
+  r.commit("collection correction [allow-data-regression]");
+  for (const key of ["rows", "events", "units", "days"]) {
+    const data = pendingMachine();
+    data.meta.collection[key] -= 1;
+    r.write(data);
+    assert.equal(r.check({ tolerance: 1 }), 1, key);
+    assert.match(r.messages.join("\n"), new RegExp(`meta\\.collection\\.${key}`));
+  }
+});
+
+test("a shortened collection period fails even when all counts and lastUpdated grow", (t) => {
+  const r = repo(t, pendingMachine());
+  r.commit("collection correction [allow-data-regression]");
+  const data = pendingMachine();
+  data.lastUpdated = "2026-09-10";
+  Object.assign(data.meta.collection, {
+    rows: 200, events: 180, units: 5, days: 3,
+    firstDate: "2026-09-07", lastDate: "2026-09-10"
+  });
+  r.write(data);
+  assert.equal(r.check(), 1);
+  assert.match(r.messages.join("\n"), /収集期間/);
+});
+
+test("collection end rollback remains forbidden with an allow signal", (t) => {
+  const r = repo(t, pendingMachine());
+  r.commit("collection correction [allow-data-regression]");
+  const data = pendingMachine();
+  data.lastUpdated = "2026-09-06";
+  data.meta.collection.firstDate = "2026-09-05";
+  data.meta.collection.lastDate = "2026-09-06";
+  r.write(data);
+  assert.equal(r.check(), 1);
+  assert.match(r.messages.join("\n"), /収集期間/);
+});
+
+test("collection metadata or its machine file cannot disappear with an allow signal", (t) => {
+  const r = repo(t, pendingMachine());
+  r.commit("remove collection [allow-data-regression]");
+  r.write(machine("2026-09-07", "0"));
+  assert.equal(r.check(), 1);
+  assert.match(r.messages.join("\n"), /meta.collectionが失われています/);
+  // Acquiring an EV model must not silently discard the collection baseline.
+  r.write(machine());
+  assert.equal(r.check(), 1);
+  unlinkSync(join(r.dir, FILE));
+  assert.equal(r.check(), 1);
+  assert.match(r.messages.join("\n"), /収集履歴の減少・欠落/);
+});
+
+test("published EV samples cannot be silently replaced by a pending collection", (t) => {
+  const r = repo(t);
+  r.write(pendingMachine());
+  r.commit("pending counter [allow-data-regression]");
+  assert.equal(r.check(), 1);
+  assert.match(r.messages.join("\n"), /公開済みEVサンプル/);
+});
+
+test("malformed collection values and impossible count/date combinations always fail", (t) => {
+  const r = repo(t, pendingMachine());
+  r.commit("repair [allow-data-regression]");
+  for (const bad of [null, [], false, "unknown", {}]) {
+    const data = pendingMachine(); data.meta.collection = bad;
+    r.write(data); assert.equal(r.check(), 2, JSON.stringify(bad));
+  }
+  for (const [key, bad] of [
+    ["rows", 0], ["rows", "100"], ["events", -1], ["events", true],
+    ["units", 1.5], ["units", 101], ["days", Number.MAX_SAFE_INTEGER + 1],
+    ["events", 101], ["days", 3], ["units", null],
+    ["firstDate", "2026-02-30"], ["firstDate", "2026-09-08"],
+    ["lastDate", "2026-09-08"], ["lastDate", null]
+  ]) {
+    const data = pendingMachine(); data.meta.collection[key] = bad;
+    r.write(data); assert.equal(r.check(), 2, `${key}=${JSON.stringify(bad)}`);
+  }
+});
+
+test("an invalid BASE collection cannot be treated as absent or bypassed by repair", (t) => {
+  const bad = pendingMachine(); bad.meta.collection = null;
+  const r = repo(t, bad);
+  r.write(pendingMachine());
+  r.commit("repair [allow-data-regression]");
+  assert.equal(r.check(), 2);
+  assert.match(r.messages.join("\n"), /meta.collection/);
+});
+
+test("new machine files are validated, including generated and committed collection records", (t) => {
+  const r = repo(t);
+  const newFile = join(r.dir, "data/machines/new-machine.json");
+  writeFileSync(newFile, JSON.stringify(machine()));
+  assert.equal(r.check(), 0);
+  writeFileSync(newFile, JSON.stringify(pendingMachine()));
+  assert.equal(r.check(), 0);
+  r.commit("new collection [allow-data-regression]");
+  assert.equal(r.check(), 0);
+  const bad = pendingMachine(); bad.meta.collection.rows = "100";
+  writeFileSync(newFile, JSON.stringify(bad));
+  assert.equal(r.check(), 2);
+  assert.match(r.messages.join("\n"), /new-machine.json: meta.collection.rows/);
 });

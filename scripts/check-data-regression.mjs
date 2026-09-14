@@ -3,7 +3,7 @@
 // Dates never move backward. The one known execution-date defect is compared
 // using the exact-snapshot migration in data-date-compatibility.mjs.
 // [allow-data-regression] only permits >10% sample losses or removed files;
-// it never permits date rollback or unreadable/invalid comparison data.
+// it never permits collection losses, date rollback, or invalid comparison data.
 // Usage: node scripts/check-data-regression.mjs [--base origin/main] [--tolerance 0.1]
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -23,6 +23,33 @@ export const samplesOf = (data) => {
   return Number.isSafeInteger(n) && n >= 0 ? n : null;
 };
 
+const COLLECTION_COUNTS = ["rows", "events", "units", "days"];
+
+function collectionOf(data, label) {
+  if (!Object.hasOwn(data.meta ?? {}, "collection")) return null;
+  const collection = data.meta.collection;
+  if (!collection || typeof collection !== "object" || Array.isArray(collection)) {
+    throw new Error(`${label}: meta.collectionがオブジェクトではありません`);
+  }
+  for (const key of COLLECTION_COUNTS) {
+    if (!Number.isSafeInteger(collection[key]) || collection[key] < (key === "events" ? 0 : 1)) {
+      throw new Error(`${label}: meta.collection.${key}が有効な整数件数ではありません`);
+    }
+  }
+  if (["events", "units", "days"].some(key => collection[key] > collection.rows)) {
+    throw new Error(`${label}: meta.collectionの件数が整合しません`);
+  }
+  if (!isDate(collection.firstDate) || !isDate(collection.lastDate)
+      || collection.firstDate > collection.lastDate || collection.lastDate !== data.lastUpdated) {
+    throw new Error(`${label}: meta.collectionの日付が整合しません`);
+  }
+  const calendarDays = (Date.parse(collection.lastDate) - Date.parse(collection.firstDate)) / 86_400_000 + 1;
+  if (collection.days > calendarDays) {
+    throw new Error(`${label}: meta.collection.daysが収集期間を超えています`);
+  }
+  return collection;
+}
+
 function parseMachine(text, label) {
   let data;
   try { data = JSON.parse(text); }
@@ -35,6 +62,7 @@ function parseMachine(text, label) {
   if (Object.hasOwn(data.meta ?? {}, "samples") && samplesOf(data) === null) {
     throw new Error(`${label}: meta.samplesが有効な件数ではありません`);
   }
+  collectionOf(data, label);
   return data;
 }
 
@@ -54,14 +82,24 @@ export function checkDataRegression({
     const base = git("rev-parse", "--verify", `${baseRef}^{commit}`).trim();
     const files = git("ls-tree", "-r", "--name-only", base, "--", DIR)
       .split("\n").filter((file) => file.endsWith(".json"));
+    const baseFiles = new Set(files);
+    // New publications have no BASE blob, but their collection metadata still
+    // needs validation. Include staged/generated files for local checks too.
+    const currentFiles = git("ls-files", "--cached", "--others", "--exclude-standard", "-z", "--", DIR)
+      .split("\0").filter((file) => file.endsWith(".json"));
     // Failure is not equivalent to no permission: incomplete history must fail
     // closed. CI prepares/proves the complete BASE..HEAD graph before this call.
     const allowed = git("log", "--format=%B", `${base}..HEAD`).includes("[allow-data-regression]");
     const rollbacks = [];
     const decreases = [];
+    const collectionLosses = [];
     const migrations = [];
 
-    for (const file of files) {
+    for (const file of new Set([...files, ...currentFiles])) {
+      if (!baseFiles.has(file)) {
+        parseMachine(readFileSync(resolve(cwd, file), "utf8"), file);
+        continue;
+      }
       // ls-tree proved this blob exists at BASE. A show/parse failure cannot
       // mean a new/deleted file (and cannot silently skip comparisons).
       const before = parseMachine(git("show", `${base}:${file}`), `${baseRef}:${file}`);
@@ -69,7 +107,8 @@ export function checkDataRegression({
       try { text = readFileSync(resolve(cwd, file), "utf8"); }
       catch (readError) {
         if (readError.code !== "ENOENT") throw readError;
-        decreases.push(`${before.name ?? file}: JSONが消えている（${file}）`);
+        const loss = `${before.name ?? file}: JSONが消えている（${file}）`;
+        (collectionOf(before, file) ? collectionLosses : decreases).push(loss);
         continue;
       }
       const after = parseMachine(text, file);
@@ -83,6 +122,25 @@ export function checkDataRegression({
       if (dates.migrated) migrations.push(`${name}: 既知の生成日 ${before.lastUpdated} を対象末日 ${dates.before.date} として比較 → ${after.lastUpdated}`);
       const bN = samplesOf(before);
       const hN = samplesOf(after);
+      const beforeCollection = collectionOf(before, `${baseRef}:${file}`);
+      const afterCollection = collectionOf(after, file);
+      if (beforeCollection && !afterCollection) {
+        collectionLosses.push(`${name}: meta.collectionが失われています`);
+      } else if (beforeCollection) {
+        for (const key of COLLECTION_COUNTS) {
+          if (afterCollection[key] < beforeCollection[key]) {
+            collectionLosses.push(`${name}: meta.collection.${key} ${beforeCollection[key]} → ${afterCollection[key]}`);
+          }
+        }
+        if (afterCollection.firstDate > beforeCollection.firstDate
+            || afterCollection.lastDate < beforeCollection.lastDate) {
+          collectionLosses.push(`${name}: 収集期間 ${beforeCollection.firstDate}〜${beforeCollection.lastDate}`
+            + ` → ${afterCollection.firstDate}〜${afterCollection.lastDate}`);
+        }
+      }
+      if (afterCollection && hN === 0 && bN !== null && bN > 0) {
+        collectionLosses.push(`${name}: 公開済みEVサンプル ${bN}件を算出保留に置き換えています`);
+      }
       if (bN !== null && hN === null) throw new Error(`${file}: meta.samplesが失われています`);
       if (bN !== null && hN !== null && bN > 0 && hN < bN * (1 - tolerance)) {
         decreases.push(`${name}: サンプル ${bN.toLocaleString()} → ${hN.toLocaleString()}`
@@ -95,13 +153,17 @@ export function checkDataRegression({
       error(`\n✖ 巻き戻し ${rollbacks.length}件（[allow-data-regression] でも通しません）`);
       for (const message of rollbacks) error(`   ${message}`);
     }
+    if (collectionLosses.length) {
+      error(`\n✖ 収集履歴の減少・欠落 ${collectionLosses.length}件（[allow-data-regression] でも通しません）`);
+      for (const message of collectionLosses) error(`   ${message}`);
+    }
     if (decreases.length) {
       error(`\n${allowed ? "許可済み" : "✖"} データの減少 ${decreases.length}件`);
       for (const message of decreases) error(`   ${message}`);
     }
-    if (rollbacks.length || (decreases.length && !allowed)) {
+    if (rollbacks.length || collectionLosses.length || (decreases.length && !allowed)) {
       error(`\n古い土台や収集失敗がないか確認し、データは最新mainを採用してください。`);
-      error("正当な件数減・削除だけは、理由と [allow-data-regression] をコミットメッセージに記載できます。");
+      error("収集履歴を持たない機種の正当なサンプル件数減・削除だけは、理由と [allow-data-regression] をコミットメッセージに記載できます。");
       return 1;
     }
     log(decreases.length ? "✔ [allow-data-regression] により件数減と削除を許可しました" : "✔ 巻き戻りなし");
