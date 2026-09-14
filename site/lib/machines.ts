@@ -6,6 +6,7 @@ import { LOW_SETTING_HALL_SUBDIR, onlyLowSetting, withoutLowSetting } from "./ev
 import { compareMachines } from "./machine-order";
 import { getReadyHalls } from "./halls";
 import { machineSummary } from "./ev/summary";
+import { normalizeMachineMetadata } from "./machine-metadata";
 
 // Data lives at the repository root (data/machines), while the site builds from
 // site/. Resolve against the repo root so it works whether the cwd is site/
@@ -34,7 +35,7 @@ async function readMachines(dir: string): Promise<Machine[]> {
   return Promise.all(
     jsonFiles.map(async (fileName) => {
       const raw = await fs.readFile(path.join(dir, fileName), "utf8");
-      return validateMachine(JSON.parse(raw));
+      return normalizeMachineMetadata(validateMachine(JSON.parse(raw)));
     })
   );
 }
@@ -47,7 +48,7 @@ async function readMachine(dir: string, id: string): Promise<Machine | undefined
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
     throw error;
   }
-  const machine = validateMachine(JSON.parse(raw));
+  const machine = normalizeMachineMetadata(validateMachine(JSON.parse(raw)));
   return machine.id === id ? machine : undefined;
 }
 

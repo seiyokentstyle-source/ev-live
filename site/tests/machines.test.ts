@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import fixture from "../app/preview/ev-table/machine.json";
 import { onlyLowSetting, withoutLowSetting } from "../lib/ev/low-setting";
 import { validateMachine } from "../lib/ev/validate";
+import { normalizeSearchText } from "../lib/search/normalize";
 
 let root: string;
 let getMachine: typeof import("../lib/machines").getMachine;
@@ -130,6 +131,50 @@ describe("single-machine data loading", () => {
     const failure = Object.assign(new Error("Access denied"), { code: "EACCES" });
     vi.spyOn(fs, "readFile").mockRejectedValueOnce(failure);
     await expect(getMachine("target")).rejects.toBe(failure);
+  });
+});
+
+describe("SAO metadata separation", () => {
+  it.each(["", "mixed"])("separates sequel search and dates in lists and details for hall %j", async (hall) => {
+    const original = {
+      ...machine("m49d497e0"), name: "Lソードアート・オンライン",
+      aliases: ["Lソードアート・オンライン", "SAO2", "ソードアートオンライン2"],
+      releaseDate: "2026-06-08",
+    };
+    const sequel = {
+      ...machine("mfb4da289"), name: "ソードアート・オンラインII",
+      aliases: ["ソードアート・オンラインII", "SAO2", "ソードアートオンライン2"],
+      releaseDate: "2026-06-08", meta: { ...original.meta, samples: "4,373" },
+    };
+    await writeMachine(original.id, original, hall);
+    await writeMachine(sequel.id, sequel, hall);
+    const listed = await getMachines(hall);
+    for (const query of ["SAO2", "SAOⅡ", "ソードアートオンライン2", "ソードアート・オンラインⅡ"]) {
+      const matches = listed.filter((item) => [item.name, ...item.aliases].some((name) =>
+        normalizeSearchText(name).includes(normalizeSearchText(query))));
+      expect(matches.map((item) => item.id)).toEqual([sequel.id]);
+    }
+    for (const input of [original, sequel]) {
+      const actual = await getMachine(input.id, hall);
+      expect(actual).toEqual(listed.find((item) => item.id === input.id));
+      const { aliases: _aliases, releaseDate: _date, ...unchanged } = actual!;
+      const selected = hall ? validateMachine(input) : withoutLowSetting(validateMachine(input));
+      const { aliases: _oldAliases, releaseDate: _oldDate, ...expected } = selected!;
+      expect(unchanged).toEqual(expected);
+    }
+    expect((await getMachine(original.id, hall))?.releaseDate).toBe("2023-05-15");
+    expect((await getMachine(sequel.id, hall))?.releaseDate).toBe("2026-06-08");
+    expect(JSON.parse(await fs.readFile(path.join(root, "data", "machines", hall, `${original.id}.json`), "utf8"))).toEqual(original);
+  });
+
+  it("requires both ID and exact name before applying a known machine's metadata", async () => {
+    for (const input of [
+      { ...machine("m49d497e0"), name: "ソードアート・オンラインIII" },
+      { ...machine("future"), name: "Lソードアート・オンライン" },
+    ]) {
+      await writeMachine(input.id, input);
+      expect(await getMachine(input.id)).toEqual(withoutLowSetting(validateMachine(input)));
+    }
   });
 });
 
