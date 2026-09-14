@@ -95,6 +95,32 @@ describe("低設定想定店舗混合の表示（onlyLowSetting）", () => {
   });
 });
 
+// 生成側（777site-scraper）が主表の双子 game_ceiling_s1_* を出すようになった後の形。
+// 「全体平均」で別枠に出していた表が、同じ打ち方のタブとして混合側に並ぶ。
+describe("主表の設定1想定（game_ceiling_s1）", () => {
+  const MAIN_S1 = profile("AT・RB間天井（設定1想定）・46/52", "game_ceiling_s1_4652");
+
+  it("混合側へ移り、店舗別には残らない", () => {
+    const input = machine([REAL, MAIN_S1, EST]);
+    expect(withoutLowSetting(input)?.profiles.map((p) => p.key)).toEqual([REAL.key]);
+    expect(onlyLowSetting(input)?.profiles.map((p) => p.key)).toEqual([MAIN_S1.key, EST.key]);
+  });
+
+  // ★タブ名からは「設定1想定」を落とす（profiles.ts の LABEL_REWRITES）。
+  //   振り分けは生のラベルで見るので、表示を短くしても移設は壊れない。
+  it("振り分けは生のラベルで見る（タブ名の言い換えに影響されない）", () => {
+    const out = onlyLowSetting(machine([REAL, MAIN_S1]));
+    expect(out?.profiles[0].label).toBe("AT・RB間天井（設定1想定）・46/52");
+  });
+
+  // 再生成後は theoretical が消える（同じ表が2か所に出ないように生成側で止めた）。
+  it("theoretical が無くても混合は成立する", () => {
+    const out = onlyLowSetting(machine([REAL, MAIN_S1]));
+    expect(out?.theoretical).toBeUndefined();
+    expect(out?.profiles).toHaveLength(1);
+  });
+});
+
 describe("算出条件の振り分け", () => {
   const calcSpec = {
     items: [
