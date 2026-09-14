@@ -41,8 +41,7 @@ export function EvFilter({ axes, values, onChange, units, hits, hitUnit, enabled
       {active ? (
         <span className="mono flex items-center gap-2 text-[10px] text-muted">
           <span>
-            {units.toLocaleString("ja-JP")}台 / {hits.toLocaleString("ja-JP")}
-            {hitUnit ? `${hitUnit}区間` : "AT"}
+            {units.toLocaleString("ja-JP")}台 / {hitUnit ? `${hitUnit}の狙い目` : "狙い目"} {hits.toLocaleString("ja-JP")}件
           </span>
           <button
             type="button"

@@ -88,18 +88,14 @@ export function ConditionsBar({
     rows.push({ k: "発生率", v: "出たラッシュ ÷ ラッシュ突入回数（1ラッシュ1回・最大100%）" });
   }
   if (range) rows.push({ k: "データ範囲", v: range });
-  // サンプルは表示中のタブの母数を出す（meta.samples は機種全体なのでタブによってはズレる）。
-  if (!pendingStatus) rows.push(
-    mode === "ev" && profileSessions != null
-      ? {
-          k: "サンプル",
-          v: profileSessionUnit
-            // 単位が違うので「機種全体」と単純に並べない（区間数のほうが多くなり誤解を招く）
-            ? `${profileSessions.toLocaleString("ja-JP")}区間（表示中のタブ＝${profileSessionUnit}／機種全体のAT ${machine.meta.samples}件）`
-            : `${profileSessions.toLocaleString("ja-JP")}件（表示中のタブ／機種全体 ${machine.meta.samples}件）`
-        }
-      : { k: "サンプル", v: `${machine.meta.samples}件` }
-  );
+  // 機種全体は主ボーナス・AT突入、各狙い方は条件に該当する機会を数える。
+  if (!pendingStatus) {
+    rows.push({ k: "機種全体のサンプル", v: `${machine.meta.samples}回（主ボーナス・AT突入回数）` });
+    if (mode === "ev" && profileSessions != null) rows.push({
+      k: "この狙い方のサンプル",
+      v: `${profileSessions.toLocaleString("ja-JP")}件（${profileSessionUnit ? `${profileSessionUnit}の` : ""}狙い目があった回数。開始Gごとの件数は表に表示）`
+    });
+  }
 
   if (rows.length === 0) return null;
   const summary = rows.slice(0, 3).map((r) => r.v.split("（")[0]).join(" / ");

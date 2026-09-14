@@ -67,10 +67,10 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
               カード内でいちばん読ませる数値にする。ただし期待値と誤読されない大きさに留める。 */}
         <div className="mt-auto pt-3">
           {pendingStatus ? <p className="mono text-[11px] leading-relaxed text-ink-soft">{pendingStatus}</p> : <>
-          <p className="text-[9px] font-medium tracking-[0.16em] text-muted">サンプル</p>
+          <p className="text-[9px] font-medium tracking-[0.16em] text-muted">サンプル（主ボーナス・AT突入）</p>
           <p className="mono mt-0.5 flex items-baseline gap-0.5 text-[17px] font-bold leading-none text-ink">
             {machine.meta.samples}
-            <span className="text-[10px] font-normal text-ink-soft">件</span>
+            <span className="text-[10px] font-normal text-ink-soft">回</span>
           </p>
           </>}
         </div>
