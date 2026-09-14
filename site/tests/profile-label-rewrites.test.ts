@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { groupProfiles } from "../lib/ev/profiles";
+import { groupProfiles, rewriteCeiling } from "../lib/ev/profiles";
 import type { Profile } from "../lib/ev/types";
 
 /**
@@ -72,5 +72,29 @@ describe("タブ名の言い換え", () => {
 
   it("空の括弧を残さない", () => {
     expect(labelOf("ボーナス間（固定G天井なし・実測）（通常）")).toBe("ボーナス間");
+  });
+});
+
+describe("天井表記の言い換え", () => {
+  it("引き戻しゾーンの説明は落とす（言わなくても分かる）", () => {
+    expect(rewriteCeiling("AT終了から16G／当選したらその連チャンを消化してやめ"))
+      .toBe("AT終了から16G");
+  });
+
+  it("リセット仕様は落とす（算出条件の「リセット仕様」と同じ文字列の重複）", () => {
+    expect(rewriteCeiling("リセット仕様：ボーナス間が600〜699pt+α。固定実Gへは換算しない")).toBe("");
+    expect(rewriteCeiling("リセット仕様：510G（15.2%）/1000G（20.3%）/1480G（64.5%）の再抽選")).toBe("");
+  });
+
+  it("天井の数字は落とさない", () => {
+    expect(rewriteCeiling("リセット天井 650G／ボーナス間最大650G+α、炎炎ループ間1500G+α"))
+      .toContain("650G");
+    expect(rewriteCeiling("AT間2000G（非公開情報）／AT当選でやめ／通常（下位AT後）"))
+      .toContain("2000G");
+  });
+
+  it("空や未定義でも落ちない", () => {
+    expect(rewriteCeiling("")).toBe("");
+    expect(rewriteCeiling(undefined as unknown as string)).toBe("");
   });
 });

@@ -74,6 +74,23 @@ const LABEL_REWRITES: Array<[RegExp, string]> = [
   [/（\s*）/g, ""],
   [/\s{2,}/g, " "]
 ];
+// 天井表記（タブのhintと「天井」行）も同じ扱い。算出条件タブに同じことが
+// 書いてあるものは出さない。
+// ★「リセット仕様：…」は calcSpec の「リセット仕様」と文字列が同一の重複。
+//   落とすと ConditionsBar が evCalc.ceiling（数値）へ自動で退避する。
+// ★引き戻しゾーンの「当選したらその連チャンを消化してやめ」は言わなくても分かる。
+const CEILING_REWRITES: Array<[RegExp, string]> = [
+  [/／当選したらその連チャンを消化してやめ/g, ""],
+  [/^リセット仕様：.*$/, ""]
+];
+
+/** 天井表記。算出条件で読めることは出さない。 */
+export function rewriteCeiling(text: string): string {
+  let out = text ?? "";
+  for (const [from, to] of CEILING_REWRITES) out = out.replace(from, to);
+  return out.trim();
+}
+
 // 絞り込み軸の見出しも同じ扱い。軸のラベルはデータ側（evFilters.axes）が配るので、
 // 生成側だけ直しても夜間の再生成まで古い文言が出続ける。ここを通して即時に反映する。
 // ★選択肢（「3のつく日」＝3/13/23）は言い換えない。「3の特定日」では意味が通らず、
@@ -184,7 +201,7 @@ export function groupProfiles(profiles: Profile[]): GroupedProfiles {
 
     let group = map.get(baseKey);
     if (!group) {
-      group = { key: baseKey, label: baseLabel, ceiling: profile.ceiling, variants: {}, order: [] };
+      group = { key: baseKey, label: baseLabel, ceiling: rewriteCeiling(profile.ceiling), variants: {}, order: [] };
       map.set(baseKey, group);
       order.push(baseKey);
     }

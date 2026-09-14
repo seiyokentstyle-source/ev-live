@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
 import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
-import { compatibleFilterSelection, groupProfiles, resolveProfile, rewriteAxisLabel } from "@/lib/ev/profiles";
+import { compatibleFilterSelection, groupProfiles, resolveProfile, rewriteAxisLabel, rewriteCeiling } from "@/lib/ev/profiles";
 import { AxisPicker } from "@/components/ev/AxisPicker";
 import { ConditionsBar } from "@/components/ev/ConditionsBar";
 import { TheoreticalTable } from "@/components/ev/TheoreticalTable";
@@ -555,7 +555,7 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
           return v === null ? axis.allLabel : axis.options.find((opt) => opt.value === v)?.label ?? v;
         })()}
         czTerm={czTerm}
-        ceilingText={profile.ceiling}
+        ceilingText={rewriteCeiling(profile.ceiling)}
         profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
         profileSessionUnit={displayProfile.sessionUnit}
       /> : null}
