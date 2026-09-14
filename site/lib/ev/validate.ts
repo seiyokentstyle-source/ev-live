@@ -51,6 +51,17 @@ export function validateMachine(data: unknown): Machine {
   );
   assert(typeof machine.releaseDate === "string" && isDateString(machine.releaseDate), "releaseDate must be YYYY-MM-DD");
   assert(typeof machine.lastUpdated === "string" && isDateString(machine.lastUpdated), "lastUpdated must be YYYY-MM-DD");
+  if (machine.meta?.collection !== undefined) {
+    const collection = machine.meta.collection;
+    assert(isRecord(collection), "meta.collection must be an object");
+    for (const key of ["rows", "events", "units", "days"] as const) {
+      assert(Number.isSafeInteger(collection[key]) && collection[key] >= 0, `meta.collection.${key} must be a non-negative integer`);
+    }
+    assert(collection.events <= collection.rows, "meta.collection.events must not exceed rows");
+    assert(typeof collection.firstDate === "string" && isDateString(collection.firstDate), "meta.collection.firstDate must be YYYY-MM-DD");
+    assert(typeof collection.lastDate === "string" && isDateString(collection.lastDate), "meta.collection.lastDate must be YYYY-MM-DD");
+    assert(collection.firstDate <= collection.lastDate, "meta.collection date range must be ordered");
+  }
   assert(Array.isArray(machine.profiles) && machine.profiles.length > 0, "profiles are required");
   assert(Array.isArray(machine.axes) && machine.axes.length > 0, "axes are required");
   assert(isRecord(machine.modifiers), "modifiers are required");
@@ -85,6 +96,7 @@ export function validateMachine(data: unknown): Machine {
     }
     assert(Array.isArray(profile.baseAnchors), `profile ${profile.key} baseAnchors must be an array`);
     assert(Array.isArray(profile.zones), `profile ${profile.key} zones must be an array`);
+    assert(profile.pendingReason === undefined || typeof profile.pendingReason === "string", `profile ${profile.key} pendingReason must be a string`);
 
     // A data-pending profile has no 実戦 data yet: the tab is shown but no table is
     // rendered, so the anchor/zone constraints below do not apply.

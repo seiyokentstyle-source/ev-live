@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { AimMode } from "./ModeSelector";
 import type { Machine } from "@/lib/ev/types";
 import { visibleCalcSpecItems } from "@/lib/ev/profiles";
+import { collectionStatus } from "@/lib/ev/collection-status";
 
 type ConditionsBarProps = {
   machine: Machine;
@@ -44,9 +45,16 @@ export function ConditionsBar({
   const ev = machine.evCalc;
   const range = dataRange(machine.meta.source);
   const calcSpec = machine.calcSpec;
+  const pendingStatus = collectionStatus(machine.meta);
 
   const rows: Row[] = [];
-  if (mode === "ev" && calcSpec) {
+  if (pendingStatus) {
+    const collection = machine.meta.collection!;
+    rows.push({ k: "収集状況", v: pendingStatus });
+    rows.push({ k: "収集件数", v: `信号 ${collection.events.toLocaleString("ja-JP")}件・保存 ${collection.rows.toLocaleString("ja-JP")}行・${collection.units}台・${collection.days}日` });
+    rows.push({ k: "保存期間", v: `${collection.firstDate}〜${collection.lastDate}` });
+    if (calcSpec) rows.push(...visibleCalcSpecItems(calcSpec.items));
+  } else if (mode === "ev" && calcSpec) {
     // 算出条件は生成側が組み立てた文字列をそのまま出す（サイトで組み直すと計算とズレるため）。
     // 表示中のタブ/セレクタで変わるものだけ、ここで前後に足す。
     if (rateLabel) rows.push({ k: "レート（表示中）", v: rateLabel });
@@ -81,7 +89,7 @@ export function ConditionsBar({
   }
   if (range) rows.push({ k: "データ範囲", v: range });
   // サンプルは表示中のタブの母数を出す（meta.samples は機種全体なのでタブによってはズレる）。
-  rows.push(
+  if (!pendingStatus) rows.push(
     mode === "ev" && profileSessions != null
       ? {
           k: "サンプル",
@@ -106,7 +114,7 @@ export function ConditionsBar({
         aria-expanded={open}
         className="flex w-full items-center gap-3 px-3 py-2 text-left"
       >
-        <span className="mono w-12 shrink-0 text-[9px] tracking-[0.14em] text-muted">算出条件</span>
+        <span className="mono w-12 shrink-0 text-[9px] tracking-[0.14em] text-muted">{pendingStatus ? "公表仕様" : "算出条件"}</span>
         <span className="mono flex-1 truncate text-[10px] text-ink-soft">{summary}</span>
         <span className="mono shrink-0 text-[10px] text-muted">{open ? "閉じる ▲" : "詳細 ▼"}</span>
       </button>

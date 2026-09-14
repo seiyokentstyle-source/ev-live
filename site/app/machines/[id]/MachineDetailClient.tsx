@@ -25,6 +25,7 @@ import { SavedTargets } from "@/components/ev/SavedTargets";
 import type { DisplayTarget } from "@/lib/saved-targets.mjs";
 import { useLiveMachine } from "@/lib/use-live-data";
 import type { LiveMachine } from "@/lib/live-data";
+import { collectionStatus } from "@/lib/ev/collection-status";
 
 type PickerState = {
   axis: Axis;
@@ -72,6 +73,7 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
     schema: "evlive-live-machine/v1", revision, machine: initialMachine, savedTargets: initialTargets
   }), [revision, initialMachine, initialTargets]);
   const { machine, savedTargets } = useLiveMachine(initial, hall.id);
+  const pendingStatus = collectionStatus(machine.meta);
   const grouped = useMemo(() => groupProfiles(machine.profiles, machine.id), [machine.profiles, machine.id]);
   const hasRatePairs = grouped.rates.length >= 2;
   const settingAim = machine.settingAim;
@@ -519,6 +521,15 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
         <span className="mono truncate text-right text-[10px] text-muted">{hall.name}</span>
       </header>
 
+      {pendingStatus ? (
+        <>
+          <p className="mono shrink-0 border-b border-line bg-panel px-4 py-2 text-[11px] text-ink-soft">{pendingStatus}</p>
+          <ConditionsBar machine={machine} mode="ev" />
+          <EmptyState title="期待値算出保留">
+            {machine.profiles.find(item => item.pendingReason)?.pendingReason ?? "収集済みデータから通常時・AT・獲得枚数の対応を確認できるまで、期待値の算出を保留しています。"}
+          </EmptyState>
+        </>
+      ) : <>
       {machine.theoretical ? (
         <ControlBar label="データ" collapsible>
           <SegmentedControl
@@ -585,10 +596,12 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
       ) : null}
 
       {isPending ? (
-        <EmptyState title="実戦データなし">
+        <EmptyState title={profile.pendingReason ? "期待値算出保留" : "実戦データなし"}>
+          {profile.pendingReason ?? <>
           「{group.label}」の実戦データはまだありません。
           <br />
           集計でき次第、期待値を表示します。
+          </>}
         </EmptyState>
       ) : evEmpty ? (
         <EmptyState>
@@ -617,8 +630,9 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
       )}
         </>
       )}
+      </>}
 
-      {picker ? (
+      {picker && !pendingStatus ? (
         <AxisPicker
           axis={picker.axis}
           mode={picker.mode}

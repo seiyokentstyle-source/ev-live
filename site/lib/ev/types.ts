@@ -166,6 +166,8 @@ export type Profile = {
   evFilters?: EvFilters;
   /** When true, this profile has no 実戦 data yet: the tab is shown but no numbers are rendered. */
   dataPending?: boolean;
+  /** 収集済みでも算出を保留する場合など、表示する理由。 */
+  pendingReason?: string;
 };
 
 export type SettingAimUnit = {
@@ -307,6 +309,15 @@ export type Machine = {
   meta: {
     samples: string;
     source: string;
+    /** 保存済みの収集件数。EVに使用できたサンプル数とは別の指標。 */
+    collection?: {
+      rows: number;
+      events: number;
+      units: number;
+      days: number;
+      firstDate: string;
+      lastDate: string;
+    };
   };
   profiles: Profile[];
   /** 公開を選んだ狙い目の再集計。掲載の有無・名称は別の公開カタログが決める。 */

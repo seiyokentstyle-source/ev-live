@@ -8,6 +8,7 @@ import { DEFAULT_HALL_ID, HALLS } from "@/lib/halls";
 import { useLiveIndex } from "@/lib/use-live-data";
 import { TableFoot } from "@/components/ui/DataTable";
 import { rewriteManufacturer } from "@/lib/ev/profiles";
+import { collectionPending, collectionStatus } from "@/lib/ev/collection-status";
 
 type HallSelectClientProps = {
   machine: MachineSummary;
@@ -23,7 +24,10 @@ export function HallSelectClient({ machine: initialMachine, hallMachines }: Hall
   const hallSummary = (hallId: string) => index
     ? index.machines.find(item => item.id === machine.id && item.hallId === hallId)?.summary
     : hallMachines.find(item => item.hallId === hallId)?.summary;
-  const readyCount = HALLS.filter((hall) => hall.ready && hallSummary(hall.id)?.available).length;
+  const readyCount = HALLS.filter((hall) => {
+    const summary = hallSummary(hall.id);
+    return hall.ready && summary?.available && !collectionPending(summary.meta);
+  }).length;
 
   return (
     <div className="app-shell">
@@ -40,6 +44,7 @@ export function HallSelectClient({ machine: initialMachine, hallMachines }: Hall
       <div className="shrink-0 border-b border-line bg-panel px-4 py-2.5">
         <p className="mono text-[10px] tracking-[0.14em] text-muted">店舗を選ぶ</p>
         <p className="mt-1 text-xs text-ink-soft">同じ機種でも店舗ごとに設定配分が違うため、データは店舗別に分けています。</p>
+        {collectionStatus(machine.meta) ? <p className="mono mt-1 text-[11px] text-ink-soft">{collectionStatus(machine.meta)}</p> : null}
       </div>
 
       <main className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
@@ -73,12 +78,12 @@ export function HallSelectClient({ machine: initialMachine, hallMachines }: Hall
                       hasData ? "bg-accent font-bold text-[#06131f]" : "border border-line text-muted"
                     }`}
                   >
-                    {hasData ? "データあり" : "準備中"}
+                    {hasData ? (collectionPending(hallMachine!.meta) ? "算出保留" : "データあり") : "準備中"}
                   </span>
                 </div>
                 <p className="mono mt-2 text-[10px] leading-relaxed text-muted">{hall.note}</p>
                 {hasData && hallMachine ? (
-                  <p className="mono mt-1 text-[10px] text-muted">サンプル {hallMachine.meta.samples}件</p>
+                  <p className="mono mt-1 text-[10px] text-muted">{collectionStatus(hallMachine.meta) ?? `サンプル ${hallMachine.meta.samples}件`}</p>
                 ) : null}
               </article>
             );
