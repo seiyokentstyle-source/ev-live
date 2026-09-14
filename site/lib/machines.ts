@@ -39,18 +39,46 @@ async function readMachines(dir: string): Promise<Machine[]> {
   );
 }
 
+async function readMachine(dir: string, id: string): Promise<Machine | undefined> {
+  let raw: string;
+  try {
+    raw = await fs.readFile(path.join(dir, `${id}.json`), "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+    throw error;
+  }
+  const machine = validateMachine(JSON.parse(raw));
+  return machine.id === id ? machine : undefined;
+}
+
+/** A stored correction survives an older collector overwriting the source JSON. */
+function selectMixedMachine(stored?: Machine, source?: Machine): Machine | undefined {
+  // Validated dates use YYYY-MM-DD, so string comparison preserves date order.
+  if (source?.setting1Correction && (!stored || source.lastUpdated >= stored.lastUpdated)) {
+    return onlyLowSetting(source) ?? undefined;
+  }
+  return stored?.setting1Correction ? onlyLowSetting(stored) ?? undefined : stored;
+}
+
 export async function getMachines(dataSubdir?: string): Promise<Machine[]> {
   const dir = hallDir(dataSubdir);
   // ★「設定1想定」をどの店舗に出すかはサイト側で決める（lib/ev/low-setting.ts）。
   //   生成側にも同じ切り分けを入れたが、そちらは再生成しないと効かない。
   //   ここで同じ結果になるようにしておけば、データを待たずに今のJSONで正しく出る。
   if (dataSubdir === LOW_SETTING_HALL_SUBDIR) {
-    // 生成側が分けた本物のフォルダがあればそれを使う。無い間は既定店舗から導く。
-    const machines = existsSync(dir)
-      ? (await readMachines(dir)).map((machine) => machine.setting1Correction ? onlyLowSetting(machine)! : machine)
-      : (await readMachines(hallDir()))
-          .map(onlyLowSetting)
-          .filter((machine): machine is Machine => machine !== null);
+    const sources = await readMachines(hallDir());
+    // フォルダが無い間は従来の設定1想定表も既定店舗から導く。
+    if (!existsSync(dir)) {
+      return sources.map(onlyLowSetting)
+        .filter((machine): machine is Machine => machine !== null)
+        .sort(compareMachines);
+    }
+    const storedById = new Map((await readMachines(dir)).map((machine) => [machine.id, machine]));
+    const sourceById = new Map(sources.filter((machine) => machine.setting1Correction)
+      .map((machine) => [machine.id, machine]));
+    const ids = new Set([...storedById.keys(), ...sourceById.keys()]);
+    const machines = [...ids].map((id) => selectMixedMachine(storedById.get(id), sourceById.get(id)))
+      .filter((machine): machine is Machine => machine !== undefined);
     return machines.sort(compareMachines);
   }
   const machines = await readMachines(dir);
@@ -73,21 +101,13 @@ export async function getMachine(id: string, dataSubdir?: string): Promise<Machi
   }
   const dir = hallDir(dataSubdir);
   const isLowSetting = dataSubdir === LOW_SETTING_HALL_SUBDIR;
-  // Match getMachines: derive mixed data only when the entire folder is absent,
-  // never when one machine is missing from an existing mixed folder.
-  const deriveLowSetting = isLowSetting && !existsSync(dir);
-  const file = path.join(deriveLowSetting ? hallDir() : dir, `${id}.json`);
-  let raw: string;
-  try {
-    raw = await fs.readFile(file, "utf8");
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
-    throw error;
+  if (isLowSetting) {
+    const source = await readMachine(hallDir(), id);
+    if (!existsSync(dir)) return source ? onlyLowSetting(source) ?? undefined : undefined;
+    return selectMixedMachine(await readMachine(dir, id), source);
   }
-  const machine = validateMachine(JSON.parse(raw));
-  if (machine.id !== id) return undefined;
-  return (deriveLowSetting || (isLowSetting && machine.setting1Correction)
-    ? onlyLowSetting(machine) : isLowSetting ? machine : withoutLowSetting(machine)) ?? undefined;
+  const machine = await readMachine(dir, id);
+  return machine ? withoutLowSetting(machine) ?? undefined : undefined;
 }
 
 /** Route IDs include machines collected only in a non-default hall. */

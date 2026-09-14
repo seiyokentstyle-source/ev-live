@@ -23,7 +23,30 @@ function machine(id = "target") {
   return data;
 }
 
-async function writeMachine(id: string, data = machine(id), subdir = "") {
+function correctionMachine(id = "target", lastUpdated = "2026-09-07", ev = -2400) {
+  const base = machine(id);
+  const measured = [
+    structuredClone(base.profiles[0]),
+    { ...structuredClone(base.profiles[0]), key: "morning", label: "朝一" },
+  ];
+  return {
+    ...base,
+    lastUpdated,
+    profiles: [...measured, base.profiles[1]],
+    setting1Correction: {
+      schemaVersion: 1 as const, sourceHallId: "shinjuku" as const,
+      targetRtp: 0.977, payoutScale: 0.938, method: "payout-scale" as const,
+      profiles: measured.map((profile, index) => ({
+        ...structuredClone(profile),
+        baseAnchors: profile.baseAnchors.map((anchor) => ({
+          ...anchor, ev: ev - index * 100, rtp: 95.5,
+        })),
+      })),
+    },
+  };
+}
+
+async function writeMachine(id: string, data: unknown = machine(id), subdir = "") {
   const dir = path.join(root, "data", "machines", subdir);
   await fs.mkdir(dir, { recursive: true });
   await fs.writeFile(path.join(dir, `${id}.json`), JSON.stringify(data));
@@ -133,24 +156,8 @@ describe("low-setting hall selection", () => {
     "loads the full correction bundle consistently with physical mixed folder=%s and preserves Shinjuku",
     async (physicalMixed) => {
       const base = machine();
-      const measured = [
-        structuredClone(base.profiles[0]),
-        { ...structuredClone(base.profiles[0]), key: "morning", label: "朝一" },
-      ];
-      const input = {
-        ...base,
-        profiles: [...measured, base.profiles[1]],
-        setting1Correction: {
-          schemaVersion: 1 as const, sourceHallId: "shinjuku" as const,
-          targetRtp: 0.977, payoutScale: 0.938, method: "payout-scale" as const,
-          profiles: measured.map((profile, index) => ({
-            ...structuredClone(profile),
-            baseAnchors: profile.baseAnchors.map((anchor) => ({
-              ...anchor, ev: -2400 - index * 100, rtp: 95.5,
-            })),
-          })),
-        },
-      };
+      const input = correctionMachine();
+      const measured = input.profiles.slice(0, 2);
       await writeMachine("target", input);
       const rootFile = path.join(root, "data", "machines", "target.json");
       const rootBefore = await fs.readFile(rootFile, "utf8");
@@ -158,12 +165,8 @@ describe("low-setting hall selection", () => {
       let mixedFile: string | undefined;
       let mixedBefore: string | undefined;
       if (physicalMixed) {
-        const physical = structuredClone(input);
-        // Different values prove that an existing mixed file is normalized,
-        // rather than accidentally falling back to the root JSON's bundle.
-        physical.setting1Correction.profiles.forEach((profile, index) => {
-          profile.baseAnchors.forEach((anchor) => { anchor.ev = -3600 - index * 100; });
-        });
+        // A newer stored bundle must still be normalized and retained.
+        const physical = correctionMachine("target", "2026-09-08", -3600);
         selected = physical.setting1Correction.profiles;
         await writeMachine("target", physical, "mixed");
         mixedFile = path.join(root, "data", "machines", "mixed", "target.json");
@@ -187,6 +190,80 @@ describe("low-setting hall selection", () => {
       if (mixedFile) expect(await fs.readFile(mixedFile, "utf8")).toBe(mixedBefore);
     },
   );
+
+  it.each(["2026-09-07", "2026-09-08"])(
+    "prefers a source bundle dated %s to a stored correction dated 2026-09-07",
+    async (date) => {
+      const input = correctionMachine("target", date, -1700);
+      input.meta.samples = "222";
+      const stored = onlyLowSetting(validateMachine(correctionMachine("target", "2026-09-07", -3600)))!;
+      await writeMachine("target", input);
+      await writeMachine("target", stored, "mixed");
+
+      const selected = await getMachine("target", "mixed");
+      expect(selected).toEqual(onlyLowSetting(validateMachine(input)));
+      expect(await getMachines("mixed")).toEqual([selected]);
+      expect(selected?.profiles).toEqual(input.setting1Correction.profiles);
+      expect(selected).toMatchObject({ lastUpdated: date, meta: { samples: "222" } });
+      expect(selected).not.toHaveProperty("setting1Correction");
+      expect((await getMachine("target"))?.profiles).toEqual(input.profiles.slice(0, 2));
+    },
+  );
+
+  it.each(["absent", "newer-without-bundle", "older-bundle"])(
+    "keeps the stored correction when the source is %s",
+    async (sourceState) => {
+      const stored = onlyLowSetting(validateMachine(correctionMachine("target", "2026-09-07", -3600)))!;
+      if (sourceState === "newer-without-bundle") {
+        const legacy = machine();
+        legacy.lastUpdated = "2026-09-08";
+        await writeMachine("target", legacy);
+      } else if (sourceState === "older-bundle") {
+        await writeMachine("target", correctionMachine("target", "2026-09-06", -1700));
+      }
+      await writeMachine("target", stored, "mixed");
+
+      const selected = await getMachine("target", "mixed");
+      expect(selected).toEqual(stored);
+      expect(await getMachines("mixed")).toEqual([selected]);
+      expect(selected?.profiles[0].baseAnchors[0].ev).toBe(-3600);
+      expect(selected?.lastUpdated).toBe("2026-09-07");
+    },
+  );
+
+  it("adds source bundles missing from an existing mixed folder without adding legacy source tables", async () => {
+    const input = correctionMachine();
+    await writeMachine("target", input);
+    await writeMachine("legacy", machine("legacy"));
+    await writeMachine("mixedonly", machine("mixedonly"), "mixed");
+
+    const selected = await getMachine("target", "mixed");
+    const listed = await getMachines("mixed");
+    expect(listed.map((item) => item.id).sort()).toEqual(["mixedonly", "target"]);
+    expect(selected).toEqual(onlyLowSetting(validateMachine(input)));
+    expect(listed.find((item) => item.id === "target")).toEqual(selected);
+    expect(listed.find((item) => item.id === "mixedonly")).toEqual(await getMachine("mixedonly", "mixed"));
+    expect(await getMachine("legacy", "mixed")).toBeUndefined();
+  });
+
+  it("checks only the requested source and mixed files when selecting a newer bundle", async () => {
+    const input = correctionMachine();
+    await writeMachine("target", input);
+    await writeMachine("target", correctionMachine("target", "2026-09-06", -3600), "mixed");
+    for (const subdir of ["", "mixed"]) {
+      await fs.writeFile(path.join(root, "data", "machines", subdir, "broken.json"), "invalid JSON");
+    }
+    const read = vi.spyOn(fs, "readFile");
+    const list = vi.spyOn(fs, "readdir");
+
+    expect(await getMachine("target", "mixed")).toEqual(onlyLowSetting(validateMachine(input)));
+    expect(read).toHaveBeenCalledTimes(2);
+    expect(read.mock.calls.map(([file]) => path.relative(root, String(file))).sort()).toEqual([
+      path.join("data", "machines", "mixed", "target.json"),
+      path.join("data", "machines", "target.json"),
+    ].sort());
+    expect(list).not.toHaveBeenCalled();
+  });
 
   it("uses the actual mixed file unchanged when the folder exists", async () => {
     await writeMachine("target");
