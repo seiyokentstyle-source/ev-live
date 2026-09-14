@@ -129,6 +129,65 @@ describe("low-setting hall selection", () => {
     expect((await getMachine("target", "mixed"))?.profiles.map((profile) => profile.key)).toEqual(["estimated"]);
   });
 
+  it.each([false, true])(
+    "loads the full correction bundle consistently with physical mixed folder=%s and preserves Shinjuku",
+    async (physicalMixed) => {
+      const base = machine();
+      const measured = [
+        structuredClone(base.profiles[0]),
+        { ...structuredClone(base.profiles[0]), key: "morning", label: "朝一" },
+      ];
+      const input = {
+        ...base,
+        profiles: [...measured, base.profiles[1]],
+        setting1Correction: {
+          schemaVersion: 1 as const, sourceHallId: "shinjuku" as const,
+          targetRtp: 0.977, payoutScale: 0.938, method: "payout-scale" as const,
+          profiles: measured.map((profile, index) => ({
+            ...structuredClone(profile),
+            baseAnchors: profile.baseAnchors.map((anchor) => ({
+              ...anchor, ev: -2400 - index * 100, rtp: 95.5,
+            })),
+          })),
+        },
+      };
+      await writeMachine("target", input);
+      const rootFile = path.join(root, "data", "machines", "target.json");
+      const rootBefore = await fs.readFile(rootFile, "utf8");
+      let selected = input.setting1Correction.profiles;
+      let mixedFile: string | undefined;
+      let mixedBefore: string | undefined;
+      if (physicalMixed) {
+        const physical = structuredClone(input);
+        // Different values prove that an existing mixed file is normalized,
+        // rather than accidentally falling back to the root JSON's bundle.
+        physical.setting1Correction.profiles.forEach((profile, index) => {
+          profile.baseAnchors.forEach((anchor) => { anchor.ev = -3600 - index * 100; });
+        });
+        selected = physical.setting1Correction.profiles;
+        await writeMachine("target", physical, "mixed");
+        mixedFile = path.join(root, "data", "machines", "mixed", "target.json");
+        mixedBefore = await fs.readFile(mixedFile, "utf8");
+      }
+
+      const mixed = await getMachine("target", "mixed");
+      expect(await getMachines("mixed")).toEqual([mixed]);
+      expect(mixed?.profiles).toEqual(selected);
+      expect(mixed?.profiles.map((profile) => profile.key)).toEqual(["measured", "morning"]);
+      expect(mixed?.profiles[0].baseAnchors[0].ev).toBe(physicalMixed ? -3600 : -2400);
+      expect(mixed?.profiles[1].baseAnchors[0].ev).toBe(physicalMixed ? -3700 : -2500);
+      expect(mixed).not.toHaveProperty("setting1Correction");
+
+      const shinjuku = await getMachine("target");
+      expect(await getMachines()).toEqual([shinjuku]);
+      expect(shinjuku?.profiles).toEqual(measured);
+      expect(shinjuku?.profiles[0].baseAnchors[0].ev).toBe(base.profiles[0].baseAnchors[0].ev);
+      expect(shinjuku).not.toHaveProperty("setting1Correction");
+      expect(await fs.readFile(rootFile, "utf8")).toBe(rootBefore);
+      if (mixedFile) expect(await fs.readFile(mixedFile, "utf8")).toBe(mixedBefore);
+    },
+  );
+
   it("uses the actual mixed file unchanged when the folder exists", async () => {
     await writeMachine("target");
     const mixed = machine();

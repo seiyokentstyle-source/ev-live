@@ -297,6 +297,16 @@ export type CalcSpec = {
   items: Array<{ k: string; v: string }>;
 };
 
+/** 新宿と同じ狙い方・母数で、生成側が獲得を設定1相当に補正した表。 */
+export type Setting1Correction = {
+  schemaVersion: 1;
+  sourceHallId: "shinjuku";
+  targetRtp: number;
+  payoutScale: number;
+  method: "payout-scale" | "assumed-payout";
+  profiles: Profile[];
+};
+
 export type Machine = {
   /** 生成側の天井仕様・信号マップ版。旧JSONでは省略される。 */
   specVersion?: string;
@@ -322,6 +332,8 @@ export type Machine = {
     };
   };
   profiles: Profile[];
+  /** 店舗の実測表とは別に生成した補正版。表示する店舗の選択後は取り除く。 */
+  setting1Correction?: Setting1Correction;
   /** 公開を選んだ狙い目の再集計。掲載の有無・名称は別の公開カタログが決める。 */
   savedTargets?: MachineSavedTarget[];
   /** 設定狙いモードのデータ。スクレイパーが対応機種にのみ出力する（古い/未対応データでは undefined）。 */

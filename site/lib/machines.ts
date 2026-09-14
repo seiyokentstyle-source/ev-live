@@ -47,7 +47,7 @@ export async function getMachines(dataSubdir?: string): Promise<Machine[]> {
   if (dataSubdir === LOW_SETTING_HALL_SUBDIR) {
     // 生成側が分けた本物のフォルダがあればそれを使う。無い間は既定店舗から導く。
     const machines = existsSync(dir)
-      ? await readMachines(dir)
+      ? (await readMachines(dir)).map((machine) => machine.setting1Correction ? onlyLowSetting(machine)! : machine)
       : (await readMachines(hallDir()))
           .map(onlyLowSetting)
           .filter((machine): machine is Machine => machine !== null);
@@ -86,7 +86,8 @@ export async function getMachine(id: string, dataSubdir?: string): Promise<Machi
   }
   const machine = validateMachine(JSON.parse(raw));
   if (machine.id !== id) return undefined;
-  return (deriveLowSetting ? onlyLowSetting(machine) : isLowSetting ? machine : withoutLowSetting(machine)) ?? undefined;
+  return (deriveLowSetting || (isLowSetting && machine.setting1Correction)
+    ? onlyLowSetting(machine) : isLowSetting ? machine : withoutLowSetting(machine)) ?? undefined;
 }
 
 /** Route IDs include machines collected only in a non-default hall. */

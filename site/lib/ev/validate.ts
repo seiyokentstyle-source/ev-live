@@ -131,6 +131,38 @@ export function validateMachine(data: unknown): Machine {
     }
   }
 
+  if (machine.setting1Correction !== undefined) {
+    const correction = machine.setting1Correction;
+    assert(isRecord(correction), "setting1Correction must be an object");
+    assert(correction.schemaVersion === 1, "unsupported setting1Correction schema");
+    assert(correction.sourceHallId === "shinjuku", "setting1Correction source must be shinjuku");
+    assert(Number.isFinite(correction.targetRtp) && correction.targetRtp > 0 && correction.targetRtp < 1,
+      "setting1Correction targetRtp must be between 0 and 1");
+    assert(Number.isFinite(correction.payoutScale) && correction.payoutScale > 0,
+      "setting1Correction payoutScale must be positive and finite");
+    assert(correction.method === "payout-scale" || correction.method === "assumed-payout",
+      "unknown setting1Correction method");
+    assert(correction.method !== "assumed-payout" || correction.payoutScale === 1,
+      "assumed payout must not be corrected twice");
+    assert(Array.isArray(correction.profiles) && correction.profiles.length > 0,
+      "setting1Correction profiles are required");
+    const sourceKeys = machine.profiles.filter((profile) => !profile.label.includes("設定1想定")).map((profile) => profile.key);
+    assert(JSON.stringify(correction.profiles.map((profile) => profile.key)) === JSON.stringify(sourceKeys),
+      "setting1Correction must preserve the source profile order and keys");
+    // Reuse the public profile contract, without recursively validating the bundle.
+    validateMachine({ ...machine, profiles: correction.profiles, setting1Correction: undefined });
+    for (const profile of correction.profiles) {
+      const tables = [profile, ...Object.values(profile.evFilters?.tables ?? {})];
+      for (const table of tables) {
+        assert(Array.isArray(table.baseAnchors), "setting1Correction table anchors are required");
+        for (const anchor of table.baseAnchors) {
+          assert(Number.isFinite(anchor.g) && Number.isFinite(anchor.ev) && Number.isFinite(anchor.rtp),
+            "setting1Correction anchors must be finite");
+        }
+      }
+    }
+  }
+
   for (const [axisKey, modifiers] of Object.entries(machine.modifiers)) {
     assert(axisKeys.has(axisKey), `modifier references unknown axis ${axisKey}`);
     const axis = getSelectAxis(machine.axes.find((candidate) => candidate.key === axisKey) as Axis);
