@@ -5,11 +5,23 @@ import { roundedRtp } from "@/lib/ev/rtp";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
 import { ROW_HEIGHT, RowHead, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
-type EvTableProps = {
+/** 集計にない指標は空欄にできる。通常表と狙い目で同じグリッドを使う。 */
+export type EvTableRow = Omit<TableRow, "ev" | "rtp" | "hourly" | "medals"> & {
+  ev: number | null;
+  rtp: number | null;
+  hourly: number | null;
+  medals: number | null;
+};
+
+type EvTableGridProps = {
   machine: Machine;
-  profile: Profile;
-  rows: TableRow[];
+  profile: Pick<Profile, "key">;
+  rows: EvTableRow[];
   pivot?: PivotConfig;
+};
+
+type EvTableProps = EvTableGridProps & {
+  profile: Profile;
   onViewGChange: (g: number) => void;
 };
 
@@ -23,8 +35,6 @@ function pivotHeader(machine: Machine, pivot: PivotConfig): Array<{ value: strin
 }
 
 export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTableProps) {
-  const pivotColumns = pivot ? pivotHeader(machine, pivot) : [];
-
   return (
     <TableScroll
       onScroll={(scrollTop) => {
@@ -32,10 +42,16 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
         onViewGChange(rows[index]?.g ?? profile.gRange.start);
       }}
     >
-        {/* 列が6本あり、狭い画面で%指定だと全列が潰れて読めなくなる。
-            最小幅をpxで確保し、足りない分は横スクロール（G列はsticky）。 */}
-        {/* table-fixed で列幅を指定しなければ、全列が等幅で画面幅ぴったりに割り付けられる。
-          横スクロールは無くなる。G数は4桁までなので1/6の幅で足りる。 */}
+      <EvTableGrid machine={machine} profile={profile} rows={rows} pivot={pivot} />
+    </TableScroll>
+  );
+}
+
+export function EvTableGrid({ machine, profile, rows, pivot }: EvTableGridProps) {
+  const pivotColumns = pivot ? pivotHeader(machine, pivot) : [];
+
+  return (
+      // 6列を等幅にし、G列と見出しを固定する。狙い目にも同じ配置・色・単位を使う。
       <table className="mono w-full table-fixed border-separate border-spacing-0 text-xs">
           <thead>
             <tr>
@@ -90,20 +106,20 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                           </Td>
                         );
                       })}
-                      <Td alt={alt}>{dash ? "—" : row.medals.toLocaleString("ja-JP")}</Td>
+                      <Td alt={alt}>{dash || row.medals === null ? "—" : row.medals.toLocaleString("ja-JP")}</Td>
                     </>
                   ) : (
                     <>
-                      <Td alt={alt} tone={dash ? "text-muted" : rtpToneClass(row.rtp)}>
-                        {dash ? "—" : roundedRtp(row.rtp).toFixed(1)}
+                      <Td alt={alt} tone={dash || row.rtp === null ? "text-muted" : rtpToneClass(row.rtp)}>
+                        {dash || row.rtp === null ? "—" : roundedRtp(row.rtp).toFixed(1)}
                       </Td>
-                      <Td alt={alt} bold={!dash} tone={dash ? "text-muted" : toneClass(row.ev)}>
-                        {dash ? "—" : formatSigned(row.ev)}
+                      <Td alt={alt} bold={!dash && row.ev !== null} tone={dash || row.ev === null ? "text-muted" : toneClass(row.ev)}>
+                        {dash || row.ev === null ? "—" : formatSigned(row.ev)}
                       </Td>
-                      <Td alt={alt} tone={dash ? "text-muted" : toneClass(row.hourly)}>
-                        {dash ? "—" : formatSigned(row.hourly)}
+                      <Td alt={alt} tone={dash || row.hourly === null ? "text-muted" : toneClass(row.hourly)}>
+                        {dash || row.hourly === null ? "—" : formatSigned(row.hourly)}
                       </Td>
-                      <Td alt={alt}>{dash ? "—" : row.medals.toLocaleString("ja-JP")}</Td>
+                      <Td alt={alt}>{dash || row.medals === null ? "—" : row.medals.toLocaleString("ja-JP")}</Td>
                       <Td alt={alt} tone="text-muted">
                         {row.n === undefined ? "—" : row.n.toLocaleString("ja-JP")}
                       </Td>
@@ -114,6 +130,5 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
             })}
           </tbody>
         </table>
-    </TableScroll>
   );
 }

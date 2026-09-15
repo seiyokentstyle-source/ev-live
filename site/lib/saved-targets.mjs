@@ -65,7 +65,14 @@ export function parseTargetRows(value) {
     const g = integer(row.g, 100000), n = integer(row.n), days = integer(row.days);
     if (g <= previous || days > n || (row.ev !== null && (!Number.isFinite(row.ev) || n === 0))) fail();
     previous = g;
-    return { g, ev: row.ev, n, days };
+    const metrics = {};
+    for (const key of ['inv', 'playG']) {
+      if (!Object.hasOwn(row, key)) continue;
+      const value = row[key];
+      if (value !== null && (!Number.isFinite(value) || value < 0 || n === 0)) fail();
+      metrics[key] = value;
+    }
+    return { g, ev: row.ev, n, days, ...metrics };
   });
 }
 
@@ -101,6 +108,21 @@ export function parseSavedTargetCatalog(value) {
   return { schema: 'evlive-saved-targets/v1', updatedAt: time(value.updatedAt), targets };
 }
 
+/** Fill an older collector's omitted means only from the identical calculation. */
+function refreshedRows(target, latest) {
+  if (latest.sourceRevision !== target.sourceRevision || latest.dataThrough !== target.dataThrough) return latest.rows;
+  const snapshots = new Map(target.rows.map(row => [row.g, row]));
+  return latest.rows.map(row => {
+    const snapshot = snapshots.get(row.g);
+    if (!snapshot || snapshot.ev !== row.ev || snapshot.n !== row.n || snapshot.days !== row.days) return row;
+    const metrics = {};
+    for (const key of ['inv', 'playG']) {
+      if (row[key] === undefined && snapshot[key] !== undefined) metrics[key] = snapshot[key];
+    }
+    return { ...row, ...metrics };
+  });
+}
+
 /** The catalog alone controls membership; stale collector entries cannot reattach a target. */
 export function selectSavedTargets(catalog, machineId, hallId, refreshed = [], replaySource) {
   // null means an advertised source could not be validated. undefined is only
@@ -113,7 +135,7 @@ export function selectSavedTargets(catalog, machineId, hallId, refreshed = [], r
     // A skipped refresh can mean that the EVLIVE rule or selected condition is
     // no longer supported. Never replace it with cashflows from an older rule.
     if (!latest && replaySource !== undefined && target.sourceRevision !== replaySource) return [];
-    return [{ ...target, rows: latest?.rows ?? target.rows, dataThrough: latest?.dataThrough ?? target.dataThrough, sourceRevision: latest?.sourceRevision ?? target.sourceRevision, refreshed: Boolean(latest) }];
+    return [{ ...target, rows: latest ? refreshedRows(target, latest) : target.rows, dataThrough: latest?.dataThrough ?? target.dataThrough, sourceRevision: latest?.sourceRevision ?? target.sourceRevision, refreshed: Boolean(latest) }];
   });
 }
 

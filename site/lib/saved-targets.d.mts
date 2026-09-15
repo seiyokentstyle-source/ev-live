@@ -1,4 +1,9 @@
-export type TargetRow = { g: number; ev: number | null; n: number; days: number };
+export type TargetRow = {
+  g: number; ev: number | null; n: number; days: number;
+  /** Mean invested medals and total play games for this exact target cohort. */
+  inv?: number | null;
+  playG?: number | null;
+};
 export type TargetFilter =
   | { mode: 'all' | 'range' | 'missing'; lo: string; hi: string }
   | { mode: 'category'; lo: ''; hi: ''; value: string }

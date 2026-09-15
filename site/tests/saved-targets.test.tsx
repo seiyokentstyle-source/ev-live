@@ -4,9 +4,10 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { parseMachineSavedTargets, parseSavedTargetCatalog, savedTargetReplaySource, selectSavedTargets, type PublishedTarget, type TargetFilter } from '../lib/saved-targets.mjs';
+import { parseMachineSavedTargets, parseSavedTargetCatalog, parseTargetRows, savedTargetReplaySource, selectSavedTargets, type PublishedTarget, type TargetFilter } from '../lib/saved-targets.mjs';
 import { SavedTargets } from '../components/ev/SavedTargets';
 import { validateMachine } from '../lib/ev/validate';
+import { buildLiveMachine } from '../lib/live-data';
 import fixture from '../app/preview/ev-table/machine.json';
 // @ts-expect-error build script is a standalone Node module
 import { exportSavedTargets } from '../scripts/export-saved-targets.mjs';
@@ -44,12 +45,14 @@ describe('published target contract', () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), 'evlive-targets-')); roots.push(root);
     const source = path.join(root, 'source.json'), output = path.join(root, 'public/saved-targets.json');
     const value = target();
+    value.rows = [{ g: 100, ev: 1234, n: 60, days: 8, inv: 405.5, playG: 520.25 }, { g: 200, ev: null, n: 0, days: 0, inv: null, playG: null }];
     await fs.writeFile(source, JSON.stringify({ ...catalog([{ ...value, paths: ['private raw row'], definition: { ...value.definition, secret: 'private definition' }, rows: value.rows.map(row => ({ ...row, events: ['private event'] })) } as PublishedTarget]), privateKey: 'private key' }));
     await exportSavedTargets(source, output);
     const published = await fs.readFile(output, 'utf8');
     expect(published).not.toContain('private');
     expect(published).not.toContain('events');
     expect(JSON.parse(published).targets[0].publicationKey).toBe(value.publicationKey);
+    expect(JSON.parse(published).targets[0].rows).toEqual(value.rows);
     await fs.writeFile(source, JSON.stringify(catalog([]))); await exportSavedTargets(source, output);
     expect(JSON.parse(await fs.readFile(output, 'utf8')).targets).toEqual([]);
   });
@@ -67,6 +70,42 @@ describe('published target contract', () => {
     const machine = validateMachine({ ...fixture, savedTargets: [target()], intervalExplorer: { ciphertext: 'private feed' } });
     expect(machine).not.toHaveProperty('savedTargets');
     expect(machine).not.toHaveProperty('intervalExplorer');
+  });
+});
+
+describe('optional saved-target investment and play aggregates', () => {
+  const row = { g: 100, ev: 1234, n: 60, days: 8 };
+  it('keeps historical sparse rows unchanged', () => {
+    expect(parseTargetRows([row])).toEqual([row]);
+    expect(parseTargetRows([{ g: 200, ev: null, n: 0, days: 0 }])).toEqual([{ g: 200, ev: null, n: 0, days: 0 }]);
+  });
+  it('accepts finite nonnegative means, independent missing values and null unavailable metrics', () => {
+    for (const metrics of [{ inv: 405.5, playG: 520.25 }, { inv: 0, playG: 0 }, { inv: 405.5 }, { playG: 520.25 }, { inv: null, playG: null }]) {
+      expect(parseTargetRows([{ ...row, ...metrics }])).toEqual([{ ...row, ...metrics }]);
+    }
+    const empty = { g: 200, ev: null, n: 0, days: 0, inv: null, playG: null };
+    expect(parseTargetRows([empty])).toEqual([empty]);
+  });
+  it.each(['inv', 'playG'])('rejects invalid %s without exposing unvalidated values', key => {
+    for (const value of [-1, Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY, '500', undefined, {}, []]) {
+      expect(() => parseTargetRows([{ ...row, [key]: value }])).toThrow();
+    }
+    expect(() => parseTargetRows([{ ...row, ev: null, n: 0, days: 0, [key]: 0 }])).toThrow();
+  });
+  it('preserves only aggregate means through catalog, collector refresh and live feed', () => {
+    const value = target();
+    value.rows = [{ ...row, inv: 405.5, playG: 520.25 }];
+    const parsed = parseSavedTargetCatalog(catalog([value]));
+    expect(parsed.targets[0].rows).toEqual(value.rows);
+    const current = { ...value, sourceRevision: 'd'.repeat(64), dataThrough: '2026-09-04',
+      rows: [{ ...row, ev: 1500, inv: 420.75, playG: 501.5, events: ['private'], intervals: ['private'] }] };
+    const refreshed = parseMachineSavedTargets([current]);
+    expect(refreshed[0].rows).toEqual([{ ...row, ev: 1500, inv: 420.75, playG: 501.5 }]);
+    const live = buildLiveMachine({ ...fixture, id: value.machineId }, 'shinjuku', parsed, refreshed, current.sourceRevision);
+    expect(live.savedTargets[0]).toMatchObject({ name: value.name, refreshed: true, rows: refreshed[0].rows });
+    expect(JSON.stringify(live)).not.toContain('private');
+    const corrected = parseMachineSavedTargets([{ ...current, rows: [{ ...row, ev: 1500, inv: 420.75, playG: 500 }] }]);
+    expect(buildLiveMachine({ ...fixture, id: value.machineId }, 'shinjuku', parsed, corrected, current.sourceRevision).revision).not.toBe(live.revision);
   });
 });
 
@@ -137,6 +176,12 @@ describe('historical signal condition contract', () => {
 
 describe('published membership and refreshed values', () => {
   const refreshed = () => ({ id: target().id, conditionKey: target().conditionKey, sourceRevision: 'd'.repeat(64), dataThrough: '2026-09-04', rows: [{ g: 100, ev: 2222, n: 80, days: 9 }] });
+  const metricSnapshot = () => {
+    const value = target();
+    value.rows = [{ g: 100, ev: 1234, n: 60, days: 8, inv: 405.5, playG: 520.25 }];
+    return value;
+  };
+  const sparseSnapshotRefresh = () => ({ ...metricSnapshot(), rows: [{ g: 100, ev: 1234, n: 60, days: 8 }] });
   it('uses matching later aggregates but keeps the manually selected name', () => {
     const result = selectSavedTargets(parseSavedTargetCatalog(catalog()), 'test', 'shinjuku', [refreshed()])[0];
     expect(result).toMatchObject({ name: target().name, dataThrough: '2026-09-04', refreshed: true });
@@ -156,6 +201,41 @@ describe('published membership and refreshed values', () => {
   it('uses an empty refreshed cohort instead of resurrecting a nonempty old table', () => {
     const result = selectSavedTargets(parseSavedTargetCatalog(catalog()), 'test', 'shinjuku', [{ ...refreshed(), rows: [] }])[0];
     expect(result.rows).toEqual([]); expect(result.refreshed).toBe(true);
+  });
+  it('fills omitted means only when calculation revision, date and all row aggregates match', () => {
+    const parsed = parseSavedTargetCatalog(catalog([metricSnapshot()]));
+    const current = parseMachineSavedTargets([sparseSnapshotRefresh()]);
+    const result = selectSavedTargets(parsed, 'test', 'shinjuku', current, metricSnapshot().sourceRevision)[0];
+    expect(result).toMatchObject({ refreshed: true, rows: metricSnapshot().rows });
+    expect(current[0].rows[0]).not.toHaveProperty('inv');
+    expect(current[0].rows[0]).not.toHaveProperty('playG');
+  });
+  it('preserves collector values and explicit null independently for each mean', () => {
+    const parsed = parseSavedTargetCatalog(catalog([metricSnapshot()]));
+    for (const metrics of [{ inv: null, playG: null }, { inv: 0, playG: 0 }, { inv: 410, playG: 500 }, { inv: null }, { playG: null }]) {
+      const current = parseMachineSavedTargets([{ ...sparseSnapshotRefresh(), rows: [{ ...sparseSnapshotRefresh().rows[0], ...metrics }] }]);
+      const result = selectSavedTargets(parsed, 'test', 'shinjuku', current)[0];
+      expect(result.rows[0]).toEqual({ ...metricSnapshot().rows[0], ...metrics });
+    }
+  });
+  it.each([
+    { sourceRevision: 'd'.repeat(64) }, { dataThrough: '2026-09-04' },
+    { rows: [{ g: 110, ev: 1234, n: 60, days: 8 }] },
+    { rows: [{ g: 100, ev: 1235, n: 60, days: 8 }] },
+    { rows: [{ g: 100, ev: 1234, n: 61, days: 8 }] },
+    { rows: [{ g: 100, ev: 1234, n: 60, days: 9 }] },
+    { rows: [{ g: 100, ev: null, n: 0, days: 0 }] }, { rows: [] },
+  ])('does not revive saved means when the current calculation differs: %j', patch => {
+    const parsed = parseSavedTargetCatalog(catalog([metricSnapshot()]));
+    const current = parseMachineSavedTargets([{ ...sparseSnapshotRefresh(), ...patch }]);
+    const result = selectSavedTargets(parsed, 'test', 'shinjuku', current)[0];
+    expect(result.refreshed).toBe(true); expect(result.rows).toEqual(current[0].rows);
+    for (const row of result.rows) { expect(row).not.toHaveProperty('inv'); expect(row).not.toHaveProperty('playG'); }
+  });
+  it('rejects a refresh with a different condition key before any metric merge', () => {
+    const parsed = parseSavedTargetCatalog(catalog([metricSnapshot()]));
+    const current = parseMachineSavedTargets([{ ...sparseSnapshotRefresh(), conditionKey: 'e'.repeat(64), sourceRevision: 'd'.repeat(64) }]);
+    expect(selectSavedTargets(parsed, 'test', 'shinjuku', current, 'd'.repeat(64))).toEqual([]);
   });
   it('hides skipped stale targets when EVLIVE publishes a different source revision', () => {
     const parsed = parseSavedTargetCatalog(catalog());
@@ -189,16 +269,17 @@ describe('published membership and refreshed values', () => {
 it('renders only aggregate columns, escaped names, snapshot date, missing values and assumed payout notice', () => {
   const value = { ...target(), name: '<img src=x>', assumedPayout: true };
   const targets = selectSavedTargets(parseSavedTargetCatalog(catalog([value])), 'test', 'shinjuku');
-  const html = renderToStaticMarkup(createElement(SavedTargets, { targets, selectedId: value.id, onSelect: () => {} }));
-  expect(html).toContain('推定平均収支'); expect(html).toContain('件数'); expect(html).toContain('2026-09-03');
+  const html = renderToStaticMarkup(createElement(SavedTargets, { machine: validateMachine(fixture), targets, selectedId: value.id, onSelect: () => {} }));
+  for (const heading of ['G数', '換算機械割', '期待値', '時給', '平均投入', 'サンプル']) expect(html).toContain(heading);
+  expect(html).toContain('2026-09-03'); expect(html).toContain('1,234'); expect(html).toContain('60');
   expect(html).toContain('追加時の集計'); expect(html).toContain('設定1の想定値'); expect(html).toContain('—');
-  expect(html).not.toContain('<img'); expect(html).not.toContain('機械割'); expect(html).not.toContain('時給');
+  expect(html).not.toContain('<img');
 });
 
 it('renders the selected target equal-exchange rate', () => {
   const value = target(); value.rate = '50/50'; value.definition.rate = '50/50';
   const targets = selectSavedTargets(parseSavedTargetCatalog(catalog([value])), 'test', 'shinjuku');
-  const html = renderToStaticMarkup(createElement(SavedTargets, { targets, selectedId: value.id, onSelect: () => {} }));
+  const html = renderToStaticMarkup(createElement(SavedTargets, { machine: validateMachine(fixture), targets, selectedId: value.id, onSelect: () => {} }));
   expect(html).toContain('50枚貸し／50枚交換');
   expect(html).not.toContain('46枚貸し／52枚交換');
 });

@@ -54,7 +54,7 @@ describe('static machine page saved-target source', () => {
 
   it('uses matching refreshed calculations while retaining the manually published identity', async () => {
     const refreshed = { id: target.id, conditionKey: target.conditionKey,
-      sourceRevision: 'd'.repeat(64), dataThrough: '2026-09-04', rows: [{ g: 100, ev: 1500, n: 30, days: 5 }] };
+      sourceRevision: 'd'.repeat(64), dataThrough: '2026-09-04', rows: [{ g: 100, ev: 1500, n: 30, days: 5, inv: 420.75, playG: 501.5 }] };
     vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [refreshed], replaySource: refreshed.sourceRevision });
     const result = (await renderPage()).props.savedTargets[0];
     expect(result).toMatchObject({ name: target.name, publicationKey: target.publicationKey, rate: '50/50',

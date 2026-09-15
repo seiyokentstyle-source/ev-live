@@ -579,7 +579,7 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
       /> : null}
 
       {mode === 'targets' ? (
-        <SavedTargets targets={savedTargets} selectedId={targetId} onSelect={setTargetId} />
+        <SavedTargets machine={machine} targets={savedTargets} selectedId={targetId} onSelect={setTargetId} />
       ) : mode === "setting" && settingAim ? (
         <SettingAimTable aim={settingAim} />
       ) : mode === "payout" && atPayout ? (

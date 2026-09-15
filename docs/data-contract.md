@@ -145,26 +145,43 @@ guardはこの旧出力だけを読み取り時に互換比較する。
 
 各項目は `id`（UUID）、自由入力の `name`、`machineId`、`hallId`、`conditionKey`、
 `publicationKey`、`definition`、`machine`、`profile`、`conditions`、`stopping`、
-`rate: "46/52"`、`dataThrough`、`sourceRevision`、`updatedAt`、`rows` を持つ。
+`rate: "46/52" | "50/50"`、`dataThrough`、`sourceRevision`、`updatedAt`、`rows` を持つ。
 `conditions` と `stopping` は表示用の文字列。`assumedPayout?: boolean` は想定出玉の注記。
 `conditionKey` は正規化した条件定義のSHA-256、`publicationKey` は公開するID・名称・
 条件定義のSHA-256。更新日付は `YYYY-MM-DD`、版は64文字の小文字16進数。
 
 `definition` は `schema: "interval-target/v1"`、機種・店舗、`profileKey`、`startG`、
-`endG`（未指定はnull）、`filters`、`rate: "46/52"`、`stopRule: "evlive"`。
+`endG`（未指定はnull）、`filters`、`rate: "46/52" | "50/50"`、`stopRule: "evlive"`。
 フィルターは軸キーごとの `{ mode: "all" | "range" | "missing", lo, hi }`。
 上下限は数値文字列／空文字列で、`hi` は排他的上限。空のrangeは「記録あり」を意味し、
 allやmissingとは異なる。現在の店舗は新宿（`shinjuku`）。
 
-公開する集計行は `{ g, ev, n, days }` のみ。`ev` は推定平均収支（円）またはnull、
+公開する集計行は `{ g, ev, n, days, inv?, playG? }`。`ev` は期待値（円）またはnull、
 `n` は該当区間数、`days` は収集日数。開始Gの昇順・重複なしで、終了G未満の行を持つ。
-通常の `baseAnchors` と違い機械割・時給は持たないため、専用の「狙い目」欄で表示する。
+`inv` はその狙い目に該当する区間の平均投入枚数、`playG` は同じ区間の平均消化G
+（通常時＋AT中）。いずれも有限の非負数またはnullで、サンプル0件の行ではnullとする。
+生履歴や個別区間を追加せず、この2つの集計値だけを公開の許可項目へ追加する。
+
+「狙い目」は「期待値稼働」と同じ6列（G数・機械割・期待値・時給・平均投入・
+サンプル）で表示し、46/52の列名は「換算機械割」とする。
+時給は `ev * gamesPerHour / playG`、換算機械割は上記の
+1枚20円基準の式を使う。初期表示は10G間隔で、集計済みの行を表示間隔に応じて
+絞り込む。行の補間は行わない。集計対象日は従来どおり狙い目の情報に表示する。
+
+旧版の `{ g, ev, n, days }` 行も引き続き受け付ける。`inv` / `playG` が欠けるかnullの
+指標は「—」とし、通常プロファイルや天井までの残りGから別の対象区間の値を補わない。
+保存済み・再集計・ライブ更新・公開確認用JSONのすべてで、この後方互換の検証と
+許可項目への絞り込みを通す。
 
 収集側は機種JSONの任意フィールド `savedTargets` に
 `{ id, conditionKey, sourceRevision, dataThrough, rows }[]` を出力できる。
 サイトはカタログに載るIDと条件キーが一致し、集計日が古くない結果だけ採用する。
 取り外したIDが機種JSONに残っていても表示しない。一致する更新がなければ、カタログの
 追加時集計と日付を表示する。空の更新結果も有効で、古い非空の表へ戻さない。
+旧収集コードの再集計行に `inv` / `playG` だけが欠ける場合は、カタログと
+`sourceRevision`・`dataThrough`・条件キーが一致し、行の `g`・`ev`・`n`・`days` も
+すべて一致するときだけ、カタログの集計値を補う。再集計側に値または明示的なnullが
+ある場合はそちらを優先する。別の版・日付・集計結果や、空の更新結果には補わない。
 
 ビルド時に `site/scripts/export-saved-targets.mjs` が検証・許可項目への絞り込みを行い、
 公開状態確認用の `/ev-live/saved-targets.json` を出力する。生履歴・イベント・秘密鍵は
