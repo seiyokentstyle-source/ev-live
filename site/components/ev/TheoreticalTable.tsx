@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import type { Theoretical } from "@/lib/ev/types";
+import { cashRtp, rewriteRtpNote, roundedRtp } from "@/lib/ev/rtp";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
 import { RowHead, TableFoot, TableNote, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
@@ -13,30 +14,34 @@ type TheoreticalTableProps = {
   data: Theoretical;
   /** 時給換算に使う（economics.gamesPerHour）. */
   gamesPerHour: number;
+  bet?: number;
 };
 
-export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) {
+export function TheoreticalTable({ data, gamesPerHour, bet = 3 }: TheoreticalTableProps) {
+  // 古いJSONの機械割を信用せず、時給と同じEV・消化Gから表示とボーダーを揃える。
+  const anchors = useMemo(() => data.baseAnchors.map((a) => ({
+    ...a, rtp: cashRtp(a.ev, a.playG ?? 0, bet)
+  })), [data.baseAnchors, bet]);
   // 行間隔はデータ側の gRange.step に従う（生成側が10G刻みなら10G刻みで全部出す）。
   // 最終行（天井手前の最深G）は step で割り切れなくても必ず残す。
   const rows = useMemo(() => {
     const step = Math.max(1, data.gRange?.step ?? 10);
-    const last = data.baseAnchors[data.baseAnchors.length - 1];
-    return data.baseAnchors.filter((a) => a.g % step === 0 || a.g === last?.g);
-  }, [data.baseAnchors, data.gRange]);
+    const last = anchors[anchors.length - 1];
+    return anchors.filter((a) => a.g % step === 0 || a.g === last?.g);
+  }, [anchors, data.gRange]);
 
   // ボーダー＝ここから先が全部 BORDER_RTP% 以上になる最初のG。
   // 「最初に超えたG」だと浅い側のブレを拾って早すぎるボーダーが出るので、
   // 基準を割る一番深い行を探して、その次の行を採る（＝深い側のクロス点）。
   const border = useMemo(() => {
-    const anchors = data.baseAnchors;
     let i = anchors.length - 1;
     while (i >= 0 && anchors[i].rtp >= BORDER_RTP) i--;
     return i + 1 < anchors.length ? anchors[i + 1].g : null;
-  }, [data.baseAnchors]);
+  }, [anchors]);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-bg">
-      <TableNote>{data.note}</TableNote>
+      <TableNote>{rewriteRtpNote(data.note, gamesPerHour, bet)}</TableNote>
       {/* 左右2段組にすると右側が3行に折り返して読みづらかったので、
           他のバーと同じ「見出し＋本文」の縦積みにする。 */}
       <div className="mono shrink-0 border-b border-line bg-panel px-3 py-2">
@@ -45,7 +50,7 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
           <span className="text-sm font-bold text-highlight">
             {border === null ? "—" : `${border.toLocaleString("ja-JP")}G〜`}
           </span>
-          <span className="text-[10px] text-muted">機械割{BORDER_RTP}%以上</span>
+          <span className="text-[10px] text-muted">換算機械割{BORDER_RTP}%以上</span>
         </div>
         {/* 初当りGは表が実際に使っている値＝当店実測。公表の設定1とは別物なので分けて出す。 */}
         <div className="mt-1 flex flex-wrap gap-x-3 pl-14 text-[10px] text-muted">
@@ -69,7 +74,7 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
               <Th unit="円" primary>
                 期待値
               </Th>
-              <Th unit="%">機械割</Th>
+              <Th unit="%">換算機械割</Th>
               <Th unit="円/h">時給</Th>
               <Th unit="枚">平均投入</Th>
             </tr>
@@ -85,7 +90,7 @@ export function TheoreticalTable({ data, gamesPerHour }: TheoreticalTableProps) 
                     {formatSigned(a.ev)}
                   </Td>
                   <Td alt={alt} tone={rtpToneClass(a.rtp)}>
-                    {a.rtp.toFixed(1)}
+                    {roundedRtp(a.rtp).toFixed(1)}
                   </Td>
                   <Td alt={alt} tone={toneClass(hourly)}>
                     {formatSigned(hourly)}

@@ -1,6 +1,7 @@
 "use client";
 
 import type { Machine, PivotConfig, Profile, TableRow } from "@/lib/ev/types";
+import { roundedRtp } from "@/lib/ev/rtp";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
 import { ROW_HEIGHT, RowHead, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
@@ -52,7 +53,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                 </>
               ) : (
                 <>
-                  <Th unit="%">機械割</Th>
+                  <Th unit="%">{profile.key.endsWith("_4652") ? "換算機械割" : "機械割"}</Th>
                   <Th unit="円" primary>
                     期待値
                   </Th>
@@ -94,7 +95,7 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
                   ) : (
                     <>
                       <Td alt={alt} tone={dash ? "text-muted" : rtpToneClass(row.rtp)}>
-                        {dash ? "—" : row.rtp.toFixed(1)}
+                        {dash ? "—" : roundedRtp(row.rtp).toFixed(1)}
                       </Td>
                       <Td alt={alt} bold={!dash} tone={dash ? "text-muted" : toneClass(row.ev)}>
                         {dash ? "—" : formatSigned(row.ev)}

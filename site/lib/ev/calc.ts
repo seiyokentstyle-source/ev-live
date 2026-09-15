@@ -1,4 +1,5 @@
 import type { BaseAnchor, Conditions, EvCalc, EvSamples, Machine, PivotConfig, Profile, TableRow } from "./types";
+import { cashRtp, roundedRtp } from "./rtp";
 
 // scraper/make_evlive_data.py の forward_anchors と同じ式。絞り込み（台番号末尾/特定日）で
 // 部分集合のアンカーをクライアント側で再集計するために移植したもの。
@@ -19,8 +20,8 @@ export function computeAnchors(
 
   // AT間モデル：hitsに投入G0(6要素目)がある機種は、やめ想定込みの通常時投入で集計する
   // （scraperのforward_anchors AT間分岐と同じ式）。打ち切りは含めない。
-  // 機械割/期待値の定義は当たり間モデルと共通＝投資は貸単価・回収は換金単価
-  // （46/52なら46枚投資=52枚回収で100%）。
+  // 期待値は投資を貸単価・回収を換金単価で計算。機械割は同じ現金収支を
+  // 1枚20円・全消化Gの賭け枚数へ換算する（46/52の交換差を含む）。
   const atKan = Boolean(calc.bet) && hits.length > 0 && hits.every((h) => h[5] !== undefined);
   if (atKan) {
     for (let g = 0; g <= gTop; g += calc.step) {
@@ -43,9 +44,9 @@ export function computeAnchors(
       const retTotal = pay * kan; // 回収(円)＝AT獲得枚×換金単価
       if (invTotal < 1) break;
       const ev = Math.round((retTotal - invTotal) / n);
-      let rtp = Math.round((1000 * retTotal) / invTotal) / 10;
-      rtp = ev >= 0 ? Math.max(rtp, 100) : Math.min(rtp, 99.9);
-      anchors.push({ g, ev, rtp, n, inv: Math.round(invMed / n), playG: Math.round(shouka / n) });
+      const playG = Math.round(shouka / n);
+      const rtp = roundedRtp(cashRtp(ev, playG, calc.bet || 3), ev);
+      anchors.push({ g, ev, rtp, n, inv: Math.round(invMed / n), playG });
     }
     return anchors;
   }
@@ -74,11 +75,10 @@ export function computeAnchors(
     const meanRet = (payMed * kan) / n;
     if (meanInv < 1) break;
     const ev = Math.round(meanRet - meanInv);
-    let rtp = Math.round((1000 * meanRet) / meanInv) / 10;
-    rtp = ev >= 0 ? Math.max(rtp, 100) : Math.min(rtp, 99.9);
     const inv = Math.round(invMed / n);
     const atG = calc.junzou ? payMed / calc.junzou : 0;
     const playG = Math.round((invMed / calc.use + atG) / n);
+    const rtp = roundedRtp(cashRtp(ev, playG, calc.bet || 3), ev);
     anchors.push({ g, ev, rtp, n, inv, playG });
   }
   return anchors;
@@ -115,6 +115,7 @@ export function baseEV(g: number, profile: Profile): number {
   return interpolate(g, profile, "ev") ?? 0;
 }
 
+/** 旧JSONの値を読む互換API。画面の機械割はadjustedRtpでEV・消化Gから計算する。 */
 export function baseRtp(g: number, profile: Profile): number {
   return interpolate(g, profile, "rtp") ?? 100;
 }
@@ -146,33 +147,28 @@ export function calcEV(g: number, conditions: Conditions, profile: Profile, mach
 
 export function adjustedRtp(
   g: number,
-  conditions: Conditions,
+  _conditions: Conditions,
   totalEv: number,
   profile: Profile,
   machine: Machine
 ): number {
-  const base = baseRtp(g, profile);
-  const remain = Math.max(0, profile.gRange.end - g);
-  if (remain <= 0) return base;
-
-  const rate = String(conditions.rate ?? "50");
-  const medalValue = machine.creditValue[rate] ?? 20;
-  const totalInvest = remain * machine.economics.medalsPerGame * medalValue;
-  if (totalInvest <= 0) return base;
-
-  const evDelta = totalEv - baseEV(g, profile);
-  return base + (evDelta / totalInvest) * 100;
+  // 旧JSONのrtpも使わず、補間・条件補正後のEVと時給と同じ消化Gから計算する。
+  return cashRtp(totalEv, sessionGames(g, profile), machine.evCalc?.bet || 3);
 }
 
 export function basePlayG(g: number, profile: Profile): number {
   return interpolate(g, profile, "playG") ?? 0;
 }
 
-export function hourlyEV(g: number, ev: number, profile: Profile, machine: Machine): number {
+function sessionGames(g: number, profile: Profile): number {
   // 新データ: アンカーの playG（1セッション消化G＝当たりまで＋AT中）で消化時間を出す。
   // 旧データ(playG 無し): 天井までの時間で近似（従来動作）。
   const usePlayG = profile.baseAnchors.some((anchor) => anchor.playG !== undefined);
-  const games = usePlayG ? basePlayG(g, profile) : Math.max(0, profile.gRange.end - g);
+  return usePlayG ? basePlayG(g, profile) : Math.max(0, profile.gRange.end - g);
+}
+
+export function hourlyEV(g: number, ev: number, profile: Profile, machine: Machine): number {
+  const games = sessionGames(g, profile);
   if (games <= 0) return 0;
   const hours = games / machine.economics.gamesPerHour;
   if (hours <= 0) return 0;
@@ -184,7 +180,7 @@ export function baseInv(g: number, profile: Profile): number {
 }
 
 export function avgMedals(g: number, profile: Profile, machine: Machine): number {
-  // 新データ: アンカーの inv（当たりまでの平均投資枚数＝機械割と同じ基準）を補間する。
+  // 新データ: アンカーの inv（当たりまでの平均投資枚数）を補間する。
   // 旧データ(inv 無し): 天井までの投資で近似（従来動作）。
   if (profile.baseAnchors.some((anchor) => anchor.inv !== undefined)) {
     return Math.round(baseInv(g, profile));

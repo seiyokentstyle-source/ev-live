@@ -35,10 +35,11 @@ export type Axis = SelectAxis | NumberAxis;
 export type BaseAnchor = {
   g: number;
   ev: number;
+  /** 1枚20円基準の換算機械割。旧JSONの値は表示時にEV・playGから再計算する。 */
   rtp: number;
   /** Estimated sample size (当たり＋打ち切り台日数) used for this G. Optional: absent on older data. */
   n?: number;
-  /** Average medals invested from this G until the AT hit (機械割と同じ基準). Optional: absent on older data. */
+  /** Average medals invested from this G until the AT hit. Optional: absent on older data. */
   inv?: number;
   /** Average games to finish one session from this G (通常時＋AT中). Used for 時給. Optional: absent on older data. */
   playG?: number;
@@ -61,9 +62,9 @@ export type EvCalc = {
   step: number;
   /** 前兆補正G。打ち始めからこのGは当たらない＝アンカーgでは 初当りG>=g+preg のみ当たり扱い（投資はフル）. 無い/0で従来動作. */
   preg?: number;
-  /** 賭け枚数（機械割OUT/INの分母＝bet×消化G）。AT間モデル（hitsに投入G0がある機種）で使う. */
+  /** 賭け枚数（換算機械割の分母＝20円×bet×消化G）。未設定は3枚. */
   bet?: number;
-  /** 'at'＝AT間モデル（機械割=OUT/INの枚ベース）/ 'hit'＝当たり間モデル（機械割=回収円÷投資円）. */
+  /** 'at'＝AT間モデル / 'hit'＝当たり間モデル。どちらも同じ現金収支・消化Gの換算式を使う. */
   model?: "at" | "hit";
 };
 
@@ -77,7 +78,7 @@ export type EvSamples = {
   minSess: number;
   /** 当たり: [台番号, 取得日, 初当りG, 総獲得, 道中CZ数?, 投入G0?].
    *  5要素目=道中CZ回数、6要素目=投入G0（g=0時の1サイクル通常時投入G＝初当りG＋引き戻しゾーンG＋やめtail）。
-   *  どちらもAT間区切り機種(ヴヴヴ2)のみ。6要素目がある機種はAT間モデル（差枚時給・OUT/IN機械割）で再集計する. */
+   *  どちらもAT間区切り機種(ヴヴヴ2)のみ。6要素目がある機種はやめ想定を含むAT間モデルで再集計する. */
   hits: Array<[string, string, number, number, number?, number?]>;
   /** 打ち切り: [台番号, 取得日, ハマりG]. */
   cens: Array<[string, string, number]>;

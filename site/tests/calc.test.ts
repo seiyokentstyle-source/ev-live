@@ -219,19 +219,21 @@ describe("AT間モデル（hitsに投入G0=6要素目・投資は貸単価/回�
   ];
   const calc: EvCalc = { use, junzou, ceiling: 500, step: 100, bet };
 
-  test("g=0で 回収円−投資円の期待収支と 回収円÷投資円の機械割 を返す", () => {
+  test("g=0で現金の期待収支を全消化Gの20円基準の機械割に換算する", () => {
     const tai = 21.74;
     const anchors = computeAnchors(hits, [], calc, tai, kan, 1);
     const a0 = anchors.find((a) => a.g === 0)!;
     // 投入G(0) = 366,466,200 → 通常時投入枚 = (366+466+200)*1.53 = 1579.0
     const invMed = (366 + 466 + 200) * use;
     const pay = 700 + 900 + 300;
-    // 機械割/期待値の定義は当たり間モデルと共通（投資=貸単価・回収=換金単価）。
+    // EVは交換差を含め、機械割は通常時＋AT中の全消化Gを使う。
     const invTotal = invMed * tai;
     const retTotal = pay * kan;
     expect(a0.n).toBe(3);
     expect(a0.ev).toBe(Math.round((retTotal - invTotal) / 3));
-    expect(a0.rtp).toBeCloseTo(Math.round((1000 * retTotal) / invTotal) / 10, 1);
+    const playG = Math.round((366 + 466 + 200 + pay / junzou) / 3);
+    const expectedRtp = 100 + a0.ev / (20 * bet * playG) * 100;
+    expect(a0.rtp).toBeCloseTo(Math.round(expectedRtp * 10) / 10, 1);
     expect(a0.inv).toBe(Math.round(invMed / 3)); // 平均投入＝やめ想定込み
   });
 

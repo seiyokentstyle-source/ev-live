@@ -5,6 +5,7 @@ import type { AimMode } from "./ModeSelector";
 import type { Machine } from "@/lib/ev/types";
 import { visibleCalcSpecItems } from "@/lib/ev/profiles";
 import { collectionStatus } from "@/lib/ev/collection-status";
+import { rtpExplanation } from "@/lib/ev/rtp";
 
 type ConditionsBarProps = {
   machine: Machine;
@@ -57,12 +58,13 @@ export function ConditionsBar({
     rows.push({ k: "保存期間", v: `${collection.firstDate}〜${collection.lastDate}` });
     if (calcSpec) rows.push(...visibleCalcSpecItems(calcSpec.items));
   } else if (mode === "ev" && calcSpec) {
-    // 算出条件は生成側が組み立てた文字列をそのまま出す（サイトで組み直すと計算とズレるため）。
-    // 表示中のタブ/セレクタで変わるものだけ、ここで前後に足す。
+    // 機械割は旧JSONでも表示時に換算するため、その説明も現在の計算に合わせる。
+    // それ以外の条件は生成側の文字列を使う。
     if (rateLabel) rows.push({ k: "レート（表示中）", v: rateLabel });
     if (czLabel) rows.push({ k: `道中${czTerm ?? "CZ"}（表示中）`, v: `${czLabel} の状態から次のボーナスまで` });
     if (ceilingText) rows.push({ k: "天井（表示中のタブ）", v: ceilingText });
-    rows.push(...visibleCalcSpecItems(calcSpec.items));
+    rows.push(...visibleCalcSpecItems(calcSpec.items).filter(item => item.k !== "機械割" && item.k !== "換算機械割"));
+    rows.push({ k: "機械割・換算機械割", v: rtpExplanation(machine.economics.gamesPerHour, ev?.bet || 3) });
     rows.push({ k: "時給換算", v: `${machine.economics.gamesPerHour}G/時で消化する前提` });
   } else if (mode === "ev" && ev) {
     // 旧データ（calcSpec 未生成）向けのフォールバック。
@@ -74,7 +76,7 @@ export function ConditionsBar({
     if (ev.preg) rows.push({ k: "前兆", v: `${ev.preg}G（打ち始めから自力当選しない前提）` });
     if (czLabel) rows.push({ k: `道中${czTerm ?? "CZ"}`, v: `${czLabel} の状態から次のボーナスまで` });
     rows.push({ k: "時給換算", v: `${machine.economics.gamesPerHour}G/時` });
-    rows.push({ k: "機械割", v: "どちらのレートも100%＝損益分岐。等価はOUT÷IN、46/52は回収円÷投資円" });
+    rows.push({ k: "機械割・換算機械割", v: rtpExplanation(machine.economics.gamesPerHour, ev.bet || 3) });
   } else if (mode === "setting") {
     rows.push({ k: "出率", v: "OUT÷IN（3枚掛け・即やめ想定）" });
     if (ev?.junzou) rows.push({ k: "AT中G", v: `総獲得÷${ev.junzou}枚/G で推定` });
