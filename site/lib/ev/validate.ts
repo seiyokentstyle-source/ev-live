@@ -51,6 +51,14 @@ export function validateMachine(data: unknown): Machine {
   );
   assert(typeof machine.releaseDate === "string" && isDateString(machine.releaseDate), "releaseDate must be YYYY-MM-DD");
   assert(typeof machine.lastUpdated === "string" && isDateString(machine.lastUpdated), "lastUpdated must be YYYY-MM-DD");
+  if (machine.mixedSources !== undefined) {
+    const mixed = machine.mixedSources;
+    assert(isRecord(mixed) && mixed.schemaVersion === 1, "invalid mixedSources schema");
+    assert(Array.isArray(mixed.halls) && mixed.halls.length > 0
+      && mixed.halls.every((hall) => typeof hall === "string" && /^[a-z0-9_-]+$/.test(hall) && hall !== "mixed")
+      && new Set(mixed.halls).size === mixed.halls.length, "invalid mixedSources halls");
+    assert(typeof mixed.inputSha256 === "string" && /^[a-f0-9]{64}$/.test(mixed.inputSha256), "invalid mixedSources hash");
+  }
   if (machine.meta?.collection !== undefined) {
     const collection = machine.meta.collection;
     assert(isRecord(collection), "meta.collection must be an object");
@@ -135,7 +143,8 @@ export function validateMachine(data: unknown): Machine {
     const correction = machine.setting1Correction;
     assert(isRecord(correction), "setting1Correction must be an object");
     assert(correction.schemaVersion === 1, "unsupported setting1Correction schema");
-    assert(correction.sourceHallId === "shinjuku", "setting1Correction source must be shinjuku");
+    assert(correction.sourceHallId === "shinjuku" || correction.sourceHallId === "mixed",
+      "setting1Correction source must be shinjuku or mixed");
     assert(Number.isFinite(correction.targetRtp) && correction.targetRtp > 0 && correction.targetRtp < 1,
       "setting1Correction targetRtp must be between 0 and 1");
     assert(Number.isFinite(correction.payoutScale) && correction.payoutScale > 0,
