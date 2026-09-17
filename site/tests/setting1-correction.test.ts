@@ -167,7 +167,7 @@ describe("setting-1 correction validation", () => {
 
   it.each([
     ["schemaVersion", 0], ["schemaVersion", 2], ["schemaVersion", "1"],
-    ["sourceHallId", "mixed"], ["sourceHallId", "unknown"],
+    ["sourceHallId", "akihabara"], ["sourceHallId", "unknown"],
     ["targetRtp", 0], ["targetRtp", -0.1], ["targetRtp", 1], ["targetRtp", 1.1],
     ["targetRtp", Number.NaN], ["targetRtp", Number.POSITIVE_INFINITY], ["targetRtp", "0.977"],
     ["payoutScale", 0], ["payoutScale", -0.1], ["payoutScale", Number.NaN],
