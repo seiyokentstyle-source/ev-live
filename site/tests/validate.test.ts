@@ -9,7 +9,8 @@ describe("machine validation", () => {
 
   test("rejects EV/RTP sign mismatches", () => {
     const invalid = structuredClone(machineData);
-    invalid.profiles[0].baseAnchors[0].rtp = 101;
+    const anchor = invalid.profiles[0].baseAnchors[0];
+    anchor.rtp = anchor.ev >= 0 ? 99 : 101;
     expect(() => validateMachine(invalid)).toThrow(/sign mismatch/);
   });
 
