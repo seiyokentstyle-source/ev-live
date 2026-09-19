@@ -14,6 +14,23 @@ const filterKeys = new Set(['h', 'y', 'n', 'm', 'g', 'past_y', 'cz', 'bb', 'rb',
 const categoryFilterKeys = new Set(['prev_first_raw_type', 'prev_second_raw_type', 'prev_third_raw_type', 'prev_last_raw_type', 'prev_raw_signature']);
 const ordinalFilterKeys = new Set(['next_ordinal', 'recorded_next_ordinal']);
 const numericFilterKeys = new Set(['next_ordinal', 'recorded_next_ordinal', 'prev_first_main_payout', 'prev_main_count', 'daily_single_count', 'daily_intermediate_failures', 'previous_same_first_type_run', 'sessions_since_single']);
+const gameFilterKeys = new Set(['day_g', 'recent_net', 'recent_hits']);
+const recentFilterKeys = new Set(['recent_net', 'recent_hits']);
+
+function gameFilter(key, item) {
+  if (!record(item) || !['all', 'range', 'missing'].includes(item.mode)) fail();
+  const lo = string(item.lo, 24, true), hi = string(item.hi, 24, true);
+  if (item.mode !== 'range' && (lo || hi)) fail();
+  if ([lo, hi].some(v => v && (!Number.isFinite(Number(v)) || Math.abs(Number(v)) > 100000000 ||
+      key !== 'recent_net' && (Number(v) < 0 || !Number.isSafeInteger(Number(v))))) || lo && hi && Number(lo) >= Number(hi)) fail();
+  if (!recentFilterKeys.has(key) || item.mode === 'all') {
+    if (Object.hasOwn(item, 'windowG')) fail();
+    return { mode: item.mode, lo, hi };
+  }
+  const windowG = item.windowG === undefined ? 1000 : integer(item.windowG, 100000);
+  if (windowG < 1) fail();
+  return { mode: item.mode, lo, hi, windowG };
+}
 
 function hypothesisFilter(key, item) {
   if ((!categoryFilterKeys.has(key) && !numericFilterKeys.has(key)) || !record(item)) fail();
@@ -47,6 +64,8 @@ function definition(value) {
   const filters = {};
   for (const key of Object.keys(value.filters).sort()) {
     const item = value.filters[key];
+    if (record(item) && Object.hasOwn(item, 'windowG') && !recentFilterKeys.has(key)) fail();
+    if (gameFilterKeys.has(key)) { filters[key] = gameFilter(key, item); continue; }
     if (!filterKeys.has(key)) { filters[key] = hypothesisFilter(key, item); continue; }
     if (!record(item) || !['all', 'range', 'missing'].includes(item.mode)) fail();
     const lo = string(item.lo, 24, true), hi = string(item.hi, 24, true);

@@ -174,6 +174,59 @@ describe('historical signal condition contract', () => {
   });
 });
 
+describe('AT/bonus-inclusive game-window condition contract', () => {
+  const range = (lo = '0', hi = '3') => ({ mode: 'range', lo, hi });
+  const missing = { mode: 'missing', lo: '', hi: '' };
+
+  it('preserves combined day, recent net and initial-hit conditions in canonical key order', () => {
+    const filters = {
+      day_g: range('2000', '4000'),
+      recent_hits: { ...range('0', '3'), windowG: 1200 },
+      recent_net: { ...range('-1000.5', '-0.25'), windowG: 1000 },
+    };
+    const value = catalogWithFilters(filters), parsed = parseSavedTargetCatalog(value).targets[0];
+    expect(JSON.stringify(parsed.definition)).toBe(JSON.stringify(value.targets[0].definition));
+    expect(parsed.conditionKey).toBe(value.targets[0].conditionKey);
+    expect(parsed.publicationKey).toBe(value.targets[0].publicationKey);
+  });
+  it.each(['recent_net', 'recent_hits'])('keeps the chosen %s window for both range and missing modes', key => {
+    for (const base of [range(), missing]) {
+      for (const windowG of [1, 1000, 100000]) {
+        const filter = { ...base, windowG };
+        expect(parseSavedTargetCatalog(catalogWithFilters({ [key]: filter })).targets[0].definition.filters[key]).toEqual(filter);
+      }
+      expect(parseSavedTargetCatalog(catalogWithFilters({ [key]: base })).targets[0].definition.filters[key]).toEqual({ ...base, windowG: 1000 });
+    }
+  });
+  it('retains open ranges, integer boundaries and signed finite recent-net values', () => {
+    const filters = { day_g: range('', ''), recent_hits: { ...range('0', '100000000'), windowG: 1000 }, recent_net: { ...range('-100000000', '100000000'), windowG: 1000 } };
+    expect(parseSavedTargetCatalog(catalogWithFilters(filters)).targets[0].definition.filters).toEqual(filters);
+    expect(parseSavedTargetCatalog(catalogWithFilters({ day_g: missing })).targets[0].definition.filters.day_g).toEqual(missing);
+  });
+  it.each(['recent_net', 'recent_hits'])('rejects invalid %s windows in range and missing modes', key => {
+    for (const base of [range(), missing]) {
+      for (const windowG of [0, -1, 0.5, 100001, Number.NaN, Number.POSITIVE_INFINITY, null, false, '1000', '', {}, []]) {
+        expect(() => parseSavedTargetCatalog(catalogWithFilters({ [key]: { ...base, windowG } }))).toThrow();
+      }
+    }
+  });
+  it.each(['day_g', 'g', 'y', 'prev_first_raw_type', 'next_ordinal'])('rejects window metadata on unrelated field %s', key => {
+    expect(() => parseSavedTargetCatalog(catalogWithFilters({ [key]: { ...missing, windowG: 1000 } }))).toThrow();
+  });
+  it.each([
+    ['day_g', range('-1', '3')], ['day_g', range('1.5', '3')],
+    ['recent_hits', range('-1', '3')], ['recent_hits', range('1.5', '3')],
+    ['recent_net', range('-100000001', '3')], ['recent_net', range('0', '100000001')],
+    ['recent_net', range('Infinity', '')], ['recent_net', range('NaN', '')],
+    ['recent_hits', range('3', '3')], ['day_g', range('4', '3')],
+    ['recent_net', { ...missing, lo: '1' }], ['recent_hits', { ...missing, hi: '1' }],
+    ['recent_net', { mode: 'category', lo: '', hi: '', value: '1000' }],
+    ['recent_hits', { mode: 'modulo', lo: '', hi: '', period: 2, remainder: 1 }],
+  ])('rejects invalid game-window filter %s: %j', (key, filter) => {
+    expect(() => parseSavedTargetCatalog(catalogWithFilters({ [String(key)]: filter }))).toThrow();
+  });
+});
+
 describe('published membership and refreshed values', () => {
   const refreshed = () => ({ id: target().id, conditionKey: target().conditionKey, sourceRevision: 'd'.repeat(64), dataThrough: '2026-09-04', rows: [{ g: 100, ev: 2222, n: 80, days: 9 }] });
   const metricSnapshot = () => {

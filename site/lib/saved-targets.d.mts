@@ -6,6 +6,7 @@ export type TargetRow = {
 };
 export type TargetFilter =
   | { mode: 'all' | 'range' | 'missing'; lo: string; hi: string }
+  | { mode: 'range' | 'missing'; lo: string; hi: string; windowG: number }
   | { mode: 'category'; lo: ''; hi: ''; value: string }
   | { mode: 'modulo'; lo: ''; hi: ''; period: number; remainder: number };
 export type TargetDefinition = {
