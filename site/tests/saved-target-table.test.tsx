@@ -90,4 +90,18 @@ describe('the same table format for saved targets and EV play', () => {
     expect(html).toContain('掲載中の狙い目はありません');
     expect(html).not.toContain('<table');
   });
+
+  it('uses identical one-sample and empty results when selected from the normal aim bar', () => {
+    const value = target([{ g: 0, ev: 240, n: 1, days: 1, inv: 200, playG: 400 }]);
+    const embedded = renderToStaticMarkup(<SavedTargets machine={machine} targets={[value]} selectedId={value.id}
+      showSelector={false} onSelect={() => {}} />);
+    expect(table(embedded)).toBe(table(render(value)));
+    expect(embedded).not.toContain('id="saved-target-choice"');
+    expect(embedded).toContain('46枚貸し／52枚交換');
+    const empty = { ...value, rows: [] };
+    const emptyHtml = renderToStaticMarkup(<SavedTargets machine={machine} targets={[empty]} selectedId={empty.id}
+      showSelector={false} onSelect={() => {}} />);
+    expect(emptyHtml).toContain('この条件で集計できる区間はありません');
+    expect(emptyHtml).not.toContain('<table');
+  });
 });

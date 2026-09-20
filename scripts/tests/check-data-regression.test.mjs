@@ -91,6 +91,40 @@ test("known legacy data migrates to the same or a later verified data-period end
   assert.equal(dateRegression(FILE, old, old, manifest).rollback, false);
 });
 
+test("audited machine-specific ends apply only to the registered exact snapshot", () => {
+  const audited = { ...manifest, dataThroughByFile: { [FILE]: "2026-08-18" } };
+  assert.deepEqual(comparisonDate(FILE, old, audited), { date: "2026-08-18", legacy: true });
+  assert.equal(dateRegression(FILE, old, machine("2026-08-18"), audited).rollback, false);
+  assert.equal(dateRegression(FILE, old, machine("2026-08-17"), audited).rollback, true);
+  assert.equal(dateRegression(FILE, machine("2026-08-19"), old, audited).rollback, true);
+  assert.equal(comparisonDate("data/machines/another.json", old, audited).legacy, false);
+  assert.equal(comparisonDate(FILE, { ...old, anchors: [{ g: 0, ev: 124 }] }, audited).legacy, false);
+  assert.equal(comparisonDate(FILE, { ...old, intervalExplorer: { private: true } }, audited).legacy, false);
+  const wrongPeriod = { ...old, meta: { ...old.meta, source: machine("2026-09-06").meta.source } };
+  const wrongManifest = { ...audited, files: { [FILE]: snapshotHash(wrongPeriod) } };
+  assert.equal(comparisonDate(FILE, wrongPeriod, wrongManifest).legacy, false);
+});
+
+test("machine-specific ends fail closed on invalid or out-of-period dates", () => {
+  for (const end of ["2026-02-30", "2026-06-08", "2026-09-06", "not-a-date", 123]) {
+    const audited = { ...manifest, dataThroughByFile: { [FILE]: end } };
+    assert.deepEqual(comparisonDate(FILE, old, audited), { date: "2026-09-13", legacy: false });
+    assert.equal(dateRegression(FILE, old, machine("2026-08-18"), audited).rollback, true);
+  }
+});
+
+test("production machine-specific ends remain limited to the audited old hashes", () => {
+  assert.deepEqual(LEGACY_DATA_DATES.dataThroughByFile, {
+    "data/machines/m0ff44978.json": "2026-08-18",
+    "data/machines/m416dcfa2.json": "2026-08-18",
+    "data/machines/m6a74cdc0.json": "2026-08-18"
+  });
+  for (const [file, end] of Object.entries(LEGACY_DATA_DATES.dataThroughByFile)) {
+    assert.match(LEGACY_DATA_DATES.files[file], /^[a-f0-9]{64}$/);
+    assert.ok(isDate(end) && end <= LEGACY_DATA_DATES.dataThrough);
+  }
+});
+
 test("true rollback and reintroduction of the known old snapshot stay blocked", () => {
   assert.equal(dateRegression(FILE, old, machine("2026-09-04"), manifest).rollback, true);
   assert.equal(dateRegression(FILE, machine("2026-09-07"), old, manifest).rollback, true);

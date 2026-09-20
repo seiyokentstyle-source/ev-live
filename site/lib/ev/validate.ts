@@ -1,4 +1,6 @@
 import type { Axis, Machine, SelectAxis } from "./types";
+import { isExactFilterTableKey } from "./profiles";
+import { validateAggregateRows } from "./filter-aggregation-validation";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -98,6 +100,8 @@ export function validateMachine(data: unknown): Machine {
   }
 
   for (const profile of machine.profiles) {
+    assert(profile.aimKind === undefined || ["cz", "bonus", "at_non_runthrough", "at_runthrough"].includes(profile.aimKind),
+      `profile ${profile.key} aimKind is invalid`);
     assert(profile.gRange.step > 0, `profile ${profile.key} step must be > 0`);
     for (const key of profile.activeAxes) {
       assert(axisKeys.has(key), `profile ${profile.key} references unknown axis ${key}`);
@@ -106,11 +110,100 @@ export function validateMachine(data: unknown): Machine {
     assert(Array.isArray(profile.zones), `profile ${profile.key} zones must be an array`);
     assert(profile.pendingReason === undefined || typeof profile.pendingReason === "string", `profile ${profile.key} pendingReason must be a string`);
 
+    if (profile.evFilters !== undefined) {
+      const filters = profile.evFilters;
+      assert(isRecord(filters) && isRecord(filters.tables), `profile ${profile.key} evFilters.tables must be an object`);
+      assert(filters.selectionPolicy === undefined || isRecord(filters.selectionPolicy),
+        `profile ${profile.key} selectionPolicy must be an object`);
+      if (filters.aggregation !== undefined) {
+        const aggregate = filters.aggregation;
+        assert(isRecord(aggregate) && aggregate.schema === "evlive-filter-aggregates/v1",
+          `profile ${profile.key} aggregation schema is invalid`);
+        const fields = new Set(["schema", "axisKeys", "rows", "rowsGzip", "rowCount", "costPerGame", "exchange", "medalsPerGame", "junzou", "bet", "investmentMinimum", "minPlay", "roundingEpsilon"]);
+        assert(Object.keys(aggregate).every(key => fields.has(key)), `profile ${profile.key} aggregation contains unsupported fields`);
+        assert(Array.isArray(filters.axes) && filters.axes.every(axis => isRecord(axis) && Array.isArray(axis.options)) && Array.isArray(aggregate.axisKeys)
+          && JSON.stringify(aggregate.axisKeys) === JSON.stringify(filters.axes.map(axis => axis.key)),
+        `profile ${profile.key} aggregation axisKeys must match the declared axes`);
+        for (const key of ["costPerGame", "exchange", "medalsPerGame", "bet"] as const) {
+          assert(Number.isFinite(aggregate[key]) && aggregate[key] > 0,
+            `profile ${profile.key} aggregation ${key} must be positive and finite`);
+        }
+        assert(Number.isFinite(aggregate.junzou) && aggregate.junzou >= 0,
+          `profile ${profile.key} aggregation junzou must be nonnegative and finite`);
+        assert(aggregate.investmentMinimum === "mean" || aggregate.investmentMinimum === "total",
+          `profile ${profile.key} aggregation investmentMinimum is invalid`);
+        assert(aggregate.minPlay === undefined || (Number.isFinite(aggregate.minPlay) && aggregate.minPlay >= 0),
+          `profile ${profile.key} aggregation minPlay must be nonnegative and finite`);
+        assert(Number.isFinite(aggregate.roundingEpsilon) && aggregate.roundingEpsilon >= 0 && aggregate.roundingEpsilon < 0.25,
+          `profile ${profile.key} aggregation roundingEpsilon is invalid`);
+        if (aggregate.rows !== undefined) {
+          assert(aggregate.rowsGzip === undefined && aggregate.rowCount === undefined,
+            `profile ${profile.key} aggregation must contain rows or compressed rows, not both`);
+          validateAggregateRows(aggregate.rows, filters.axes);
+        } else {
+          assert(typeof aggregate.rowsGzip === "string" && aggregate.rowsGzip.length > 0
+            && aggregate.rowsGzip.length % 4 === 0 && /^[A-Za-z0-9+/]+={0,2}$/.test(aggregate.rowsGzip),
+          `profile ${profile.key} aggregation rowsGzip must be base64`);
+          assert(Number.isSafeInteger(aggregate.rowCount) && aggregate.rowCount >= 0,
+            `profile ${profile.key} aggregation rowCount is invalid`);
+        }
+      }
+      if (filters.axes !== undefined) {
+        assert(Array.isArray(filters.axes), `profile ${profile.key} filter axes must be an array`);
+        const filterKeys = new Set<string>();
+        for (const axis of filters.axes) {
+          assert(isRecord(axis) && typeof axis.key === "string" && axis.key.length > 0 && !filterKeys.has(axis.key),
+            `profile ${profile.key} filter axis keys must be unique nonempty strings`);
+          filterKeys.add(axis.key);
+          assert(typeof axis.label === "string" && axis.label.length > 0 && typeof axis.allLabel === "string",
+            `profile ${profile.key} filter axis labels are required`);
+          assert(Array.isArray(axis.options), `profile ${profile.key} filter options must be an array`);
+          const values = new Set<string>();
+          for (const option of axis.options) {
+            assert(isRecord(option) && typeof option.value === "string" && option.value.length > 0 && !values.has(option.value)
+              && typeof option.label === "string", `profile ${profile.key} filter options must have unique nonempty values and labels`);
+            values.add(option.value);
+          }
+        }
+        // 旧生成物には、削除済みの軸の孤立表が残る。UIからは選べないため許容し、
+        // 新しい契約を宣言する生成物では全キーを厳密に確認する。
+        if (profile.aimKind || filters.selectionPolicy || filters.aggregation) {
+          for (const key of Object.keys(filters.tables)) {
+            assert(isExactFilterTableKey(filters.axes, key), `profile ${profile.key} filter table ${key} must match exactly one declared selection`);
+          }
+        }
+      }
+      for (const [key, table] of Object.entries(filters.tables)) {
+        assert(isRecord(table) && Array.isArray(table.baseAnchors), `profile ${profile.key} filter ${key} anchors are required`);
+        const start = table.start ?? profile.gRange.start;
+        assert(Number.isFinite(start) && Number.isFinite(table.end) && table.end >= start,
+          `profile ${profile.key} filter ${key} range is invalid`);
+        for (const field of ["hits", "units"] as const) {
+          assert(Number.isSafeInteger(table[field]) && table[field] >= 0, `profile ${profile.key} filter ${key} ${field} must be a nonnegative integer`);
+        }
+        assert(Number.isFinite(table.totalPayout) && (table.firstHitRate === null || Number.isFinite(table.firstHitRate)),
+          `profile ${profile.key} filter ${key} aggregates must be finite`);
+        let previous = Number.NEGATIVE_INFINITY;
+        for (const anchor of table.baseAnchors) {
+          assert(isRecord(anchor) && Number.isFinite(anchor.g) && Number.isFinite(anchor.ev) && Number.isFinite(anchor.rtp),
+            `profile ${profile.key} filter ${key} anchors must be finite`);
+          assert(anchor.g >= start && anchor.g <= table.end && anchor.g > previous,
+            `profile ${profile.key} filter ${key} anchors must be ordered and in range`);
+          previous = anchor.g;
+          for (const field of ["n", "inv", "playG"] as const) {
+            assert(anchor[field] === undefined || (Number.isFinite(anchor[field]) && anchor[field]! >= 0),
+              `profile ${profile.key} filter ${key} ${field} must be nonnegative`);
+          }
+        }
+      }
+    }
+
     // A data-pending profile has no 実戦 data yet: the tab is shown but no table is
     // rendered, so the anchor/zone constraints below do not apply.
     if (profile.dataPending) continue;
 
-    assert(profile.baseAnchors.length >= 2, `profile ${profile.key} must have at least two anchors`);
+    const minimumAnchors = profile.evFilters?.aggregation ? 1 : 2;
+    assert(profile.baseAnchors.length >= minimumAnchors, `profile ${profile.key} must have at least ${minimumAnchors} anchors`);
     for (let i = 0; i < profile.baseAnchors.length; i += 1) {
       const anchor = profile.baseAnchors[i];
       assert(anchor.g >= profile.gRange.start && anchor.g <= profile.gRange.end, `anchor ${anchor.g} is out of range`);

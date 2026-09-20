@@ -24,7 +24,7 @@ export function savedTargetTableRows(target: DisplayTarget, machine: Machine, st
     });
 }
 
-export function SavedTargets({ machine, targets, selectedId, onSelect }: { machine: Machine; targets: DisplayTarget[]; selectedId: string; onSelect: (id: string) => void }) {
+export function SavedTargets({ machine, targets, selectedId, onSelect, showSelector = true }: { machine: Machine; targets: DisplayTarget[]; selectedId: string; onSelect: (id: string) => void; showSelector?: boolean }) {
   const [step, setStep] = useState(10);
   const target = targets.find(item => item.id === selectedId) ?? targets[0];
   if (!target) return <section className="flex min-h-0 flex-1 flex-col"><h2 className="border-b border-line px-4 py-3 text-sm font-bold">狙い目</h2><EmptyState>この機種・店舗に掲載中の狙い目はありません。</EmptyState></section>;
@@ -32,10 +32,11 @@ export function SavedTargets({ machine, targets, selectedId, onSelect }: { machi
   return <section className="flex min-h-0 flex-1 flex-col" aria-labelledby="saved-target-heading">
     <div className="shrink-0 border-b border-line px-3 py-2">
       <div className="flex items-center justify-between gap-3"><h2 id="saved-target-heading" className="text-sm font-bold">狙い目</h2><span className="mono text-[10px] text-muted">{target.rate === '50/50' ? '50枚貸し／50枚交換' : '46枚貸し／52枚交換'}</span></div>
-      <label htmlFor="saved-target-choice" className="sr-only">狙い目を選ぶ</label>
+      {showSelector ? <><label htmlFor="saved-target-choice" className="sr-only">狙い目を選ぶ</label>
       <select id="saved-target-choice" value={target.id} onChange={event => onSelect(event.target.value)} className="mt-2 w-full rounded-md border border-line bg-bg px-2 py-2 text-xs text-ink">
         {targets.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
       </select>
+      </> : null}
     </div>
     <TableScroll>
       <div className="space-y-2 border-b border-line px-3 py-3 text-xs leading-relaxed">

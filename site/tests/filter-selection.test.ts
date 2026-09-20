@@ -40,8 +40,8 @@ describe("profile changes and EV filters", () => {
     expect(selection).toEqual({ t: "1", d: "7", m: "1000", c: "2" });
   });
 
-  test("clears individually valid filters when their combination has no table", () => {
-    expect(compatibleFilterSelection(reset, { t: "1", m: "0" })).toEqual({});
+  test("keeps individually valid filters when their combination has no table", () => {
+    expect(compatibleFilterSelection(reset, { t: "1", m: "0" })).toEqual({ t: "1", m: "0" });
   });
 
   test("treats zero as a valid option", () => {

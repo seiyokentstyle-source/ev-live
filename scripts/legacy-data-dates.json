@@ -4,6 +4,11 @@
   "reason": "Full regeneration recorded its execution date instead of the data-period end. Exact parsed JSON hashes restrict this compatibility migration to that observed output.",
   "recordedLastUpdated": "2026-09-13",
   "dataThrough": "2026-09-05",
+  "dataThroughByFile": {
+    "data/machines/m0ff44978.json": "2026-08-18",
+    "data/machines/m416dcfa2.json": "2026-08-18",
+    "data/machines/m6a74cdc0.json": "2026-08-18"
+  },
   "files": {
     "data/machines/hokuto.json": "2e2c751b58f0eb08181ee1cdd1be0c304ec4d9f9a407364837929c79698a83fe",
     "data/machines/m05fa80ec.json": "cbdb3d25be24fc01fb88c5a98646cb877ab86cc28f88fa119de63cfe095b4025",

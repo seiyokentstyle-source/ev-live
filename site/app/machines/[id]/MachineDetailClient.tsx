@@ -5,7 +5,9 @@ import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
 import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
-import { compatibleFilterSelection, groupProfiles, resolveProfile, rewriteAxisLabel, rewriteCeiling } from "@/lib/ev/profiles";
+import { compatibleFilterSelection, declaredFilterAxes, filterSelectionKey, groupProfiles, resolveProfile, rewriteCeiling, selectedFilterTable } from "@/lib/ev/profiles";
+import { aimTabs, savedTargetAimKey, savedTargetIdFromAim } from "@/lib/ev/aim-selection";
+import { useFilterAggregation } from "@/lib/ev/use-filter-aggregation";
 import { AxisPicker } from "@/components/ev/AxisPicker";
 import { ConditionsBar } from "@/components/ev/ConditionsBar";
 import { TheoreticalTable } from "@/components/ev/TheoreticalTable";
@@ -95,6 +97,11 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
 
   const [mode, setMode] = useState<AimMode>("ev");
   const [targetId, setTargetId] = useState('');
+  const [aimTargetId, setAimTargetId] = useState<string | null>(null);
+  const aimTarget = savedTargets.find(target => target.id === aimTargetId);
+  useEffect(() => {
+    if (aimTargetId && !aimTarget) setAimTargetId(null);
+  }, [aimTargetId, aimTarget]);
   const restoredTargetFor = useRef("");
   useEffect(() => {
     const page = `${hall.id}/${machine.id}`;
@@ -142,18 +149,17 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
   // 軸の一覧。新形式は axes をそのまま使い、旧データは従来のフィールドから組み立てる。
   const evAxes: FilterAxis[] = useMemo(() => {
     // 見出しだけ現在の表記に直す（データ再生成を待たずに文言を反映するため）。
-    if (evFilters?.axes?.length) {
-      return evFilters.axes.map((axis) => ({ ...axis, label: rewriteAxisLabel(axis.label) }));
-    }
+    const declared = declaredFilterAxes(profile);
+    if (declared !== undefined) return declared;
     const out: FilterAxis[] = [];
     const tails = useFilters
-      ? evFilters!.tails
+      ? evFilters!.tails ?? []
       : Array.from(new Set((evSamples?.hits ?? []).map((h) => tailOf(h[0])))).filter(Boolean).sort();
     const days = useFilters
-      ? evFilters!.days
+      ? evFilters!.days ?? []
       : Array.from(new Set((evSamples?.hits ?? []).flatMap((h) => dayOfMonth(h[1]).split("")))).sort();
     const czs = useFilters
-      ? evFilters!.cz
+      ? evFilters!.cz ?? []
       : Array.from(new Set((evSamples?.hits ?? []).map((h) => czBucket(h[4])))).filter(Boolean).sort();
     if (tails.length) out.push({ key: "t", label: "末尾", allLabel: "全部", options: tails.map((v) => ({ value: v, label: `末尾${v}` })) });
     if (days.length) out.push({ key: "d", label: "特定日", allLabel: "全日", options: days.map((v) => ({ value: v, label: `${v}のつく日` })) });
@@ -175,43 +181,28 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
       });
     }
     return out;
-  }, [evFilters, evSamples, useFilters, czTerm]);
+  }, [profile, evFilters, evSamples, useFilters, czTerm]);
 
   const hasEvFilter = evAxes.length > 0 && (useFilters || Boolean(machine.evCalc));
   const setAxis = (key: string, value: string | null) => setEvSel((prev) => ({ ...prev, [key]: value }));
 
   // 選択→キー。axes の並び順に key+値 を連結する（生成側も同じ順で作っている）。
-  const filterKey = evAxes.map((axis) => (evSel[axis.key] ? `${axis.key}${evSel[axis.key]}` : "")).join("");
+  const filterKey = filterSelectionKey(evAxes, evSel);
   const anySelected = evAxes.some((axis) => evSel[axis.key] != null);
+  const aggregationState = useFilterAggregation(evFilters?.aggregation, evAxes,
+    anySelected && mode === "ev" && !aimTarget && !(dataView === "theory" && machine.theoretical));
+  const selectedTable = useMemo(() => selectedFilterTable(profile, evAxes, evSel, aggregationState.data),
+    [profile, evAxes, evSel, aggregationState.data]);
 
-  // 軸ごとに『いま選べる値』を出す。
-  // ★生成側は軸の全組み合わせぶんの表を持っていない（末尾×特定日×道中CZ の総当たりと、
-  //   c×z / c×n だけ。標準4軸や RB スルーは単独の表しか無い）。UIは全部選べてしまうので、
-  //   組み合わせた表が実在しない選択肢は殺す。放っておくと2軸45通りのうち40通りが
-  //   「選べるのに必ずデータ不足」になる。
-  const enabledOptions = useMemo(() => {
-    const out: Record<string, Set<string>> = {};
-    if (!useFilters || !evFilters) return out;   // 旧形式は生サンプルから再集計するので制限しない
-    const keys = Object.keys(evFilters.tables);
-    const has = new Set(keys);
-    for (const axis of evAxes) {
-      const ok = new Set<string>();
-      for (const option of axis.options) {
-        const trial = { ...evSel, [axis.key]: option.value };
-        const key = evAxes.map((a) => (trial[a.key] ? `${a.key}${trial[a.key]}` : "")).join("");
-        if (has.has(key)) ok.add(option.value);
-      }
-      out[axis.key] = ok;
-    }
-    return out;
-  }, [evAxes, evSel, evFilters, useFilters]);
+  // 単独の表が無い軸も選べる。次の軸を指定して掛け合わせへ進めるようにし、
+  // 完全一致する集計が無い途中状態では空表を表示する。
   const selOf = (key: string) => evSel[key] ?? null;
 
   // 絞り込みが効いていれば、その条件の表示用プロファイルを作る。
   const displayProfile = useMemo(() => {
     if (!anySelected) return profile;
     if (useFilters) {
-      const tbl = evFilters!.tables[filterKey];
+      const tbl = selectedTable;
       if (!tbl) return { ...profile, baseAnchors: [], gRange: { ...profile.gRange, end: profile.gRange.start } };
       // start は「その条件に達するG」。手前は母数が無いので表に出さない（アンカーが無いのに
       // 0Gから最初のアンカー値で埋めると、あり得ない条件の期待値を描いてしまう）。
@@ -243,13 +234,13 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
       firstHitRate: hits.length ? Math.round(hits.reduce((sum, h) => sum + h[2], 0) / hits.length) : undefined
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile, useFilters, evFilters, filterKey, anySelected, evSamples, machine.evCalc, evSel]);
+  }, [profile, useFilters, filterKey, anySelected, evSamples, machine.evCalc, evSel, selectedTable]);
 
   const evFiltered = displayProfile !== profile;
   const evFilterStats = useMemo(() => {
     if (!evFiltered) return { units: 0, hits: 0 };
     if (useFilters) {
-      const tbl = evFilters!.tables[filterKey];
+      const tbl = selectedTable;
       return tbl ? { units: tbl.units, hits: tbl.hits } : { units: 0, hits: 0 };
     }
     if (!evSamples) return { units: 0, hits: 0 };
@@ -259,13 +250,13 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
     const hits = evSamples.hits.filter((h) => keepUnitDate(h[0], h[1]) && (selOf("c") === null || czBucket(h[4]) === selOf("c")));
     return { units: new Set(hits.map((h) => h[0])).size, hits: hits.length };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [evFiltered, useFilters, evFilters, filterKey, evSamples, evSel]);
+  }, [evFiltered, useFilters, filterKey, evSamples, evSel, selectedTable]);
   // 絞り込み結果がアンカー2本未満（データ不足）かどうか。
-  const evEmpty = evFiltered && displayProfile.baseAnchors.length < 2;
+  const evEmpty = evFiltered && displayProfile.baseAnchors.length < (evFilters?.aggregation ? 1 : 2);
 
   const tabs = useMemo(
-    () => grouped.groups.map((candidate) => ({ key: candidate.key, label: candidate.label, ceiling: candidate.ceiling })),
-    [grouped.groups]
+    () => aimTabs(grouped.groups, savedTargets),
+    [grouped.groups, savedTargets]
   );
 
   // When rate is handled by the selector, drop the (dummy) rate axis from the
@@ -292,6 +283,13 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
       setPivotValues([]);
     }
     setCurrentG(nextProfile?.gRange.start ?? 0);
+  }
+
+  function switchAim(key: string): void {
+    const savedId = savedTargetIdFromAim(key, savedTargets);
+    setAimTargetId(savedId);
+    if (savedId) setTargetId(savedId);
+    else if (grouped.groups.some(candidate => candidate.key === key)) switchGroup(key);
   }
 
   function switchRate(rate: string): void {
@@ -561,7 +559,7 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
         <>
       {availableModes.length > 1 ? <ModeSelector value={mode} onChange={setMode} modes={availableModes} /> : null}
 
-      {mode !== 'targets' ? <ConditionsBar
+      {mode !== 'targets' && !(mode === 'ev' && aimTarget) ? <ConditionsBar
         machine={machine}
         mode={mode}
         rateLabel={grouped.rates.find((r) => r.value === activeRate)?.label ?? activeRate}
@@ -572,7 +570,7 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
           return v === null ? axis.allLabel : axis.options.find((opt) => opt.value === v)?.label ?? v;
         })()}
         czTerm={czTerm}
-        ceilingText={rewriteCeiling(profile.ceiling, machine.id, group.key)}
+        ceilingText={profile.aimKind ? profile.ceiling : rewriteCeiling(profile.ceiling, machine.id, group.key)}
         profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
         profileSessionUnit={displayProfile.sessionUnit}
         profileSampleNote={displayProfile.sampleNote}
@@ -588,7 +586,9 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
         <HarakiriTable harakiri={harakiri} />
       ) : (
         <>
-      <ProfileBar tabs={tabs} activeKey={activeGroupKey} onChange={switchGroup} />
+      <ProfileBar tabs={tabs} activeKey={aimTarget ? savedTargetAimKey(aimTarget.id) : group.key} onChange={switchAim} />
+      {aimTarget ? <SavedTargets machine={machine} targets={savedTargets} selectedId={aimTarget.id}
+        showSelector={false} onSelect={id => { setAimTargetId(id); setTargetId(id); }} /> : <>
       {hasRatePairs ? <RateSelector rates={grouped.rates} value={activeRate} onChange={switchRate} /> : null}
       {hasEvFilter && !isPending ? (
         <EvFilter
@@ -598,7 +598,6 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
           units={evFilterStats.units}
           hits={evFilterStats.hits}
           hitUnit={displayProfile.sessionUnit}
-          enabled={enabledOptions}
         />
       ) : null}
 
@@ -610,11 +609,18 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
           集計でき次第、期待値を表示します。
           </>}
         </EmptyState>
+      ) : aggregationState.status === "loading" ? (
+        <EmptyState>絞り込み条件を計算中です。</EmptyState>
+      ) : aggregationState.status === "error" ? (
+        <EmptyState>
+          絞り込みの集計を読み込めませんでした。
+          <button type="button" onClick={aggregationState.retry} className="mt-3 rounded border border-line px-3 py-2 text-xs">再試行</button>
+        </EmptyState>
       ) : evEmpty ? (
         <EmptyState>
-          該当する台／日のデータが足りません。
+          この条件の組み合わせで集計できるデータがありません。
           <br />
-          （アンカーを作るには当たり{evSamples?.minSess ?? 15}件以上が必要です）
+          条件を変更するか、ほかの絞り込みを追加してください。
         </EmptyState>
       ) : (
         <>
@@ -633,6 +639,7 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
           <FooterBar profile={displayProfile} rowCount={rows.length} currentG={currentG} />
         </>
       )}
+      </>}
         </>
       )}
         </>

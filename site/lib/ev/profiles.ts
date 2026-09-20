@@ -1,4 +1,5 @@
-import type { Profile } from "./types";
+import type { AimKind, DecodedFilterAggregation, EvFilterTable, FilterAxis, Profile } from "./types";
+import { aggregateFilterTable, type AggregateFilterTable } from "./filter-aggregation";
 
 // Machine JSON ships one profile per (狙い方 × レート) combination. Rate variants
 // share a base key/label and differ only by a suffix:
@@ -16,6 +17,7 @@ export type RateOption = {
 export type ProfileGroup = {
   /** Base key with the rate suffix removed (the tab identity). */
   key: string;
+  aimKind?: AimKind;
   /** Base label with the rate token removed (the tab text). */
   label: string;
   ceiling: string;
@@ -209,7 +211,8 @@ const SINGLE = "_single";
 
 function parseProfile(profile: Profile): { baseKey: string; baseLabel: string; rate: string | null } {
   let cleanLabel = profile.label.replace(SAMPLE_SUFFIX_RE, "");
-  for (const [from, to] of LABEL_REWRITES) cleanLabel = cleanLabel.replace(from, to);
+  // 分類付きの表は生成側が機種仕様に合わせた名称を配る。旧表だけを言い換える。
+  if (!profile.aimKind) for (const [from, to] of LABEL_REWRITES) cleanLabel = cleanLabel.replace(from, to);
   const match = RATE_KEY_RE.exec(profile.key);
   if (!match) {
     return { baseKey: profile.key, baseLabel: cleanLabel.trim(), rate: null };
@@ -232,7 +235,8 @@ export function groupProfiles(profiles: Profile[], machineId?: string): GroupedP
 
     let group = map.get(baseKey);
     if (!group) {
-      group = { key: baseKey, label: baseLabel, ceiling: rewriteCeiling(profile.ceiling, machineId, baseKey), variants: {}, order: [] };
+      group = { key: baseKey, aimKind: profile.aimKind, label: baseLabel,
+        ceiling: profile.aimKind ? profile.ceiling : rewriteCeiling(profile.ceiling, machineId, baseKey), variants: {}, order: [] };
       map.set(baseKey, group);
       order.push(baseKey);
     }
@@ -245,13 +249,72 @@ export function groupProfiles(profiles: Profile[], machineId?: string): GroupedP
     .map((value) => ({ value, label: RATE_META[value]?.label ?? value }));
   const defaultRate = rates.find((rate) => rate.value === "4652")?.value ?? rates[0]?.value ?? null;
 
-  return { groups: order.map((key) => map.get(key) as ProfileGroup), rates, defaultRate };
+  const aimOrder: Record<AimKind, number> = { cz: 0, bonus: 1, at_non_runthrough: 2, at_runthrough: 3 };
+  const groups = order.map((key) => map.get(key) as ProfileGroup);
+  groups.sort((a, b) => (a.aimKind ? aimOrder[a.aimKind] : 4) - (b.aimKind ? aimOrder[b.aimKind] : 4));
+  return { groups, rates, defaultRate };
 }
 
 export function resolveProfile(group: ProfileGroup, rate: string | null): Profile {
   if (rate && group.variants[rate]) return group.variants[rate];
   if (group.variants[SINGLE]) return group.variants[SINGLE];
   return group.order[0];
+}
+
+export type FilterSelection = Record<string, string | null>;
+
+/** 宣言された軸・値だけで、生成側と同じ順序の完全一致キーを作る。 */
+export function filterSelectionKey(axes: FilterAxis[], selection: FilterSelection): string | null {
+  const known = new Set(axes.map(axis => axis.key));
+  if (Object.entries(selection).some(([key, value]) => value != null && !known.has(key))) return null;
+  let key = "";
+  for (const axis of axes) {
+    const value = selection[axis.key];
+    if (value == null) continue;
+    if (!axis.options.some(option => option.value === value)) return null;
+    key += `${axis.key}${value}`;
+  }
+  return key;
+}
+
+/** 省略可能な各軸を順に読んで、表キーが一意な指定条件へ戻せるか確認する。 */
+export function isExactFilterTableKey(axes: FilterAxis[], key: string): boolean {
+  if (!key) return false;
+  const memo = new Map<string, number>();
+  const count = (index: number, offset: number): number => {
+    if (index === axes.length) return offset === key.length ? 1 : 0;
+    const state = `${index}:${offset}`;
+    const cached = memo.get(state);
+    if (cached !== undefined) return cached;
+    const axis = axes[index];
+    let ways = count(index + 1, offset);
+    for (const option of axis.options) {
+      const token = `${axis.key}${option.value}`;
+      if (key.startsWith(token, offset)) ways += count(index + 1, offset + token.length);
+      if (ways > 1) break;
+    }
+    memo.set(state, Math.min(ways, 2));
+    return Math.min(ways, 2);
+  };
+  return count(0, 0) === 1;
+}
+
+export function selectedFilterTable(profile: Profile, axes: FilterAxis[], selection: FilterSelection,
+  decoded?: DecodedFilterAggregation): EvFilterTable | AggregateFilterTable | undefined {
+  const key = filterSelectionKey(axes, selection);
+  if (!key) return undefined;
+  const aggregation = profile.evFilters?.aggregation;
+  if (!aggregation) return profile.evFilters?.tables[key];
+  const prepared = decoded ?? (aggregation.rows !== undefined ? aggregation : undefined);
+  return prepared ? aggregateFilterTable(prepared, axes, selection, profile.gRange.start) : undefined;
+}
+
+/** 明示された空配列も新形式。旧軸を復活させない。 */
+export function declaredFilterAxes(profile: Profile): FilterAxis[] | undefined {
+  const axes = profile.evFilters?.axes;
+  if (axes === undefined) return undefined;
+  return axes.map(axis => ({ ...axis, label: rewriteAxisLabel(axis.label),
+    allLabel: profile.aimKind || profile.evFilters?.selectionPolicy ? "不問" : axis.allLabel }));
 }
 
 /** 狙い方・レート切替後も適用できる絞り込みだけを引き継ぐ。 */
@@ -271,7 +334,7 @@ export function compatibleFilterSelection(
       next[axis.key] = value;
     }
   }
-  const key = axes.map((axis) => next[axis.key] != null ? `${axis.key}${next[axis.key]}` : "").join("");
-  // 選択肢が個別に存在しても、切替先にその組み合わせの表があるとは限らない。
-  return key && !filters.tables[key] ? {} : next;
+  // 組合せの表がまだ無くても選択を保持。単独では差がなく、掛け合わせでだけ
+  // 採用された条件へ進めるようにし、表示側は完全一致が無ければ空表にする。
+  return next;
 }

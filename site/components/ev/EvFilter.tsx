@@ -10,7 +10,7 @@ type EvFilterProps = {
   values: Record<string, string | null>;
   onChange: (key: string, value: string | null) => void;
   /** 絞り込み後の台数（実台数の概算）と当たり件数. */
-  units: number;
+  units?: number;
   hits: number;
   /** hits の単位（『BB間』等）。CZ間天井の表は区間数なのでATと書かない. */
   hitUnit?: string;
@@ -41,7 +41,7 @@ export function EvFilter({ axes, values, onChange, units, hits, hitUnit, enabled
       {active ? (
         <span className="mono flex items-center gap-2 text-[10px] text-muted">
           <span>
-            {units.toLocaleString("ja-JP")}台 / {hitUnit ? `${hitUnit}の狙い目` : "狙い目"} {hits.toLocaleString("ja-JP")}件
+            {units === undefined ? "" : `${units.toLocaleString("ja-JP")}台 / `}{hitUnit ? `${hitUnit}の狙い目` : "狙い目"} {hits.toLocaleString("ja-JP")}件
           </span>
           <button
             type="button"

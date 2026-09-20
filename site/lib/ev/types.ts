@@ -114,16 +114,41 @@ export type FilterAxis = {
   options: Array<{ value: string; label: string }>;
 };
 
+/** 生履歴を含まない、軸値・打ち始めGごとの合計。 */
+export type FilterAggregationParameters = {
+  schema: "evlive-filter-aggregates/v1";
+  axisKeys: string[];
+  costPerGame: number;
+  exchange: number;
+  medalsPerGame: number;
+  junzou: number;
+  bet: number;
+  investmentMinimum: "mean" | "total";
+  minPlay?: number;
+  roundingEpsilon: number;
+};
+
+/** [g, ...optionIndexes, n, sumNormalGames, sumPayoutMedals]。-1 は不明。 */
+export type DecodedFilterAggregation = FilterAggregationParameters & { rows: number[][] };
+export type FilterAggregation = FilterAggregationParameters & (
+  | { rows: number[][]; rowsGzip?: never; rowCount?: never }
+  | { rows?: never; rowsGzip: string; rowCount: number }
+);
+
 /** 末尾/日/CZ の絞り込みを“公開前に集計済み”で持つ（生サンプルは公開しない）。
  *  サイトは選択からキー（例 't7c1'＝末尾7×CZ1回、順序 t→d→c）を作って tables を引くだけ。
  *  素の全体（絞り込み無し）は profile.baseAnchors 側なので tables には入れない。 */
 export type EvFilters = {
+  /** 通常表の軸を選別した生成側の方針。探索用の条件とは独立する。 */
+  selectionPolicy?: Record<string, unknown>;
+  /** 完全一致条件の合計から再集計する新形式。tables より優先。 */
+  aggregation?: FilterAggregation;
   /** 末尾候補. */
-  tails: string[];
+  tails?: string[];
   /** ○のつく日候補. */
-  days: string[];
+  days?: string[];
   /** 道中CZ回数候補（AT間区切り機種のみ）. */
-  cz: string[];
+  cz?: string[];
   /** CZセレクタの「未選択」が何を意味するか（既定表のCZ条件）。古いデータでは undefined。 */
   czAll?: string;
   /** 道中の当たりの呼び名（既定 'CZ'。マギレコは 'BB'）。表示だけで計算には影響しない。 */
@@ -140,8 +165,12 @@ export type EvFilters = {
   tables: Record<string, EvFilterTable>;
 };
 
+export type AimKind = "cz" | "bonus" | "at_non_runthrough" | "at_runthrough";
+
 export type Profile = {
   key: string;
+  /** 生成側が母集団を確認した狙い方。旧データから表示側で推測しない。 */
+  aimKind?: AimKind;
   label: string;
   ceiling: string;
   gRange: {

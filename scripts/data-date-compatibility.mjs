@@ -33,10 +33,15 @@ export function snapshotHash(data) {
  */
 export function comparisonDate(file, data, manifest = LEGACY_DATA_DATES) {
   const period = sourcePeriod(data);
+  // The broken batch also used the all-machine period for stopped machines.
+  // Audited per-file ends still require the same exact original snapshot.
+  const date = manifest.dataThroughByFile?.[file] ?? manifest.dataThrough;
+  const validEnd = isDate(date) && period?.start <= date && date <= manifest.dataThrough;
   const legacy = data.lastUpdated === manifest.recordedLastUpdated
     && period?.end === manifest.dataThrough
+    && validEnd
     && manifest.files[file] === snapshotHash(data);
-  return { date: legacy ? manifest.dataThrough : data.lastUpdated, legacy };
+  return { date: legacy ? date : data.lastUpdated, legacy };
 }
 
 export function dateRegression(file, base, head, manifest = LEGACY_DATA_DATES) {
