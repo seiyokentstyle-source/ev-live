@@ -117,7 +117,13 @@ test("production machine-specific ends remain limited to the audited old hashes"
   assert.deepEqual(LEGACY_DATA_DATES.dataThroughByFile, {
     "data/machines/m0ff44978.json": "2026-08-18",
     "data/machines/m416dcfa2.json": "2026-08-18",
-    "data/machines/m6a74cdc0.json": "2026-08-18"
+    "data/machines/m6a74cdc0.json": "2026-08-18",
+    "data/machines/mb0d0c823.json": "2026-08-18",
+    "data/machines/mbf0ab5b1.json": "2026-08-18",
+    "data/machines/m403fbe7e.json": "2026-07-24",
+    "data/machines/maba0ba88.json": "2026-06-17",
+    "data/machines/mac2bf183.json": "2026-07-24",
+    "data/machines/md079acdd.json": "2026-08-13"
   });
   for (const [file, end] of Object.entries(LEGACY_DATA_DATES.dataThroughByFile)) {
     assert.match(LEGACY_DATA_DATES.files[file], /^[a-f0-9]{64}$/);
