@@ -1,6 +1,6 @@
 import type { Axis, Machine, SelectAxis } from "./types";
 import { isExactFilterTableKey } from "./profiles";
-import { validateAggregateRows } from "./filter-aggregation-validation";
+import { validateAggregateMatchModes, validateAggregateRows } from "./filter-aggregation-validation";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -119,11 +119,12 @@ export function validateMachine(data: unknown): Machine {
         const aggregate = filters.aggregation;
         assert(isRecord(aggregate) && aggregate.schema === "evlive-filter-aggregates/v1",
           `profile ${profile.key} aggregation schema is invalid`);
-        const fields = new Set(["schema", "axisKeys", "rows", "rowsGzip", "rowCount", "costPerGame", "exchange", "medalsPerGame", "junzou", "bet", "investmentMinimum", "minPlay", "roundingEpsilon"]);
+        const fields = new Set(["schema", "axisKeys", "axisMatchModes", "rows", "rowsGzip", "rowCount", "costPerGame", "exchange", "medalsPerGame", "junzou", "bet", "investmentMinimum", "minPlay", "roundingEpsilon"]);
         assert(Object.keys(aggregate).every(key => fields.has(key)), `profile ${profile.key} aggregation contains unsupported fields`);
         assert(Array.isArray(filters.axes) && filters.axes.every(axis => isRecord(axis) && Array.isArray(axis.options)) && Array.isArray(aggregate.axisKeys)
           && JSON.stringify(aggregate.axisKeys) === JSON.stringify(filters.axes.map(axis => axis.key)),
         `profile ${profile.key} aggregation axisKeys must match the declared axes`);
+        validateAggregateMatchModes(aggregate.axisMatchModes, filters.axes);
         for (const key of ["costPerGame", "exchange", "medalsPerGame", "bet"] as const) {
           assert(Number.isFinite(aggregate[key]) && aggregate[key] > 0,
             `profile ${profile.key} aggregation ${key} must be positive and finite`);
@@ -139,7 +140,7 @@ export function validateMachine(data: unknown): Machine {
         if (aggregate.rows !== undefined) {
           assert(aggregate.rowsGzip === undefined && aggregate.rowCount === undefined,
             `profile ${profile.key} aggregation must contain rows or compressed rows, not both`);
-          validateAggregateRows(aggregate.rows, filters.axes);
+          validateAggregateRows(aggregate.rows, filters.axes, undefined, aggregate.axisMatchModes);
         } else {
           assert(typeof aggregate.rowsGzip === "string" && aggregate.rowsGzip.length > 0
             && aggregate.rowsGzip.length % 4 === 0 && /^[A-Za-z0-9+/]+={0,2}$/.test(aggregate.rowsGzip),

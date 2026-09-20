@@ -168,6 +168,11 @@ exchange, medalsPerGame, junzou, bet, investmentMinimum, minPlay?, roundingEpsil
 `axisKeys` は `axes` と同じキー・順序で、
 各行は `[g, ...optionIndexes, n, sumNormalGames, sumPayoutMedals]`。
 選択肢は0始まりの添字、`-1` は不明・範囲外で、不問時には含め指定時には一致しない。
+任意の `axisMatchModes` は軸と同じ長さの `"single" | "bitmask"` 配列で、省略時は全軸single。
+bitmaskの軸値は選択肢indexに対応するビット集合で、1軸30選択肢までとする。
+指定時は対象ビットが立つセルを含め、未知を表す `-1` は一致させない。
+例えば13日の「特定日」は「1のつく日」「3のつく日」の両ビットを同じ行に持つ。
+行を複製しないため、不問や他軸だけの指定では13日の件数を二重計上しない。
 台番号・日時・履歴ID・イベントは配信しない。同じG・軸値のセルは一意で、
 軸値が一致するセルの件数・投入G・獲得を合算してから平均を計算する。
 

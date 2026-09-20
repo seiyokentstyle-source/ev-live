@@ -12,7 +12,7 @@ export function clearAggregationDecodeCache(): void {
 
 export function decodeFilterAggregation(data: FilterAggregation, axes: FilterAxis[]): Promise<DecodedFilterAggregation> {
   if (data.rows !== undefined) return Promise.resolve(data);
-  const axisIdentity = JSON.stringify(axes.map(axis => [axis.key, axis.options.map(option => option.value)]));
+  const axisIdentity = JSON.stringify([data.axisMatchModes, axes.map(axis => [axis.key, axis.options.map(option => option.value)])]);
   const previous = cache.get(data);
   if (previous?.axes === axisIdentity) {
     cache.delete(data); cache.set(data, previous);
@@ -27,7 +27,7 @@ export function decodeFilterAggregation(data: FilterAggregation, axes: FilterAxi
     for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
     const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"), { signal: controller.signal });
     const text = await new Response(stream).text();
-    const rows = validateAggregateRows(JSON.parse(text), axes, data.rowCount);
+    const rows = validateAggregateRows(JSON.parse(text), axes, data.rowCount, data.axisMatchModes);
     const { rowsGzip: _encoded, rowCount: _count, ...parameters } = data;
     return { ...parameters, rows };
   })();

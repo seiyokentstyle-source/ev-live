@@ -115,9 +115,13 @@ export type FilterAxis = {
 };
 
 /** 生履歴を含まない、軸値・打ち始めGごとの合計。 */
+export type FilterAxisMatchMode = "single" | "bitmask";
+
 export type FilterAggregationParameters = {
   schema: "evlive-filter-aggregates/v1";
   axisKeys: string[];
+  /** 省略時は全軸single。bitmaskは1軸30選択肢まで。 */
+  axisMatchModes?: FilterAxisMatchMode[];
   costPerGame: number;
   exchange: number;
   medalsPerGame: number;

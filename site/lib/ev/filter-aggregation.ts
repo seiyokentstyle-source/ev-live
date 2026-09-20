@@ -27,7 +27,14 @@ export function aggregateFilterTable(
   });
   const byGame = new Map<number, { n: number; normal: number; payout: number }>();
   for (const row of data.rows) {
-    if (selected.some((index, axis) => index !== null && (index < 0 || row[axis + 1] !== index))) continue;
+    if (selected.some((index, axis) => {
+      if (index === null) return false;
+      const value = row[axis + 1];
+      if (index < 0) return true;
+      return data.axisMatchModes?.[axis] === "bitmask"
+        ? value < 0 || (value & 2 ** index) === 0
+        : value !== index;
+    })) continue;
     const [n, normal, payout] = row.slice(axes.length + 1);
     if (n <= 0) continue;
     const total = byGame.get(row[0]) ?? { n: 0, normal: 0, payout: 0 };
