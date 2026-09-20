@@ -224,6 +224,32 @@ function parseProfile(profile: Profile): { baseKey: string; baseLabel: string; r
   };
 }
 
+/** 同じ母集団を分けた狙い方が揃った場合だけ、重複する旧通常表を外す。 */
+function replacedByRunthroughGroups(group: ProfileGroup, groups: Map<string, ProfileGroup>): boolean {
+  if (group.aimKind) return false;
+  const replacements: Array<[string, AimKind]> = group.key === "game_ceiling"
+    ? [["game_ceiling_after_nonrunthrough", "at_non_runthrough"],
+       ["game_ceiling_after_runthrough", "at_runthrough"]]
+    : group.key === "game_ceiling_joui"
+      ? [["game_ceiling_after_nonrunthrough_joui", "at_non_runthrough"]]
+      : [];
+  if (replacements.length === 0) return false;
+
+  return Object.entries(group.variants).every(([rate, original]) => {
+    if (!Number.isInteger(original.sessions) || original.sessions! <= 0) return false;
+    let sessions = 0;
+    for (const [key, aimKind] of replacements) {
+      const replacement = groups.get(key)?.variants[rate];
+      if (!replacement || replacement.aimKind !== aimKind || replacement.dataPending || replacement.pendingReason
+          || replacement.baseAnchors.length === 0
+          || !Number.isInteger(replacement.sessions) || replacement.sessions! <= 0) return false;
+      sessions += replacement.sessions!;
+    }
+    // 判別不能な前回状態や、まだ表がない交換条件を黙って落とさない。
+    return sessions === original.sessions;
+  });
+}
+
 export function groupProfiles(profiles: Profile[], machineId?: string): GroupedProfiles {
   const order: string[] = [];
   const map = new Map<string, ProfileGroup>();
@@ -250,7 +276,8 @@ export function groupProfiles(profiles: Profile[], machineId?: string): GroupedP
   const defaultRate = rates.find((rate) => rate.value === "4652")?.value ?? rates[0]?.value ?? null;
 
   const aimOrder: Record<AimKind, number> = { cz: 0, bonus: 1, at_non_runthrough: 2, at_runthrough: 3 };
-  const groups = order.map((key) => map.get(key) as ProfileGroup);
+  const groups = order.map((key) => map.get(key) as ProfileGroup)
+    .filter(group => !replacedByRunthroughGroups(group, map));
   groups.sort((a, b) => (a.aimKind ? aimOrder[a.aimKind] : 4) - (b.aimKind ? aimOrder[b.aimKind] : 4));
   return { groups, rates, defaultRate };
 }
