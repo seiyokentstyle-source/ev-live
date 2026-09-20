@@ -12,3 +12,4 @@ next-dev.*.log
 tsconfig.tsbuildinfo
 /site/public/interval-feed/
 /site/public/saved-targets.json
+/site/public/filter-aggregates/

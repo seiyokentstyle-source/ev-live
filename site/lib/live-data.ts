@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { externalizeMachineAggregations } from "./filter-aggregate-assets.mjs";
 import type { Machine, MachineSummary } from "./ev/types";
 import { validateMachine } from "./ev/validate";
 import { machineSummary } from "./ev/summary";
@@ -40,7 +41,7 @@ export function buildLiveMachine(
   refreshed: MachineSavedTarget[] = [],
   replaySource: string | null | undefined = savedTargetReplaySource(data, hallId)
 ): LiveMachine {
-  const machine = validateMachine(data);
+  const machine = externalizeMachineAggregations(validateMachine(data));
   const savedTargets = selectSavedTargets(catalog, machine.id, hallId, refreshed, replaySource);
   // Hash the complete public payload: same-day recalculation and target removal
   // must update an open table even when the headline sample count is unchanged.

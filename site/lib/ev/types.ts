@@ -134,9 +134,13 @@ export type FilterAggregationParameters = {
 
 /** [g, ...optionIndexes, n, sumNormalGames, sumPayoutMedals]。-1 は不明。 */
 export type DecodedFilterAggregation = FilterAggregationParameters & { rows: number[][] };
-export type FilterAggregation = FilterAggregationParameters & (
+export type FilterAggregationRowsAsset = { sha256: string; rowCount: number };
+export type FilterAggregationRowPayload =
   | { rows: number[][]; rowsGzip?: never; rowCount?: never }
-  | { rows?: never; rowsGzip: string; rowCount: number }
+  | { rows?: never; rowsGzip: string; rowCount: number };
+export type FilterAggregation = FilterAggregationParameters & (
+  | (FilterAggregationRowPayload & { rowsAsset?: never })
+  | { rowsAsset: FilterAggregationRowsAsset; rows?: never; rowsGzip?: never; rowCount?: never }
 );
 
 /** 末尾/日/CZ の絞り込みを“公開前に集計済み”で持つ（生サンプルは公開しない）。
