@@ -250,6 +250,24 @@ function replacedByRunthroughGroups(group: ProfileGroup, groups: Map<string, Pro
   });
 }
 
+const KABANERI_ST_AIMS: Record<string, { label: string; order: number }> = {
+  game_ceiling_after_nonrunthrough: { label: "駆け抜け以外後", order: 0 },
+  game_ceiling_after_runthrough: { label: "駆け抜け後", order: 1 },
+  game_ceiling_after_nonrunthrough_joui: { label: "上位後", order: 2 },
+  game_ceiling_joui: { label: "上位後", order: 2 },
+  reset: { label: "リセット", order: 3 }
+};
+
+/** 海門決戦はST間を前回状態で選ぶ。ボーナス1回で区切る別の打ち方は並べない。 */
+function machineAimGroups(groups: ProfileGroup[], machineId?: string): ProfileGroup[] {
+  if (machineId !== "mcd43a818") return groups;
+  const selected = groups.filter(group => !["cz_ceiling", "cz_s1", "cz_reset"].includes(group.key));
+  // 古いデータに道中表しかない場合も、機種ページを空にしない。
+  if (selected.length === 0) return groups;
+  return selected.map(group => ({ ...group, label: KABANERI_ST_AIMS[group.key]?.label ?? group.label }))
+    .sort((a, b) => (KABANERI_ST_AIMS[a.key]?.order ?? 4) - (KABANERI_ST_AIMS[b.key]?.order ?? 4));
+}
+
 export function groupProfiles(profiles: Profile[], machineId?: string): GroupedProfiles {
   const order: string[] = [];
   const map = new Map<string, ProfileGroup>();
@@ -279,7 +297,7 @@ export function groupProfiles(profiles: Profile[], machineId?: string): GroupedP
   const groups = order.map((key) => map.get(key) as ProfileGroup)
     .filter(group => !replacedByRunthroughGroups(group, map));
   groups.sort((a, b) => (a.aimKind ? aimOrder[a.aimKind] : 4) - (b.aimKind ? aimOrder[b.aimKind] : 4));
-  return { groups, rates, defaultRate };
+  return { groups: machineAimGroups(groups, machineId), rates, defaultRate };
 }
 
 export function resolveProfile(group: ProfileGroup, rate: string | null): Profile {

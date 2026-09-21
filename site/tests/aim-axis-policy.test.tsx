@@ -176,6 +176,42 @@ describe("short-ceiling runthrough aim replacement", () => {
     const values = splitProfiles().filter(value => !value.aimKind);
     expect(keys(values)).toEqual(["game_ceiling", "game_ceiling_joui"]);
   });
+
+  it("shows Kabaneri's four ST aftermath aims in order without changing either rate's data", () => {
+    const additions = ["4652", "5050"].flatMap(rate =>
+      ["reset", "cz_ceiling", "cz_reset", "cz_s1"].map(key => ({
+        ...profile(key === "cz_ceiling" ? "bonus" : undefined, `${key}_${rate}`), sessions: 10
+      })));
+    const values = [...splitProfiles(), ...additions];
+    const before = structuredClone(values);
+    const result = groupProfiles(values, "mcd43a818");
+    expect(result.groups.map(group => [group.key, group.label])).toEqual([
+      ["game_ceiling_after_nonrunthrough", "駆け抜け以外後"],
+      ["game_ceiling_after_runthrough", "駆け抜け後"],
+      ["game_ceiling_after_nonrunthrough_joui", "上位後"],
+      ["reset", "リセット"]
+    ]);
+    for (const group of result.groups) {
+      for (const rate of ["4652", "5050"]) {
+        expect(group.variants[rate]).toBe(values.find(value => value.key === `${group.key}_${rate}`));
+      }
+    }
+    expect(result.rates.map(rate => rate.value)).toEqual(["4652", "5050"]);
+    expect(values).toEqual(before);
+    const tabs = aimTabs(result.groups, []);
+    const markup = renderToStaticMarkup(createElement(ProfileBar, {
+      tabs, activeKey: tabs[0].key, onChange: () => undefined
+    }));
+    for (const label of ["駆け抜け以外後", "駆け抜け後", "上位後", "リセット"]) expect(markup).toContain(label);
+    expect(markup).not.toContain("cz_ceiling");
+  });
+
+  it("keeps bonus interval aims for other machines and keeps legacy-only Kabaneri pages usable", () => {
+    const bonus = profile("bonus", "cz_ceiling_4652");
+    const values = [...splitProfiles(), bonus];
+    expect(groupProfiles(values, "other-machine").groups.some(group => group.key === "cz_ceiling")).toBe(true);
+    expect(groupProfiles([bonus], "mcd43a818").groups[0].variants["4652"]).toBe(bonus);
+  });
 });
 
 describe("exact filter intersections", () => {
