@@ -275,3 +275,19 @@ allやmissingとは異なる。現在の店舗は新宿（`shinjuku`）。
 公開状態確認用の `/ev-live/saved-targets.json` を出力する。生履歴・イベント・秘密鍵は
 カタログや集計結果に含めない。公開リンクは
 `/ev-live/machines/<machineId>/shinjuku/?target=<id>`。
+
+## 店舗の台番号ヒートマップ
+
+`data/halls/shinjuku-heatmap.json` は収集側 `export_hall_heatmap.py` が生成する
+`evlive-floor-heatmap/v1`。機種JSONの `settingAim.net` は最終AT即やめ想定なので流用しない。
+指標は終日差枚の推定で、`groups` の `all` と `0`〜`9` の11群に、
+台別 `{ unit, days, net }`（有効日数・合計差枚）を持つ。表示は `net / days`。
+欠測を0扱いせず、機種別の平均や回転数で加重もしない。日別履歴・計算コードは含めない。
+
+特定日は既存条件と同じ、サイトデータの日付数字を含む日（1なら1・10〜19・21・31日）。
+対象期間・台日数は実データだけから算出する。生成時刻をデータ末日にはしない。
+日次収集完了時に、品質検査とグラフ校正の後で新宿分だけ更新する。
+
+表示先は `/ev-live/halls/shinjuku/heatmap/`。島図の664台は
+`site/lib/heatmap/shinjuku-layout.ts` に位置だけを保持し、元画像の機種名・差枚色は再利用しない。
+灰色は未計算/欠測、0枚は中立色。色の閾値は日付条件を変えても固定する。
