@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { externalizeMachineAggregations } from '../lib/filter-aggregate-assets.mjs';
+import { splitCzThroughProfiles } from '../lib/cz-through-profiles.mjs';
 
 export async function exportFilterAggregates(sourceDir, outputDir) {
   const source = path.resolve(sourceDir), output = path.resolve(outputDir);
@@ -25,7 +26,7 @@ export async function exportFilterAggregates(sourceDir, outputDir) {
         throw new Error(`Source aggregates must contain their row payload: ${entry.name}`);
       }
       const assets = new Map();
-      externalizeMachineAggregations(machine, (hash, body) => {
+      externalizeMachineAggregations(splitCzThroughProfiles(machine), (hash, body) => {
         if (!emitted.has(hash)) assets.set(hash, body);
       });
       for (const [hash, body] of assets) {

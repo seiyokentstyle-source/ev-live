@@ -359,7 +359,9 @@ export function declaredFilterAxes(profile: Profile): FilterAxis[] | undefined {
   const axes = profile.evFilters?.axes;
   if (axes === undefined) return undefined;
   return axes.map(axis => ({ ...axis, label: rewriteAxisLabel(axis.label),
-    allLabel: profile.aimKind || profile.evFilters?.selectionPolicy ? "不問" : axis.allLabel }));
+    allLabel: axis.key === "cz" && /^cz_ceiling_after_(4652|5050)$/.test(profile.key)
+      ? "1スルー以降すべて"
+      : profile.aimKind || profile.evFilters?.selectionPolicy ? "不問" : axis.allLabel }));
 }
 
 /** 狙い方・レート切替後も適用できる絞り込みだけを引き継ぐ。 */

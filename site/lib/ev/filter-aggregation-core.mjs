@@ -1,0 +1,50 @@
+/** Match Python's half-even EV rounding, including its floating-point tolerance. */
+export function roundAggregateEV(value, epsilon = 1e-8) {
+  if (!Number.isFinite(value) || !Number.isFinite(epsilon) || epsilon < 0 || epsilon >= 0.25) {
+    throw new Error("Invalid EVLIVE rounding value or tolerance");
+  }
+  const floor = Math.floor(value);
+  const fraction = Math.abs(value - (floor + 0.5)) <= epsilon ? 0.5 : value - floor;
+  if (fraction < 0.5) return floor;
+  if (fraction > 0.5) return floor + 1;
+  return floor % 2 === 0 ? floor : floor + 1;
+}
+
+/** Merge counts and totals before calculating means; shared by server and browser. */
+export function aggregateFilterTable(data, axes, selection, fallbackStart) {
+  const selected = axes.map(axis => {
+    const value = selection[axis.key];
+    return value == null ? null : axis.options.findIndex(option => option.value === value);
+  });
+  const byGame = new Map();
+  for (const row of data.rows) {
+    if (selected.some((index, axis) => {
+      if (index === null) return false;
+      const value = row[axis + 1];
+      if (index < 0) return true;
+      return data.axisMatchModes?.[axis] === "bitmask"
+        ? value < 0 || (value & 2 ** index) === 0
+        : value !== index;
+    })) continue;
+    const [n, normal, payout] = row.slice(axes.length + 1);
+    if (n <= 0) continue;
+    const total = byGame.get(row[0]) ?? { n: 0, normal: 0, payout: 0 };
+    total.n += n; total.normal += normal; total.payout += payout;
+    byGame.set(row[0], total);
+  }
+  const baseAnchors = [...byGame.entries()].filter(([, total]) => {
+    const investment = total.normal * data.costPerGame;
+    const enoughInvestment = data.investmentMinimum === "mean" ? investment / total.n >= 1 : investment >= 1;
+    return enoughInvestment && (data.minPlay === undefined || total.normal / total.n >= data.minPlay);
+  }).sort(([a], [b]) => a - b).map(([g, total]) => {
+    const profit = total.payout * data.exchange - total.normal * data.costPerGame;
+    const games = total.normal + (data.junzou > 0 ? total.payout / data.junzou : 0);
+    return { g, n: total.n, ev: roundAggregateEV(profit / total.n, data.roundingEpsilon),
+      inv: total.normal * data.medalsPerGame / total.n, playG: games / total.n,
+      rtp: games > 0 ? 100 + profit / (20 * data.bet * games) * 100 : 100 };
+  });
+  const first = baseAnchors[0];
+  return { baseAnchors, start: first?.g ?? fallbackStart,
+    end: baseAnchors.at(-1)?.g ?? fallbackStart,
+    hits: first?.n ?? 0, totalPayout: first ? byGame.get(first.g).payout : 0, firstHitRate: null };
+}
