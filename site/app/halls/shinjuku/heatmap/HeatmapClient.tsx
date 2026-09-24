@@ -137,7 +137,7 @@ export function HeatmapClient({ data, floor }: { data: HeatmapData | null; floor
         <p>設定狙いと同じ推定差枚です。100G以上・最終AT終了時に即やめする想定のデータで平均し、対象データがない台は灰色で表示します。</p>
         {data?.snapshotFallbackTo && <p>特定日は一部の台で{data.snapshotFallbackTo.replaceAll("-", "/")}までの集計済みデータを表示しています。</p>}
         <p>特定日は日付の数字で抽出（例：1のつく日＝1・10〜19・21・31日）。</p>
-        <p><a href={floor.sourceUrl} target="_blank" rel="noreferrer">島図出典：アナスロ</a> · {floor.asOf.replaceAll("-", "/")}時点の配置。入替前後も同じ台番号で集計。</p>
+        <p>{floor.asOf.replaceAll("-", "/")}時点の配置。入替前後も同じ台番号で集計。</p>
       </footer>
     </div>
   );

@@ -120,7 +120,6 @@ describe("floor heatmap presentation", () => {
     expect(html).toContain("設定狙いと同じ推定差枚");
     expect(html).toContain("100G以上・最終AT終了時に即やめ");
     expect(html).toContain("島図を拡大");
-    expect(html).toContain("島図出典：アナスロ");
     expect(html).not.toContain("までの集計済みデータを表示");
   });
 
