@@ -41,6 +41,14 @@ export const HALLS: Hall[] = [
     dataSubdir: "akihabara"
   },
   {
+    id: "kabuki",
+    area: "新宿",
+    name: "歌舞伎のお店",
+    note: "集計データを準備中",
+    ready: false,
+    dataSubdir: "kabuki"
+  },
+  {
     id: "mixed",
     area: "混合",
     name: "低設定想定店舗混合",
