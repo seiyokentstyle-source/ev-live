@@ -124,6 +124,19 @@ export function rewriteCeiling(text: string, machineId?: string, profileKey?: st
   return out.trim();
 }
 
+function isGodEaterUpperAim(machineId?: string, profileKey?: string): boolean {
+  return machineId === "m19571085" &&
+    (profileKey === "game_ceiling_after_nonrunthrough_joui" || profileKey === "game_ceiling_joui");
+}
+
+/** タブの補足と算出条件で同じ天井表記を使う。 */
+export function profileCeilingText(profile: Profile, machineId?: string, profileKey?: string): string {
+  if (isGodEaterUpperAim(machineId, profileKey)) {
+    return profile.ceiling.replace(/^(?:AT間・駆け抜け後以外・)?上位AT後/, "上位後");
+  }
+  return profile.aimKind ? profile.ceiling : rewriteCeiling(profile.ceiling, machineId, profileKey);
+}
+
 // 絞り込み軸の見出しも同じ扱い。軸のラベルはデータ側（evFilters.axes）が配るので、
 // 生成側だけ直しても夜間の再生成まで古い文言が出続ける。ここを通して即時に反映する。
 // ★選択肢（「3のつく日」＝3/13/23）は言い換えない。「3の特定日」では意味が通らず、
@@ -258,8 +271,13 @@ const KABANERI_ST_AIMS: Record<string, { label: string; order: number }> = {
   reset: { label: "リセット", order: 3 }
 };
 
-/** 海門決戦はST間を前回状態で選ぶ。ボーナス1回で区切る別の打ち方は並べない。 */
+/** 機種に合わせた狙い方の見出し・並び順。 */
 function machineAimGroups(groups: ProfileGroup[], machineId?: string): ProfileGroup[] {
+  // ゴッドイーターの該当表は上位後だけ。「非駆け抜け」との合算ではない。
+  if (machineId === "m19571085") {
+    return groups.map(group => isGodEaterUpperAim(machineId, group.key) ? { ...group, label: "上位後" } : group);
+  }
+  // 海門決戦はST間を前回状態で選び、ボーナス間を並べない。
   if (machineId !== "mcd43a818") return groups;
   const selected = groups.filter(group => !["cz_ceiling", "cz_s1", "cz_reset"].includes(group.key));
   // 古いデータに道中表しかない場合も、機種ページを空にしない。
@@ -280,7 +298,7 @@ export function groupProfiles(profiles: Profile[], machineId?: string): GroupedP
     let group = map.get(baseKey);
     if (!group) {
       group = { key: baseKey, aimKind: profile.aimKind, label: baseLabel,
-        ceiling: profile.aimKind ? profile.ceiling : rewriteCeiling(profile.ceiling, machineId, baseKey), variants: {}, order: [] };
+        ceiling: profileCeilingText(profile, machineId, baseKey), variants: {}, order: [] };
       map.set(baseKey, group);
       order.push(baseKey);
     }
