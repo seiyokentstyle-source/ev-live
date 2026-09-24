@@ -210,6 +210,8 @@ export type Profile = {
   pendingReason?: string;
 };
 
+export type SettingAimDayDigit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
+
 export type SettingAimUnit = {
   /** 台番号. */
   unit: string;
@@ -223,6 +225,8 @@ export type SettingAimUnit = {
   games?: number[];
   /** 期間合計の推定差枚（即やめ想定）. */
   net: number;
+  /** rates と同じ有効日を、日にちに含まれる数字ごとに集計した差枚。旧データは未提供. */
+  dayDigitNets?: Partial<Record<SettingAimDayDigit, { net: number; days: number }>>;
 };
 
 /** 設定狙いモード：台番号別の推定出率（OUT÷IN）。データ未生成の機種では undefined。 */

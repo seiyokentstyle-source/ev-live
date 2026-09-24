@@ -47,6 +47,8 @@ export function validateHeatmapData(value: unknown): HeatmapData {
   const fail = (): never => { throw new Error("Invalid Shinjuku heatmap aggregate data"); };
   if (!record(value) || value.schema !== "evlive-floor-heatmap/v1" || value.hallId !== "shinjuku" || value.metric !== "net" || value.estimated !== true || !dateOrNull(value.dataFrom) || !dateOrNull(value.dataTo) || !Array.isArray(value.groups)) return fail();
   if ((value.dataFrom === null) !== (value.dataTo === null) || (value.dataFrom && value.dataTo && value.dataFrom > value.dataTo)) return fail();
+  if (value.snapshotFallbackTo !== undefined && (typeof value.snapshotFallbackTo !== "string" || !dateOrNull(value.snapshotFallbackTo) ||
+      !value.dataFrom || !value.dataTo || value.snapshotFallbackTo < value.dataFrom || value.snapshotFallbackTo > value.dataTo)) return fail();
   const groupKeys = new Set<string>();
   for (const group of value.groups) {
     if (!record(group) || typeof group.key !== "string" || !HEATMAP_GROUP_KEYS.includes(group.key as HeatmapGroupKey) || groupKeys.has(group.key) || typeof group.label !== "string" || !dateOrNull(group.firstDate) || !dateOrNull(group.lastDate) || !Array.isArray(group.units)) return fail();

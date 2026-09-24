@@ -2,6 +2,7 @@ import type { Axis, Machine, SelectAxis } from "./types";
 import { isExactFilterTableKey } from "./profiles";
 import { validateAggregateMatchModes, validateAggregateRows } from "./filter-aggregation-validation";
 import { validateAggregationRowsAsset } from "./aggregation-asset";
+import { validateSettingAimDayDigitNets } from "./setting-aim-day-nets";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -314,6 +315,7 @@ export function validateMachine(data: unknown): Machine {
           `settingAim ${unit.unit} games must be non-negative numbers`
         );
       }
+      validateSettingAimDayDigitNets(unit.dayDigitNets, aim.dates.filter((_, index) => unit.rates[index] !== null), unit.unit);
     }
   }
 

@@ -24,6 +24,8 @@ export type HeatmapData = {
   estimated: true;
   dataFrom: string | null;
   dataTo: string | null;
+  /** Latest observed date among historical setting-aim snapshots used for specific days. */
+  snapshotFallbackTo?: string;
   groups: HeatmapGroup[];
 };
 

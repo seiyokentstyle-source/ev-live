@@ -69,6 +69,13 @@ describe("floor heatmap aggregate contract", () => {
     expect(validateHeatmapData(data).groups).toHaveLength(11);
   });
 
+  it("validates the observed through-date of a historical fallback", () => {
+    expect(validateHeatmapData({ ...data, snapshotFallbackTo: "2026-09-11" }).snapshotFallbackTo).toBe("2026-09-11");
+    for (const date of [null, 20260911, "2026-02-30", "2026-08-31", "2026-09-20"]) {
+      expect(() => validateHeatmapData({ ...data, snapshotFallbackTo: date })).toThrow();
+    }
+  });
+
   it.each([
     ["negative days", { ...data.groups[0].units[0], days: -1 }],
     ["fractional days", { ...data.groups[0].units[0], days: 1.5 }],
@@ -110,9 +117,16 @@ describe("floor heatmap presentation", () => {
     for (const seat of floor.seats) expect(html).toContain(`>${seat.unit}</button>`);
     expect(html).toContain("3 / 4台にデータ");
     expect(html).toContain("7台日");
-    expect(html).toContain("推定値");
+    expect(html).toContain("設定狙いと同じ推定差枚");
+    expect(html).toContain("100G以上・最終AT終了時に即やめ");
     expect(html).toContain("島図を拡大");
     expect(html).toContain("島図出典：アナスロ");
+    expect(html).not.toContain("までの集計済みデータを表示");
+  });
+
+  it("identifies historical specific-day observations only when a snapshot is used", () => {
+    const html = renderToStaticMarkup(<HeatmapClient data={{ ...data, snapshotFallbackTo: "2026-09-11" }} floor={floor} />);
+    expect(html).toContain("特定日は一部の台で2026/09/11までの集計済みデータを表示しています。");
   });
 
   it("renders all seats as unknown when data has not been generated", () => {
