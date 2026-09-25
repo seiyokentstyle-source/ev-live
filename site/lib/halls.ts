@@ -7,7 +7,7 @@
 // ★現状 ready=true は新宿だけ。data/machines/*.json は全て
 //   マルハン新宿東宝ビル店（scraper の address_text）で集めたもの。
 //   他店の収集を始めたら、その店の JSON の置き場を dataDir に足して ready を立てる。
-import publishedHalls from "../../../data/published-halls.json";
+import publishedHalls from "../../data/published-halls.json";
 
 export type Hall = {
   /** URL に出る識別子（/machines/<機種id>/<ここ>）. */

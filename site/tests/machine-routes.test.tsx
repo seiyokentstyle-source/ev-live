@@ -65,10 +65,10 @@ describe("machines collected only outside the default hall", () => {
     expect(articles).toHaveLength(HALLS.length);
     for (const [index, hall] of HALLS.entries()) {
       if (hall.id === "mixed") {
-        expect(articles[index]).toContain("123");
+        expect(articles[index]).toContain("サンプル 123回");
         expect(articles[index]).toContain("データあり");
       } else {
-        expect(articles[index]).not.toContain("サンプル");
+        expect(articles[index]).not.toMatch(/サンプル\s+[\d,]+回/);
         expect(articles[index]).toContain("準備中");
       }
     }
