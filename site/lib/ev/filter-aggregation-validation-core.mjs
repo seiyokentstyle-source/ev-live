@@ -23,7 +23,8 @@ export function validateAggregateRows(value, axes, expectedRows, axisMatchModes)
       if (!Number.isSafeInteger(option) || option < -1 || option > maximum) fail("option index or bitmask is invalid");
     }
     const [n, normal, payout] = row.slice(axes.length + 1);
-    if (!Number.isSafeInteger(n) || n < 0 || normal < 0 || payout < 0 || (n === 0 && (normal !== 0 || payout !== 0))) fail("totals are invalid");
+    // Payout is a signed medal change, including losses during recorded CZs.
+    if (!Number.isSafeInteger(n) || n < 0 || normal < 0 || (n === 0 && (normal !== 0 || payout !== 0))) fail("totals are invalid");
     const key = JSON.stringify(row.slice(0, axes.length + 1));
     if (cells.has(key)) fail("cells must be unique");
     cells.add(key);
