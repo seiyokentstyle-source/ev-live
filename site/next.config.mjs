@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+import { fileURLToPath } from "node:url";
 
 // Content Security Policy.
 // The app ships no external scripts/styles (fonts fall back to system fonts),
@@ -38,6 +39,8 @@ const staticExport = process.env.STATIC_EXPORT === "true";
 
 const nextConfig = {
   reactStrictMode: true,
+  // The shared published hall registry lives in ../data alongside the app.
+  turbopack: { root: fileURLToPath(new URL("..", import.meta.url)) },
   env: { NEXT_PUBLIC_BASE_PATH: basePath },
   // GitHub Pages serves /foo/ from foo/index.html. Without this, the static
   // export emits foo.html (no per-route index.html), so trailing-slash URLs
