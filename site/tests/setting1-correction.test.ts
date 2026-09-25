@@ -100,10 +100,10 @@ describe("complete setting-1 correction selection", () => {
     expect(() => validateMachine(output)).not.toThrow();
   });
 
-  it("explains the Shinjuku source, correction multiplier and unchanged conditional hit distribution", () => {
+  it("explains the declared source halls, correction multiplier and unchanged conditional hit distribution", () => {
     const output = onlyLowSetting(correctionMachine())!;
     const explanations = output.calcSpec!.items.map(({ k, v }) => `${k} ${v}`).join("\n");
-    expect(explanations).toContain("新宿");
+    expect(explanations).toContain("収集元として記載された店舗");
     expect(explanations).toContain("97.7%");
     expect(explanations).toMatch(/93\.80%|0\.938/);
     expect(explanations).toContain("当選G分布");

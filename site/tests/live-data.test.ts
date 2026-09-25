@@ -106,6 +106,7 @@ describe("live data publication", () => {
     // 店舗が増えればここも増える＝ready の店舗×機種ぶんのルートが出る、を固定する。
     expect(await generateStaticParams()).toEqual([
       { hall: "shinjuku", id: `${fixture.id}.json` },
+      { hall: "kabuki", id: `${fixture.id}.json` },
       { hall: "mixed", id: `${fixture.id}.json` }
     ]);
   });
