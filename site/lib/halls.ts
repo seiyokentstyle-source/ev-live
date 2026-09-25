@@ -44,8 +44,8 @@ export const HALLS: Hall[] = [
     id: "kabuki",
     area: "新宿",
     name: "歌舞伎のお店",
-    note: "集計データを準備中",
-    ready: false,
+    note: "Daidataの保存済み履歴をゴジラのお店と共通の機種仕様・計算条件で集計。算出保留の機種は保留表示",
+    ready: true,
     dataSubdir: "kabuki"
   },
   {
@@ -54,7 +54,7 @@ export const HALLS: Hall[] = [
     name: "低設定想定店舗混合",
     // ★ここだけ性格が違う。実測ではなく「実測を設定1相当に補正した推定」を置く場所。
     //   店舗別の表に推定が混ざると、どれが実戦値か見て分からないので分けている。
-    note: "新宿の表構成と当たり方を基に、獲得を設定1相当に補正した推定値",
+    note: "収集済み店舗の履歴を台番号が混ざらない形で合算。設定1補正がある機種は補正値、ない機種は店舗合算値",
     // data/machines/mixed/ がまだ無くても、lib/ev/low-setting.ts が既定店舗の
     // JSONから設定1想定の表を拾って組み立てる＝再生成を待たずに中身がある。
     ready: true,

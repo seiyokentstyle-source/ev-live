@@ -51,15 +51,15 @@ function correctedMachine(machine: Machine): Machine | null {
     profiles: correction.profiles,
     meta: {
       ...machine.meta,
-      source: `${machine.meta.source}／新宿の履歴を設定1相当に補正した推定`,
+      source: `${machine.meta.source}／上記の収集対象店舗の履歴を設定1相当に補正した推定`,
     },
     calcSpec: {
       items: [
-        { k: "参照データ", v: "新宿で収集した履歴を使用。狙い方・絞り込み条件・当たり方と母数を揃えて算出" },
+        { k: "参照データ", v: "収集元として記載された店舗の履歴を使用。狙い方・絞り込み条件・当たり方と母数を揃えて算出" },
         { k: "設定1への補正", v: correction.method === "assumed-payout"
           ? `公表設定1の機械割${(correction.targetRtp * 100).toFixed(1)}%から獲得を逆算済み。追加の獲得補正は行わない`
           : `機種全体の機械割を公表設定1の${(correction.targetRtp * 100).toFixed(1)}%に合わせる獲得倍率${(correction.payoutScale * 100).toFixed(2)}%を、全ての狙い方と絞り込みに適用` },
-        { k: "補正の前提", v: "当選G分布と条件別の母数は新宿の実測のまま。獲得の仮定を変えて期待値・機械割・消化時間を再計算。各条件の機械割を一律に設定1の値へ揃える処理ではない" },
+        { k: "補正の前提", v: "当選G分布と条件別の母数は収集対象店舗の実測のまま。獲得の仮定を変えて期待値・機械割・消化時間を再計算。各条件の機械割を一律に設定1の値へ揃える処理ではない" },
         ...(machine.calcSpec?.items ?? []).filter((item) => item.k !== "設定1想定の補正"),
       ],
     },

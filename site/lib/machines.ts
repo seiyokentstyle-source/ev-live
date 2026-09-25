@@ -55,6 +55,10 @@ async function readMachine(dir: string, id: string): Promise<Machine | undefined
 
 /** A stored correction survives an older collector overwriting the source JSON. */
 function selectMixedMachine(stored?: Machine, source?: Machine): Machine | undefined {
+  // A combined dataset must not be replaced by a single store's correction.
+  if (stored && "mixedSources" in stored) {
+    return stored.setting1Correction ? onlyLowSetting(stored) ?? undefined : stored;
+  }
   // Validated dates use YYYY-MM-DD, so string comparison preserves date order.
   if (source?.setting1Correction && (!stored || source.lastUpdated >= stored.lastUpdated)) {
     return onlyLowSetting(source) ?? undefined;
