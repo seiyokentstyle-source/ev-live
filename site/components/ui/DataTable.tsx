@@ -39,7 +39,7 @@ export function TableScroll({
   return (
     <div
       data-table-scroll
-      className="min-h-0 flex-1 select-none overflow-auto overscroll-none [-webkit-touch-callout:none]"
+      className="min-h-0 flex-1 select-none overflow-auto overscroll-x-none overscroll-y-contain [-webkit-touch-callout:none]"
       onCopy={block}
       onCut={block}
       onContextMenu={block}
