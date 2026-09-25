@@ -212,6 +212,20 @@ export type Profile = {
 
 export type SettingAimDayDigit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
 
+export type HeatmapCoverageUnit = {
+  unit: string;
+  days: number;
+  firstDate: string;
+  lastDate: string;
+};
+
+/** Observed history only. These counts do not imply that a net-medal value can be calculated. */
+export type HeatmapCoverage = {
+  schema: "heatmap-coverage/v1";
+  reason: string;
+  groups: Record<"all" | SettingAimDayDigit, HeatmapCoverageUnit[]>;
+};
+
 export type SettingAimUnit = {
   /** 台番号. */
   unit: string;
@@ -382,6 +396,8 @@ export type Machine = {
   savedTargets?: MachineSavedTarget[];
   /** 設定狙いモードのデータ。スクレイパーが対応機種にのみ出力する（古い/未対応データでは undefined）。 */
   settingAim?: SettingAim;
+  /** History presence, including machines whose payout calculation is held. */
+  heatmapCoverage?: HeatmapCoverage;
   /** AT獲得モードのデータ。古い/未生成データでは undefined。 */
   atPayout?: AtPayout;
   /** ハラキリドライブモードのデータ。対応機種（ヴヴヴ2）のみ。古い/未生成データでは undefined。 */

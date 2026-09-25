@@ -9,12 +9,24 @@ export type HeatmapUnit = {
   net: number;
 };
 
+export type HeatmapPendingUnit = {
+  unit: string;
+  /** Null only when ranges overlap and aggregate-only inputs cannot prove unique days. */
+  days: number | null;
+  firstDate: string;
+  lastDate: string;
+  reasons: string[];
+  overlappingPeriods?: Array<{ days: number; firstDate: string; lastDate: string; reason: string }>;
+};
+
 export type HeatmapGroup = {
   key: HeatmapGroupKey;
   label: string;
   firstDate: string | null;
   lastDate: string | null;
   units: HeatmapUnit[];
+  /** History exists, but this date group has no monetary aggregate for these seats. */
+  pendingUnits?: HeatmapPendingUnit[];
 };
 
 export type HeatmapData = {

@@ -1,4 +1,17 @@
-import { HEATMAP_GROUP_KEYS, type FloorLayout, type HeatmapData, type HeatmapGroupKey, type HeatmapUnit } from "./types";
+import { validateHeatmapCoverageUnit } from "../ev/heatmap-coverage";
+import { HEATMAP_GROUP_KEYS, type FloorLayout, type HeatmapData, type HeatmapGroup, type HeatmapGroupKey, type HeatmapUnit } from "./types";
+
+export const PENDING_HEAT_COLOR = {
+  background: "repeating-linear-gradient(135deg, #716397 0px, #716397 4px, #574b79 4px, #574b79 8px)",
+  foreground: "#ffffff",
+};
+
+/** The visible history range includes pending observations without changing monetary date metadata. */
+export function heatmapGroupDateRange(group: HeatmapGroup | undefined) {
+  const firstDates = [group?.firstDate, ...(group?.pendingUnits ?? []).map((unit) => unit.firstDate)].filter((date): date is string => Boolean(date));
+  const lastDates = [group?.lastDate, ...(group?.pendingUnits ?? []).map((unit) => unit.lastDate)].filter((date): date is string => Boolean(date));
+  return { firstDate: firstDates.sort()[0] ?? null, lastDate: lastDates.sort().at(-1) ?? null };
+}
 
 export function groupLabel(key: HeatmapGroupKey): string {
   return key === "all" ? "日付不問" : `${key}のつく日`;
@@ -64,6 +77,31 @@ export function validateHeatmapData(value: unknown): HeatmapData {
       const span = group.firstDate && group.lastDate ? (Date.parse(group.lastDate) - Date.parse(group.firstDate)) / 86400000 + 1 : 0;
       if ((unit.days as number) > span) return fail();
       units.add(unit.unit);
+    }
+    if (group.pendingUnits !== undefined) {
+      if (!Array.isArray(group.pendingUnits)) return fail();
+      for (const pending of group.pendingUnits) {
+        if (!record(pending) || typeof pending.unit !== "string" || units.has(pending.unit) || !Array.isArray(pending.reasons) || !pending.reasons.length ||
+            pending.reasons.some((reason) => typeof reason !== "string" || !reason.trim()) || new Set(pending.reasons).size !== pending.reasons.length) return fail();
+        validateHeatmapCoverageUnit({ ...pending, days: pending.days === null ? 1 : pending.days });
+        units.add(pending.unit);
+        const reasons = pending.reasons;
+        if (pending.days === null) {
+          if (!Array.isArray(pending.overlappingPeriods) || pending.overlappingPeriods.length < 2) return fail();
+          const periods = pending.overlappingPeriods.map((period) => {
+            if (!record(period) || typeof period.reason !== "string" || !reasons.includes(period.reason)) return fail();
+            return validateHeatmapCoverageUnit({ ...period, unit: pending.unit });
+          }).sort((a, b) => a.firstDate.localeCompare(b.firstDate));
+          const firstDate = periods[0].firstDate;
+          let lastDate = periods[0].lastDate;
+          let overlaps = false;
+          for (const period of periods.slice(1)) {
+            if (period.firstDate <= lastDate) overlaps = true;
+            if (period.lastDate > lastDate) lastDate = period.lastDate;
+          }
+          if (!overlaps || firstDate !== pending.firstDate || lastDate !== pending.lastDate) return fail();
+        } else if (pending.overlappingPeriods !== undefined) return fail();
+      }
     }
   }
   if (groupKeys.size !== HEATMAP_GROUP_KEYS.length) return fail();

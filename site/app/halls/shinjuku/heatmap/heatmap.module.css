@@ -10,12 +10,13 @@
 .filter select { min-width: 152px; padding: 9px 12px; border: 1px solid #506176; border-radius: 6px; background: #172334; color: var(--ink); font-size: 14px; }
 .period { color: var(--ink-soft); font-size: 11px; line-height: 1.8; }
 .legend { display: flex; flex-shrink: 0; align-items: flex-start; gap: 20px; padding: 0 22px 13px; }
-.colorScale { width: 360px; max-width: 72%; }
+.colorScale { width: 360px; max-width: 72%; min-width: 0; }
 .colorBar { display: flex; height: 10px; overflow: hidden; border-radius: 3px; }
 .colorBar i { flex: 1; }
 .scaleLabels { display: flex; justify-content: space-between; margin-top: 5px; color: var(--ink-soft); font-size: 10px; font-variant-numeric: tabular-nums; }
 .noDataKey { display: flex; align-items: center; gap: 5px; color: var(--ink-soft); font-size: 10px; white-space: nowrap; }
 .noDataKey i { display: inline-block; width: 13px; height: 13px; border: 1px dashed #637284; border-radius: 2px; background: #293440; }
+.legendStates { display: grid; flex-shrink: 0; gap: 4px; }
 .mapToolbar { display: flex; flex-shrink: 0; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 22px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.025); }
 .mapToolbar p { font-size: 11px; color: var(--muted); }
 .zoomControls { display: flex; flex-shrink: 0; align-items: center; gap: 5px; }
@@ -37,6 +38,9 @@
 .detail strong { display: block; font-family: var(--font-mono); font-size: 19px; }
 .detailLabel { display: block; margin-bottom: 3px; font-size: 10px; color: var(--ink-soft); }
 .detail .unitTitle { display: flex; align-items: baseline; gap: 5px; font-size: 22px; }
+.pendingDetail { min-width: 0; max-height: 125px; overflow-y: auto; }
+.detail .pendingDetail strong { font-family: var(--font-sans); font-size: 12px; }
+.detail .pendingDetail p { margin-top: 3px; font-size: 10px; line-height: 1.5; overflow-wrap: anywhere; }
 .unitTitle span { font-family: var(--font-sans); font-size: 10px; font-weight: 400; color: var(--ink-soft); }
 .footer { flex-shrink: 0; padding: 10px 22px; border-top: 1px solid var(--line-soft); color: var(--muted); font-size: 10px; line-height: 1.7; }
 .footer a { text-decoration: underline; text-underline-offset: 3px; }

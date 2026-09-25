@@ -7,6 +7,7 @@ import { compareMachines } from "./machine-order";
 import { getReadyHalls } from "./halls";
 import { machineSummary } from "./ev/summary";
 import { normalizeMachineMetadata } from "./machine-metadata";
+import type { HeatmapCoverageMachine } from "./heatmap/coverage";
 
 // Data lives at the repository root (data/machines), while the site builds from
 // site/. Resolve against the repo root so it works whether the cwd is site/
@@ -92,6 +93,11 @@ export async function getMachines(dataSubdir?: string): Promise<Machine[]> {
 export async function getAvailableMachines(dataSubdir?: string): Promise<Machine[]> {
   const machines = await getMachines(dataSubdir);
   return machines.filter((machine) => machine.available);
+}
+
+/** Default-hall presence only, including held/unavailable machines. No monetary values escape this path. */
+export async function getShinjukuHeatmapCoverageSources(): Promise<HeatmapCoverageMachine[]> {
+  return (await readMachines(hallDir())).map(({ id, lastUpdated, heatmapCoverage }) => ({ id, lastUpdated, heatmapCoverage }));
 }
 
 export async function getMachine(id: string, dataSubdir?: string): Promise<Machine | undefined> {

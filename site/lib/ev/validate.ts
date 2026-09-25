@@ -3,6 +3,7 @@ import { isExactFilterTableKey } from "./profiles";
 import { validateAggregateMatchModes, validateAggregateRows } from "./filter-aggregation-validation";
 import { validateAggregationRowsAsset } from "./aggregation-asset";
 import { validateSettingAimDayDigitNets } from "./setting-aim-day-nets";
+import { validateHeatmapCoverage } from "./heatmap-coverage";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -55,6 +56,7 @@ export function validateMachine(data: unknown): Machine {
   );
   assert(typeof machine.releaseDate === "string" && isDateString(machine.releaseDate), "releaseDate must be YYYY-MM-DD");
   assert(typeof machine.lastUpdated === "string" && isDateString(machine.lastUpdated), "lastUpdated must be YYYY-MM-DD");
+  if (machine.heatmapCoverage !== undefined) validateHeatmapCoverage(machine.heatmapCoverage, machine.lastUpdated);
   if (machine.mixedSources !== undefined) {
     const mixed = machine.mixedSources;
     assert(isRecord(mixed) && mixed.schemaVersion === 1, "invalid mixedSources schema");
