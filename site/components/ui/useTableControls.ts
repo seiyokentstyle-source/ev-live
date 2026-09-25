@@ -2,7 +2,6 @@
 
 import { useEffect, useState, type RefObject } from "react";
 
-const SPACE = "--table-controls-bottom-space";
 const SETTLE_MS = 360; // Fallback check; actual CSS animations must finish first.
 
 /** Resize the table viewport without treating layout changes as another gesture. */
@@ -18,41 +17,20 @@ export function useTableControls(shellRef: RefObject<HTMLDivElement>, contextKey
     let returnedToTop = false;
     let timer: ReturnType<typeof setTimeout> | undefined;
     let active: HTMLElement | null = null;
-    const positions = new WeakMap<HTMLElement, number>();
-    const tables = new Set<HTMLElement>();
+    const positions = new WeakMap<HTMLElement, { top: number; max: number }>();
     setCollapsed(false);
 
-    const topOf = (table: HTMLElement) => Math.max(0, table.scrollTop);
-    const contentHeight = (table: HTMLElement) => {
-      const top = table.getBoundingClientRect().top + table.clientTop;
-      return Math.ceil(Math.max(0, ...[...table.children].map(child =>
-        child.getBoundingClientRect().bottom - top + table.scrollTop)));
-    };
+    const maxOf = (table: HTMLElement) => Math.max(0, table.scrollHeight - table.clientHeight);
+    const topOf = (table: HTMLElement) => Math.max(0, Math.min(table.scrollTop, maxOf(table)));
     const barHeight = () => [...shell.querySelectorAll<HTMLElement>(".collapsible-bar")]
       .reduce((sum, bar) => sum + bar.getBoundingClientRect().height, 0);
-    const setSpace = (table: HTMLElement, space: number) => {
-      if (space > 0) table.style.setProperty(SPACE, `${Math.ceil(space)}px`);
-      else table.style.removeProperty(SPACE);
-    };
-    // Padding is needed only when an enlarged viewport would otherwise clamp
-    // the current G row at the end of a table. It never adds data rows.
-    const trimSpace = (table: HTMLElement) => {
-      // Reopened controls restore the smaller viewport, so compensation is no
-      // longer needed. Clear it directly: old padding can itself impose a flex
-      // minimum height larger than that viewport on a narrow screen.
-      if (!closed) { setSpace(table, 0); return; }
-      // scrollHeight is clamped to clientHeight for short content, so subtracting
-      // the old padding from it would invent empty scroll space on short tables.
-      const top = topOf(table);
-      setSpace(table, top > 0 ? Math.max(0, top + table.clientHeight - contentHeight(table)) : 0);
-    };
 
     const settle = () => {
       if (timer !== undefined) clearTimeout(timer);
       timer = undefined;
       if (!transitioning) return;
       // React can commit after the timer starts, and a busy mobile frame can
-      // start CSS later still. Never release the anchor while height is moving.
+      // start CSS later still. Do not settle while the viewport height is moving.
       const animating = [...shell.querySelectorAll<HTMLElement>(".collapsible-bar")]
         .some(bar => bar.getAnimations().some(animation => animation.playState === "running" || animation.pending));
       if (animating) {
@@ -61,7 +39,6 @@ export function useTableControls(shellRef: RefObject<HTMLDivElement>, contextKey
       }
       transitioning = false;
       if (!active || !shell.contains(active)) return;
-      trimSpace(active);
       // A fast swipe may finish before the height transition. Do not discard
       // its final top position; manual collapse at 0G must still remain closed.
       const top = topOf(active);
@@ -77,12 +54,8 @@ export function useTableControls(shellRef: RefObject<HTMLDivElement>, contextKey
 
     const apply = (next: boolean, table: HTMLElement) => {
       active = table;
-      tables.add(table);
       if (next === closed) return;
-      if (next) {
-        const top = topOf(table);
-        setSpace(table, top > 0 ? Math.max(0, top + table.clientHeight + barHeight() - contentHeight(table)) : 0);
-      }
+      positions.set(table, { top: topOf(table), max: maxOf(table) });
       closed = next;
       transitioning = true;
       returnedToTop = false;
@@ -92,29 +65,29 @@ export function useTableControls(shellRef: RefObject<HTMLDivElement>, contextKey
     };
 
     for (const table of shell.querySelectorAll<HTMLElement>("[data-table-scroll]")) {
-      table.style.removeProperty(SPACE);
       table.scrollTop = 0;
-      positions.set(table, 0);
-      tables.add(table);
+      positions.set(table, { top: 0, max: maxOf(table) });
     }
 
     const onScroll = (event: Event) => {
       const table = event.target;
       if (!(table instanceof HTMLElement) || !table.matches("[data-table-scroll]")) return;
       const top = topOf(table);
-      const previous = positions.get(table) ?? 0;
-      positions.set(table, top);
-      if (top === previous) return; // Horizontal scrolling is not resizing input.
+      const max = maxOf(table);
+      const previous = positions.get(table) ?? { top: 0, max };
+      positions.set(table, { top, max });
+      if (top === previous.top) return; // Horizontal scrolling is not resizing input.
       active = table;
-      tables.add(table);
+      // Enlarging the viewport at the ceiling clamps the scroll position to
+      // the last data row. This layout change must not undo manual expansion.
+      if (max < previous.max && previous.top > max && top >= max - 1) return;
       if (transitioning) {
-        returnedToTop = top < previous && top <= 24;
+        returnedToTop = top < previous.top && top <= 24;
         return;
       }
-      trimSpace(table);
       // A manual expansion at 0G must survive the first small scroll toward
       // the ceiling. Release it only when moving back toward the top.
-      if (top < previous && top <= 24) {
+      if (top < previous.top && top <= 24) {
         manual = false;
         apply(false, table);
       } else if (!manual && !closed && top > 88 &&
@@ -194,7 +167,6 @@ export function useTableControls(shellRef: RefObject<HTMLDivElement>, contextKey
     return () => {
       if (timer !== undefined) clearTimeout(timer);
       cancelGestures();
-      for (const table of tables) table.style.removeProperty(SPACE);
       shell.removeEventListener("scroll", onScroll, true);
       shell.removeEventListener("transitionend", onTransitionEnd);
       shell.removeEventListener("touchstart", onTouchStart);

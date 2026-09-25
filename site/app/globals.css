@@ -359,7 +359,6 @@ button {
      ときはブラウザに表をスクロールさせない（サイズは変えるが表は動かない）。 */
   .app-shell [data-table-scroll] {
     overflow-anchor: none;
-    padding-bottom: var(--table-controls-bottom-space, 0px);
   }
 
   .app-shell [data-table-scroll] thead,
