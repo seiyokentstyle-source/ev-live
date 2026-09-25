@@ -108,11 +108,13 @@ export function useTableControls(shellRef: RefObject<HTMLDivElement>, contextKey
       active = table;
       tables.add(table);
       if (transitioning) {
-        if (top < previous && top <= 24) returnedToTop = true;
+        returnedToTop = top < previous && top <= 24;
         return;
       }
       trimSpace(table);
-      if (top <= 24) {
+      // A manual expansion at 0G must survive the first small scroll toward
+      // the ceiling. Release it only when moving back toward the top.
+      if (top < previous && top <= 24) {
         manual = false;
         apply(false, table);
       } else if (!manual && !closed && top > 88 &&
@@ -129,6 +131,7 @@ export function useTableControls(shellRef: RefObject<HTMLDivElement>, contextKey
     };
     const decide = (dy: number, table: HTMLElement) => {
       manual = true;
+      returnedToTop = false;
       apply(dy < 0, table);
     };
 
