@@ -38,6 +38,7 @@ export function TableScroll({
   const block = (event: { preventDefault: () => void }) => event.preventDefault();
   return (
     <div
+      data-table-scroll
       className="min-h-0 flex-1 select-none overflow-auto overscroll-contain [-webkit-touch-callout:none]"
       onCopy={block}
       onCut={block}
