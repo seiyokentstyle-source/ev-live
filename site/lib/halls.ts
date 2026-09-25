@@ -7,6 +7,8 @@
 // ★現状 ready=true は新宿だけ。data/machines/*.json は全て
 //   マルハン新宿東宝ビル店（scraper の address_text）で集めたもの。
 //   他店の収集を始めたら、その店の JSON の置き場を dataDir に足して ready を立てる。
+import publishedHalls from "../../../data/published-halls.json";
+
 export type Hall = {
   /** URL に出る識別子（/machines/<機種id>/<ここ>）. */
   id: string;
@@ -23,7 +25,7 @@ export type Hall = {
   dataSubdir: string;
 };
 
-export const HALLS: Hall[] = [
+const DEFAULT_HALLS: Hall[] = [
   {
     id: "shinjuku",
     area: "新宿",
@@ -60,6 +62,14 @@ export const HALLS: Hall[] = [
     ready: true,
     dataSubdir: "mixed"
   }
+];
+
+// The publisher exports registered backend halls here after selecting a store.
+// New stores therefore use the existing routes without a second manual list.
+const publishedById = new Map<string, Hall>(publishedHalls.map((hall) => [hall.id, hall]));
+export const HALLS: Hall[] = [
+  ...DEFAULT_HALLS.map((hall) => publishedById.get(hall.id) ?? hall),
+  ...publishedHalls.filter((hall) => !DEFAULT_HALLS.some((item) => item.id === hall.id)),
 ];
 
 /** 既定の店舗。店舗を指定しない導線から来たときはここへ送る. */

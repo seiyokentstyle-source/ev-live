@@ -1,0 +1,18 @@
+[
+  {
+    "id": "shinjuku",
+    "area": "新宿",
+    "name": "ゴジラのお店",
+    "note": "共通の機種仕様・集計条件で算出。未検証・サンプル不足の条件は保留",
+    "ready": true,
+    "dataSubdir": ""
+  },
+  {
+    "id": "kabuki",
+    "area": "新宿",
+    "name": "歌舞伎のお店",
+    "note": "Daidataの保存済み履歴を共通の機種仕様・集計条件で算出。保留機種は保留表示",
+    "ready": true,
+    "dataSubdir": "kabuki"
+  }
+]
