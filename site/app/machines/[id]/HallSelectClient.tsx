@@ -9,6 +9,7 @@ import { useLiveIndex } from "@/lib/use-live-data";
 import { TableFoot } from "@/components/ui/DataTable";
 import { rewriteManufacturer } from "@/lib/ev/profiles";
 import { collectionPending, collectionStatus } from "@/lib/ev/collection-status";
+import { simpleEvSet } from "@/lib/ev/simple-ev-tables";
 
 type HallSelectClientProps = {
   machine: MachineSummary;
@@ -21,6 +22,7 @@ export function HallSelectClient({ machine: initialMachine, hallMachines }: Hall
   const index = useLiveIndex();
   const machine = index?.machines.find(item => item.id === initialMachine.id && item.hallId === DEFAULT_HALL_ID)?.summary ?? initialMachine;
   const router = useRouter();
+  const simpleSet = simpleEvSet(machine.id);
   const hallSummary = (hallId: string) => index
     ? index.machines.find(item => item.id === machine.id && item.hallId === hallId)?.summary
     : hallMachines.find(item => item.hallId === hallId)?.summary;
@@ -88,6 +90,29 @@ export function HallSelectClient({ machine: initialMachine, hallMachines }: Hall
               </article>
             );
           })}
+          {simpleSet ? (
+            /* 店舗別の実測とは別枠。持ち込みの簡易期待値表は店舗を問わず同じ表。 */
+            <>
+              <p className="mono mt-2 text-[10px] tracking-[0.14em] text-muted">別枠</p>
+              <Link
+                href={`/machines/${machine.id}/simple`}
+                className="block rounded-lg border border-line bg-panel p-3 active:bg-panel-2"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="mono text-[10px] tracking-[0.18em] text-highlight">店舗共通</p>
+                    <h2 className="mt-0.5 truncate text-sm font-bold">簡易期待値表</h2>
+                  </div>
+                  <span className="mono shrink-0 rounded border border-line px-2 py-1 text-[10px] text-ink-soft">
+                    {simpleSet.tables.length}表
+                  </span>
+                </div>
+                <p className="mono mt-2 text-[10px] leading-relaxed text-muted">
+                  {simpleSet.tables.map((table) => table.label).join("・")}
+                </p>
+              </Link>
+            </>
+          ) : null}
         </div>
       </main>
 

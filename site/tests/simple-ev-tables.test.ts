@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { simpleEvSet } from "@/lib/ev/simple-ev-tables";
+import { HALLS } from "@/lib/halls";
 
 describe("簡易期待値表（持ち込み）", () => {
+  it("店舗選択の別枠ページ /machines/<id>/simple が店舗idとぶつからない", () => {
+    expect(HALLS.map((hall) => hall.id)).not.toContain("simple");
+  });
+
   it("リコリスは店舗を問わず表がある。他の機種には無い", () => {
     expect(simpleEvSet("lycoris")?.tables.map((t) => t.label)).toEqual(["全体", "朝一", "1連後", "2-4連後", "5-6連後", "7-9連後", "10連以上後"]);
     expect(simpleEvSet("hokuto")).toBeNull();
