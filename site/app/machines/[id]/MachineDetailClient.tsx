@@ -21,6 +21,8 @@ import { ModeSelector, type AimMode } from "@/components/ev/ModeSelector";
 import { SettingAimTable } from "@/components/ev/SettingAimTable";
 import { AtPayoutTable } from "@/components/ev/AtPayoutTable";
 import { HarakiriTable } from "@/components/ev/HarakiriTable";
+import { SimpleEvTable } from "@/components/ev/SimpleEvTable";
+import { simpleEvSet } from "@/lib/ev/simple-ev-tables";
 import { ControlBar, SegmentedControl } from "@/components/ui/Controls";
 import { EmptyState } from "@/components/ui/DataTable";
 import { useTableControls } from "@/components/ui/useTableControls";
@@ -85,15 +87,18 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
   const hasAtPayout = Boolean(atPayout && atPayout.bands.length > 0);
   const harakiri = machine.harakiri;
   const hasHarakiri = Boolean(harakiri && harakiri.units.length > 0);
+  // 持ち込みの簡易期待値表（店舗を問わず同じ表）。収集データの算出保留中でも出す。
+  const simpleSet = simpleEvSet(machine.id);
   const availableModes = useMemo<AimMode[]>(
     () => [
       "ev",
       "targets",
       ...(hasSettingAim ? (["setting"] as const) : []),
       ...(hasAtPayout ? (["payout"] as const) : []),
-      ...(hasHarakiri ? (["harakiri"] as const) : [])
+      ...(hasHarakiri ? (["harakiri"] as const) : []),
+      ...(simpleSet ? (["simple"] as const) : [])
     ],
-    [hasSettingAim, hasAtPayout, hasHarakiri]
+    [hasSettingAim, hasAtPayout, hasHarakiri, simpleSet]
   );
 
   const [mode, setMode] = useState<AimMode>("ev");
@@ -342,11 +347,14 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
 
       {pendingStatus ? (
         <>
+          {simpleSet ? <ModeSelector value={mode === "simple" ? "simple" : "ev"} onChange={setMode} modes={["ev", "simple"]} /> : null}
+          {mode === "simple" && simpleSet ? <SimpleEvTable set={simpleSet} /> : <>
           <p className="mono shrink-0 border-b border-line bg-panel px-4 py-2 text-[11px] text-ink-soft">{pendingStatus}</p>
           <ConditionsBar machine={machine} mode="ev" />
           <EmptyState title="期待値算出保留">
             {machine.profiles.find(item => item.pendingReason)?.pendingReason ?? "収集済みデータから通常時・AT・獲得枚数の対応を確認できるまで、期待値の算出を保留しています。"}
           </EmptyState>
+          </>}
         </>
       ) : <>
       {machine.theoretical ? (
@@ -374,7 +382,7 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
         <>
       {availableModes.length > 1 ? <ModeSelector value={mode} onChange={setMode} modes={availableModes} /> : null}
 
-      {mode !== 'targets' && !(mode === 'ev' && aimTarget) ? <ConditionsBar
+      {mode !== 'targets' && mode !== 'simple' && !(mode === 'ev' && aimTarget) ? <ConditionsBar
         machine={machine}
         mode={mode}
         rateLabel={grouped.rates.find((r) => r.value === activeRate)?.label ?? activeRate}
@@ -399,6 +407,8 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
         <AtPayoutTable data={atPayout} />
       ) : mode === "harakiri" && harakiri ? (
         <HarakiriTable harakiri={harakiri} />
+      ) : mode === "simple" && simpleSet ? (
+        <SimpleEvTable set={simpleSet} />
       ) : (
         <>
       <ProfileBar tabs={tabs} activeKey={aimTarget ? savedTargetAimKey(aimTarget.id) : group.key} onChange={switchAim} />
