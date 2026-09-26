@@ -3,7 +3,7 @@ import { simpleEvSet } from "@/lib/ev/simple-ev-tables";
 
 describe("簡易期待値表（持ち込み）", () => {
   it("リコリスは店舗を問わず表がある。他の機種には無い", () => {
-    expect(simpleEvSet("lycoris")?.tables.map((t) => t.label)).toEqual(["1連後", "2-4連後", "5-6連後", "7-9連後", "10連以上後"]);
+    expect(simpleEvSet("lycoris")?.tables.map((t) => t.label)).toEqual(["全体", "朝一", "1連後", "2-4連後", "5-6連後", "7-9連後", "10連以上後"]);
     expect(simpleEvSet("hokuto")).toBeNull();
   });
 
@@ -11,8 +11,9 @@ describe("簡易期待値表（持ち込み）", () => {
     const set = simpleEvSet("lycoris")!;
     for (const table of set.tables) {
       table.rows.forEach(([g, rtp, ev, hourly, invest], index) => {
-        expect(g).toBe(table.rows[0][0] + index * 10);
-        expect(table.rows.at(-1)![0]).toBe(700);
+        expect(g).toBe(index * 10);
+        // 朝一は0〜350Gの画像だけ届いている（360〜700Gは未着）
+        expect(table.rows.at(-1)![0]).toBe(table.key === "morning" ? 350 : 700);
         // 機械割100.0%は四捨五入の境目（5-6連後360Gは100.0%で-5円）なので符号を問わない
         if (rtp !== 100) expect(rtp > 100).toBe(ev > 0);
         expect(Math.sign(hourly)).toBe(Math.sign(ev));
