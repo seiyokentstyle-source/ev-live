@@ -12,8 +12,8 @@ describe("簡易期待値表（持ち込み）", () => {
     for (const table of set.tables) {
       table.rows.forEach(([g, rtp, ev, hourly, invest], index) => {
         expect(g).toBe(index * 10);
-        // 朝一は0〜350Gの画像だけ届いている（360〜700Gは未着）
-        expect(table.rows.at(-1)![0]).toBe(table.key === "morning" ? 350 : 700);
+        // 朝一は提供された表が550Gまで（560G以降は無い。外挿で作らない）
+        expect(table.rows.at(-1)![0]).toBe(table.key === "morning" ? 550 : 700);
         // 機械割100.0%は四捨五入の境目（5-6連後360Gは100.0%で-5円）なので符号を問わない
         if (rtp !== 100) expect(rtp > 100).toBe(ev > 0);
         expect(Math.sign(hourly)).toBe(Math.sign(ev));
