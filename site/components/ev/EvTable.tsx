@@ -14,7 +14,8 @@ export type EvTableRow = Omit<TableRow, "ev" | "rtp" | "hourly" | "medals"> & {
 };
 
 type EvTableGridProps = {
-  machine: Machine;
+  /** ピボット列の見出しにだけ使う（簡易期待値表は軸を持たない）. */
+  machine: Pick<Machine, "axes">;
   profile: Pick<Profile, "key">;
   rows: EvTableRow[];
   pivot?: PivotConfig;
@@ -25,7 +26,7 @@ type EvTableProps = EvTableGridProps & {
   onViewGChange: (g: number) => void;
 };
 
-function pivotHeader(machine: Machine, pivot: PivotConfig): Array<{ value: string; label: string }> {
+function pivotHeader(machine: Pick<Machine, "axes">, pivot: PivotConfig): Array<{ value: string; label: string }> {
   const axis = machine.axes.find((candidate) => candidate.key === pivot.axisKey);
   if (!axis || axis.type !== "select") return [];
   return pivot.values.map((value) => ({
