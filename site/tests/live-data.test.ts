@@ -1,14 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import fixture from "../app/preview/ev-table/machine.json";
 import { validateMachine } from "../lib/ev/validate";
-import { getAvailableMachines, getMachine } from "../lib/machines";
+import { getAvailableMachines, getMachine, getHallDisplays, getHallDisplay } from "../lib/machines";
+import { getHall } from "../lib/halls";
 import { getSavedTargetCatalog, getSavedTargetSnapshot } from "../lib/saved-target-catalog";
-import { buildLiveMachine, getLiveIndex, getLiveMachine, liveIndexEntry } from "../lib/live-data";
+import { buildLiveMachine, buildLiveCollection, getLiveIndex, getLiveMachine, liveIndexEntry } from "../lib/live-data";
+import { collectedFixture } from "./fixtures/collection-status";
 import { GET as indexGET } from "../app/live-data/index.json/route";
 import { GET as machineGET, generateStaticParams } from "../app/live-data/[hall]/[id]/route";
 import type { PublishedTarget, SavedTargetCatalog } from "../lib/saved-targets.mjs";
 
-vi.mock("../lib/machines", () => ({ getAvailableMachines: vi.fn(), getMachine: vi.fn() }));
+vi.mock("../lib/machines", () => ({ getAvailableMachines: vi.fn(), getMachine: vi.fn(), getHallDisplays: vi.fn(), getHallDisplay: vi.fn() }));
 vi.mock("../lib/saved-target-catalog", () => ({ getSavedTargetCatalog: vi.fn(), getSavedTargetSnapshot: vi.fn() }));
 
 const target: PublishedTarget = {
@@ -28,6 +30,12 @@ beforeEach(() => {
   const machine = validateMachine(structuredClone(fixture));
   vi.mocked(getAvailableMachines).mockResolvedValue([machine]);
   vi.mocked(getMachine).mockImplementation(async (id) => id === machine.id ? machine : undefined);
+  vi.mocked(getHallDisplays).mockImplementation(async hallId =>
+    (await getAvailableMachines(getHall(hallId)?.dataSubdir)).map(machine => ({ kind: "machine", machine })));
+  vi.mocked(getHallDisplay).mockImplementation(async (id, hallId) => {
+    const machine = await getMachine(id, getHall(hallId)?.dataSubdir);
+    return machine?.available ? { kind: "machine", machine } : undefined;
+  });
   vi.mocked(getSavedTargetCatalog).mockResolvedValue(catalog());
   vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: undefined });
 });
@@ -78,11 +86,11 @@ describe("live data publication", () => {
     vi.mocked(getSavedTargetCatalog).mockResolvedValue(catalog([target]));
     vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: "d".repeat(64) });
     const stale = await getLiveMachine(fixture.id, "shinjuku");
-    expect(stale?.savedTargets).toEqual([]);
+    expect(stale?.schema === "evlive-live-machine/v1" && stale.savedTargets).toEqual([]);
     expect((await getLiveIndex()).machines[0].revision).toBe(stale?.revision);
     vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: target.sourceRevision });
     const current = await getLiveMachine(fixture.id, "shinjuku");
-    expect(current?.savedTargets).toHaveLength(1);
+    expect(current?.schema === "evlive-live-machine/v1" && current.savedTargets).toHaveLength(1);
     expect(current?.revision).not.toBe(stale?.revision);
   });
 
@@ -127,5 +135,21 @@ describe("live data publication", () => {
     vi.mocked(getAvailableMachines).mockResolvedValue([]);
     expect((await getLiveIndex()).machines).toEqual([]);
     expect(await generateStaticParams()).toEqual([]);
+  });
+
+  it("publishes collection-only routes and revisions without reading saved targets or invoking financial publication", async () => {
+    const collection = collectedFixture();
+    vi.mocked(getHallDisplay).mockResolvedValue({ kind: "collection", collection });
+    vi.mocked(getHallDisplays).mockImplementation(async hall => hall === "kabuki" ? [{ kind: "collection", collection }] : []);
+    const detail = await getLiveMachine(collection.summary.id, "kabuki");
+    expect(detail).toEqual(buildLiveCollection(collection));
+    expect(getSavedTargetCatalog).not.toHaveBeenCalled();
+    expect(getSavedTargetSnapshot).not.toHaveBeenCalled();
+    expect((await getLiveIndex()).machines).toEqual([liveIndexEntry("kabuki", detail!)]);
+    expect(getSavedTargetSnapshot).not.toHaveBeenCalled();
+    expect(await generateStaticParams()).toEqual([{ hall: "kabuki", id: `${collection.summary.id}.json` }]);
+    expect(detail).not.toHaveProperty("savedTargets");
+    expect(detail?.machine).not.toHaveProperty("profiles");
+    expect(detail?.machine).not.toHaveProperty("economics");
   });
 });

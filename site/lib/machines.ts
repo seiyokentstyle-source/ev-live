@@ -4,10 +4,13 @@ import type { Machine, MachineSummary } from "./ev/types";
 import { validateMachine } from "./ev/validate";
 import { LOW_SETTING_HALL_SUBDIR, onlyLowSetting, withoutLowSetting } from "./ev/low-setting";
 import { compareMachines } from "./machine-order";
-import { getReadyHalls } from "./halls";
+import { getReadyHalls, getHall } from "./halls";
 import { machineSummary } from "./ev/summary";
 import { normalizeMachineMetadata } from "./machine-metadata";
 import type { HeatmapCoverageMachine } from "./heatmap/coverage";
+import { readCollectionCatalog } from "./collection-status-catalog";
+import type { CollectedMachine } from "./collection-status-contract";
+import { selectMachineListSummaries } from "./machine-list-summary";
 
 // Data lives at the repository root (data/machines), while the site builds from
 // site/. Resolve against the repo root so it works whether the cwd is site/
@@ -123,8 +126,8 @@ export async function getMachine(id: string, dataSubdir?: string): Promise<Machi
 
 /** Route IDs include machines collected only in a non-default hall. */
 export async function getMachineIds(): Promise<string[]> {
-  const halls = await Promise.all(getReadyHalls().map((hall) => getMachines(hall.dataSubdir)));
-  return [...new Set(halls.flatMap((machines) => machines.map((machine) => machine.id)))];
+  const halls = await Promise.all(getReadyHalls().map((hall) => getHallDisplays(hall.id)));
+  return [...new Set(halls.flatMap((items) => items.map(item => displaySummary(item).id)))];
 }
 
 export type MachineHallSummary = { hallId: string; summary: MachineSummary };
@@ -132,8 +135,50 @@ export type MachineHallSummary = { hallId: string; summary: MachineSummary };
 /** Metadata for navigation; each summary keeps the hall its counts came from. */
 export async function getMachineHallSummaries(id: string): Promise<MachineHallSummary[]> {
   const summaries = await Promise.all(getReadyHalls().map(async (hall) => {
-    const machine = await getMachine(id, hall.dataSubdir);
-    return machine ? { hallId: hall.id, summary: machineSummary(machine) } : undefined;
+    const display = await getHallDisplay(id, hall.id);
+    return display ? { hallId: hall.id, summary: displaySummary(display) } : undefined;
   }));
   return summaries.filter((item): item is MachineHallSummary => item !== undefined);
+}
+
+export type HallDisplay = { kind: "machine"; machine: Machine } | { kind: "collection"; collection: CollectedMachine };
+
+export function displaySummary(display: HallDisplay): MachineSummary {
+  return display.kind === "machine" ? machineSummary(display.machine) : display.collection.summary;
+}
+
+/** Numeric publications and their admission rules remain unchanged by observations. */
+export async function getHallDisplays(hallId: string): Promise<HallDisplay[]> {
+  const hall = getHall(hallId);
+  if (!hall?.ready) return [];
+  const [machines, observations] = await Promise.all([
+    getAvailableMachines(hall.dataSubdir), readCollectionCatalog(path.dirname(machinesDir), hallId),
+  ]);
+  const displays = new Map<string, HallDisplay>(machines.map(machine => [machine.id, { kind: "machine", machine }]));
+  for (const { forcePending, ...collection } of observations) {
+    if (forcePending || !displays.has(collection.summary.id)) {
+      displays.set(collection.summary.id, { kind: "collection", collection });
+    }
+  }
+  return [...displays.values()].sort((a, b) => compareMachines(displaySummary(a), displaySummary(b)));
+}
+
+export async function getHallDisplay(id: string, hallId: string): Promise<HallDisplay | undefined> {
+  const hall = getHall(hallId);
+  if (!hall?.ready || !/^[a-z0-9]{1,40}$/.test(id)) return undefined;
+  const [machine, observations] = await Promise.all([
+    getMachine(id, hall.dataSubdir), readCollectionCatalog(path.dirname(machinesDir), hallId),
+  ]);
+  const entry = observations.find(item => item.summary.id === id);
+  if (entry && (entry.forcePending || !machine?.available)) {
+    const { forcePending: _, ...collection } = entry;
+    return { kind: "collection", collection };
+  }
+  return machine?.available ? { kind: "machine", machine } : undefined;
+}
+
+export async function getMachineListSummaries(): Promise<MachineSummary[]> {
+  const halls = await Promise.all(getReadyHalls().map(async hall =>
+    (await getHallDisplays(hall.id)).map(display => ({ hallId: hall.id, summary: displaySummary(display) }))));
+  return selectMachineListSummaries(halls.flat());
 }

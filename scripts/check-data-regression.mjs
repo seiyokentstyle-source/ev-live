@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Read-only guard for data/machines/**/*.json (including hall subdirectories).
+// Read-only guard for machine JSON and independent hall collection catalogs.
 // Dates never move backward. The one known execution-date defect is compared
 // using the exact-snapshot migration in data-date-compatibility.mjs.
 // [allow-data-regression] only permits >10% sample losses or removed files;
@@ -10,8 +10,12 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dateRegression, isDate } from "./data-date-compatibility.mjs";
+import { parseCollectionStatus, collectionStatusLosses } from "./collection-status-validation.mjs";
 
 const DIR = "data/machines";
+const CATALOG_DIR = "data/halls";
+const catalogFile = (file) => file.startsWith(`${CATALOG_DIR}/`) && file.endsWith("/collection-status.json");
+const guardedFile = (file) => (file.startsWith(`${DIR}/`) && file.endsWith(".json")) || catalogFile(file);
 
 export const samplesOf = (data) => {
   const raw = data?.meta?.samples;
@@ -80,13 +84,13 @@ export function checkDataRegression({
   try {
     // Resolve a commit, not an arbitrary tree/path expression.
     const base = git("rev-parse", "--verify", `${baseRef}^{commit}`).trim();
-    const files = git("ls-tree", "-r", "--name-only", base, "--", DIR)
-      .split("\n").filter((file) => file.endsWith(".json"));
+    const files = git("ls-tree", "-r", "--name-only", base, "--", DIR, CATALOG_DIR)
+      .split("\n").filter(guardedFile);
     const baseFiles = new Set(files);
     // New publications have no BASE blob, but their collection metadata still
     // needs validation. Include staged/generated files for local checks too.
-    const currentFiles = git("ls-files", "--cached", "--others", "--exclude-standard", "-z", "--", DIR)
-      .split("\0").filter((file) => file.endsWith(".json"));
+    const currentFiles = git("ls-files", "--cached", "--others", "--exclude-standard", "-z", "--", DIR, CATALOG_DIR)
+      .split("\0").filter(guardedFile);
     // Failure is not equivalent to no permission: incomplete history must fail
     // closed. CI prepares/proves the complete BASE..HEAD graph before this call.
     const allowed = git("log", "--format=%B", `${base}..HEAD`).includes("[allow-data-regression]");
@@ -96,6 +100,20 @@ export function checkDataRegression({
     const migrations = [];
 
     for (const file of new Set([...files, ...currentFiles])) {
+      if (catalogFile(file)) {
+        const before = baseFiles.has(file)
+          ? parseCollectionStatus(git("show", `${base}:${file}`), `${baseRef}:${file}`, file) : null;
+        let text;
+        try { text = readFileSync(resolve(cwd, file), "utf8"); }
+        catch (readError) {
+          if (readError.code !== "ENOENT" || !before) throw readError;
+          collectionLosses.push(`${file}: 収集状況JSONが消えています`);
+          continue;
+        }
+        const after = parseCollectionStatus(text, file);
+        if (before) collectionLosses.push(...collectionStatusLosses(before, after, file));
+        continue;
+      }
       if (!baseFiles.has(file)) {
         parseMachine(readFileSync(resolve(cwd, file), "utf8"), file);
         continue;

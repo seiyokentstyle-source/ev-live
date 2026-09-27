@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
-import { getMachine, getMachineHallSummaries, getMachineIds } from "@/lib/machines";
+import { getMachineHallSummaries, getMachineIds } from "@/lib/machines";
 import { HALLS, getHall } from "@/lib/halls";
-import { MachineDetailClient } from "../MachineDetailClient";
+import { LiveMachineClient } from "../MachineDetailClient";
 import { HallPendingClient } from "./HallPendingClient";
-import { getSavedTargetCatalog, getSavedTargetSnapshot } from "@/lib/saved-target-catalog";
-import { buildLiveMachine } from "@/lib/live-data";
+import { getLiveMachine } from "@/lib/live-data";
 
 type MachineDetailPageProps = {
   params: Promise<{
@@ -27,14 +26,12 @@ export default async function MachineDetailPage({ params }: MachineDetailPagePro
 
   // ★その店舗のデータだけを見ること。既存（新宿）のJSONを他店の名前で出すと、
   //   別店舗の設定配分をその店のものとして見せることになり、判断を誤らせる。
-  const hallMachine = hall.ready ? await getMachine(id, hall.dataSubdir) : undefined;
-  if (!hallMachine) {
+  const snapshot = hall.ready ? await getLiveMachine(id, hall.id) : undefined;
+  if (!snapshot) {
     const machine = (await getMachineHallSummaries(id))[0]?.summary;
     if (!machine) notFound();
     return <HallPendingClient machine={machine} hall={hall} />;
   }
 
-  const [catalog, targets] = await Promise.all([getSavedTargetCatalog(), getSavedTargetSnapshot(id, hall.dataSubdir, hall.id)]);
-  const snapshot = buildLiveMachine(hallMachine, hall.id, catalog, targets.refreshed, targets.replaySource);
-  return <MachineDetailClient machine={snapshot.machine} hall={hall} savedTargets={snapshot.savedTargets} revision={snapshot.revision} />;
+  return <LiveMachineClient initial={snapshot} hall={hall} />;
 }

@@ -1,5 +1,4 @@
-import { getAvailableMachines } from "@/lib/machines";
-import { machineSummary } from "@/lib/ev/summary";
+import { getMachineListSummaries } from "@/lib/machines";
 import { MachineListClient } from "./machines/MachineListClient";
 
 // Render the machine list directly at "/" instead of redirect("/machines").
@@ -7,6 +6,5 @@ import { MachineListClient } from "./machines/MachineListClient";
 // target ("/machines") drops the basePath and 404s, and redirect() is awkward
 // under static export. Rendering the list here keeps the home route working.
 export default async function HomePage() {
-  const machines = await getAvailableMachines();
-  return <MachineListClient machines={machines.map(machineSummary)} />;
+  return <MachineListClient machines={await getMachineListSummaries()} />;
 }

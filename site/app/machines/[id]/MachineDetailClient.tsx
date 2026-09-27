@@ -27,8 +27,9 @@ import { useTableControls } from "@/components/ui/useTableControls";
 import { SavedTargets } from "@/components/ev/SavedTargets";
 import type { DisplayTarget } from "@/lib/saved-targets.mjs";
 import { useLiveMachine } from "@/lib/use-live-data";
-import type { LiveMachine } from "@/lib/live-data";
+import type { LiveMachine, LiveSnapshot } from "@/lib/live-data";
 import { collectionStatus } from "@/lib/ev/collection-status";
+import { HallPendingClient } from "./[hall]/HallPendingClient";
 
 type PickerState = {
   axis: Axis;
@@ -75,7 +76,18 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
   const initial = useMemo<LiveMachine>(() => ({
     schema: "evlive-live-machine/v1", revision, machine: initialMachine, savedTargets: initialTargets
   }), [revision, initialMachine, initialTargets]);
-  const { machine, savedTargets } = useLiveMachine(initial, hall.id);
+  return <LiveMachineClient initial={initial} hall={hall} />;
+}
+
+export function LiveMachineClient({ initial, hall }: { initial: LiveSnapshot; hall: Hall }) {
+  const snapshot = useLiveMachine(initial, hall.id);
+  if (snapshot.schema === "evlive-live-collection/v1") {
+    return <HallPendingClient machine={snapshot.machine} hall={hall} collection={{ ...snapshot.pending, summary: snapshot.machine }} />;
+  }
+  return <MachineDetailBody machine={snapshot.machine} hall={hall} savedTargets={snapshot.savedTargets} />;
+}
+
+function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: MachineDetailClientProps) {
   const pendingStatus = collectionStatus(machine.meta);
   const grouped = useMemo(() => groupProfiles(machine.profiles, machine.id), [machine.profiles, machine.id]);
   const hasRatePairs = grouped.rates.length >= 2;

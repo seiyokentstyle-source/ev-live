@@ -6,12 +6,16 @@ import fixture from "../app/preview/ev-table/machine.json";
 import { onlyLowSetting, withoutLowSetting } from "../lib/ev/low-setting";
 import { validateMachine } from "../lib/ev/validate";
 import { normalizeSearchText } from "../lib/search/normalize";
+import { catalogFixture } from "./fixtures/collection-status";
 
 let root: string;
 let getMachine: typeof import("../lib/machines").getMachine;
 let getMachines: typeof import("../lib/machines").getMachines;
 let getMachineIds: typeof import("../lib/machines").getMachineIds;
 let getMachineHallSummaries: typeof import("../lib/machines").getMachineHallSummaries;
+let getHallDisplay: typeof import("../lib/machines").getHallDisplay;
+let getHallDisplays: typeof import("../lib/machines").getHallDisplays;
+let getMachineListSummaries: typeof import("../lib/machines").getMachineListSummaries;
 
 function machine(id = "target") {
   const data = structuredClone(fixture);
@@ -58,12 +62,60 @@ beforeEach(async () => {
   await fs.mkdir(path.join(root, "data", "machines"), { recursive: true });
   vi.spyOn(process, "cwd").mockReturnValue(root);
   vi.resetModules();
-  ({ getMachine, getMachines, getMachineIds, getMachineHallSummaries } = await import("../lib/machines"));
+  ({ getMachine, getMachines, getMachineIds, getMachineHallSummaries, getHallDisplay, getHallDisplays, getMachineListSummaries } = await import("../lib/machines"));
 });
 
 afterEach(async () => {
   vi.restoreAllMocks();
   await fs.rm(root, { recursive: true, force: true });
+});
+
+async function writeCatalog(id = "held", forcePending = false) {
+  const dir = path.join(root, "data", "halls", "kabuki");
+  await fs.mkdir(dir, { recursive: true });
+  await fs.writeFile(path.join(dir, "collection-status.json"), JSON.stringify(catalogFixture(id, forcePending)));
+}
+
+describe("collection fallback selection", () => {
+  it("adds catalog-only machines to routes, lists and their own hall without borrowing another hall", async () => {
+    await writeMachine("held");
+    await writeCatalog();
+    expect(await getHallDisplay("held", "kabuki")).toMatchObject({ kind: "collection", collection: { summary: { meta: { samples: "0" } } } });
+    expect(await getHallDisplay("held", "shinjuku")).toMatchObject({ kind: "machine" });
+    expect(await getHallDisplay("held", "akihabara")).toBeUndefined();
+    expect(await getHallDisplays("kabuki")).toHaveLength(1);
+    expect(await getMachineIds()).toEqual(["held"]);
+    expect((await getMachineHallSummaries("held")).map(item => item.hallId)).toEqual(["shinjuku", "kabuki", "mixed"]);
+    expect((await getMachineListSummaries())[0]).toMatchObject({ id: "held", summaryHallId: "shinjuku" });
+    await writeCatalog("newonly");
+    expect((await getMachineIds()).sort()).toEqual(["held", "newonly"]);
+    expect((await getMachineListSummaries()).find(item => item.id === "newonly")).toMatchObject({ summaryHallId: "kabuki" });
+  });
+
+  it("keeps usable numeric data above stale fallback, but honors an explicit review hold without changing stored numbers", async () => {
+    await writeMachine("held", machine("held"), "kabuki");
+    await writeCatalog();
+    const file = path.join(root, "data", "machines", "kabuki", "held.json");
+    const before = await fs.readFile(file, "utf8");
+    expect(await getHallDisplay("held", "kabuki")).toMatchObject({ kind: "machine" });
+    expect((await getHallDisplays("kabuki"))[0]).toMatchObject({ kind: "machine" });
+    await writeCatalog("held", true);
+    expect(await getHallDisplay("held", "kabuki")).toMatchObject({ kind: "collection" });
+    expect((await getHallDisplays("kabuki"))[0]).toMatchObject({ kind: "collection" });
+    expect(await fs.readFile(file, "utf8")).toBe(before);
+    expect(await getMachine("held", "kabuki")).toHaveProperty("profiles");
+  });
+
+  it("shows collection facts for assumed-payout-only actual-hall data while retaining the mixed model", async () => {
+    const assumed = { ...machine("mfb4da289"), calcSpec: { items: [{ k: "獲得は実測ではない", v: "推定" }] } };
+    await writeMachine(assumed.id, assumed, "kabuki");
+    await writeMachine(assumed.id, assumed, "mixed");
+    await writeCatalog(assumed.id);
+    expect(await getMachine(assumed.id, "kabuki")).toBeUndefined();
+    expect(await getHallDisplay(assumed.id, "kabuki")).toMatchObject({ kind: "collection" });
+    expect(await getHallDisplay(assumed.id, "mixed")).toMatchObject({ kind: "machine" });
+    expect((await getMachineHallSummaries(assumed.id)).map(item => item.hallId)).toEqual(["kabuki", "mixed"]);
+  });
 });
 
 describe("single-machine data loading", () => {

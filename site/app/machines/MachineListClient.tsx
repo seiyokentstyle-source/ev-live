@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { MachineSummary } from "@/lib/ev/types";
 import { useLiveMachines } from "@/lib/use-live-data";
-import { DEFAULT_HALL_ID } from "@/lib/halls";
 import { readFavorites, writeFavorites, type FavoriteMap } from "@/lib/favorites";
 import { normalizeSearchText } from "@/lib/search/normalize";
 import { rewriteManufacturer } from "@/lib/ev/profiles";
@@ -37,7 +36,7 @@ function getSearchMatch(machine: MachineSummary, query: string): MachineSearchMa
 }
 
 export function MachineListClient({ machines: initialMachines }: MachineListClientProps) {
-  const rawMachines = useLiveMachines(initialMachines, DEFAULT_HALL_ID);
+  const rawMachines = useLiveMachines(initialMachines);
   const router = useRouter();
   /* メーカー名は1か所で直す。カードと絞り込みで別々に直すと食い違う。 */
   const machines = useMemo(

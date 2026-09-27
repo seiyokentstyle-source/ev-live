@@ -416,7 +416,7 @@ export type Machine = {
 
 export type MachineSummary = Pick<Machine,
   "id" | "name" | "manufacturer" | "aliases" | "thumb" | "available" | "releaseDate" | "lastUpdated" | "meta"
->;
+> & { /** The hall whose counts are shown on a combined machine-list card. */ summaryHallId?: string };
 
 export type PivotConfig = {
   axisKey: string;

@@ -1,4 +1,4 @@
-# 期待値データ（data/machines/**/*.json）が巻き戻っていないか見張る。
+# 期待値データと店舗別の収集状況が巻き戻っていないか見張る。
 #
 # 期待値データは毎晩の収集で前へ進むだけの資産で、後ろへ動くことはない。
 # ところが古い土台で再生成したJSONを新しい main へマージすると、1日ぶんが黙って消える。
@@ -13,12 +13,14 @@ on:
   pull_request:
     paths:
       - "data/machines/**"
+      - "data/halls/**/collection-status.json"
       - "scripts/**"
       - ".github/workflows/data-guard.yml"
   push:
     branches: [main]
     paths:
       - "data/machines/**"
+      - "data/halls/**/collection-status.json"
       - "scripts/**"
       - ".github/workflows/data-guard.yml"
 

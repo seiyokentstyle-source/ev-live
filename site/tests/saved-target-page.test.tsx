@@ -1,16 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import fixture from '../app/preview/ev-table/machine.json';
 import { validateMachine } from '../lib/ev/validate';
-import { getMachine } from '../lib/machines';
+import { getMachine, getHallDisplay } from '../lib/machines';
+import { getHall } from '../lib/halls';
 import { getSavedTargetCatalog, getSavedTargetSnapshot } from '../lib/saved-target-catalog';
 import { buildLiveMachine } from '../lib/live-data';
 import type { PublishedTarget, SavedTargetCatalog } from '../lib/saved-targets.mjs';
 import MachineDetailPage from '../app/machines/[id]/[hall]/page';
 
 vi.mock('next/navigation', () => ({ notFound: () => { throw new Error('not found'); } }));
-vi.mock('../lib/machines', () => ({ getMachine: vi.fn(), getMachines: vi.fn(), getAvailableMachines: vi.fn() }));
+vi.mock('../lib/machines', () => ({ getMachine: vi.fn(), getMachines: vi.fn(), getAvailableMachines: vi.fn(), getHallDisplay: vi.fn() }));
 vi.mock('../lib/saved-target-catalog', () => ({ getSavedTargetCatalog: vi.fn(), getSavedTargetSnapshot: vi.fn() }));
-vi.mock('../app/machines/[id]/MachineDetailClient', () => ({ MachineDetailClient: () => null }));
+vi.mock('../app/machines/[id]/MachineDetailClient', () => ({ LiveMachineClient: () => null }));
 vi.mock('../app/machines/[id]/[hall]/HallPendingClient', () => ({ HallPendingClient: () => null }));
 
 const target: PublishedTarget = {
@@ -29,6 +30,10 @@ const renderPage = () => MachineDetailPage({ params: Promise.resolve({ id: fixtu
 beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(getMachine).mockResolvedValue(validateMachine(fixture));
+  vi.mocked(getHallDisplay).mockImplementation(async (id, hallId) => {
+    const machine = await getMachine(id, getHall(hallId)?.dataSubdir);
+    return machine ? { kind: 'machine', machine } : undefined;
+  });
   vi.mocked(getSavedTargetCatalog).mockResolvedValue(catalog);
   vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: target.sourceRevision });
 });
@@ -36,27 +41,27 @@ beforeEach(() => {
 describe('static machine page saved-target source', () => {
   it('passes the source revision through after the machine envelope was stripped', async () => {
     const page = await renderPage();
-    expect(page.props.savedTargets).toHaveLength(1);
-    expect(page.props.savedTargets[0]).toMatchObject({ name: target.name, rate: '50/50', refreshed: false });
+    expect(page.props.initial.savedTargets).toHaveLength(1);
+    expect(page.props.initial.savedTargets[0]).toMatchObject({ name: target.name, rate: '50/50', refreshed: false });
     expect(getSavedTargetSnapshot).toHaveBeenCalledWith(fixture.id, '', 'shinjuku');
-    expect(page.props.machine).not.toHaveProperty('intervalExplorer');
+    expect(page.props.initial.machine).not.toHaveProperty('intervalExplorer');
     const snapshot = buildLiveMachine(validateMachine(fixture), 'shinjuku', catalog, [], target.sourceRevision);
-    expect(page.props.revision).toBe(snapshot.revision);
+    expect(page.props.initial.revision).toBe(snapshot.revision);
   });
 
   it('hides skipped prior calculations after an EVLIVE source update', async () => {
     const current = await renderPage();
     vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: 'd'.repeat(64) });
     const updated = await renderPage();
-    expect(updated.props.savedTargets).toEqual([]);
-    expect(updated.props.revision).not.toBe(current.props.revision);
+    expect(updated.props.initial.savedTargets).toEqual([]);
+    expect(updated.props.initial.revision).not.toBe(current.props.initial.revision);
   });
 
   it('uses matching refreshed calculations while retaining the manually published identity', async () => {
     const refreshed = { id: target.id, conditionKey: target.conditionKey,
       sourceRevision: 'd'.repeat(64), dataThrough: '2026-09-04', rows: [{ g: 100, ev: 1500, n: 30, days: 5, inv: 420.75, playG: 501.5 }] };
     vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [refreshed], replaySource: refreshed.sourceRevision });
-    const result = (await renderPage()).props.savedTargets[0];
+    const result = (await renderPage()).props.initial.savedTargets[0];
     expect(result).toMatchObject({ name: target.name, publicationKey: target.publicationKey, rate: '50/50',
       sourceRevision: refreshed.sourceRevision, rows: refreshed.rows, refreshed: true });
   });

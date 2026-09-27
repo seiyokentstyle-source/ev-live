@@ -5,7 +5,8 @@ import type { Machine, MachineSummary } from "./ev/types";
 import { validateMachine } from "./ev/validate";
 import { machineSummary } from "./ev/summary";
 import { getHall, getReadyHalls } from "./halls";
-import { getAvailableMachines, getMachine } from "./machines";
+import { getHallDisplays, getHallDisplay } from "./machines";
+import { validateCollectedMachine, type CollectedMachine } from "./collection-status-contract";
 import { getSavedTargetCatalog, getSavedTargetSnapshot } from "./saved-target-catalog";
 import {
   selectSavedTargets,
@@ -21,6 +22,20 @@ export type LiveMachine = {
   machine: Machine;
   savedTargets: DisplayTarget[];
 };
+
+export type LiveCollection = {
+  schema: "evlive-live-collection/v1";
+  revision: string;
+  machine: MachineSummary;
+  pending: Omit<CollectedMachine, "summary">;
+};
+export type LiveSnapshot = LiveMachine | LiveCollection;
+
+export function buildLiveCollection(value: CollectedMachine): LiveCollection {
+  const { summary: machine, ...pending } = validateCollectedMachine(value);
+  const revision = createHash("sha256").update(JSON.stringify({ machine, pending })).digest("hex");
+  return { schema: "evlive-live-collection/v1", revision, machine, pending };
+}
 
 export type LiveIndexEntry = {
   hallId: string;
@@ -52,7 +67,7 @@ export function buildLiveMachine(
   return { schema: "evlive-live-machine/v1", revision, machine, savedTargets };
 }
 
-export function liveIndexEntry(hallId: string, payload: LiveMachine): LiveIndexEntry {
+export function liveIndexEntry(hallId: string, payload: LiveSnapshot): LiveIndexEntry {
   return {
     hallId,
     id: payload.machine.id,
@@ -64,17 +79,20 @@ export function liveIndexEntry(hallId: string, payload: LiveMachine): LiveIndexE
 /** Only published machines in ready halls get a static detail endpoint. */
 export async function getLiveMachineParams(): Promise<Array<{ hall: string; id: string }>> {
   const halls = await Promise.all(getReadyHalls().map(async (hall) => {
-    const machines = await getAvailableMachines(hall.dataSubdir);
-    return machines.map((machine) => ({ hall: hall.id, id: `${machine.id}.json` }));
+    const displays = await getHallDisplays(hall.id);
+    return displays.map(display => ({ hall: hall.id,
+      id: `${display.kind === "machine" ? display.machine.id : display.collection.summary.id}.json` }));
   }));
   return halls.flat();
 }
 
-export async function getLiveMachine(machineId: string, hallId: string): Promise<LiveMachine | undefined> {
+export async function getLiveMachine(machineId: string, hallId: string): Promise<LiveSnapshot | undefined> {
   const hall = getHall(hallId);
   if (!hall?.ready || !/^[a-z0-9]{1,40}$/.test(machineId)) return undefined;
-  const machine = await getMachine(machineId, hall.dataSubdir);
-  if (!machine?.available) return undefined;
+  const display = await getHallDisplay(machineId, hallId);
+  if (!display) return undefined;
+  if (display.kind === "collection") return buildLiveCollection(display.collection);
+  const machine = display.machine;
   const [catalog, targets] = await Promise.all([
     getSavedTargetCatalog(),
     getSavedTargetSnapshot(machineId, hall.dataSubdir, hall.id)
@@ -85,8 +103,10 @@ export async function getLiveMachine(machineId: string, hallId: string): Promise
 export async function getLiveIndex(): Promise<LiveIndex> {
   const catalog = await getSavedTargetCatalog();
   const halls = await Promise.all(getReadyHalls().map(async (hall) => {
-    const machines = await getAvailableMachines(hall.dataSubdir);
-    return Promise.all(machines.map(async (machine) => {
+    const displays = await getHallDisplays(hall.id);
+    return Promise.all(displays.map(async (display) => {
+      if (display.kind === "collection") return liveIndexEntry(hall.id, buildLiveCollection(display.collection));
+      const machine = display.machine;
       const targets = await getSavedTargetSnapshot(machine.id, hall.dataSubdir, hall.id);
       return liveIndexEntry(hall.id, buildLiveMachine(machine, hall.id, catalog, targets.refreshed, targets.replaySource));
     }));

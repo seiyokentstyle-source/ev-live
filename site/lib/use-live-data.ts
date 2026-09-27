@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import type { MachineSummary } from "./ev/types";
-import type { LiveIndex, LiveMachine } from "./live-data";
+import type { LiveIndex, LiveSnapshot } from "./live-data";
 import { startLiveMachineRefresh, startLiveRefresh } from "./live-refresh";
+import { selectMachineListSummaries } from "./machine-list-summary";
 
 export function useLiveIndex(): LiveIndex | null {
   const [index, setIndex] = useState<LiveIndex | null>(null);
@@ -11,12 +12,14 @@ export function useLiveIndex(): LiveIndex | null {
   return index;
 }
 
-export function useLiveMachines(initial: MachineSummary[], hallId: string): MachineSummary[] {
+export function useLiveMachines(initial: MachineSummary[], hallId?: string): MachineSummary[] {
   const index = useLiveIndex();
-  return index ? index.machines.filter(item => item.hallId === hallId).map(item => item.summary) : initial;
+  if (!index) return initial;
+  return hallId ? index.machines.filter(item => item.hallId === hallId).map(item => item.summary)
+    : selectMachineListSummaries(index.machines);
 }
 
-export function useLiveMachine(initial: LiveMachine, hallId: string): LiveMachine {
+export function useLiveMachine(initial: LiveSnapshot, hallId: string): LiveSnapshot {
   const [current, setCurrent] = useState({ hallId, data: initial });
   useEffect(() => {
     setCurrent({ hallId, data: initial });

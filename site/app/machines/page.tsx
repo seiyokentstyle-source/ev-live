@@ -1,8 +1,6 @@
-import { getAvailableMachines } from "@/lib/machines";
-import { machineSummary } from "@/lib/ev/summary";
+import { getMachineListSummaries } from "@/lib/machines";
 import { MachineListClient } from "./MachineListClient";
 
 export default async function MachinesPage() {
-  const machines = await getAvailableMachines();
-  return <MachineListClient machines={machines.map(machineSummary)} />;
+  return <MachineListClient machines={await getMachineListSummaries()} />;
 }

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { LiveIndex, LiveMachine } from "../lib/live-data";
+import { buildLiveCollection, type LiveIndex, type LiveMachine, type LiveSnapshot } from "../lib/live-data";
+import { collectedFixture } from "./fixtures/collection-status";
 import { validateMachine } from "../lib/ev/validate";
 import { LIVE_REFRESH_MS, startLiveMachineRefresh, startLiveRefresh } from "../lib/live-refresh";
 import fixture from "../app/preview/ev-table/machine.json";
@@ -23,7 +24,7 @@ const updated: LiveMachine = {
   }
 };
 
-function indexFor(payload: LiveMachine = original): LiveIndex {
+function indexFor(payload: LiveSnapshot = original): LiveIndex {
   const { id, name, manufacturer, aliases, available, thumb, releaseDate, lastUpdated, meta } = payload.machine;
   return {
     schema: "evlive-live-index/v1",
@@ -70,6 +71,30 @@ afterEach(() => {
 });
 
 describe("live machine snapshots", () => {
+  it("switches between numeric and collection-only snapshots without keeping prior financial fields", async () => {
+    const collection = buildLiveCollection(collectedFixture(original.machine.id));
+    request.mockResolvedValueOnce(response(indexFor(collection))).mockResolvedValueOnce(response(collection))
+      .mockResolvedValueOnce(response(indexFor(updated))).mockResolvedValueOnce(response(updated));
+    const onUpdate = vi.fn();
+    stop = startLiveMachineRefresh(original, "shinjuku", onUpdate);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(onUpdate.mock.calls[0][0]).toEqual(collection);
+    expect(onUpdate.mock.calls[0][0].machine).not.toHaveProperty("profiles");
+    expect(onUpdate.mock.calls[0][0]).not.toHaveProperty("savedTargets");
+    await vi.advanceTimersByTimeAsync(LIVE_REFRESH_MS);
+    expect(onUpdate.mock.calls[1][0]).toMatchObject({ schema: "evlive-live-machine/v1", revision: updated.revision });
+  });
+
+  it("rejects malformed collection facts without replacing the displayed numeric snapshot", async () => {
+    const collection = buildLiveCollection(collectedFixture(original.machine.id));
+    const malformed = structuredClone(collection);
+    malformed.machine.meta.samples = "100";
+    request.mockResolvedValueOnce(response(indexFor(collection))).mockResolvedValueOnce(response(malformed));
+    const onUpdate = vi.fn();
+    stop = startLiveMachineRefresh(original, "shinjuku", onUpdate);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(onUpdate).not.toHaveBeenCalled();
+  });
   it("refreshes same-day sample counts and tables together, then skips unchanged details", async () => {
     request
       .mockResolvedValueOnce(response(indexFor(original)))
@@ -104,7 +129,7 @@ describe("live machine snapshots", () => {
       .mockRejectedValueOnce(new Error("offline"))
       .mockResolvedValueOnce(response(indexFor(updated)))
       .mockResolvedValueOnce(response(updated));
-    let displayed = original;
+    let displayed: LiveSnapshot = original;
     stop = startLiveMachineRefresh(original, "shinjuku", next => { displayed = next; });
     await vi.advanceTimersByTimeAsync(0);
     expect(displayed).toBe(original);

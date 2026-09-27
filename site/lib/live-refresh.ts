@@ -1,27 +1,32 @@
-import type { LiveIndex, LiveMachine } from "./live-data";
+import type { LiveIndex, LiveSnapshot } from "./live-data";
 import { validateMachine } from "./ev/validate";
+import { validateCollectedMachine } from "./collection-status-contract";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 export const LIVE_REFRESH_MS = 60_000;
 
 export async function fetchLiveMachine(
   item: LiveIndex["machines"][number], signal: AbortSignal
-): Promise<LiveMachine> {
+): Promise<LiveSnapshot> {
   const response = await fetch(
     `${basePath}/live-data/${encodeURIComponent(item.hallId)}/${encodeURIComponent(item.id)}.json?revision=${item.revision}`,
     { cache: "no-store", signal }
   );
   if (!response.ok) throw new Error("Live machine unavailable");
-  const data = await response.json() as LiveMachine;
-  if (data.schema !== "evlive-live-machine/v1" || data.revision !== item.revision ||
-      data.machine?.id !== item.id || !Array.isArray(data.savedTargets)) {
+  const data = await response.json() as LiveSnapshot;
+  if (data.revision !== item.revision || data.machine?.id !== item.id) {
     throw new Error("Live machine revision mismatch");
   }
+  if (data.schema === "evlive-live-collection/v1") {
+    const { summary: machine, ...pending } = validateCollectedMachine({ ...data.pending, summary: data.machine });
+    return { schema: data.schema, revision: data.revision, machine, pending };
+  }
+  if (data.schema !== "evlive-live-machine/v1" || !Array.isArray(data.savedTargets)) throw new Error("Invalid live machine");
   return { ...data, machine: validateMachine(data.machine) };
 }
 
 export function startLiveMachineRefresh(
-  initial: LiveMachine, hallId: string, onUpdate: (next: LiveMachine) => void
+  initial: LiveSnapshot, hallId: string, onUpdate: (next: LiveSnapshot) => void
 ): () => void {
   let revision = initial.revision;
   return startLiveRefresh(async (index, signal) => {
