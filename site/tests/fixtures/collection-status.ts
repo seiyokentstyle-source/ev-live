@@ -11,12 +11,13 @@ export function collectedFixture(id = "held"): CollectedMachine {
   };
 }
 
-export function catalogFixture(id = "held", forcePending = false) {
+export function catalogFixture(id = "held", forcePending = false, hallId = "kabuki") {
   const { summary, ...pending } = collectedFixture(id);
   const { available: _, thumb: _thumb, meta, ...identity } = summary;
-  return { schema: "evlive-collection-status/v1", source: "daidata", storeId: "100949", hallId: "kabuki",
+  return { schema: "evlive-collection-status/v1", source: hallId === "shinjuku" ? "site_seven" : "daidata",
+    storeId: hallId === "shinjuku" ? "00001050" : "100949", hallId,
     lastUpdated: summary.lastUpdated,
     machines: [{ ...identity, ...pending, collection: meta.collection!, status: "pending", forcePending,
-      sourceIntegrity: { schemaVersion: 1, hallId: "kabuki", machineName: summary.name,
+      sourceIntegrity: { schemaVersion: 1, hallId, machineName: summary.name,
         targetDate: summary.lastUpdated, inputSha256: "a".repeat(64) } }] };
 }

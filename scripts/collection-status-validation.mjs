@@ -29,8 +29,9 @@ export function parseCollectionStatus(raw, label, file = label) {
   catch { fail(label, "収集状況JSONを解析できません"); }
   object(data, ["schema", "hallId", "lastUpdated", "source", "storeId", "machines"], label);
   const match = COLLECTION_STATUS_PATH.exec(file);
+  const storePattern = data.source === "daidata" ? /^[0-9]{6}$/ : data.source === "site_seven" ? /^[0-9]{4,16}$/ : null;
   if (!match || data.hallId !== match[1] || data.schema !== "evlive-collection-status/v1"
-      || data.source !== "daidata" || typeof data.storeId !== "string" || !/^\d{6}$/.test(data.storeId)) {
+      || !storePattern || typeof data.storeId !== "string" || !storePattern.test(data.storeId)) {
     fail(label, "収集状況の形式・店舗・取得元が一致しません");
   }
   if (!isDate(data.lastUpdated) || !Array.isArray(data.machines) || !data.machines.length) {
@@ -52,7 +53,7 @@ export function parseCollectionStatus(raw, label, file = label) {
     }
     for (const alias of entry.aliases) text(alias, `${context}.aliases`);
     if (!entry.aliases.includes(entry.name)) fail(context, "機種名が別名一覧にありません");
-    if (!isDate(entry.releaseDate) || !isDate(entry.lastUpdated) || entry.lastUpdated > data.lastUpdated) {
+    if ((entry.releaseDate !== null && !isDate(entry.releaseDate)) || !isDate(entry.lastUpdated) || entry.lastUpdated > data.lastUpdated) {
       fail(context, "機種の日付が不正です");
     }
     if (entry.status !== "pending" || !REASONS.has(entry.reasonCode)
@@ -101,8 +102,19 @@ export function collectionStatusLosses(before, after, label) {
     const next = current.get(entry.id);
     const name = `${label}:${entry.id}`;
     if (!next) { losses.push(`${name}: 収集済み機種が消えています`); continue; }
-    if (next.name !== entry.name || next.sourceIntegrity.machineName !== entry.sourceIntegrity.machineName) {
+    // The raw-name ID survives formal registration. Only an explicitly unknown
+    // identity can be completed; original names remain exact aliases below.
+    const unverified = entry.manufacturer === "未確認" && entry.releaseDate === null;
+    if (unverified && after.machines.some(candidate => candidate.id !== entry.id
+        && (candidate.aliases.includes(entry.name) || candidate.aliases.includes(entry.sourceIntegrity.machineName)))) {
+      losses.push(`${name}: 正式登録で機種IDが変更または重複しています`);
+    }
+    if (!unverified && (next.name !== entry.name || next.manufacturer !== entry.manufacturer
+        || next.releaseDate !== entry.releaseDate || next.sourceIntegrity.machineName !== entry.sourceIntegrity.machineName)) {
       losses.push(`${name}: 収集元の機種が変更されています`);
+    }
+    if (unverified && (!next.aliases.includes(entry.name) || !next.aliases.includes(entry.sourceIntegrity.machineName))) {
+      losses.push(`${name}: 登録前の機種名が消えています`);
     }
     if (entry.aliases.some(alias => !next.aliases.includes(alias))) losses.push(`${name}: 既存の機種別名が消えています`);
     if (next.lastUpdated < entry.lastUpdated) losses.push(`${name}: 機種の観測末日が巻き戻っています`);
@@ -116,4 +128,15 @@ export function collectionStatusLosses(before, after, label) {
     }
   }
   return losses;
+}
+
+/** Compare authoritative full names with a numeric publication, never aliases
+ * from both sides: abbreviations shared by sequels are not machine identities. */
+export function collectionMachineIdentityLosses(catalog, machine, label) {
+  if (!catalog) return [];
+  const names = new Set([machine?.name, ...(Array.isArray(machine?.aliases) ? machine.aliases : [])]
+    .filter(value => typeof value === "string" && value.length > 0));
+  return catalog.machines.filter(entry => entry.id !== machine?.id
+    && (names.has(entry.name) || names.has(entry.sourceIntegrity.machineName)))
+    .map(entry => `${label}: 収集済み機種 ${entry.name} の数値公開ID ${machine?.id ?? "未設定"} が既存ID ${entry.id} と一致しません`);
 }

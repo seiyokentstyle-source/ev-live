@@ -10,12 +10,16 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dateRegression, isDate } from "./data-date-compatibility.mjs";
-import { parseCollectionStatus, collectionStatusLosses } from "./collection-status-validation.mjs";
+import { parseCollectionStatus, collectionStatusLosses, collectionMachineIdentityLosses } from "./collection-status-validation.mjs";
 
 const DIR = "data/machines";
 const CATALOG_DIR = "data/halls";
 const catalogFile = (file) => file.startsWith(`${CATALOG_DIR}/`) && file.endsWith("/collection-status.json");
 const guardedFile = (file) => (file.startsWith(`${DIR}/`) && file.endsWith(".json")) || catalogFile(file);
+const machineHall = (file) => {
+  const match = /^data\/machines\/(?:(?<hall>[a-z0-9][a-z0-9_-]*)\/)?[^/]+\.json$/.exec(file);
+  return match ? match.groups?.hall ?? "shinjuku" : null;
+};
 
 export const samplesOf = (data) => {
   const raw = data?.meta?.samples;
@@ -98,8 +102,21 @@ export function checkDataRegression({
     const decreases = [];
     const collectionLosses = [];
     const migrations = [];
+    const allFiles = new Set([...files, ...currentFiles]);
+    const catalogs = new Map();
+    // A future numeric publication must retain the observation ID even when
+    // its catalog is unchanged in this commit and appears later in tree order.
+    for (const file of [...allFiles].filter(catalogFile)) {
+      try {
+        const catalog = parseCollectionStatus(readFileSync(resolve(cwd, file), "utf8"), file);
+        catalogs.set(catalog.hallId, catalog);
+      } catch (readError) {
+        if (readError.code !== "ENOENT" || !baseFiles.has(file)) throw readError;
+        // The normal catalog loop below records deletion as an unconditional loss.
+      }
+    }
 
-    for (const file of new Set([...files, ...currentFiles])) {
+    for (const file of allFiles) {
       if (catalogFile(file)) {
         const before = baseFiles.has(file)
           ? parseCollectionStatus(git("show", `${base}:${file}`), `${baseRef}:${file}`, file) : null;
@@ -115,7 +132,8 @@ export function checkDataRegression({
         continue;
       }
       if (!baseFiles.has(file)) {
-        parseMachine(readFileSync(resolve(cwd, file), "utf8"), file);
+        const after = parseMachine(readFileSync(resolve(cwd, file), "utf8"), file);
+        collectionLosses.push(...collectionMachineIdentityLosses(catalogs.get(machineHall(file)), after, file));
         continue;
       }
       // ls-tree proved this blob exists at BASE. A show/parse failure cannot
@@ -130,6 +148,7 @@ export function checkDataRegression({
         continue;
       }
       const after = parseMachine(text, file);
+      collectionLosses.push(...collectionMachineIdentityLosses(catalogs.get(machineHall(file)), after, file));
       const name = before.name ?? file;
       const dates = dateRegression(file, before, after);
       if (dates.rollback) {

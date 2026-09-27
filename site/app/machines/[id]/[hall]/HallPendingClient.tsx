@@ -58,7 +58,7 @@ export function HallPendingClient({ machine, hall, collection }: HallPendingClie
         </>}
       </main>
 
-      <TableFoot left={hall.note} right={collection ? "期待値算出保留" : "集計待ち"} />
+      <TableFoot left={collection ? "保存済みの履歴を表示" : hall.note} right={collection ? "期待値算出保留" : "集計待ち"} />
     </div>
   );
 }

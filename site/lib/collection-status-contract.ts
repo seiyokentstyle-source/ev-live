@@ -28,7 +28,7 @@ export function validateCollectedMachine(value: unknown): CollectedMachine {
   check(typeof summary.id === "string" && /^[a-z0-9]{1,40}$/.test(summary.id), "invalid id");
   for (const key of ["name", "manufacturer"] as const) check(typeof summary[key] === "string" && summary[key].trim(), `${key} required`);
   check(Array.isArray(summary.aliases) && summary.aliases.every((alias: unknown) => typeof alias === "string"), "aliases required");
-  check(validDate(summary.releaseDate) && validDate(summary.lastUpdated), "invalid machine date");
+  check((summary.releaseDate === null || validDate(summary.releaseDate)) && validDate(summary.lastUpdated), "invalid machine date");
   check(summary.available === true && summary.thumb === null, "invalid observation metadata");
   check(record(summary.meta) && summary.meta.samples === "0" && typeof summary.meta.source === "string", "observations are not EV samples");
   const collection = summary.meta.collection;
@@ -58,7 +58,8 @@ export function validateCollectedMachine(value: unknown): CollectedMachine {
 
 export function validateCollectionCatalog(value: unknown, hallId: string): CollectionStatusEntry[] {
   check(record(value) && value.schema === "evlive-collection-status/v1", "unsupported schema");
-  check(value.hallId === hallId && value.source === "daidata" && typeof value.storeId === "string", "source mismatch");
+  const storePattern = value.source === "daidata" ? /^[0-9]{6}$/ : value.source === "site_seven" ? /^[0-9]{4,16}$/ : null;
+  check(value.hallId === hallId && storePattern && typeof value.storeId === "string" && storePattern.test(value.storeId), "source mismatch");
   check(validDate(value.lastUpdated) && Array.isArray(value.machines), "invalid catalog");
   const seen = new Set<string>();
   return value.machines.map((item: unknown) => {

@@ -8,6 +8,8 @@ import { MachineCard } from "../components/machine-list/MachineCard";
 import { LiveMachineClient } from "../app/machines/[id]/MachineDetailClient";
 import { computeAnchors, defaultConditions, generateRows } from "../lib/ev/calc";
 import { getHall } from "../lib/halls";
+import { validateMachine } from "../lib/ev/validate";
+import numericFixture from "../app/preview/ev-table/machine.json";
 import { catalogFixture, collectedFixture } from "./fixtures/collection-status";
 
 vi.mock("../lib/ev/calc", async importOriginal => {
@@ -17,6 +19,30 @@ vi.mock("../lib/ev/calc", async importOriginal => {
 });
 
 describe("collection publication contract", () => {
+  it("does not permit an unknown release date in the existing numerical machine contract", () => {
+    expect(() => validateMachine({ ...numericFixture, releaseDate: null })).toThrow("Invalid machine data");
+  });
+  it.each(["shinjuku", "kabuki"])("accepts unknown release dates only through the observation contract for %s", hallId => {
+    const data = catalogFixture("future", false, hallId);
+    Object.assign(data.machines[0], { releaseDate: null, manufacturer: "未確認" });
+    const [entry] = validateCollectionCatalog(data, hallId);
+    const payload = buildLiveCollection(entry);
+    expect(payload.machine).toMatchObject({ manufacturer: "未確認", releaseDate: null });
+    expect(payload.machine).not.toHaveProperty("economics");
+    const html = renderToString(createElement(LiveMachineClient, { initial: payload, hall: getHall(hallId)! }));
+    expect(html).toContain("期待値算出保留");
+    expect(html).toContain("保存済みの履歴を表示");
+    expect(html).not.toContain(getHall(hallId)!.note);
+    expect(html).not.toContain("公表仕様");
+  });
+
+  it("rejects unknown source types and identifiers belonging to the other source format", () => {
+    for (const [source, storeId] of [["other", "100949"], ["daidata", "00001050"], ["site_seven", "123"], ["site_seven", "0000/1050"]]) {
+      const data = catalogFixture();
+      Object.assign(data, { source, storeId });
+      expect(() => validateCollectionCatalog(data, "kabuki")).toThrow("source mismatch");
+    }
+  });
   it("accepts daily observations with no history and separates saved rows from EV samples", () => {
     const data = catalogFixture();
     data.machines[0].collection.rows = 0;
@@ -83,6 +109,14 @@ describe("collection-only UI", () => {
 });
 
 describe("multi-hall machine list", () => {
+  it("orders observations with unknown dates deterministically without inventing a date", () => {
+    const known = collectedFixture("known").summary;
+    const unknown = { ...collectedFixture("unknown").summary, releaseDate: null };
+    const second = { ...unknown, id: "another" };
+    const selected = selectMachineListSummaries([unknown, second, known].map(summary => ({ hallId: "kabuki", summary })));
+    expect(selected.map(item => item.id)).toEqual(["known", "another", "unknown"]);
+    expect(selected.find(item => item.id === "unknown")?.releaseDate).toBeNull();
+  });
   it("ignores unknown and inactive halls even when their entries precede the default hall", () => {
     const summary = collectedFixture().summary;
     expect(selectMachineListSummaries([

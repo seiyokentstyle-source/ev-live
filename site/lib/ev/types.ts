@@ -414,9 +414,11 @@ export type Machine = {
   economics: Economics;
 };
 
+// Collection-only summaries may have an unverified release date. The numeric
+// Machine contract above continues to require a date string.
 export type MachineSummary = Pick<Machine,
-  "id" | "name" | "manufacturer" | "aliases" | "thumb" | "available" | "releaseDate" | "lastUpdated" | "meta"
-> & { /** The hall whose counts are shown on a combined machine-list card. */ summaryHallId?: string };
+  "id" | "name" | "manufacturer" | "aliases" | "thumb" | "available" | "lastUpdated" | "meta"
+> & { releaseDate: string | null; /** The hall whose counts are shown on a combined machine-list card. */ summaryHallId?: string };
 
 export type PivotConfig = {
   axisKey: string;

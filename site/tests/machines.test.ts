@@ -70,13 +70,24 @@ afterEach(async () => {
   await fs.rm(root, { recursive: true, force: true });
 });
 
-async function writeCatalog(id = "held", forcePending = false) {
-  const dir = path.join(root, "data", "halls", "kabuki");
+async function writeCatalog(id = "held", forcePending = false, hallId = "kabuki", unknown = false) {
+  const dir = path.join(root, "data", "halls", hallId);
   await fs.mkdir(dir, { recursive: true });
-  await fs.writeFile(path.join(dir, "collection-status.json"), JSON.stringify(catalogFixture(id, forcePending)));
+  const catalog = catalogFixture(id, forcePending, hallId);
+  if (unknown) Object.assign(catalog.machines[0], { releaseDate: null, manufacturer: "未確認" });
+  await fs.writeFile(path.join(dir, "collection-status.json"), JSON.stringify(catalog));
 }
 
 describe("collection fallback selection", () => {
+  it.each(["shinjuku", "kabuki"])("publishes newly observed unknown machines from a %s catalog without any numeric JSON", async hallId => {
+    await writeCatalog("futuremachine", false, hallId, true);
+    expect(await getMachineIds()).toEqual(["futuremachine"]);
+    expect(await getMachineListSummaries()).toMatchObject([{ id: "futuremachine", manufacturer: "未確認", releaseDate: null, summaryHallId: hallId }]);
+    expect(await getMachineHallSummaries("futuremachine")).toMatchObject([{ hallId, summary: { id: "futuremachine", releaseDate: null } }]);
+    expect(await getHallDisplay("futuremachine", hallId)).toMatchObject({ kind: "collection" });
+    expect(await getHallDisplay("futuremachine", hallId === "shinjuku" ? "kabuki" : "shinjuku")).toBeUndefined();
+    expect(await fs.readdir(path.join(root, "data", "machines"))).toEqual([]);
+  });
   it("adds catalog-only machines to routes, lists and their own hall without borrowing another hall", async () => {
     await writeMachine("held");
     await writeCatalog();

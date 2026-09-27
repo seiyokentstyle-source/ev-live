@@ -20,7 +20,7 @@ export function sampleCount(machine: MachineSummary): number {
 export function compareMachines(a: MachineSummary, b: MachineSummary): number {
   const bySamples = sampleCount(b) - sampleCount(a);
   if (bySamples !== 0) return bySamples;
-  const byDate = b.releaseDate.localeCompare(a.releaseDate);
+  const byDate = (b.releaseDate ?? "").localeCompare(a.releaseDate ?? "");
   if (byDate !== 0) return byDate;
   return a.id.localeCompare(b.id);
 }

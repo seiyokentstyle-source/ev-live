@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
 import { checkDataRegression } from "../check-data-regression.mjs";
-import { parseCollectionStatus } from "../collection-status-validation.mjs";
+import { parseCollectionStatus, collectionMachineIdentityLosses } from "../collection-status-validation.mjs";
 
 const FILE = "data/halls/kabuki/collection-status.json";
 function entry(id = "fixture") {
@@ -63,6 +63,61 @@ test("signed daily observations can have no history signals while still proving 
   assert.equal(parse(data).machines[0].collection.units, 4);
   data.machines[0].collection.units = 0;
   assert.throws(() => parse(data), /整数件数/);
+});
+
+test("Site Seven uses its registered hall code and an unknown machine never invents a release date", () => {
+  const data = catalog();
+  Object.assign(data, { source: "site_seven", storeId: "00001050", hallId: "shinjuku" });
+  Object.assign(data.machines[0], { manufacturer: "未確認", releaseDate: null });
+  data.machines[0].sourceIntegrity.hallId = "shinjuku";
+  const parseSiteSeven = () => parseCollectionStatus(JSON.stringify(data), "data/halls/shinjuku/collection-status.json");
+  assert.equal(parseSiteSeven().machines[0].releaseDate, null);
+  for (const id of ["123", "0000/1050", "１2345678", "1".repeat(17)]) {
+    data.storeId = id;
+    assert.throws(parseSiteSeven, /取得元/);
+  }
+  data.storeId = "00001050";
+  data.source = "other";
+  assert.throws(parseSiteSeven, /取得元/);
+  data.source = "daidata";
+  assert.throws(parseSiteSeven, /取得元/);
+});
+
+test("formal registration can complete unknown metadata under the original ID without erasing its source names", t => {
+  const initial = catalog();
+  Object.assign(initial.machines[0], { manufacturer: "未確認", releaseDate: null });
+  const r = repository(t, initial);
+  const registered = structuredClone(initial);
+  Object.assign(registered.machines[0], { name: "Registered name", manufacturer: "Verified maker", releaseDate: "2026-09-01" });
+  registered.machines[0].sourceIntegrity.machineName = "Canonical name";
+  registered.machines[0].aliases.push("Registered name", "Canonical name");
+  r.write(registered); assert.equal(r.check(), 0);
+
+  const renamedId = structuredClone(registered); renamedId.machines[0].id = "different";
+  r.write(renamedId); assert.equal(r.check(), 1);
+  const forgotten = structuredClone(registered); forgotten.machines[0].aliases = ["Registered name", "Canonical name"];
+  r.write(forgotten); assert.equal(r.check(), 1);
+  const lostRows = structuredClone(registered); lostRows.machines[0].collection.rows = 99;
+  r.write(lostRows); assert.equal(r.check(), 1);
+  const duplicate = structuredClone(initial);
+  duplicate.machines.push({ ...structuredClone(registered.machines[0]), id: "different" });
+  r.write(duplicate); assert.equal(r.check(), 1);
+  assert.match(r.messages.join("\n"), /機種ID/);
+  const distinct = structuredClone(initial);
+  const sequel = entry("sequel");
+  sequel.name = sequel.sourceIntegrity.machineName = "Fixture II";
+  sequel.aliases = ["Fixture II"];
+  distinct.machines.push(sequel);
+  r.write(distinct); assert.equal(r.check(), 0);
+});
+
+test("formal machine metadata cannot be silently rewritten through the unknown-machine admission rule", t => {
+  const r = repository(t);
+  for (const field of ["manufacturer", "releaseDate"]) {
+    const data = catalog();
+    data.machines[0][field] = field === "manufacturer" ? "Changed maker" : null;
+    r.write(data); assert.equal(r.check(), 1);
+  }
 });
 
 test("saved observations can survive an unknown current unit list without inventing an expected count", () => {
@@ -197,4 +252,57 @@ test("catalog additions cannot bypass the original numeric machine guards", t =>
   r.commit("catalog [allow-data-regression]");
   assert.equal(r.check(), 1);
   assert.match(r.messages.join("\n"), /巻き戻し/);
+});
+
+test("numeric admission matches catalog full identities but never joins two abbreviation aliases", () => {
+  const data = catalog();
+  data.machines[0].aliases.push("Shared nickname", "Canonical complete name");
+  data.machines[0].sourceIntegrity.machineName = "Canonical complete name";
+  for (const fullName of ["Fixture", "Canonical complete name"]) {
+    assert.equal(collectionMachineIdentityLosses(data, { id: "other", name: fullName }, "numeric").length, 1);
+    assert.equal(collectionMachineIdentityLosses(data, { id: "other", name: "Display", aliases: [fullName] }, "numeric").length, 1);
+    assert.deepEqual(collectionMachineIdentityLosses(data, { id: "fixture", name: fullName }, "numeric"), []);
+  }
+  assert.deepEqual(collectionMachineIdentityLosses(data,
+    { id: "sequel", name: "Fixture II", aliases: ["Shared nickname", "Canonical complete name II"] }, "numeric"), []);
+});
+
+test("a new numeric JSON cannot use a different ID when the existing same-hall catalog is unchanged", t => {
+  const r = repository(t);
+  r.commit("new table [allow-data-regression]");
+  const wrong = { id: "other", name: "Fixture", aliases: [], lastUpdated: "2026-09-24", meta: { samples: "100" } };
+  writeFileSync(join(r.dir, "data/machines/kabuki/other.json"), JSON.stringify(wrong));
+  assert.equal(r.check(), 1);
+  assert.match(r.messages.join("\n"), /数値公開ID/);
+  wrong.name = "Another model"; wrong.aliases = ["Fixture"];
+  writeFileSync(join(r.dir, "data/machines/kabuki/other.json"), JSON.stringify(wrong));
+  assert.equal(r.check(), 1);
+  unlinkSync(join(r.dir, "data/machines/kabuki/other.json"));
+  writeFileSync(join(r.dir, "data/machines/other.json"), JSON.stringify(wrong));
+  assert.equal(r.check(), 0); // A Kabuki catalog must not bind a Shinjuku identity.
+});
+
+test("a later update of an existing numeric file cannot attach a collected identity under another ID", t => {
+  const r = repository(t);
+  const file = join(r.dir, "data/machines/kabuki/other.json");
+  const numeric = { id: "other", name: "Unrelated", lastUpdated: "2026-09-24", meta: { samples: "100" } };
+  writeFileSync(file, JSON.stringify(numeric));
+  const base = r.commit("unrelated model");
+  numeric.aliases = ["Fixture"];
+  writeFileSync(file, JSON.stringify(numeric));
+  assert.equal(checkDataRegression({ baseRef: base, cwd: r.dir, log() {}, error() {} }), 1);
+});
+
+test("root numeric publications are checked against the Shinjuku Site Seven catalog", t => {
+  const r = repository(t, null);
+  const data = catalog();
+  Object.assign(data, { hallId: "shinjuku", source: "site_seven", storeId: "00001050" });
+  data.machines[0].sourceIntegrity.hallId = "shinjuku";
+  mkdirSync(join(r.dir, "data/halls/shinjuku"), { recursive: true });
+  writeFileSync(join(r.dir, "data/halls/shinjuku/collection-status.json"), JSON.stringify(data));
+  writeFileSync(join(r.dir, "data/machines/wrong.json"), JSON.stringify({ id: "wrong", name: "Fixture", lastUpdated: "2026-09-24", meta: { samples: "100" } }));
+  assert.equal(r.check(), 1);
+  unlinkSync(join(r.dir, "data/machines/wrong.json"));
+  writeFileSync(join(r.dir, "data/machines/fixture.json"), r.machineBytes);
+  assert.equal(r.check(), 0);
 });
