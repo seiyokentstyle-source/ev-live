@@ -8,6 +8,7 @@ import { validateMachine } from "../lib/ev/validate";
 import { normalizeSearchText } from "../lib/search/normalize";
 import { catalogFixture } from "./fixtures/collection-status";
 import { referenceFixture } from "./fixtures/provisional-setting1";
+import { estimateFixture } from "./fixtures/counter-estimate";
 
 let root: string;
 let getMachine: typeof import("../lib/machines").getMachine;
@@ -92,6 +93,19 @@ describe("collection fallback selection", () => {
     expect(await getHallDisplays("kabuki")).toEqual([selected]);
     expect(await getHallDisplay("lycoris", "shinjuku")).toBeUndefined();
     expect((await getMachineHallSummaries("lycoris"))[0].summary).not.toHaveProperty("provisionalSetting1");
+  });
+  it("shows a counter estimate only for the hall whose history produced it", async () => {
+    const input = machine("lycoris");
+    input.meta.samples = "0";
+    input.profiles = input.profiles.map(profile => ({ ...profile, baseAnchors: [], zones: [], dataPending: true, sessions: 0 }));
+    const estimate = estimateFixture();
+    await writeMachine("lycoris", { ...input, counterEstimate: estimate });
+    await writeMachine("lycoris", { ...input, counterEstimate: estimate }, "kabuki");
+    expect((await getMachine("lycoris"))?.counterEstimate).toEqual(estimate);
+    expect(await getMachine("lycoris", "kabuki")).not.toHaveProperty("counterEstimate");
+    expect((await getMachines("kabuki"))[0]).not.toHaveProperty("counterEstimate");
+    for (const machine of await getMachines("mixed")) expect(machine).not.toHaveProperty("counterEstimate");
+    expect(await getMachine("lycoris", "mixed")).not.toHaveProperty("counterEstimate");
   });
   it.each(["shinjuku", "kabuki"])("publishes newly observed unknown machines from a %s catalog without any numeric JSON", async hallId => {
     await writeCatalog("futuremachine", false, hallId, true);

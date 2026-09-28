@@ -2,6 +2,7 @@ import type { LiveIndex, LiveSnapshot } from "./live-data";
 import { validateMachine } from "./ev/validate";
 import { validateCollectedMachine } from "./collection-status-contract";
 import { validateMachineProvisionalSetting1 } from "./ev/provisional-setting1";
+import { assertSingleAttachment, validateMachineCounterEstimate } from "./ev/counter-estimate";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 export const LIVE_REFRESH_MS = 60_000;
@@ -20,13 +21,19 @@ export async function fetchLiveMachine(
   }
   if (data.schema === "evlive-live-collection/v1") {
     const { summary: machine, ...pending } = validateCollectedMachine({ ...data.pending, summary: data.machine });
-    const attachment = data.provisionalSetting1 === undefined ? {} : {
-      provisionalSetting1: validateMachineProvisionalSetting1(data.provisionalSetting1, machine.id)
+    const attachment = {
+      ...(data.provisionalSetting1 === undefined ? {} : {
+        provisionalSetting1: validateMachineProvisionalSetting1(data.provisionalSetting1, machine.id) }),
+      ...(data.counterEstimate === undefined ? {} : {
+        counterEstimate: validateMachineCounterEstimate(data.counterEstimate, machine.id, item.hallId) }),
     };
+    assertSingleAttachment(attachment);
     return { schema: data.schema, revision: data.revision, machine, pending, ...attachment };
   }
   if (data.schema !== "evlive-live-machine/v1" || !Array.isArray(data.savedTargets)) throw new Error("Invalid live machine");
-  return { ...data, machine: validateMachine(data.machine) };
+  const machine = validateMachine(data.machine);
+  if (machine.counterEstimate !== undefined) validateMachineCounterEstimate(machine.counterEstimate, machine.id, item.hallId);
+  return { ...data, machine };
 }
 
 export function startLiveMachineRefresh(

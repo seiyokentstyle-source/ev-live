@@ -1,10 +1,11 @@
 import { existsSync, promises as fs } from "node:fs";
 import path from "node:path";
-import type { Machine, MachineSummary, ProvisionalSetting1 } from "./ev/types";
+import type { CounterEstimate, Machine, MachineSummary, ProvisionalSetting1 } from "./ev/types";
+import { withoutForeignCounterEstimate } from "./ev/counter-estimate";
 import { validateMachine } from "./ev/validate";
 import { LOW_SETTING_HALL_SUBDIR, onlyLowSetting, withoutLowSetting } from "./ev/low-setting";
 import { compareMachines } from "./machine-order";
-import { getReadyHalls, getHall } from "./halls";
+import { HALLS, getReadyHalls, getHall } from "./halls";
 import { machineSummary } from "./ev/summary";
 import { normalizeMachineMetadata } from "./machine-metadata";
 import type { HeatmapCoverageMachine } from "./heatmap/coverage";
@@ -69,7 +70,17 @@ function selectMixedMachine(stored?: Machine, source?: Machine): Machine | undef
   return stored?.setting1Correction ? onlyLowSetting(stored) ?? undefined : stored;
 }
 
+/** JSONの置き場所（店舗フォルダ）から店舗IDを引く。推定表の店舗照合に使う。 */
+function hallIdOf(dataSubdir?: string): string | undefined {
+  return HALLS.find(hall => hall.dataSubdir === (dataSubdir ?? ""))?.id;
+}
+
 export async function getMachines(dataSubdir?: string): Promise<Machine[]> {
+  const hallId = hallIdOf(dataSubdir);
+  return (await loadHallMachines(dataSubdir)).map(machine => withoutForeignCounterEstimate(machine, hallId));
+}
+
+async function loadHallMachines(dataSubdir?: string): Promise<Machine[]> {
   const dir = hallDir(dataSubdir);
   // ★「設定1想定」をどの店舗に出すかはサイト側で決める（lib/ev/low-setting.ts）。
   //   生成側にも同じ切り分けを入れたが、そちらは再生成しないと効かない。
@@ -108,6 +119,11 @@ export async function getShinjukuHeatmapCoverageSources(): Promise<HeatmapCovera
 }
 
 export async function getMachine(id: string, dataSubdir?: string): Promise<Machine | undefined> {
+  const machine = await loadHallMachine(id, dataSubdir);
+  return machine ? withoutForeignCounterEstimate(machine, hallIdOf(dataSubdir)) : undefined;
+}
+
+async function loadHallMachine(id: string, dataSubdir?: string): Promise<Machine | undefined> {
   // IDs are JSON basenames, not aliases or paths. Detail pages must not read
   // every machine again: each static route otherwise reparses the whole data set.
   if (!/^[a-z0-9_-]+$/.test(id) || (dataSubdir && !/^[a-z0-9_-]+$/.test(dataSubdir))) {
@@ -142,7 +158,7 @@ export async function getMachineHallSummaries(id: string): Promise<MachineHallSu
 }
 
 export type HallDisplay = { kind: "machine"; machine: Machine }
-  | { kind: "collection"; collection: CollectedMachine; provisionalSetting1?: ProvisionalSetting1 };
+  | { kind: "collection"; collection: CollectedMachine; provisionalSetting1?: ProvisionalSetting1; counterEstimate?: CounterEstimate };
 
 export function displaySummary(display: HallDisplay): MachineSummary {
   return display.kind === "machine" ? machineSummary(display.machine) : display.collection.summary;
@@ -158,9 +174,10 @@ export async function getHallDisplays(hallId: string): Promise<HallDisplay[]> {
   const displays = new Map<string, HallDisplay>(machines.map(machine => [machine.id, { kind: "machine", machine }]));
   for (const { forcePending, ...collection } of observations) {
     if (forcePending || !displays.has(collection.summary.id)) {
-      const provisionalSetting1 = machines.find(machine => machine.id === collection.summary.id)?.provisionalSetting1;
+      const source = machines.find(machine => machine.id === collection.summary.id);
+      const { provisionalSetting1, counterEstimate } = source ?? {};
       displays.set(collection.summary.id, { kind: "collection", collection,
-        ...(provisionalSetting1 ? { provisionalSetting1 } : {}) });
+        ...(provisionalSetting1 ? { provisionalSetting1 } : {}), ...(counterEstimate ? { counterEstimate } : {}) });
     }
   }
   return [...displays.values()].sort((a, b) => compareMachines(displaySummary(a), displaySummary(b)));
@@ -176,7 +193,8 @@ export async function getHallDisplay(id: string, hallId: string): Promise<HallDi
   if (entry && (entry.forcePending || !machine?.available)) {
     const { forcePending: _, ...collection } = entry;
     return { kind: "collection", collection,
-      ...(machine?.available && machine.provisionalSetting1 ? { provisionalSetting1: machine.provisionalSetting1 } : {}) };
+      ...(machine?.available && machine.provisionalSetting1 ? { provisionalSetting1: machine.provisionalSetting1 } : {}),
+      ...(machine?.available && machine.counterEstimate ? { counterEstimate: machine.counterEstimate } : {}) };
   }
   return machine?.available ? { kind: "machine", machine } : undefined;
 }

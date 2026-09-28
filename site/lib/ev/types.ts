@@ -391,6 +391,45 @@ export type ProvisionalSetting1 = {
   }>;
 };
 
+/** 店舗のカウンター履歴から計算した推定表。獲得枚数はモデル推定で、実測EVの保留は解除しない。 */
+export type CounterEstimateAnchor = { g: number; n: number; ev: number; rtp: number; inv: number; playG: number };
+export type CounterEstimate = {
+  schemaVersion: 1;
+  status: "estimate";
+  model: "lycoris-counter-v1";
+  label: "カウンター履歴から計算した推定期待値表（獲得枚数は推定）";
+  historyBased: true;
+  graphCorrected: false;
+  note: string;
+  assumptions: string[];
+  summary: {
+    unitDays: number;
+    firstDate: string;
+    lastDate: string;
+    excludedDates: string[];
+    assumedAverageSetting: number;
+    assumedRtp: number;
+    firstHitGames: number;
+    meanPayout: number;
+    normalBonus: number;
+    upperBonus: number;
+    kakeShare: number;
+    normalShare: number;
+    upperShare: number;
+  };
+  groups: Array<{
+    key: "all" | "after_kake" | "after_normal" | "after_upper";
+    label: string;
+    rates: Array<{
+      key: "46/52" | "50/50";
+      label: string;
+      loanPerMedal: number;
+      creditPerMedal: number;
+      anchors: CounterEstimateAnchor[];
+    }>;
+  }>;
+};
+
 export type Machine = {
   /** 生成側の天井仕様・信号マップ版。旧JSONでは省略される。 */
   specVersion?: string;
@@ -418,6 +457,8 @@ export type Machine = {
   profiles: Profile[];
   /** Independently generated public-spec reference; pending observations remain pending. */
   provisionalSetting1?: ProvisionalSetting1;
+  /** 同じ店舗の履歴からの推定表。参考表の代わりに付き、両方は付かない。 */
+  counterEstimate?: CounterEstimate;
   /** 店舗の実測表とは別に生成した補正版。表示する店舗の選択後は取り除く。 */
   setting1Correction?: Setting1Correction;
   /** 店舗ごとに品質検証してから履歴を合算した生成物。 */

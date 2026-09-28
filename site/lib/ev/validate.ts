@@ -5,6 +5,7 @@ import { validateAggregationRowsAsset } from "./aggregation-asset";
 import { validateSettingAimDayDigitNets } from "./setting-aim-day-nets";
 import { validateHeatmapCoverage } from "./heatmap-coverage";
 import { validateMachineProvisionalSetting1 } from "./provisional-setting1";
+import { assertSingleAttachment, validateMachineCounterEstimate } from "./counter-estimate";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -83,6 +84,13 @@ export function validateMachine(data: unknown): Machine {
     assert(machine.meta?.samples === "0" && machine.profiles.every(profile => profile.dataPending === true
       && profile.baseAnchors.length === 0 && (profile.sessions === undefined || profile.sessions === 0)),
     "provisionalSetting1 must preserve pending profiles and zero EV samples");
+  }
+  if (machine.counterEstimate !== undefined) {
+    validateMachineCounterEstimate(machine.counterEstimate, machine.id);
+    assertSingleAttachment(machine);
+    assert(machine.meta?.samples === "0" && machine.profiles.every(profile => profile.dataPending === true
+      && profile.baseAnchors.length === 0 && (profile.sessions === undefined || profile.sessions === 0)),
+    "counterEstimate must preserve pending profiles and zero EV samples");
   }
   assert(Array.isArray(machine.axes) && machine.axes.length > 0, "axes are required");
   assert(isRecord(machine.modifiers), "modifiers are required");

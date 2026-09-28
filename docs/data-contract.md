@@ -121,6 +121,31 @@ EVサンプルとして数えない。`meta.samples` は `"0"`、各プロファ
 だけを `LiveCollection.provisionalSetting1` に独立して渡す。収集状況DTOや一覧の母数へ
 混ぜず、参照表の変更もライブ更新のrevisionに含める。他店舗からの補完はしない。
 
+### カウンター履歴からの推定表（counterEstimate）
+
+2026-09-28 利用者承認。同じ店舗の外部カウンター履歴（信号とG数）から生成側のプログラムが
+計算した推定表を、任意の `counterEstimate` として付けられる。現在は `lycoris` の新宿だけ。
+付く場合は `provisionalSetting1` の代わりで、両方は付かない。実戦EVの算出保留は解除しない
+（`meta.samples: "0"`、`profiles[].dataPending: true`、空の `baseAnchors` を保持）。
+他店の履歴から作った表を別の店舗に付けない。サイトも機種IDと店舗（`lycoris` は `shinjuku`）を照合し、
+他店のフォルダや混合店舗（新宿の機種から作る表を含む）では推定表を取り除く。
+収集状況ページ（`LiveCollection`）でも参考表との同時付加を拒否する。
+
+契約は `schemaVersion: 1`、`status: "estimate"`、`model: "lycoris-counter-v1"`、
+`historyBased: true`、`graphCorrected: false`、`label` は
+「カウンター履歴から計算した推定期待値表（獲得枚数は推定）」。`note` と5項目以上の
+`assumptions` を必須にする。`summary` は `unitDays`、`firstDate`、`lastDate`、
+`excludedDates`、`assumedAverageSetting`、`assumedRtp`、`firstHitGames`、`meanPayout`、
+`normalBonus`、`upperBonus`、`kakeShare`、`normalShare`、`upperShare`。
+獲得枚数は履歴に無いため、仮定の平均設定の公表出玉率に合うよう逆算した推定値である。
+
+`groups` は `all`・`after_kake`・`after_normal`・`after_upper`（前回ATの種類）の順。
+各グループは46/52・50/50の順に `rates` を持ち、各行は `{ g, n, ev, rtp, inv, playG }`。
+`g` は0Gから10G刻みの連続、`n` はその打ち始めGでの件数で、行が進むほど増えない。
+件数が足りない打ち始めGは生成側が出さない（`all` 以外は空でもよい）。G軸は店舗の
+外部カウンターから推定した通常時Gで、液晶Gとは一致しないことがある。サイトは形と
+来歴を検証する（数値の再計算は履歴を持つ生成側の `lycoris_counter_ev.validate_counter_estimate`）。
+
 ### 機種JSONと独立した収集状況
 
 未確認スペック・サンプル不足・収集未完などで機種JSONを生成できない場合は、
