@@ -23,11 +23,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 137,
-        "events": 135,
+        "rows": 145,
+        "events": 142,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -35,7 +35,7 @@
         "hallId": "kabuki",
         "machineName": "L ULTRAMAN最終決戦",
         "targetDate": "2026-09-24",
-        "inputSha256": "55dec01c12d03ab7b7eac53a011213ffe6dbdb1da261fcc84545046108413107"
+        "inputSha256": "d016cdf82d2432ca7b5c135ea2caeb4b5a1ca74d8a68b2d4f04f550efec3a207"
       }
     },
     {
@@ -56,10 +56,10 @@
       "collectionComplete": true,
       "expectedUnits": 44,
       "collection": {
-        "rows": 8433,
-        "events": 8257,
+        "rows": 11189,
+        "events": 10969,
         "units": 44,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-09-21",
         "lastDate": "2026-09-26"
       },
@@ -68,7 +68,7 @@
         "hallId": "kabuki",
         "machineName": "L 東京喰種",
         "targetDate": "2026-09-26",
-        "inputSha256": "cbee333a7ee123271a5faeda26d71a9283a02dda422e0982cd9304b8c6a11331"
+        "inputSha256": "5affedfa1f3a2be6b8e8414875c7dd905b0b4db0358428e8ebe2ef6e984161fb"
       }
     },
     {
@@ -87,11 +87,11 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 249,
-        "events": 245,
+        "rows": 282,
+        "events": 276,
         "units": 2,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -99,7 +99,7 @@
         "hallId": "kabuki",
         "machineName": "L 無職転生 ～異世界行ったら本気だす～",
         "targetDate": "2026-09-24",
-        "inputSha256": "83b49ea1a93c8ef7878608cf577b96b005beb7f823edc7f57f61fdb1f3210c93"
+        "inputSha256": "f309199f144aefa0212869a1853b4baa2a76d7aebf7fdc2e34d8a23247c992a6"
       }
     },
     {
@@ -120,11 +120,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 136,
-        "events": 134,
+        "rows": 158,
+        "events": 155,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -132,7 +132,7 @@
         "hallId": "kabuki",
         "machineName": "LToLOVEるダークネス TRANCE ver.8.7",
         "targetDate": "2026-09-24",
-        "inputSha256": "d9851904351ec7f9cc3e9fa37f1867f475d025f34d75910c9f7f70496c98a49d"
+        "inputSha256": "95086ef525695aee739aaef4a534a99770c9e65d22673e5951b4a31e86d1dd2c"
       }
     },
     {
@@ -152,11 +152,11 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 497,
-        "events": 483,
+        "rows": 707,
+        "events": 686,
         "units": 7,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -164,7 +164,7 @@
         "hallId": "kabuki",
         "machineName": "Lからくりサーカス2",
         "targetDate": "2026-09-24",
-        "inputSha256": "511746b8b6f2dda006f61d95f40367abd8e057ed965fa2c28e79bad65ab25c97"
+        "inputSha256": "ba562ee31fde5e631c591d46db87dabd0556fec07c460c39982c5d40161d907a"
       }
     },
     {
@@ -185,11 +185,11 @@
       "collectionComplete": true,
       "expectedUnits": 15,
       "collection": {
-        "rows": 2134,
-        "events": 2089,
+        "rows": 2690,
+        "events": 2630,
         "units": 15,
-        "days": 3,
-        "firstDate": "2026-09-23",
+        "days": 4,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-26"
       },
       "sourceIntegrity": {
@@ -197,7 +197,7 @@
         "hallId": "kabuki",
         "machineName": "Lとある魔術の禁書目録2",
         "targetDate": "2026-09-26",
-        "inputSha256": "ceed4d30018443c473cdf5751379fad5cefdea8bc40777f55d39d5e776c0e252"
+        "inputSha256": "e375e6686bac588c97104749ead95922d9164d18e7e020ff8ee01cfddb2fed7e"
       }
     },
     {
@@ -219,11 +219,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 584,
-        "events": 578,
+        "rows": 754,
+        "events": 745,
         "units": 3,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -231,7 +231,7 @@
         "hallId": "kabuki",
         "machineName": "Lとんでもスキルで異世界放浪メシ",
         "targetDate": "2026-09-24",
-        "inputSha256": "ac5284cd8ebc7907040067b3451b4d0b4570186340f4d57893471d590ddfe496"
+        "inputSha256": "f564a81143f03aaf9603c63563bfd10c49521f0b72e3cb649e42fb35af0b0c26"
       }
     },
     {
@@ -252,11 +252,11 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 207,
-        "events": 197,
+        "rows": 260,
+        "events": 245,
         "units": 5,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -264,7 +264,7 @@
         "hallId": "kabuki",
         "machineName": "Lやじきた道中記参る！",
         "targetDate": "2026-09-24",
-        "inputSha256": "6deb9a8e0a34f32bd1e91378e3672da7fbcea9e00f2134f2f5817ac783ce5fdc"
+        "inputSha256": "efdc0778b8e25b35cea78e10f2236679c7771f1af0fda78c03dd168816706b7c"
       }
     },
     {
@@ -287,11 +287,11 @@
       "collectionComplete": true,
       "expectedUnits": 19,
       "collection": {
-        "rows": 3004,
-        "events": 2947,
+        "rows": 3824,
+        "events": 3748,
         "units": 19,
-        "days": 3,
-        "firstDate": "2026-09-23",
+        "days": 4,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-26"
       },
       "sourceIntegrity": {
@@ -299,7 +299,7 @@
         "hallId": "kabuki",
         "machineName": "Lスマスロ モンキーターンV",
         "targetDate": "2026-09-26",
-        "inputSha256": "4b556929576a64451dcf5120980d70c3baba2141ed26cf2148e634e2d0eed578"
+        "inputSha256": "4c181acfd790ca014d6b65d5e03bcfea0e1c4a3036f1427e59d7d656ca08f01c"
       }
     },
     {
@@ -320,11 +320,11 @@
       "collectionComplete": true,
       "expectedUnits": 12,
       "collection": {
-        "rows": 983,
-        "events": 959,
+        "rows": 1418,
+        "events": 1382,
         "units": 12,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -332,7 +332,7 @@
         "hallId": "kabuki",
         "machineName": "Lスマスロ　ゴッドイーター　リザレクション",
         "targetDate": "2026-09-24",
-        "inputSha256": "b880f480c402889a83cccdfe369f92c86b889fab27f4d045de5f49186ab6231e"
+        "inputSha256": "04f8e98f9431b3832d833d251683315b7d865eeeb45eba395824734f994d0609"
       }
     },
     {
@@ -352,11 +352,11 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 334,
-        "events": 326,
+        "rows": 432,
+        "events": 420,
         "units": 4,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -364,7 +364,7 @@
         "hallId": "kabuki",
         "machineName": "Lスマスロかぐや様は告らせたい",
         "targetDate": "2026-09-24",
-        "inputSha256": "60c58b1cc7bac097b1b593abc61609e30f775a9784e0a2a3636c9be28affe6bb"
+        "inputSha256": "8b46604f682d9388205ee5da6c3fabea0639845f2a4db3c7fd4d8e321d3a517d"
       }
     },
     {
@@ -387,11 +387,11 @@
       "collectionComplete": true,
       "expectedUnits": 8,
       "collection": {
-        "rows": 822,
-        "events": 806,
+        "rows": 1196,
+        "events": 1172,
         "units": 8,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -399,7 +399,7 @@
         "hallId": "kabuki",
         "machineName": "Lスマスロ北斗の拳",
         "targetDate": "2026-09-24",
-        "inputSha256": "f43d8257a1ab1e7d5553b8d3d7ed5273074816d23a332ef2e0c8760aac6cace0"
+        "inputSha256": "a3d8bbd34c3dd76af9d21281869b9a3316712cc73e9f69a75621783a45ae3f3a"
       }
     },
     {
@@ -419,11 +419,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 147,
-        "events": 145,
+        "rows": 156,
+        "events": 153,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -431,7 +431,7 @@
         "hallId": "kabuki",
         "machineName": "Lスロット　ゾンビランドサガ",
         "targetDate": "2026-09-24",
-        "inputSha256": "ab80e41198c23e231380d56cd50c00a5174a386881b3c769edf58c876552e85b"
+        "inputSha256": "5858d5f3b2cbe8786b797c5eaf2ff7f0af4f25a4d55d0e091640d8534d56e1b2"
       }
     },
     {
@@ -453,11 +453,11 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 421,
-        "events": 413,
+        "rows": 504,
+        "events": 492,
         "units": 4,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -465,7 +465,7 @@
         "hallId": "kabuki",
         "machineName": "Lソードアート・オンライン",
         "targetDate": "2026-09-24",
-        "inputSha256": "c059e89c47d3441bab435e2263c3f1b1852ba1b32530b157011aa545805ecf52"
+        "inputSha256": "228f0df58503431a878ce5eacf940696fc19212b0254c93004d88a993656f576"
       }
     },
     {
@@ -485,11 +485,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 112,
-        "events": 110,
+        "rows": 138,
+        "events": 135,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -497,7 +497,7 @@
         "hallId": "kabuki",
         "machineName": "Lタクトオーパス デスティニー",
         "targetDate": "2026-09-24",
-        "inputSha256": "413773d31d22904438e389e9926db180aae4a8d7ecafe3917c7602c973bb50b2"
+        "inputSha256": "932701dfdfc9754fbb23afc55377f50765afc485a7e4655d7fde952cabea5695"
       }
     },
     {
@@ -516,11 +516,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 103,
-        "events": 101,
+        "rows": 123,
+        "events": 120,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -528,7 +528,7 @@
         "hallId": "kabuki",
         "machineName": "Lバンドリ！",
         "targetDate": "2026-09-24",
-        "inputSha256": "067ff860db96c00768328f6eb9bcc01d726d6707a5d462cad877bf2f69b1a596"
+        "inputSha256": "d1407832b9606398af8c9b848833beb9f14ab6add78521d80c8b5e6c22b23405"
       }
     },
     {
@@ -549,11 +549,11 @@
       "collectionComplete": true,
       "expectedUnits": 15,
       "collection": {
-        "rows": 1700,
-        "events": 1655,
+        "rows": 1985,
+        "events": 1925,
         "units": 15,
-        "days": 3,
-        "firstDate": "2026-09-23",
+        "days": 4,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-26"
       },
       "sourceIntegrity": {
@@ -561,7 +561,7 @@
         "hallId": "kabuki",
         "machineName": "Lパチスロ 炎炎ノ消防隊2",
         "targetDate": "2026-09-26",
-        "inputSha256": "4afa791ad8b6d25c4093e97ab99cf40f13ea3f83f3365d0ab857ceb9cb860360"
+        "inputSha256": "012f16e6396ad1263afe45cb4a1f98e9339a120a04d54892cda2d4df270266be"
       }
     },
     {
@@ -618,11 +618,11 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 114,
-        "events": 110,
+        "rows": 175,
+        "events": 169,
         "units": 2,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -630,7 +630,7 @@
         "hallId": "kabuki",
         "machineName": "Lパチスロうみねこのなく頃に2",
         "targetDate": "2026-09-24",
-        "inputSha256": "72c146deab242649ebe9f35acba569c180641aaccb367e8ff6edd28fdcace424"
+        "inputSha256": "c6cefc74c386df58219d286ab4724e32317c20d8844dddc93e616ca87d0794e7"
       }
     },
     {
@@ -683,11 +683,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 147,
-        "events": 145,
+        "rows": 173,
+        "events": 170,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -695,7 +695,7 @@
         "hallId": "kabuki",
         "machineName": "Lパチスロガールズ＆パンツァー 最終章",
         "targetDate": "2026-09-24",
-        "inputSha256": "43aa5da784a113ae96aae821524730cf6851339eea8e9c05ec0b1321fd01b8c4"
+        "inputSha256": "e58f60f8e9e8418e645db0e88b8b33fe6510f68befefaec4bce744531c48e86b"
       }
     },
     {
@@ -716,11 +716,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 265,
-        "events": 259,
+        "rows": 404,
+        "events": 395,
         "units": 3,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -728,7 +728,7 @@
         "hallId": "kabuki",
         "machineName": "Lパチスロ革命機ヴァルヴレイヴ",
         "targetDate": "2026-09-24",
-        "inputSha256": "a01e58d8b7f4f6234f1179c10f953a6a8011d9990fef05a836190b914052646b"
+        "inputSha256": "7937661e3d060272613fe58a78ac1d71993f456cbc937ab74cf95b463e005db6"
       }
     },
     {
@@ -783,11 +783,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 216,
-        "events": 210,
+        "rows": 334,
+        "events": 325,
         "units": 3,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -795,7 +795,7 @@
         "hallId": "kabuki",
         "machineName": "Lモグモグ風林火山 大海戦の巻",
         "targetDate": "2026-09-24",
-        "inputSha256": "e4b11d03806736458f5a10be9e64971b2e2e10872e578428ebf0dc3a387804dc"
+        "inputSha256": "bb2a30baf1464c62c8f17ce2240c19e9574f4300eeee607dced13eb25f826f2b"
       }
     },
     {
@@ -848,11 +848,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 260,
-        "events": 254,
+        "rows": 340,
+        "events": 331,
         "units": 3,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -860,7 +860,7 @@
         "hallId": "kabuki",
         "machineName": "L南国育ちSPECIAL",
         "targetDate": "2026-09-24",
-        "inputSha256": "12bf6bd4580d29a63df8c52b83891869f69a2b0d625471b9c005a4b295f380b0"
+        "inputSha256": "e6d6d87a0fef0a24d37e82172415d776937e723fd4135bf9107233944d5c9719"
       }
     },
     {
@@ -881,11 +881,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 318,
-        "events": 312,
+        "rows": 457,
+        "events": 448,
         "units": 3,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -893,7 +893,7 @@
         "hallId": "kabuki",
         "machineName": "L喰霊-零-Re",
         "targetDate": "2026-09-24",
-        "inputSha256": "8436f6eae99b1496e1e72ab24b897ee5fbcb5e9bc58e66a348063052e5bd24be"
+        "inputSha256": "1f9f058e34c89a768664fbb8188c9a0a4ff9aed35d133960f2a5582743367276"
       }
     },
     {
@@ -914,11 +914,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 109,
-        "events": 107,
+        "rows": 117,
+        "events": 114,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -926,7 +926,7 @@
         "hallId": "kabuki",
         "machineName": "L回胴黙示録カイジ 狂宴",
         "targetDate": "2026-09-24",
-        "inputSha256": "88ea488dde1aa17c83fcd80910e793b3cab8c53c4520244d346f96104c849012"
+        "inputSha256": "c0b2340e01bf1d563b6197c97da72551d1f65dce6820c25e1eca849c60ebc525"
       }
     },
     {
@@ -945,11 +945,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 121,
-        "events": 119,
+        "rows": 162,
+        "events": 159,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -957,7 +957,7 @@
         "hallId": "kabuki",
         "machineName": "L少女☆歌劇 レヴュースタァライト -The SLOT-",
         "targetDate": "2026-09-24",
-        "inputSha256": "00011fb53dfa30849b7e836a92bcd880dabc9ac2f5761c49fcf4e8713f58b55d"
+        "inputSha256": "3e332466da369de442f62b72d4e8660e053878e05f06ee2f6bd738a3d9823bd2"
       }
     },
     {
@@ -978,11 +978,11 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 444,
-        "events": 436,
+        "rows": 674,
+        "events": 662,
         "units": 4,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -990,7 +990,7 @@
         "hallId": "kabuki",
         "machineName": "L彼女、お借りします",
         "targetDate": "2026-09-24",
-        "inputSha256": "c8ce758fbc6de8b5d93bbceb8f126bfbe2268d6cc0e21d7219269873790969c6"
+        "inputSha256": "1690bc381d2bb2766f896ff850826beb488661fe29376d47b7a1111f73f047e4"
       }
     },
     {
@@ -1011,11 +1011,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 51,
-        "events": 49,
+        "rows": 66,
+        "events": 63,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1023,7 +1023,7 @@
         "hallId": "kabuki",
         "machineName": "L忍魂参 奥義皆伝ノ章",
         "targetDate": "2026-09-24",
-        "inputSha256": "6b0e405ed929568c9997e6cd3754d850877c69ae07d00a69dbcc5deb7b3b5a00"
+        "inputSha256": "55ef5c6e72a98a176b315563458520348e08845487ef238e41519f9e344c458d"
       }
     },
     {
@@ -1043,11 +1043,11 @@
       "collectionComplete": true,
       "expectedUnits": 16,
       "collection": {
-        "rows": 3446,
-        "events": 3398,
+        "rows": 4202,
+        "events": 4138,
         "units": 16,
-        "days": 3,
-        "firstDate": "2026-09-23",
+        "days": 4,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-26"
       },
       "sourceIntegrity": {
@@ -1055,7 +1055,7 @@
         "hallId": "kabuki",
         "machineName": "L戦国乙女5 業火を穿つ宿焔の双刃",
         "targetDate": "2026-09-26",
-        "inputSha256": "ac9d47ae4b047f9e7ab9582aa38a4081715547d6562d6d98c008689b50ec5820"
+        "inputSha256": "1092fa051b006339d0f118c8798d3fd4d60015259067dfef86ba3862c98feab6"
       }
     },
     {
@@ -1076,11 +1076,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 81,
-        "events": 79,
+        "rows": 97,
+        "events": 94,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1088,7 +1088,7 @@
         "hallId": "kabuki",
         "machineName": "L戦国乙女４　戦乱に閃く炯眼の軍師",
         "targetDate": "2026-09-24",
-        "inputSha256": "addb7b2cfb3849e34ee17f5848528b896424c4337694374e82384c81cc3962c2"
+        "inputSha256": "1c0b46c200bd72874d5df9c4d0eb3e1aaaac9181df09ccd349c3ffb9dd66d85a"
       }
     },
     {
@@ -1109,10 +1109,10 @@
       "collectionComplete": true,
       "expectedUnits": 31,
       "collection": {
-        "rows": 8318,
-        "events": 8194,
+        "rows": 9262,
+        "events": 9124,
         "units": 31,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-09-21",
         "lastDate": "2026-09-26"
       },
@@ -1121,7 +1121,7 @@
         "hallId": "kabuki",
         "machineName": "L甲鉄城のカバネリ海門決戦",
         "targetDate": "2026-09-26",
-        "inputSha256": "2679351cf96c30460c066b3764dd2e37e03486f7f3ebf758ae76a2b6f1b5e97c"
+        "inputSha256": "99f34da8591367ec6d7d7f169f22fb7ef0ce70cbfa34ab417fc1bd36dad5ceba"
       }
     },
     {
@@ -1141,11 +1141,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 113,
-        "events": 108,
+        "rows": 146,
+        "events": 139,
         "units": 3,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1153,7 +1153,7 @@
         "hallId": "kabuki",
         "machineName": "L痛いのは嫌なので防御力に極振りしたいと思います。",
         "targetDate": "2026-09-24",
-        "inputSha256": "45e81d6b344ee79fc98f9838ddc021544381f450c0a727526f300d76ebb8b40f"
+        "inputSha256": "ff860511652f84e323b65a08ebdb1c3db2a9af4f8e04f9e83d2c9c07e4980b12"
       }
     },
     {
@@ -1173,11 +1173,11 @@
       "collectionComplete": false,
       "expectedUnits": 14,
       "collection": {
-        "rows": 2152,
-        "events": 2114,
+        "rows": 2887,
+        "events": 2835,
         "units": 14,
-        "days": 3,
-        "firstDate": "2026-09-23",
+        "days": 4,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-26"
       },
       "sourceIntegrity": {
@@ -1185,7 +1185,7 @@
         "hallId": "kabuki",
         "machineName": "L真打吉宗",
         "targetDate": "2026-09-26",
-        "inputSha256": "49525c4c6600b1f97f0a16461b31952d6e6f72f7014c7e1009891beb8f8ed0e6"
+        "inputSha256": "4a2fc26eadbef337346543d04269f64dab75beb125f12a0bd32c75091ce9769c"
       }
     },
     {
@@ -1206,11 +1206,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 114,
-        "events": 112,
+        "rows": 139,
+        "events": 136,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1218,7 +1218,7 @@
         "hallId": "kabuki",
         "machineName": "L聖闘士星矢 海皇覚醒 CUSTOM EDITION",
         "targetDate": "2026-09-24",
-        "inputSha256": "88ba9ee19c032f2535f867f2a3f4f781713f50acfe45093e7185bfde47d54b42"
+        "inputSha256": "1391422700d4760b4cd55054f4356cb36990a35b5065f4db467b5899d8719d81"
       }
     },
     {
@@ -1238,11 +1238,11 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 82,
-        "events": 78,
+        "rows": 132,
+        "events": 126,
         "units": 2,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1250,7 +1250,7 @@
         "hallId": "kabuki",
         "machineName": "L虚構推理",
         "targetDate": "2026-09-24",
-        "inputSha256": "16cc77762d0b691a32475b1ab4c21ccaa328bac2a4aef98d0488936192c7f62a"
+        "inputSha256": "168a36b9426403c4962c42aa01dd5c06230fabed6feb5fbab2cb8c4209de1687"
       }
     },
     {
@@ -1271,11 +1271,11 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 847,
-        "events": 835,
+        "rows": 1277,
+        "events": 1259,
         "units": 6,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1283,7 +1283,7 @@
         "hallId": "kabuki",
         "machineName": "L青春ブタ野郎はバニーガール先輩の夢を見ない",
         "targetDate": "2026-09-24",
-        "inputSha256": "5d3192fdf3fb945784611d6414cb8716bfdcf03d7d2aa1cc4bdf6a8c7954527b"
+        "inputSha256": "e8515b0cfaf32ca2f25ddb4e4feaafc971d79f0a0415ba41d217d46a35f8fe6e"
       }
     },
     {
@@ -1304,11 +1304,11 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 209,
-        "events": 205,
+        "rows": 260,
+        "events": 254,
         "units": 2,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1316,7 +1316,7 @@
         "hallId": "kabuki",
         "machineName": "Sハイビリターン-30",
         "targetDate": "2026-09-24",
-        "inputSha256": "42bdb84ab101cdad821bdad6e204129eb195a6fb0e148bd1f4484adfc73b8025"
+        "inputSha256": "d76432ac2471d15820d54b8f9fee49384dd2543090a6bafdc56a4e02a8ecaed4"
       }
     },
     {
@@ -1336,11 +1336,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 514,
-        "events": 508,
+        "rows": 733,
+        "events": 724,
         "units": 3,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1348,7 +1348,7 @@
         "hallId": "kabuki",
         "machineName": "この素晴らしい世界に祝福を！",
         "targetDate": "2026-09-24",
-        "inputSha256": "0df231fafa501b056c818e0c8debe3d8e5e1df93b0bb4b4359793d0c94d696b4"
+        "inputSha256": "021cefe572ba6f2cb163b957562a9dc854c62dd421530a4f0e3ad1e6dad8b9e9"
       }
     },
     {
@@ -1369,11 +1369,11 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 414,
-        "events": 400,
+        "rows": 524,
+        "events": 503,
         "units": 7,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1381,7 +1381,7 @@
         "hallId": "kabuki",
         "machineName": "ストリートファイター6",
         "targetDate": "2026-09-24",
-        "inputSha256": "cfcbddb9db008a3e5fd8c839854c75ebaa33cb47db36142b584f3b8e236e82fd"
+        "inputSha256": "5c4ab3229f7b8bd8c8c5854365669f882494f2c5827198ce37ef39ec307b48b8"
       }
     },
     {
@@ -1401,11 +1401,11 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 139,
-        "events": 135,
+        "rows": 173,
+        "events": 167,
         "units": 2,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1413,7 +1413,7 @@
         "hallId": "kabuki",
         "machineName": "スマスロ シャーマンキング",
         "targetDate": "2026-09-24",
-        "inputSha256": "89f0573a6b4085fe70c06c10eca27213be7e2bad45f91876aeef0610a47d6778"
+        "inputSha256": "2a29bff89d38b97ed6be6b93081ab436f8ebf718810221eb06061082806cd7d8"
       }
     },
     {
@@ -1435,11 +1435,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 512,
-        "events": 506,
+        "rows": 612,
+        "events": 603,
         "units": 3,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1447,7 +1447,7 @@
         "hallId": "kabuki",
         "machineName": "スマスロ バジリスク絆2 天膳 BLACK EDITION",
         "targetDate": "2026-09-24",
-        "inputSha256": "acf96d0e5060572a83b28746a308de4caff6992abd8cbbaea1a1c514ae7a2e29"
+        "inputSha256": "ed05a06538846bb8cf6d432f0421443e48e150930f7b3a32ce20cdf28647b8dd"
       }
     },
     {
@@ -1468,11 +1468,11 @@
       "collectionComplete": true,
       "expectedUnits": 13,
       "collection": {
-        "rows": 817,
-        "events": 791,
+        "rows": 1241,
+        "events": 1202,
         "units": 13,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1480,7 +1480,7 @@
         "hallId": "kabuki",
         "machineName": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
         "targetDate": "2026-09-24",
-        "inputSha256": "5bf7fedd4a29b02e0c9280ffdaa5d0322bd28f4b13bdb4678b46527b4be771f1"
+        "inputSha256": "4e55bc368c5181cef2e3e7dbe636ebd78dc717137fcf3b9669145975eb5b5087"
       }
     },
     {
@@ -1501,11 +1501,11 @@
       "collectionComplete": true,
       "expectedUnits": 10,
       "collection": {
-        "rows": 1265,
-        "events": 1245,
+        "rows": 1615,
+        "events": 1585,
         "units": 10,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1513,7 +1513,7 @@
         "hallId": "kabuki",
         "machineName": "スマスロ モンスターハンターライズ",
         "targetDate": "2026-09-24",
-        "inputSha256": "138f012849297e1665bd4e0ff6750abc4d8b7b0f23c81cdf705570f8358b27ae"
+        "inputSha256": "dc5467c08bd759386abb4c1f0c201c9452a285852431c2cfc169db09e2c86a81"
       }
     },
     {
@@ -1533,11 +1533,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 155,
-        "events": 153,
+        "rows": 185,
+        "events": 182,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1545,7 +1545,7 @@
         "hallId": "kabuki",
         "machineName": "スマスロ 化物語",
         "targetDate": "2026-09-24",
-        "inputSha256": "1983d398038e26040f388c8718755755bf3c4fb12f3ff5699bb6cefb85140725"
+        "inputSha256": "c3e8db68dfcd8bb6d3d8a72bdf0a81e961f913abf6be2e142a4c6cc6dba3fa88"
       }
     },
     {
@@ -1566,11 +1566,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 339,
-        "events": 333,
+        "rows": 413,
+        "events": 404,
         "units": 3,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1578,7 +1578,7 @@
         "hallId": "kabuki",
         "machineName": "スマスロ 北斗の拳 転生の章2",
         "targetDate": "2026-09-24",
-        "inputSha256": "3b916b002d994431965e6081920b28a6d73778cee95dcea0b8e7f114beccd0e8"
+        "inputSha256": "975b65921abbc2eb90b11d233c776ec345118e5d5c0e5412db410ade311cb555"
       }
     },
     {
@@ -1599,11 +1599,11 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 400,
-        "events": 388,
+        "rows": 573,
+        "events": 555,
         "units": 6,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1611,7 +1611,7 @@
         "hallId": "kabuki",
         "machineName": "スマスロ 攻殻機動隊",
         "targetDate": "2026-09-24",
-        "inputSha256": "97588268aafb0712532de316749f7faabfa893c3d02e9ae6638ff81a4bb03d08"
+        "inputSha256": "cc7dec3b282196f69a814384181f6e20e38dad710755877c8c9fb50b9a515d84"
       }
     },
     {
@@ -1631,11 +1631,11 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 91,
-        "events": 87,
+        "rows": 199,
+        "events": 193,
         "units": 2,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1643,7 +1643,7 @@
         "hallId": "kabuki",
         "machineName": "スマスロ 東京リベンジャーズ",
         "targetDate": "2026-09-24",
-        "inputSha256": "e5de142447c2d4e8d7d4e7697be009c16043f4950596b3506834147f57687de4"
+        "inputSha256": "a860ca25626dbea02dd87b84ae1a9ac7c42ba27d7e2275e15b6cab17d563b738"
       }
     },
     {
@@ -1664,11 +1664,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 175,
-        "events": 173,
+        "rows": 210,
+        "events": 207,
         "units": 1,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1676,7 +1676,7 @@
         "hallId": "kabuki",
         "machineName": "スマスロ頭文字D 2nd",
         "targetDate": "2026-09-24",
-        "inputSha256": "f52492b7ded2ea5401de3f94d4f6fab57eb2b620e523d50f2c2e4886f2078a11"
+        "inputSha256": "1155016849ce90c0f60e43d9625190e2926e7a911d662928895b062629b257fd"
       }
     },
     {
@@ -1700,8 +1700,8 @@
       "collectionComplete": true,
       "expectedUnits": 20,
       "collection": {
-        "rows": 4262,
-        "events": 4201,
+        "rows": 5405,
+        "events": 5325,
         "units": 20,
         "days": 4,
         "firstDate": "2026-09-21",
@@ -1712,7 +1712,7 @@
         "hallId": "kabuki",
         "machineName": "ソードアート・オンラインII",
         "targetDate": "2026-09-26",
-        "inputSha256": "9361c37eb90e4cad09fa7c38f3c5c76f32f0d90307cec99a807a8f4eea92ea24"
+        "inputSha256": "0d77935d8584a79f2331c76d3438002c6ca65e37166729dddf175af076b77df6"
       }
     },
     {
@@ -1731,11 +1731,11 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 397,
-        "events": 389,
+        "rows": 502,
+        "events": 490,
         "units": 4,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1743,7 +1743,7 @@
         "hallId": "kabuki",
         "machineName": "ワールドダイスター",
         "targetDate": "2026-09-24",
-        "inputSha256": "43f6f7f6c10e666f857978530b4d3b23e9c83476270ae0023904b0609ac4c105"
+        "inputSha256": "f2de62470d0f97e28d6a61cb4186ca30959bfda0604971fa6e5ea675322ac566"
       }
     },
     {
@@ -1764,11 +1764,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 196,
-        "events": 190,
+        "rows": 276,
+        "events": 267,
         "units": 3,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1776,7 +1776,7 @@
         "hallId": "kabuki",
         "machineName": "戦国コレクション6",
         "targetDate": "2026-09-24",
-        "inputSha256": "79dab29706e077504a0ff0e025d78897e044d3d07038300dd66c0cc26c3e703a"
+        "inputSha256": "b96f7862b7cc614d5b166f7c65873307503fc76bf9735f0e8f84f30e6a5462c9"
       }
     },
     {
@@ -1797,11 +1797,11 @@
       "collectionComplete": false,
       "expectedUnits": 12,
       "collection": {
-        "rows": 738,
-        "events": 716,
+        "rows": 1061,
+        "events": 1028,
         "units": 11,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1809,7 +1809,7 @@
         "hallId": "kabuki",
         "machineName": "沖ドキ！BLACK",
         "targetDate": "2026-09-24",
-        "inputSha256": "0c15e10251ed8f3b18b9091ca45069f5227a0a30f0f153e62e09c9befc94b7a0"
+        "inputSha256": "22bdc2b0e25454ff50f516f45059280c9aa9cb0ecf13d4b9c9c16b1e28eb36f2"
       }
     },
     {
@@ -1828,11 +1828,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 170,
-        "events": 164,
+        "rows": 246,
+        "events": 237,
         "units": 3,
-        "days": 2,
-        "firstDate": "2026-09-23",
+        "days": 3,
+        "firstDate": "2026-09-21",
         "lastDate": "2026-09-24"
       },
       "sourceIntegrity": {
@@ -1840,7 +1840,7 @@
         "hallId": "kabuki",
         "machineName": "邪神ちゃんドロップキック",
         "targetDate": "2026-09-24",
-        "inputSha256": "684125516be8b24cf59ce210f5d0362e275aa55653eda04208884ff8d11e4d64"
+        "inputSha256": "30447d26c3f00fb68df5616904bc4be530296869d20d5d16d6457c4dc982355f"
       }
     }
   ]
