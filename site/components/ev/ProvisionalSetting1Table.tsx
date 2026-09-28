@@ -33,7 +33,8 @@ export function ProvisionalSetting1Table({ data }: { data: ProvisionalSetting1 }
           </dl>
           <p className="mt-2">収支換算率＝100＋丸め前の参考EV円÷（20円×3枚×想定消化G）×100。46/52は交換差を含み、公表機械割とは異なる換算値です。</p>
           <ul className="mt-2 space-y-1">
-            {data.sources.map((source, index) => <li key={index}><a href={source.url} target="_blank" rel="noopener noreferrer" className="underline">{source.label}</a></li>)}
+            {/* Keep provenance URLs in the data for validation, not in the public UI. */}
+            {data.sources.map((source, index) => <li key={index}>{source.label}</li>)}
           </ul>
         </details>
       </div>

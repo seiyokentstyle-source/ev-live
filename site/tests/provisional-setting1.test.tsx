@@ -71,11 +71,15 @@ describe("public-spec provisional reference", () => {
     expect(() => validateMachine(machine)).toThrow("zero EV samples");
   });
 
-  it("renders both rate choices, explicit assumptions and sources without sample or recommended border claims", () => {
+  it("renders both rate choices, assumptions and source names without external URLs or sample claims", () => {
     const reference = referenceFixture();
     const html = renderToStaticMarkup(<ProvisionalSetting1Table data={reference} />);
     for (const text of [reference.label, reference.note, "46/52", "50/50", "外部カウンター値とは対応未確認", "天井直前の参考EVは特に上振れ", ...reference.assumptions]) expect(html).toContain(text);
-    expect(html).toContain('href="https://example.test/spec"');
+    for (const source of reference.sources) {
+      expect(html).toContain(source.label);
+      expect(html).not.toContain(source.url);
+    }
+    expect(html).not.toMatch(/<a\b/);
     expect(html).toContain("<table");
     for (const text of ["当店実測", "サンプル", "ボーダー", "text-pos", "円/h"]) expect(html).not.toContain(text);
   });
@@ -94,6 +98,7 @@ describe("public-spec provisional reference", () => {
     expect(html).toContain("収集済み 1,200行 / 期待値算出保留");
     expect(html).toContain(machine.profiles[0].pendingReason);
     expect(html).toContain(machine.provisionalSetting1!.label);
+    for (const source of machine.provisionalSetting1!.sources) expect(html).not.toContain(source.url);
     expect(html).toContain("<table");
     for (const text of ["stale-theory", "99999", "全体平均", "設定狙い", "AT獲得", "狙い目"]) expect(html).not.toContain(text);
   });
@@ -109,6 +114,7 @@ describe("public-spec provisional reference", () => {
     const html = renderToStaticMarkup(<LiveMachineClient initial={payload} hall={getHall("kabuki")!} />);
     expect(html).toContain(collection.pendingReason);
     expect(html).toContain(payload.provisionalSetting1!.label);
+    for (const source of payload.provisionalSetting1!.sources) expect(html).not.toContain(source.url);
     expect(html).toContain("収集済み 1,200行 / 期待値算出保留");
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue({ ok: true, json: async () => payload } as Response);
     try {
