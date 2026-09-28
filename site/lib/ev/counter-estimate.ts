@@ -3,8 +3,8 @@ import type { CounterEstimate } from "./types";
 export const COUNTER_ESTIMATE_LABEL = "カウンター履歴から計算した推定期待値表（獲得枚数は推定）";
 const GROUP_KEYS = ["all", "after_kake", "after_normal", "after_upper"] as const;
 const RATES = [["46/52", 1000 / 46, 1000 / 52], ["50/50", 20, 20]] as const;
-/** 履歴から計算する機種だけ。別機種への付け替えを受け入れない。 */
-const REGISTERED = new Set(["lycoris"]);
+/** 履歴から計算する機種と、その履歴の店舗。別機種・別店舗への付け替えを受け入れない。 */
+const SOURCE_HALL: Record<string, string> = { lycoris: "shinjuku" };
 
 const record = (value: unknown): value is Record<string, any> => Boolean(value && typeof value === "object" && !Array.isArray(value));
 const finite = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
@@ -63,8 +63,23 @@ export function validateCounterEstimate(value: unknown): CounterEstimate {
   return value as CounterEstimate;
 }
 
-export function validateMachineCounterEstimate(value: unknown, machineId: string): CounterEstimate {
+/** hallIdを渡せる経路では、推定の元になった店舗と一致することも確かめる。 */
+export function validateMachineCounterEstimate(value: unknown, machineId: string, hallId?: string): CounterEstimate {
   const estimate = validateCounterEstimate(value);
-  check(REGISTERED.has(machineId), "estimate is not registered for this machine");
+  check(Object.hasOwn(SOURCE_HALL, machineId), "estimate is not registered for this machine");
+  check(hallId === undefined || SOURCE_HALL[machineId] === hallId, "estimate belongs to another hall");
   return estimate;
+}
+
+/** 参考表の代わりに付くもので、両方を同時に出さない。 */
+export function assertSingleAttachment(value: { provisionalSetting1?: unknown; counterEstimate?: unknown }): void {
+  check(value.provisionalSetting1 === undefined || value.counterEstimate === undefined,
+    "counterEstimate replaces provisionalSetting1; both must not be published");
+}
+
+/** 他店の履歴から作った推定表は、その店舗の機種として出さない（混合店舗が新宿の機種から作る表も含む）。 */
+export function withoutForeignCounterEstimate<T extends { id: string; counterEstimate?: unknown }>(machine: T, hallId: string | undefined): T {
+  if (machine.counterEstimate === undefined || (hallId !== undefined && SOURCE_HALL[machine.id] === hallId)) return machine;
+  const { counterEstimate: _, ...rest } = machine;
+  return rest as T;
 }

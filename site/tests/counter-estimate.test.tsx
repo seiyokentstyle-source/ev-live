@@ -2,9 +2,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import fixture from "../app/preview/ev-table/machine.json";
 import { validateMachine } from "../lib/ev/validate";
-import { validateCounterEstimate, validateMachineCounterEstimate } from "../lib/ev/counter-estimate";
+import { validateCounterEstimate, validateMachineCounterEstimate, withoutForeignCounterEstimate } from "../lib/ev/counter-estimate";
 import { machineSummary } from "../lib/ev/summary";
-import { buildLiveCollection } from "../lib/live-data";
+import { buildLiveCollection, buildLiveMachine } from "../lib/live-data";
 import { LiveMachineClient } from "../app/machines/[id]/MachineDetailClient";
 import { CounterEstimateTable } from "../components/ev/CounterEstimateTable";
 import { getHall } from "../lib/halls";
@@ -83,5 +83,21 @@ describe("counter-history estimate", () => {
     expect(() => buildLiveCollection(collectedFixture("worlddai"), undefined, estimateFixture())).toThrow("not registered");
     const html = renderToStaticMarkup(<LiveMachineClient initial={withEstimate} hall={getHall("shinjuku")!} />);
     expect(html).toContain(estimateFixture().label);
+  });
+
+  it("is bound to the hall whose history produced it", () => {
+    expect(validateMachineCounterEstimate(estimateFixture(), "lycoris", "shinjuku")).toEqual(estimateFixture());
+    for (const hall of ["kabuki", "mixed"]) {
+      expect(() => validateMachineCounterEstimate(estimateFixture(), "lycoris", hall)).toThrow("another hall");
+      expect(() => buildLiveCollection(collectedFixture("lycoris"), undefined, estimateFixture(), hall)).toThrow("another hall");
+      expect(() => buildLiveMachine(pendingMachine(), hall, { schemaVersion: 1, targets: [] } as any)).toThrow("another hall");
+      expect(withoutForeignCounterEstimate(pendingMachine(), hall)).not.toHaveProperty("counterEstimate");
+    }
+    expect(withoutForeignCounterEstimate(pendingMachine(), "shinjuku").counterEstimate).toEqual(estimateFixture());
+  });
+
+  it("rejects a collection snapshot carrying both the reference and the estimate", () => {
+    expect(() => buildLiveCollection(collectedFixture("lycoris"), referenceFixture("lycoris"), estimateFixture(), "shinjuku"))
+      .toThrow("both must not be published");
   });
 });

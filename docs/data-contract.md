@@ -127,7 +127,9 @@ EVサンプルとして数えない。`meta.samples` は `"0"`、各プロファ
 計算した推定表を、任意の `counterEstimate` として付けられる。現在は `lycoris` の新宿だけ。
 付く場合は `provisionalSetting1` の代わりで、両方は付かない。実戦EVの算出保留は解除しない
 （`meta.samples: "0"`、`profiles[].dataPending: true`、空の `baseAnchors` を保持）。
-他店の履歴から作った表を別の店舗に付けない。
+他店の履歴から作った表を別の店舗に付けない。サイトも機種IDと店舗（`lycoris` は `shinjuku`）を照合し、
+他店のフォルダや混合店舗（新宿の機種から作る表を含む）では推定表を取り除く。
+収集状況ページ（`LiveCollection`）でも参考表との同時付加を拒否する。
 
 契約は `schemaVersion: 1`、`status: "estimate"`、`model: "lycoris-counter-v1"`、
 `historyBased: true`、`graphCorrected: false`、`label` は

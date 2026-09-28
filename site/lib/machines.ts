@@ -1,10 +1,11 @@
 import { existsSync, promises as fs } from "node:fs";
 import path from "node:path";
 import type { CounterEstimate, Machine, MachineSummary, ProvisionalSetting1 } from "./ev/types";
+import { withoutForeignCounterEstimate } from "./ev/counter-estimate";
 import { validateMachine } from "./ev/validate";
 import { LOW_SETTING_HALL_SUBDIR, onlyLowSetting, withoutLowSetting } from "./ev/low-setting";
 import { compareMachines } from "./machine-order";
-import { getReadyHalls, getHall } from "./halls";
+import { HALLS, getReadyHalls, getHall } from "./halls";
 import { machineSummary } from "./ev/summary";
 import { normalizeMachineMetadata } from "./machine-metadata";
 import type { HeatmapCoverageMachine } from "./heatmap/coverage";
@@ -69,7 +70,17 @@ function selectMixedMachine(stored?: Machine, source?: Machine): Machine | undef
   return stored?.setting1Correction ? onlyLowSetting(stored) ?? undefined : stored;
 }
 
+/** JSONの置き場所（店舗フォルダ）から店舗IDを引く。推定表の店舗照合に使う。 */
+function hallIdOf(dataSubdir?: string): string | undefined {
+  return HALLS.find(hall => hall.dataSubdir === (dataSubdir ?? ""))?.id;
+}
+
 export async function getMachines(dataSubdir?: string): Promise<Machine[]> {
+  const hallId = hallIdOf(dataSubdir);
+  return (await loadHallMachines(dataSubdir)).map(machine => withoutForeignCounterEstimate(machine, hallId));
+}
+
+async function loadHallMachines(dataSubdir?: string): Promise<Machine[]> {
   const dir = hallDir(dataSubdir);
   // ★「設定1想定」をどの店舗に出すかはサイト側で決める（lib/ev/low-setting.ts）。
   //   生成側にも同じ切り分けを入れたが、そちらは再生成しないと効かない。
@@ -108,6 +119,11 @@ export async function getShinjukuHeatmapCoverageSources(): Promise<HeatmapCovera
 }
 
 export async function getMachine(id: string, dataSubdir?: string): Promise<Machine | undefined> {
+  const machine = await loadHallMachine(id, dataSubdir);
+  return machine ? withoutForeignCounterEstimate(machine, hallIdOf(dataSubdir)) : undefined;
+}
+
+async function loadHallMachine(id: string, dataSubdir?: string): Promise<Machine | undefined> {
   // IDs are JSON basenames, not aliases or paths. Detail pages must not read
   // every machine again: each static route otherwise reparses the whole data set.
   if (!/^[a-z0-9_-]+$/.test(id) || (dataSubdir && !/^[a-z0-9_-]+$/.test(dataSubdir))) {

@@ -5,7 +5,7 @@ import { validateAggregationRowsAsset } from "./aggregation-asset";
 import { validateSettingAimDayDigitNets } from "./setting-aim-day-nets";
 import { validateHeatmapCoverage } from "./heatmap-coverage";
 import { validateMachineProvisionalSetting1 } from "./provisional-setting1";
-import { validateMachineCounterEstimate } from "./counter-estimate";
+import { assertSingleAttachment, validateMachineCounterEstimate } from "./counter-estimate";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -87,7 +87,7 @@ export function validateMachine(data: unknown): Machine {
   }
   if (machine.counterEstimate !== undefined) {
     validateMachineCounterEstimate(machine.counterEstimate, machine.id);
-    assert(machine.provisionalSetting1 === undefined, "counterEstimate replaces provisionalSetting1; both must not be published");
+    assertSingleAttachment(machine);
     assert(machine.meta?.samples === "0" && machine.profiles.every(profile => profile.dataPending === true
       && profile.baseAnchors.length === 0 && (profile.sessions === undefined || profile.sessions === 0)),
     "counterEstimate must preserve pending profiles and zero EV samples");
