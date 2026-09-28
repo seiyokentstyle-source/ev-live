@@ -1,6 +1,6 @@
 import { existsSync, promises as fs } from "node:fs";
 import path from "node:path";
-import type { Machine, MachineSummary } from "./ev/types";
+import type { Machine, MachineSummary, ProvisionalSetting1 } from "./ev/types";
 import { validateMachine } from "./ev/validate";
 import { LOW_SETTING_HALL_SUBDIR, onlyLowSetting, withoutLowSetting } from "./ev/low-setting";
 import { compareMachines } from "./machine-order";
@@ -141,7 +141,8 @@ export async function getMachineHallSummaries(id: string): Promise<MachineHallSu
   return summaries.filter((item): item is MachineHallSummary => item !== undefined);
 }
 
-export type HallDisplay = { kind: "machine"; machine: Machine } | { kind: "collection"; collection: CollectedMachine };
+export type HallDisplay = { kind: "machine"; machine: Machine }
+  | { kind: "collection"; collection: CollectedMachine; provisionalSetting1?: ProvisionalSetting1 };
 
 export function displaySummary(display: HallDisplay): MachineSummary {
   return display.kind === "machine" ? machineSummary(display.machine) : display.collection.summary;
@@ -157,7 +158,9 @@ export async function getHallDisplays(hallId: string): Promise<HallDisplay[]> {
   const displays = new Map<string, HallDisplay>(machines.map(machine => [machine.id, { kind: "machine", machine }]));
   for (const { forcePending, ...collection } of observations) {
     if (forcePending || !displays.has(collection.summary.id)) {
-      displays.set(collection.summary.id, { kind: "collection", collection });
+      const provisionalSetting1 = machines.find(machine => machine.id === collection.summary.id)?.provisionalSetting1;
+      displays.set(collection.summary.id, { kind: "collection", collection,
+        ...(provisionalSetting1 ? { provisionalSetting1 } : {}) });
     }
   }
   return [...displays.values()].sort((a, b) => compareMachines(displaySummary(a), displaySummary(b)));
@@ -172,7 +175,8 @@ export async function getHallDisplay(id: string, hallId: string): Promise<HallDi
   const entry = observations.find(item => item.summary.id === id);
   if (entry && (entry.forcePending || !machine?.available)) {
     const { forcePending: _, ...collection } = entry;
-    return { kind: "collection", collection };
+    return { kind: "collection", collection,
+      ...(machine?.available && machine.provisionalSetting1 ? { provisionalSetting1: machine.provisionalSetting1 } : {}) };
   }
   return machine?.available ? { kind: "machine", machine } : undefined;
 }

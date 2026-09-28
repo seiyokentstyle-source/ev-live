@@ -11,6 +11,7 @@ import { useFilterAggregation } from "@/lib/ev/use-filter-aggregation";
 import { AxisPicker } from "@/components/ev/AxisPicker";
 import { ConditionsBar } from "@/components/ev/ConditionsBar";
 import { TheoreticalTable } from "@/components/ev/TheoreticalTable";
+import { ProvisionalSetting1Table } from "@/components/ev/ProvisionalSetting1Table";
 import { ConditionsPanel } from "@/components/ev/ConditionsPanel";
 import { EvTable } from "@/components/ev/EvTable";
 import { EvFilter } from "@/components/ev/EvFilter";
@@ -82,7 +83,7 @@ export function MachineDetailClient({ machine: initialMachine, hall, savedTarget
 export function LiveMachineClient({ initial, hall }: { initial: LiveSnapshot; hall: Hall }) {
   const snapshot = useLiveMachine(initial, hall.id);
   if (snapshot.schema === "evlive-live-collection/v1") {
-    return <HallPendingClient machine={snapshot.machine} hall={hall} collection={{ ...snapshot.pending, summary: snapshot.machine }} />;
+    return <HallPendingClient machine={snapshot.machine} hall={hall} collection={{ ...snapshot.pending, summary: snapshot.machine }} provisionalSetting1={snapshot.provisionalSetting1} />;
   }
   return <MachineDetailBody machine={snapshot.machine} hall={hall} savedTargets={snapshot.savedTargets} />;
 }
@@ -356,9 +357,14 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
         <>
           <p className="mono shrink-0 border-b border-line bg-panel px-4 py-2 text-[11px] text-ink-soft">{pendingStatus}</p>
           <ConditionsBar machine={machine} mode="ev" />
-          <EmptyState title="期待値算出保留">
+          {machine.provisionalSetting1 ? <>
+          <p className="shrink-0 border-b border-line px-4 py-2 text-[11px] text-muted">
+            実戦期待値は算出保留：{machine.profiles.find(item => item.pendingReason)?.pendingReason}
+          </p>
+          <ProvisionalSetting1Table data={machine.provisionalSetting1} />
+          </> : <EmptyState title="期待値算出保留">
             {machine.profiles.find(item => item.pendingReason)?.pendingReason ?? "収集済みデータから通常時・AT・獲得枚数の対応を確認できるまで、期待値の算出を保留しています。"}
-          </EmptyState>
+          </EmptyState>}
         </>
       ) : <>
       {machine.theoretical ? (

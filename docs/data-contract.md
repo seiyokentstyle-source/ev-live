@@ -87,6 +87,40 @@ EVサンプルとして数えない。`meta.samples` は `"0"`、各プロファ
 として掲載し、公表仕様・収集状況・保留理由を表示する。`pendingReason` がない既存の
 `dataPending` プロファイルには、従来の実戦データ未収集メッセージを使う。
 
+### 公表設定1による暫定参考表
+
+確認済みの公表入力と明示した仮定から別途生成する場合に限り、任意の
+`provisionalSetting1` を付けられる。これは実戦EVの算出保留を解除しない。
+`meta.samples: "0"`、`profiles[].dataPending: true`、空の `baseAnchors`、収集件数と
+保留理由を保持する。既存の `theoretical` や `setting1Correction` へ入れない。
+
+契約は `schemaVersion: 1`、`status: "provisional"`、`model: "capped-geometric-v1"`、
+`graphCorrected: false`、`historyBased: false`。`label` は
+「公表設定1を仮定した暫定・グラフ未補正の参考表」とし、`note`、6項目以上の
+`assumptions`、HTTPSの出典 `sources: [{ label, url }]` を必須にする。
+
+`publicInputs` は `firstHitMeanGames`（通常時平均待ちGと仮定した公表分母）、
+`setting1Rtp`（0〜1）、`medalsPerGame`、`bonusNetMedalsPerGame`、
+`nominalCeilingGames`。`modelInputs` は `bet: 3`、`normalHitProbability`、
+`assumedFixedPayout`。通常時は一定確率・公称天井で強制当選と仮定し、天井込み平均を
+公表分母に一致させる。純獲得は一定と仮定して0Gからの等価出率から逆算する。
+実測の当選分布・平均獲得を意味しない。天井の+α等の省略によって、特に天井直前の
+参考EVが上振れしうる。G軸と店舗の外部カウンターの対応も未確認として表示する。
+
+`rates` は46/52・50/50の順に2表を持ち、各表は `key`、`label`、`loanPerMedal`、
+`creditPerMedal`、`anchors`。各行は `{ g, ev, rtp, inv, playG }` のみで、0Gから
+公称天井未満の10G刻み。`n`・実測サンプル数などは含めない。サイトは入力から
+係数・行を再計算して検証し、保留中の実戦値と別の表で表示する。推奨ボーダーや
+実測の色分けは付けず、列名は「収支換算率」。既存と同じ現金収支式を丸め前の収支へ
+適用した生成値を検証して表示する。46/52の換算率を公表機械割とは呼ばない。
+
+公開対象は `lycoris` と `worlddai` の登録済み公表入力に限定し、機種IDと入力の
+組み合わせも照合する。別機種への付け替えや、未登録機種の数値表を受け入れない。
+
+`forcePending` の収集状況が優先される場合も、同じ店舗の検証済み機種に付いた参考表
+だけを `LiveCollection.provisionalSetting1` に独立して渡す。収集状況DTOや一覧の母数へ
+混ぜず、参照表の変更もライブ更新のrevisionに含める。他店舗からの補完はしない。
+
 ### 機種JSONと独立した収集状況
 
 未確認スペック・サンプル不足・収集未完などで機種JSONを生成できない場合は、

@@ -363,6 +363,34 @@ export type Setting1Correction = {
   profiles: Profile[];
 };
 
+/** Public-spec assumptions only; never measured sessions or graph-calibrated EV. */
+export type ProvisionalSetting1 = {
+  schemaVersion: 1;
+  status: "provisional";
+  model: "capped-geometric-v1";
+  label: "公表設定1を仮定した暫定・グラフ未補正の参考表";
+  graphCorrected: false;
+  historyBased: false;
+  note: string;
+  sources: Array<{ label: string; url: string }>;
+  assumptions: string[];
+  publicInputs: {
+    firstHitMeanGames: number;
+    setting1Rtp: number;
+    medalsPerGame: number;
+    bonusNetMedalsPerGame: number;
+    nominalCeilingGames: number;
+  };
+  modelInputs: { bet: 3; normalHitProbability: number; assumedFixedPayout: number };
+  rates: Array<{
+    key: "46/52" | "50/50";
+    label: string;
+    loanPerMedal: number;
+    creditPerMedal: number;
+    anchors: Array<{ g: number; ev: number; rtp: number; inv: number; playG: number }>;
+  }>;
+};
+
 export type Machine = {
   /** 生成側の天井仕様・信号マップ版。旧JSONでは省略される。 */
   specVersion?: string;
@@ -388,6 +416,8 @@ export type Machine = {
     };
   };
   profiles: Profile[];
+  /** Independently generated public-spec reference; pending observations remain pending. */
+  provisionalSetting1?: ProvisionalSetting1;
   /** 店舗の実測表とは別に生成した補正版。表示する店舗の選択後は取り除く。 */
   setting1Correction?: Setting1Correction;
   /** 店舗ごとに品質検証してから履歴を合算した生成物。 */

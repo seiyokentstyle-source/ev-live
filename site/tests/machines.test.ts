@@ -7,6 +7,7 @@ import { onlyLowSetting, withoutLowSetting } from "../lib/ev/low-setting";
 import { validateMachine } from "../lib/ev/validate";
 import { normalizeSearchText } from "../lib/search/normalize";
 import { catalogFixture } from "./fixtures/collection-status";
+import { referenceFixture } from "./fixtures/provisional-setting1";
 
 let root: string;
 let getMachine: typeof import("../lib/machines").getMachine;
@@ -79,6 +80,19 @@ async function writeCatalog(id = "held", forcePending = false, hallId = "kabuki"
 }
 
 describe("collection fallback selection", () => {
+  it("keeps a separately validated reference when an explicit hold overrides the machine, without copying it to another hall", async () => {
+    const input = machine("lycoris");
+    input.meta.samples = "0";
+    input.profiles = input.profiles.map(profile => ({ ...profile, baseAnchors: [], zones: [], dataPending: true, sessions: 0 }));
+    const reference = referenceFixture("lycoris");
+    await writeMachine("lycoris", { ...input, provisionalSetting1: reference }, "kabuki");
+    await writeCatalog("lycoris", true);
+    const selected = await getHallDisplay("lycoris", "kabuki");
+    expect(selected).toMatchObject({ kind: "collection", provisionalSetting1: reference, collection: { summary: { meta: { samples: "0" } } } });
+    expect(await getHallDisplays("kabuki")).toEqual([selected]);
+    expect(await getHallDisplay("lycoris", "shinjuku")).toBeUndefined();
+    expect((await getMachineHallSummaries("lycoris"))[0].summary).not.toHaveProperty("provisionalSetting1");
+  });
   it.each(["shinjuku", "kabuki"])("publishes newly observed unknown machines from a %s catalog without any numeric JSON", async hallId => {
     await writeCatalog("futuremachine", false, hallId, true);
     expect(await getMachineIds()).toEqual(["futuremachine"]);

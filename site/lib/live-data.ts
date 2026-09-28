@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 import { externalizeMachineAggregations } from "./filter-aggregate-assets.mjs";
 import { splitCzThroughProfiles } from "./cz-through-profiles.mjs";
-import type { Machine, MachineSummary } from "./ev/types";
+import type { Machine, MachineSummary, ProvisionalSetting1 } from "./ev/types";
+import { validateMachineProvisionalSetting1 } from "./ev/provisional-setting1";
 import { validateMachine } from "./ev/validate";
 import { machineSummary } from "./ev/summary";
 import { getHall, getReadyHalls } from "./halls";
@@ -28,13 +29,15 @@ export type LiveCollection = {
   revision: string;
   machine: MachineSummary;
   pending: Omit<CollectedMachine, "summary">;
+  provisionalSetting1?: ProvisionalSetting1;
 };
 export type LiveSnapshot = LiveMachine | LiveCollection;
 
-export function buildLiveCollection(value: CollectedMachine): LiveCollection {
+export function buildLiveCollection(value: CollectedMachine, reference?: ProvisionalSetting1): LiveCollection {
   const { summary: machine, ...pending } = validateCollectedMachine(value);
-  const revision = createHash("sha256").update(JSON.stringify({ machine, pending })).digest("hex");
-  return { schema: "evlive-live-collection/v1", revision, machine, pending };
+  const attachment = reference === undefined ? {} : { provisionalSetting1: validateMachineProvisionalSetting1(reference, machine.id) };
+  const revision = createHash("sha256").update(JSON.stringify({ machine, pending, ...attachment })).digest("hex");
+  return { schema: "evlive-live-collection/v1", revision, machine, pending, ...attachment };
 }
 
 export type LiveIndexEntry = {
@@ -91,7 +94,7 @@ export async function getLiveMachine(machineId: string, hallId: string): Promise
   if (!hall?.ready || !/^[a-z0-9]{1,40}$/.test(machineId)) return undefined;
   const display = await getHallDisplay(machineId, hallId);
   if (!display) return undefined;
-  if (display.kind === "collection") return buildLiveCollection(display.collection);
+  if (display.kind === "collection") return buildLiveCollection(display.collection, display.provisionalSetting1);
   const machine = display.machine;
   const [catalog, targets] = await Promise.all([
     getSavedTargetCatalog(),
@@ -105,7 +108,7 @@ export async function getLiveIndex(): Promise<LiveIndex> {
   const halls = await Promise.all(getReadyHalls().map(async (hall) => {
     const displays = await getHallDisplays(hall.id);
     return Promise.all(displays.map(async (display) => {
-      if (display.kind === "collection") return liveIndexEntry(hall.id, buildLiveCollection(display.collection));
+      if (display.kind === "collection") return liveIndexEntry(hall.id, buildLiveCollection(display.collection, display.provisionalSetting1));
       const machine = display.machine;
       const targets = await getSavedTargetSnapshot(machine.id, hall.dataSubdir, hall.id);
       return liveIndexEntry(hall.id, buildLiveMachine(machine, hall.id, catalog, targets.refreshed, targets.replaySource));

@@ -4,6 +4,7 @@ import { validateAggregateMatchModes, validateAggregateRows } from "./filter-agg
 import { validateAggregationRowsAsset } from "./aggregation-asset";
 import { validateSettingAimDayDigitNets } from "./setting-aim-day-nets";
 import { validateHeatmapCoverage } from "./heatmap-coverage";
+import { validateMachineProvisionalSetting1 } from "./provisional-setting1";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -77,6 +78,12 @@ export function validateMachine(data: unknown): Machine {
     assert(collection.firstDate <= collection.lastDate, "meta.collection date range must be ordered");
   }
   assert(Array.isArray(machine.profiles) && machine.profiles.length > 0, "profiles are required");
+  if (machine.provisionalSetting1 !== undefined) {
+    validateMachineProvisionalSetting1(machine.provisionalSetting1, machine.id);
+    assert(machine.meta?.samples === "0" && machine.profiles.every(profile => profile.dataPending === true
+      && profile.baseAnchors.length === 0 && (profile.sessions === undefined || profile.sessions === 0)),
+    "provisionalSetting1 must preserve pending profiles and zero EV samples");
+  }
   assert(Array.isArray(machine.axes) && machine.axes.length > 0, "axes are required");
   assert(isRecord(machine.modifiers), "modifiers are required");
   assert(isRecord(machine.creditValue), "creditValue is required");

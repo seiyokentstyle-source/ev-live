@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import type { MachineSummary } from "@/lib/ev/types";
+import type { MachineSummary, ProvisionalSetting1 } from "@/lib/ev/types";
+import { ProvisionalSetting1Table } from "@/components/ev/ProvisionalSetting1Table";
 import type { Hall } from "@/lib/halls";
 import { EmptyState, TableFoot } from "@/components/ui/DataTable";
 import { rewriteManufacturer } from "@/lib/ev/profiles";
@@ -12,12 +13,12 @@ type HallPendingClientProps = {
   machine: MachineSummary;
   hall: Hall;
   collection?: CollectedMachine;
+  provisionalSetting1?: ProvisionalSetting1;
 };
 
-/** まだ集計していない店舗のページ。
- *  ここで既存（新宿）のデータを出すと、別店舗の設定配分をその店のものとして
- *  見せることになるので、数字は一切出さない。 */
-export function HallPendingClient({ machine, hall, collection }: HallPendingClientProps) {
+/** 未集計・算出保留の店舗のページ。他店の実測値は転載しない。
+ *  公表入力だけの暫定参考表は、同じ店舗の検証済み機種から独立して渡された場合に限る。 */
+export function HallPendingClient({ machine, hall, collection, provisionalSetting1 }: HallPendingClientProps) {
   const counts = collection?.summary.meta.collection;
   return (
     <div className="app-shell">
@@ -43,7 +44,10 @@ export function HallPendingClient({ machine, hall, collection }: HallPendingClie
             {!collection.collectionComplete ? <p className="mt-1">全台分の取得確認はまだ完了していません。保存済みの件数を表示しています。</p> : null}
             {counts.rows === 0 ? <p className="mt-1">台の日次情報は保存済みですが、当たり履歴はまだ保存されていません。</p> : null}
           </details>
-          <EmptyState title="期待値算出保留">{collection.pendingReason}</EmptyState>
+          {provisionalSetting1 ? <>
+            <p className="shrink-0 border-b border-line px-4 py-2 text-[11px] text-muted">実戦期待値は算出保留：{collection.pendingReason}</p>
+            <ProvisionalSetting1Table data={provisionalSetting1} />
+          </> : <EmptyState title="期待値算出保留">{collection.pendingReason}</EmptyState>}
         </> : <>
         <EmptyState title="準備中">
           この店舗はまだ集計していません。
