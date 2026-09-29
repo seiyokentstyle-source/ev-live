@@ -22,6 +22,7 @@ import { RateSelector } from "@/components/ev/RateSelector";
 import { ModeSelector, type AimMode } from "@/components/ev/ModeSelector";
 import { SettingAimTable } from "@/components/ev/SettingAimTable";
 import { AtPayoutTable } from "@/components/ev/AtPayoutTable";
+import { ThroughReleaseTable } from "@/components/ev/ThroughReleaseTable";
 import { HarakiriTable } from "@/components/ev/HarakiriTable";
 import { ControlBar, SegmentedControl } from "@/components/ui/Controls";
 import { EmptyState } from "@/components/ui/DataTable";
@@ -97,6 +98,8 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
   const hasSettingAim = Boolean(settingAim && settingAim.units.length > 0);
   const atPayout = machine.atPayout;
   const hasAtPayout = Boolean(atPayout && atPayout.bands.length > 0);
+  const throughRelease = machine.throughRelease;
+  const hasThroughRelease = Boolean(throughRelease && throughRelease.rows.length > 0);
   const harakiri = machine.harakiri;
   const hasHarakiri = Boolean(harakiri && harakiri.units.length > 0);
   const availableModes = useMemo<AimMode[]>(
@@ -105,9 +108,10 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
       "targets",
       ...(hasSettingAim ? (["setting"] as const) : []),
       ...(hasAtPayout ? (["payout"] as const) : []),
+      ...(hasThroughRelease ? (["release"] as const) : []),
       ...(hasHarakiri ? (["harakiri"] as const) : [])
     ],
-    [hasSettingAim, hasAtPayout, hasHarakiri]
+    [hasSettingAim, hasAtPayout, hasThroughRelease, hasHarakiri]
   );
 
   const [mode, setMode] = useState<AimMode>("ev");
@@ -421,6 +425,8 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
         <SettingAimTable aim={settingAim} />
       ) : mode === "payout" && atPayout ? (
         <AtPayoutTable data={atPayout} />
+      ) : mode === "release" && throughRelease ? (
+        <ThroughReleaseTable data={throughRelease} />
       ) : mode === "harakiri" && harakiri ? (
         <HarakiriTable harakiri={harakiri} />
       ) : (

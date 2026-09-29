@@ -353,6 +353,19 @@ export function validateMachine(data: unknown): Machine {
   }
 
   // ハラキリドライブ（台別推定率）は任意（対応機種＝ヴヴヴ2のみ）。あるときだけ形を検証する。
+  if (machine.throughRelease !== undefined) {
+    const tr = machine.throughRelease;
+    assert(isRecord(tr) && typeof tr.label === "string" && typeof tr.note === "string", "throughRelease label/note required");
+    assert(Array.isArray(tr.rows) && tr.rows.length > 0, "throughRelease.rows must be a non-empty array");
+    tr.rows.forEach((row, index) => {
+      assert(isRecord(row) && row.through === index && typeof row.label === "string" && row.label.length > 0,
+        "throughRelease rows must be consecutive from 0");
+      assert(Number.isSafeInteger(row.n) && row.n >= 0 && Number.isSafeInteger(row.hits) && row.hits >= 0 && row.hits <= row.n,
+        "throughRelease counts must be non-negative integers with hits <= n");
+      assert(row.n === 0 ? row.rate === null : typeof row.rate === "number" && Math.abs(row.rate - row.hits / row.n) <= 0.0001,
+        "throughRelease rate must match hits / n");
+    });
+  }
   if (machine.harakiri !== undefined) {
     const hk = machine.harakiri;
     assert(isRecord(hk), "harakiri must be an object");
