@@ -430,6 +430,13 @@ export type CounterEstimate = {
   }>;
 };
 
+/** スルー回数（CZ失敗＋AT単発）別の穢れ解放率。0回から連続し、最後の行は「以上」。 */
+export type ThroughRelease = {
+  label: string;
+  note: string;
+  rows: Array<{ through: number; label: string; n: number; hits: number; rate: number | null }>;
+};
+
 export type Machine = {
   /** 生成側の天井仕様・信号マップ版。旧JSONでは省略される。 */
   specVersion?: string;
@@ -457,6 +464,8 @@ export type Machine = {
   profiles: Profile[];
   /** Independently generated public-spec reference; pending observations remain pending. */
   provisionalSetting1?: ProvisionalSetting1;
+  /** スルー回数別の穢れ解放率（対応機種のみ）。 */
+  throughRelease?: ThroughRelease;
   /** 同じ店舗の履歴からの推定表。参考表の代わりに付き、両方は付かない。 */
   counterEstimate?: CounterEstimate;
   /** 店舗の実測表とは別に生成した補正版。表示する店舗の選択後は取り除く。 */

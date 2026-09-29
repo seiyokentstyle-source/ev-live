@@ -13,7 +13,7 @@ const integer = (value, max = 100000000) => { if (!Number.isSafeInteger(value) |
 const filterKeys = new Set(['h', 'y', 'n', 'm', 'g', 'past_y', 'cz', 'bb', 'rb', 'prev_cz']);
 const categoryFilterKeys = new Set(['prev_first_raw_type', 'prev_second_raw_type', 'prev_third_raw_type', 'prev_last_raw_type', 'prev_raw_signature']);
 const ordinalFilterKeys = new Set(['next_ordinal', 'recorded_next_ordinal']);
-const numericFilterKeys = new Set(['next_ordinal', 'recorded_next_ordinal', 'prev_first_main_payout', 'prev_main_count', 'daily_single_count', 'daily_intermediate_failures', 'previous_same_first_type_run', 'sessions_since_single']);
+const numericFilterKeys = new Set(['next_ordinal', 'recorded_next_ordinal', 'prev_first_main_payout', 'prev_main_count', 'daily_single_count', 'daily_intermediate_failures', 'previous_same_first_type_run', 'sessions_since_single', 'through_since_chain']);
 const gameFilterKeys = new Set(['day_g', 'recent_net', 'recent_hits']);
 const recentFilterKeys = new Set(['recent_net', 'recent_hits']);
 

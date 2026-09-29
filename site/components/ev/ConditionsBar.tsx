@@ -86,6 +86,10 @@ export function ConditionsBar({
     const payout = machine.atPayout;
     rows.push({ k: "集計軸", v: payout?.label ?? "主表と同じ区切りの獲得分布" });
     if (payout?.note) rows.push({ k: "集計条件", v: payout.note });
+  } else if (mode === "release") {
+    const release = machine.throughRelease;
+    rows.push({ k: "集計軸", v: release?.label ?? "スルー回数別 穢れ解放率" });
+    if (release?.note) rows.push({ k: "集計条件", v: release.note });
   } else if (mode === "harakiri") {
     const th = machine.harakiri?.threshold;
     if (th) rows.push({ k: "判定", v: `ラッシュ中の1回の当たりで獲得${th}枚以上（推定）` });
