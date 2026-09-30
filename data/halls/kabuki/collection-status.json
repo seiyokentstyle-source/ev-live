@@ -543,9 +543,9 @@
       "releaseDate": "2026-02-02",
       "lastUpdated": "2026-09-28",
       "status": "pending",
-      "reasonCode": "validation_pending",
-      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
-      "forcePending": false,
+      "reasonCode": "signal_unverified",
+      "pendingReason": "一部の台で獲得枚数を正しく読み取れていなかったため、取り直し中です。期待値は再集計まで表示を停止しています。",
+      "forcePending": true,
       "collectionComplete": true,
       "expectedUnits": 14,
       "collection": {
