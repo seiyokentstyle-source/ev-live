@@ -21,11 +21,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 133,
-        "events": 130,
+        "rows": 189,
+        "events": 184,
         "units": 1,
-        "days": 3,
-        "firstDate": "2026-09-27",
+        "days": 5,
+        "firstDate": "2026-09-25",
         "lastDate": "2026-09-29"
       },
       "sourceIntegrity": {
@@ -33,7 +33,7 @@
         "hallId": "kabuki",
         "machineName": "Lｽｰﾊﾟｰﾌﾞﾗｯｸｼﾞｬｯｸ",
         "targetDate": "2026-09-29",
-        "inputSha256": "c0051dec3f1a37ba4857f0b23972fbfcaff0771e4ddbf8f87643c4459b555a97"
+        "inputSha256": "9ee15cbfa11df1689a73271b5bac9b47f7f80033432c4b2bb39211695462c993"
       }
     },
     {
@@ -52,11 +52,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 109,
-        "events": 106,
+        "rows": 176,
+        "events": 171,
         "units": 1,
-        "days": 3,
-        "firstDate": "2026-09-27",
+        "days": 5,
+        "firstDate": "2026-09-25",
         "lastDate": "2026-09-29"
       },
       "sourceIntegrity": {
@@ -64,7 +64,7 @@
         "hallId": "kabuki",
         "machineName": "Lｽｰﾊﾟｰﾘｵｴｰｽ2",
         "targetDate": "2026-09-29",
-        "inputSha256": "2f0b002d5f230bd4d002432d40690c159852df043153967f5c9ce0b53053a1c0"
+        "inputSha256": "48b01dbddc7562c0859f1b1c35516560d3d55758582ba185e2d3cb0e581bcfe9"
       }
     },
     {
@@ -326,7 +326,7 @@
         "hallId": "kabuki",
         "machineName": "Lやじきた道中記参る！",
         "targetDate": "2026-09-29",
-        "inputSha256": "37ef0d5ce94f3de59b8498d4652882a6a550b9473beece32350a51a6ea592801"
+        "inputSha256": "1f7ef66b75d06e562489c307ab62aa955e1ef0ffb5ab1ad4a4d809466cf11ee2"
       }
     },
     {
@@ -361,7 +361,7 @@
         "hallId": "kabuki",
         "machineName": "Lスマスロ モンキーターンV",
         "targetDate": "2026-09-29",
-        "inputSha256": "b428017aece14b04b2d13735ac86f006ad2f44ff2f1d1b2f459ee2727f6a777b"
+        "inputSha256": "8ee31edbcdb8a68868f4d6aee34a15b7efed27efe718b9ba22183a2803094378"
       }
     },
     {
@@ -660,7 +660,7 @@
         "hallId": "kabuki",
         "machineName": "Lパチスロ 革命機ヴァルヴレイヴ2（Lヴヴヴ2）",
         "targetDate": "2026-09-29",
-        "inputSha256": "15dc52b071542d2bfbc2979bf8f67e65cff5638990f3ecd70dcf96528b7f94d2"
+        "inputSha256": "897cb141b8f6992ed822397d172336dac1e0dcda7c200d3547b7e63c80f8eaa9"
       }
     },
     {
@@ -824,7 +824,7 @@
         "hallId": "kabuki",
         "machineName": "Lミリオンゴッド－神々の軌跡－",
         "targetDate": "2026-09-29",
-        "inputSha256": "aadb2a48c2825a90e5549f6512182e710ba66acc271cc03c031f535e726bc460"
+        "inputSha256": "3c42eadb93f33697fae178418c1351c70113e03f493d6e3f4048d23c2adfe7da"
       }
     },
     {
@@ -890,7 +890,7 @@
         "hallId": "kabuki",
         "machineName": "Lリコリス・リコイル",
         "targetDate": "2026-09-29",
-        "inputSha256": "aa5844df48be72eaaea24d00a39ebc57ec1d5777e12b9f871257d61467da7b87"
+        "inputSha256": "328021d93c25ca3189243ad738fde813c16ed563fad74ba6bc6afef26665237f"
       }
     },
     {
@@ -922,7 +922,7 @@
         "hallId": "kabuki",
         "machineName": "L南国育ちSPECIAL",
         "targetDate": "2026-09-29",
-        "inputSha256": "0cf056acccd88de82e8ef6e266f1aabd3524213846665d199b1f550508ca0121"
+        "inputSha256": "2eb6ad4e48401bb3bfb852d38b628415c6e89fe434ca883af5e4de8622c61140"
       }
     },
     {
@@ -1052,7 +1052,7 @@
         "hallId": "kabuki",
         "machineName": "L彼女、お借りします",
         "targetDate": "2026-09-29",
-        "inputSha256": "552d390eebccfd7a21f3a9e4f8c943ac7b63ff75e9a99ba44731734fdf67aa61"
+        "inputSha256": "f2fed3ad56f39fcca7aa68ccc5c070f3dcf549bb590a365aa4caa60d0a9187d9"
       }
     },
     {
@@ -1183,7 +1183,7 @@
         "hallId": "kabuki",
         "machineName": "L甲鉄城のカバネリ海門決戦",
         "targetDate": "2026-09-29",
-        "inputSha256": "0dc76c379f2fa20b85833a3b4e04e104931cd009215aba709ef223065a15866e"
+        "inputSha256": "660b13d4dc588d1782f0dca662af7cb9f9619ae1a645ad06d1c8d784a046004a"
       }
     },
     {
@@ -1475,7 +1475,7 @@
         "hallId": "kabuki",
         "machineName": "スマスロ シャーマンキング",
         "targetDate": "2026-09-29",
-        "inputSha256": "596766a7f07d59ba83d2cd2e3a479617be77acfefea05c4d9258899348397413"
+        "inputSha256": "db4637ec400a079a8b55bdfba050462bf090c4d20275cc344ccedc21096265e6"
       }
     },
     {
@@ -1774,7 +1774,7 @@
         "hallId": "kabuki",
         "machineName": "ソードアート・オンラインII",
         "targetDate": "2026-09-29",
-        "inputSha256": "a6670ac7a234613e17cc1b4d040ffa819ee938ea1d25932d78d7078a4cd325bf"
+        "inputSha256": "b6ff35e5d8497541f4445a251af9492dcac565a9fe90309082134b2cd879ee2a"
       }
     },
     {
@@ -1805,7 +1805,7 @@
         "hallId": "kabuki",
         "machineName": "ワールドダイスター",
         "targetDate": "2026-09-29",
-        "inputSha256": "c78ba0c81b3d85e927e39ce6f1fc5df111f9cea1cc144e01bf41fc4a70e3432d"
+        "inputSha256": "f8b71c07bad6af45f93eb449d51b9a511eea7cb2a395e3d61c2e88f228dd39a3"
       }
     },
     {
@@ -1871,7 +1871,7 @@
         "hallId": "kabuki",
         "machineName": "沖ドキ！BLACK",
         "targetDate": "2026-09-29",
-        "inputSha256": "62c7bb411056e2615081cbad383564ef59b4aaff446c5a9d71b166d1e75741d1"
+        "inputSha256": "c35abcc26f2003f9216f99bcf6595c97d159cfeae7527d7e67586f671814be6f"
       }
     },
     {
