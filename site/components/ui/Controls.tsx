@@ -160,3 +160,47 @@ export function FilterSelect({
     </label>
   );
 }
+
+/** 1軸で複数の値を選べる絞り込み（チェックボックス）。何も選ばなければ「不問」。 */
+export function FilterMultiSelect({
+  label,
+  allLabel,
+  options,
+  values,
+  onChange,
+  fmt
+}: {
+  label: string;
+  allLabel: string;
+  options: string[];
+  values: string[];
+  onChange: (values: string[]) => void;
+  fmt: (value: string) => string;
+}) {
+  const summary = values.length === 0 ? allLabel
+    : values.length <= 2 ? values.map(fmt).join("・") : `${fmt(values[0])} ほか${values.length - 1}件`;
+  const toggle = (option: string) =>
+    onChange(values.includes(option) ? values.filter(value => value !== option) : [...values, option]);
+  return (
+    <div className="flex min-w-0 flex-col">
+      <span className="mono text-[9px] leading-tight tracking-[0.06em] text-muted">{label}</span>
+      <details className="group relative min-w-0">
+        <summary className="glass-control mono w-full min-w-0 cursor-pointer list-none truncate rounded-md px-2 py-1 text-[11px] text-ink-soft">
+          {summary}
+        </summary>
+        <div className="absolute left-0 right-0 z-20 mt-1 max-h-64 overflow-y-auto rounded-md border border-line bg-panel-2 p-1 shadow-lg">
+          <button type="button" onClick={() => onChange([])}
+            className="mono block w-full rounded px-2 py-1 text-left text-[11px] text-muted hover:bg-panel">
+            {allLabel}（選択を外す）
+          </button>
+          {options.map((option) => (
+            <label key={option} className="mono flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-[11px] text-ink-soft hover:bg-panel">
+              <input type="checkbox" checked={values.includes(option)} onChange={() => toggle(option)} />
+              {fmt(option)}
+            </label>
+          ))}
+        </div>
+      </details>
+    </div>
+  );
+}

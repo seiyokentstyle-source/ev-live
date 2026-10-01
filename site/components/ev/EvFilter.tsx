@@ -1,7 +1,8 @@
 "use client";
 
 import type { FilterAxis } from "@/lib/ev/types";
-import { ControlBar, FilterGroup, FilterSelect } from "@/components/ui/Controls";
+import { ControlBar, FilterGroup, FilterMultiSelect, FilterSelect } from "@/components/ui/Controls";
+import { joinFilterValues, splitFilterValue } from "@/lib/ev/profiles";
 
 type EvFilterProps = {
   /** 絞り込みの軸（データ側が並び順ごと配る）。軸が増えてもここは無改修. */
@@ -17,15 +18,27 @@ type EvFilterProps = {
   /** 軸key→いま選べる値。生成側は軸の全組み合わせぶんの表を持っていないので、
    *  組み合わせた表が無い選択肢はここから外れる。 */
   enabled?: Record<string, Set<string>>;
+  /** 集計行から計算する新形式の表だけ、1軸で複数の値を選べる（区間を足し合わせる）。 */
+  multiple?: boolean;
 };
 
-export function EvFilter({ axes, values, onChange, units, hits, hitUnit, enabled }: EvFilterProps) {
+export function EvFilter({ axes, values, onChange, units, hits, hitUnit, enabled, multiple }: EvFilterProps) {
   const active = axes.some((axis) => values[axis.key] != null);
   if (axes.length === 0) return null;
   return (
     <ControlBar label="絞り込み" collapsible>
       <FilterGroup>
-        {axes.map((axis) => (
+        {axes.map((axis) => multiple ? (
+          <FilterMultiSelect
+            key={axis.key}
+            label={axis.label}
+            allLabel={axis.allLabel}
+            options={axis.options.map((option) => option.value)}
+            values={splitFilterValue(values[axis.key])}
+            onChange={(selected) => onChange(axis.key, joinFilterValues(axis, selected))}
+            fmt={(value) => axis.options.find((option) => option.value === value)?.label ?? value}
+          />
+        ) : (
           <FilterSelect
             key={axis.key}
             label={axis.label}

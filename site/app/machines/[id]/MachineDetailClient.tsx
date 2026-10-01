@@ -443,6 +443,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
           units={evFilterStats.units}
           hits={evFilterStats.hits}
           hitUnit={displayProfile.sessionUnit}
+          multiple={Boolean(evFilters?.aggregation)}
         />
       ) : null}
 

@@ -334,10 +334,22 @@ export function filterSelectionKey(axes: FilterAxis[], selection: FilterSelectio
   for (const axis of axes) {
     const value = selection[axis.key];
     if (value == null) continue;
-    if (!axis.options.some(option => option.value === value)) return null;
-    key += `${axis.key}${value}`;
+    const parts = splitFilterValue(value);
+    if (!parts.length || parts.some(part => !axis.options.some(option => option.value === part))) return null;
+    // 複数選択は選択肢の並び順にそろえる（選んだ順で別の表にならないように）。
+    key += `${axis.key}${axis.options.map(option => option.value).filter(v => parts.includes(v)).join("|")}`;
   }
   return key;
+}
+
+/** 1軸で複数選んだ値は "a|b" で持つ。旧形式の表（集計済みの表だけを配る機種）は1つだけ。 */
+export function splitFilterValue(value: string | null | undefined): string[] {
+  return value ? value.split("|").filter(Boolean) : [];
+}
+
+export function joinFilterValues(axis: FilterAxis, values: string[]): string | null {
+  const ordered = axis.options.map(option => option.value).filter(v => values.includes(v));
+  return ordered.length ? ordered.join("|") : null;
 }
 
 /** 省略可能な各軸を順に読んで、表キーが一意な指定条件へ戻せるか確認する。 */
@@ -394,10 +406,9 @@ export function compatibleFilterSelection(
 
   const next: Record<string, string | null> = {};
   for (const axis of axes) {
-    const value = selection[axis.key];
-    if (value != null && axis.options.some((option) => option.value === value)) {
-      next[axis.key] = value;
-    }
+    const kept = joinFilterValues(axis, splitFilterValue(selection[axis.key])
+      .filter(part => axis.options.some((option) => option.value === part)));
+    if (kept != null) next[axis.key] = kept;
   }
   // 組合せの表がまだ無くても選択を保持。単独では差がなく、掛け合わせでだけ
   // 採用された条件へ進めるようにし、表示側は完全一致が無ければ空表にする。

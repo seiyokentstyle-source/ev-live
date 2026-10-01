@@ -49,6 +49,23 @@ describe("public filter aggregate calculation", () => {
     expect(aggregateFilterTable(aggregation, axes, { p: "0" }, 1).baseAnchors[0].n).toBe(3);
     expect(aggregateFilterTable(aggregation, axes, { c: "0", p: "0" }, 1).baseAnchors[0].n).toBe(1);
   });
+  it("adds several selected values of one axis together (multi-select)", () => {
+    // c=0 と c=1 を両方選ぶ＝c が既知の行をすべて足す（c=-1 の不明行は入らない）。
+    const both = aggregateFilterTable(aggregation, axes, { c: "0|1" }, 1);
+    expect(both.baseAnchors[0].n).toBe(14);
+    const sum = { n: 1 + 3 + 10, normal: 100 + 600 + 100, payout: 300 + 1800 + 1000 };
+    expect(both.baseAnchors[0].ev).toBe(roundAggregateEV((sum.payout * 20 - sum.normal * 30) / sum.n));
+    // 選んだ順は関係ない。
+    expect(aggregateFilterTable(aggregation, axes, { c: "1|0" }, 1)).toEqual(both);
+    // 1つだけ選んだときは従来と同じ。
+    expect(aggregateFilterTable(aggregation, axes, { c: "0" }, 1).baseAnchors[0].n).toBe(4);
+  });
+  it("canonicalises multi-select keys and keeps only still-valid values", async () => {
+    const { filterSelectionKey, compatibleFilterSelection } = await import("../lib/ev/profiles");
+    expect(filterSelectionKey(axes, { c: "1|0" })).toBe("c0|1");
+    expect(filterSelectionKey(axes, { c: "0|9" })).toBeNull();
+    expect(compatibleFilterSelection(profile, { c: "1|9|0" })).toEqual({ c: "0|1" });
+  });
   it("retains one-anchor and one-sample results, with no minimum sample threshold", () => {
     const one = aggregateFilterTable(aggregation, axes, { c: "1", p: "1" }, 1);
     expect(one.baseAnchors).toHaveLength(1);

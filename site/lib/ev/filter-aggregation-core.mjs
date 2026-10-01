@@ -12,19 +12,23 @@ export function roundAggregateEV(value, epsilon = 1e-8) {
 
 /** Merge counts and totals before calculating means; shared by server and browser. */
 export function aggregateFilterTable(data, axes, selection, fallbackStart) {
+  // 1軸で複数の値を選んだときは "a|b" で渡る。どれかに当てはまる行を足し合わせる
+  // （件数・通常時G・獲得の合計なので、区間をまとめても平均の計算は正確）。
   const selected = axes.map(axis => {
     const value = selection[axis.key];
-    return value == null ? null : axis.options.findIndex(option => option.value === value);
+    if (value == null) return null;
+    return String(value).split("|").map(part => axis.options.findIndex(option => option.value === part))
+      .filter(index => index >= 0);
   });
   const byGame = new Map();
   for (const row of data.rows) {
-    if (selected.some((index, axis) => {
-      if (index === null) return false;
+    if (selected.some((indexes, axis) => {
+      if (indexes === null) return false;
       const value = row[axis + 1];
-      if (index < 0) return true;
+      if (indexes.length === 0) return true;
       return data.axisMatchModes?.[axis] === "bitmask"
-        ? value < 0 || (value & 2 ** index) === 0
-        : value !== index;
+        ? value < 0 || !indexes.some(index => (value & 2 ** index) !== 0)
+        : !indexes.includes(value);
     })) continue;
     const [n, normal, payout] = row.slice(axes.length + 1);
     if (n <= 0) continue;
