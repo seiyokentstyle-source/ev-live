@@ -184,11 +184,12 @@ export function FilterMultiSelect({
   return (
     <div className="flex min-w-0 flex-col">
       <span className="mono text-[9px] leading-tight tracking-[0.06em] text-muted">{label}</span>
-      <details className="group relative min-w-0">
+      <details className="group min-w-0">
         <summary className="glass-control mono w-full min-w-0 cursor-pointer list-none truncate rounded-md px-2 py-1 text-[11px] text-ink-soft">
           {summary}
         </summary>
-        <div className="absolute left-0 right-0 z-20 mt-1 max-h-64 overflow-y-auto rounded-md border border-line bg-panel-2 p-1 shadow-lg">
+        {/* 絞り込みの帯は折りたたみのため overflow: hidden。浮かせると隠れるので、帯の中で下に広げる。 */}
+        <div className="mt-1 max-h-64 overflow-y-auto rounded-md border border-line bg-panel-2 p-1">
           <button type="button" onClick={() => onChange([])}
             className="mono block w-full rounded px-2 py-1 text-left text-[11px] text-muted hover:bg-panel">
             {allLabel}（選択を外す）
