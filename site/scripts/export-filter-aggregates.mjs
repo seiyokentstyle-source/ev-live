@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { externalizeMachineAggregations } from '../lib/filter-aggregate-assets.mjs';
 import { splitCzThroughProfiles } from '../lib/cz-through-profiles.mjs';
+import { inlineSourceAggregations, sourceAggregatesDir } from '../lib/source-aggregations.mjs';
 
 export async function exportFilterAggregates(sourceDir, outputDir) {
   const source = path.resolve(sourceDir), output = path.resolve(outputDir);
@@ -19,7 +20,10 @@ export async function exportFilterAggregates(sourceDir, outputDir) {
       // Only regular machine files and hall directories; never follow symlinks.
       if (entry.isDirectory()) { await visit(filename); continue; }
       if (!entry.isFile() || !/^[a-z0-9]+\.json$/.test(entry.name)) continue;
-      const machine = JSON.parse(await fs.readFile(filename, 'utf8'));
+      // Rows the scraper stored beside the machine JSON are restored first, so the
+      // checks and CZ cohort splitting below see exactly the same payload as before.
+      const machine = inlineSourceAggregations(JSON.parse(await fs.readFile(filename, 'utf8')),
+        sourceAggregatesDir(source));
       if (!Array.isArray(machine.profiles)) continue;
       const profiles = [...machine.profiles, ...(machine.setting1Correction?.profiles ?? [])];
       if (profiles.some(profile => profile.evFilters?.aggregation?.rowsAsset)) {

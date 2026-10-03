@@ -12,6 +12,7 @@ import type { HeatmapCoverageMachine } from "./heatmap/coverage";
 import { readCollectionCatalog } from "./collection-status-catalog";
 import type { CollectedMachine } from "./collection-status-contract";
 import { selectMachineListSummaries } from "./machine-list-summary";
+import { inlineSourceAggregations, sourceAggregatesDir } from "./source-aggregations.mjs";
 
 // Data lives at the repository root (data/machines), while the site builds from
 // site/. Resolve against the repo root so it works whether the cwd is site/
@@ -40,7 +41,8 @@ async function readMachines(dir: string): Promise<Machine[]> {
   return Promise.all(
     jsonFiles.map(async (fileName) => {
       const raw = await fs.readFile(path.join(dir, fileName), "utf8");
-      return normalizeMachineMetadata(validateMachine(JSON.parse(raw)));
+      return normalizeMachineMetadata(validateMachine(
+        inlineSourceAggregations(JSON.parse(raw), sourceAggregatesDir(machinesDir))));
     })
   );
 }
@@ -53,7 +55,8 @@ async function readMachine(dir: string, id: string): Promise<Machine | undefined
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
     throw error;
   }
-  const machine = normalizeMachineMetadata(validateMachine(JSON.parse(raw)));
+  const machine = normalizeMachineMetadata(validateMachine(
+    inlineSourceAggregations(JSON.parse(raw), sourceAggregatesDir(machinesDir))));
   return machine.id === id ? machine : undefined;
 }
 
