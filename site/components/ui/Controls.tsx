@@ -1,6 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 /**
  * 画面上部に並ぶ操作バーと、その中のボタン/セレクトの見た目を集約する。
@@ -161,7 +162,30 @@ export function FilterSelect({
   );
 }
 
-/** 1軸で複数の値を選べる絞り込み（チェックボックス）。何も選ばなければ「不問」。 */
+type PanelPlace = { left: number; width: number; maxHeight: number; top?: number; bottom?: number };
+
+/** 一覧をボタンの真下（下に入らなければ真上）へ置く座標。画面の端からはみ出させない。 */
+function placePanel(trigger: HTMLElement): PanelPlace {
+  const rect = trigger.getBoundingClientRect();
+  const viewW = window.innerWidth;
+  const viewH = window.innerHeight;
+  const width = Math.min(Math.max(rect.width, 176), viewW - 16);
+  const left = Math.min(Math.max(8, rect.left), viewW - width - 8);
+  const below = viewH - rect.bottom - 12;
+  const above = rect.top - 12;
+  if (below >= 160 || below >= above) {
+    return { left, width, top: rect.bottom + 4, maxHeight: Math.min(256, below) };
+  }
+  return { left, width, bottom: viewH - rect.top + 4, maxHeight: Math.min(256, above) };
+}
+
+/** 1軸で複数の値を選べる絞り込み（チェックボックス）。何も選ばなければ「不問」。
+ *
+ *  ★一覧は帯の中に広げず、body 直下へ浮かせる（portal）。
+ *    帯の中で広げると、開くたびに2列グリッドの行が伸びて隣の選択欄
+ *    （items-end で下揃え）と下の表が押し下げられる。
+ *    帯は折りたたみのため overflow:hidden、しかも glass の backdrop-filter が
+ *    position:fixed の基準を作るので、帯の内側に置いたままでは浮かせられない。 */
 export function FilterMultiSelect({
   label,
   allLabel,
@@ -181,27 +205,77 @@ export function FilterMultiSelect({
     : values.length <= 2 ? values.map(fmt).join("・") : `${fmt(values[0])} ほか${values.length - 1}件`;
   const toggle = (option: string) =>
     onChange(values.includes(option) ? values.filter(value => value !== option) : [...values, option]);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [place, setPlace] = useState<PanelPlace | null>(null);
+  const open = place !== null;
+
+  useEffect(() => {
+    if (!open) return;
+    const close = () => setPlace(null);
+    const inside = (target: EventTarget | null) =>
+      target instanceof Node && Boolean(panelRef.current?.contains(target) || triggerRef.current?.contains(target));
+    const onPointerDown = (event: PointerEvent) => {
+      if (!inside(event.target)) close();
+    };
+    /* 表や帯が動くと一覧が置いていかれるので閉じる。一覧自身のスクロールは除く。 */
+    const onScroll = (event: Event) => {
+      if (!inside(event.target)) close();
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        close();
+        triggerRef.current?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", onPointerDown, true);
+    document.addEventListener("scroll", onScroll, true);
+    document.addEventListener("keydown", onKey);
+    window.addEventListener("resize", close);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown, true);
+      document.removeEventListener("scroll", onScroll, true);
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", close);
+    };
+  }, [open]);
+
   return (
     <div className="flex min-w-0 flex-col">
       <span className="mono text-[9px] leading-tight tracking-[0.06em] text-muted">{label}</span>
-      <details className="group min-w-0">
-        <summary className="glass-control mono w-full min-w-0 cursor-pointer list-none truncate rounded-md px-2 py-1 text-[11px] text-ink-soft">
-          {summary}
-        </summary>
-        {/* 絞り込みの帯は折りたたみのため overflow: hidden。浮かせると隠れるので、帯の中で下に広げる。 */}
-        <div className="mt-1 max-h-64 overflow-y-auto rounded-md border border-line bg-panel-2 p-1">
-          <button type="button" onClick={() => onChange([])}
-            className="mono block w-full rounded px-2 py-1 text-left text-[11px] text-muted hover:bg-panel">
-            {allLabel}（選択を外す）
-          </button>
-          {options.map((option) => (
-            <label key={option} className="mono flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-[11px] text-ink-soft hover:bg-panel">
-              <input type="checkbox" checked={values.includes(option)} onChange={() => toggle(option)} />
-              {fmt(option)}
-            </label>
-          ))}
-        </div>
-      </details>
+      <button
+        ref={triggerRef}
+        type="button"
+        aria-haspopup="true"
+        aria-expanded={open}
+        onClick={() => setPlace(open || !triggerRef.current ? null : placePanel(triggerRef.current))}
+        className="glass-control mono w-full min-w-0 cursor-pointer truncate rounded-md px-2 py-1 text-left text-[11px] text-ink-soft"
+      >
+        {summary}
+      </button>
+      {place
+        ? createPortal(
+            <div
+              ref={panelRef}
+              role="group"
+              aria-label={label}
+              style={place}
+              className="fixed z-50 overflow-y-auto overscroll-contain rounded-md border border-line bg-panel-2 p-1 shadow-lg"
+            >
+              <button type="button" onClick={() => onChange([])}
+                className="mono block w-full rounded px-2 py-1 text-left text-[11px] text-muted hover:bg-panel">
+                {allLabel}（選択を外す）
+              </button>
+              {options.map((option) => (
+                <label key={option} className="mono flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-[11px] text-ink-soft hover:bg-panel">
+                  <input type="checkbox" checked={values.includes(option)} onChange={() => toggle(option)} />
+                  {fmt(option)}
+                </label>
+              ))}
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }

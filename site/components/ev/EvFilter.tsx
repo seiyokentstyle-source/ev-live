@@ -51,20 +51,26 @@ export function EvFilter({ axes, values, onChange, units, hits, hitUnit, enabled
           />
         ))}
       </FilterGroup>
-      {active ? (
-        <span className="mono flex items-center gap-2 text-[10px] text-muted">
-          <span>
-            {units === undefined ? "" : `${units.toLocaleString("ja-JP")}台 / `}{hitUnit ? `${hitUnit}の狙い目` : "狙い目"} {hits.toLocaleString("ja-JP")}件
-          </span>
-          <button
-            type="button"
-            onClick={() => axes.forEach((axis) => onChange(axis.key, null))}
-            className="rounded-md border border-line bg-panel-2 px-2 py-1 text-[10px] text-ink-soft"
-          >
-            解除
-          </button>
+      {/* ★件数と「解除」の行は未選択でも場所を取っておき、見えなくするだけにする。
+          選んだ瞬間に行が足されると、帯が1行伸びて下の表が押し下げられる。 */}
+      <span
+        aria-hidden={!active}
+        className={`mono flex items-center gap-2 text-[10px] text-muted ${active ? "" : "invisible"}`}
+      >
+        <span>
+          {active
+            ? `${units === undefined ? "" : `${units.toLocaleString("ja-JP")}台 / `}${hitUnit ? `${hitUnit}の狙い目` : "狙い目"} ${hits.toLocaleString("ja-JP")}件`
+            : "狙い目"}
         </span>
-      ) : null}
+        <button
+          type="button"
+          tabIndex={active ? undefined : -1}
+          onClick={() => axes.forEach((axis) => onChange(axis.key, null))}
+          className="rounded-md border border-line bg-panel-2 px-2 py-1 text-[10px] text-ink-soft"
+        >
+          解除
+        </button>
+      </span>
     </ControlBar>
   );
 }
