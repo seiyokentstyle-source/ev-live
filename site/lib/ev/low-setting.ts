@@ -15,6 +15,13 @@ import type { Machine, Profile } from "./types";
  */
 export const LOW_SETTING_HALL_SUBDIR = "mixed";
 
+/**
+ * 同じ店舗混合データの、設定1補正をかけていない実測のままの表を出す店舗（利用者指定 2026-10-05）。
+ * ★フォルダは持たない。data/machines/mixed/ を読み、補正の表を外して出す。
+ *   補正あり（mixed）と補正なし（mixed-raw）が同じ入口に混ざると、どちらの数字か分からない。
+ */
+export const RAW_MIXED_HALL_SUBDIR = "mixed-raw";
+
 const LOW_SETTING_MARK = "設定1想定";
 
 /**

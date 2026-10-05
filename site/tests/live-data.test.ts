@@ -115,7 +115,8 @@ describe("live data publication", () => {
     expect(await generateStaticParams()).toEqual([
       { hall: "shinjuku", id: `${fixture.id}.json` },
       { hall: "kabuki", id: `${fixture.id}.json` },
-      { hall: "mixed", id: `${fixture.id}.json` }
+      { hall: "mixed", id: `${fixture.id}.json` },
+      { hall: "mixed-raw", id: `${fixture.id}.json` }
     ]);
   });
 

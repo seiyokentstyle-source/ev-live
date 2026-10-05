@@ -401,6 +401,46 @@ describe("low-setting hall selection", () => {
     expect(list).not.toHaveBeenCalled();
   });
 
+  describe("corrected and uncorrected mixed halls are separate (2026-10-05)", () => {
+    const sources = { schemaVersion: 1, halls: ["shinjuku", "kabuki"], inputSha256: "a".repeat(64) };
+
+    it("shows a combined dataset with a correction as corrected in mixed and as measured in mixed-raw", async () => {
+      const combined = { ...correctionMachine("target", "2026-09-07", -3600), mixedSources: sources };
+      await writeMachine("target", combined, "mixed");
+
+      const corrected = await getMachine("target", "mixed");
+      expect(corrected?.profiles).toEqual(combined.setting1Correction.profiles);
+      expect(corrected?.profiles[0].baseAnchors[0].ev).toBe(-3600);
+
+      const raw = await getMachine("target", "mixed-raw");
+      expect(raw).toEqual(withoutLowSetting(validateMachine(combined)));
+      expect(raw?.profiles).toEqual(combined.profiles.slice(0, 2));
+      expect(raw).not.toHaveProperty("setting1Correction");
+      expect(await getMachines("mixed-raw")).toEqual([raw]);
+    });
+
+    it("lists a combined dataset without a correction only in mixed-raw", async () => {
+      // 実データの「補正なし」の合算と同じく、設定1想定の表を持たない。
+      const base = machine("rawonly");
+      const combined = { ...base, mixedSources: sources,
+        profiles: base.profiles.filter((profile) => !profile.label.includes("設定1想定")) };
+      expect(combined.profiles.length).toBeGreaterThan(0);
+      await writeMachine("rawonly", combined, "mixed");
+
+      expect(await getMachine("rawonly", "mixed")).toBeUndefined();
+      expect((await getMachines("mixed")).map((item) => item.id)).not.toContain("rawonly");
+      expect(await getMachine("rawonly", "mixed-raw")).toEqual(withoutLowSetting(validateMachine(combined)));
+    });
+
+    it("never shows a single store's table or a legacy corrected file as uncorrected", async () => {
+      await writeMachine("target", correctionMachine());
+      await writeMachine("legacy", onlyLowSetting(validateMachine(correctionMachine("legacy"))), "mixed");
+      expect(await getMachine("target", "mixed-raw")).toBeUndefined();
+      expect(await getMachine("legacy", "mixed-raw")).toBeUndefined();
+      expect(await getMachines("mixed-raw")).toEqual([]);
+    });
+  });
+
   it("uses the actual mixed file unchanged when the folder exists", async () => {
     await writeMachine("target");
     const mixed = machine();

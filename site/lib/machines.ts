@@ -3,7 +3,7 @@ import path from "node:path";
 import type { CounterEstimate, Machine, MachineSummary, ProvisionalSetting1 } from "./ev/types";
 import { withoutForeignCounterEstimate } from "./ev/counter-estimate";
 import { validateMachine } from "./ev/validate";
-import { LOW_SETTING_HALL_SUBDIR, onlyLowSetting, withoutLowSetting } from "./ev/low-setting";
+import { LOW_SETTING_HALL_SUBDIR, RAW_MIXED_HALL_SUBDIR, onlyLowSetting, withoutLowSetting } from "./ev/low-setting";
 import { compareMachines } from "./machine-order";
 import { HALLS, getReadyHalls, getHall } from "./halls";
 import { machineSummary } from "./ev/summary";
@@ -33,7 +33,23 @@ function hallDir(dataSubdir?: string): string {
   return dataSubdir ? path.join(machinesDir, dataSubdir) : machinesDir;
 }
 
+// 静的書き出し中は、同じフォルダを1回だけ読む。店舗混合のフォルダは「補正あり」と
+// 「補正なし」の2店舗から読まれ、どちらも大きい集計を展開するので、二度読むと
+// 一覧ページの生成が1ページ60秒の上限に近づく。開発サーバでは毎回読み直す。
+const buildReadCache = new Map<string, Promise<Machine[]>>();
+
 async function readMachines(dir: string): Promise<Machine[]> {
+  if (process.env.STATIC_EXPORT !== "true") return readMachinesUncached(dir);
+  let cached = buildReadCache.get(dir);
+  if (!cached) {
+    cached = readMachinesUncached(dir);
+    buildReadCache.set(dir, cached);
+  }
+  // 呼び出し側が並べ替え・加工しても、ほかの店舗の結果に響かないよう配列は複製する。
+  return [...await cached];
+}
+
+async function readMachinesUncached(dir: string): Promise<Machine[]> {
   // 未集計の店舗はフォルダ自体が無い。空一覧を返して「準備中」として扱う。
   if (!existsSync(dir)) return [];
   const entries = await fs.readdir(dir);
@@ -60,17 +76,23 @@ async function readMachine(dir: string, id: string): Promise<Machine | undefined
   return machine.id === id ? machine : undefined;
 }
 
-/** A stored correction survives an older collector overwriting the source JSON. */
+/** A stored correction survives an older collector overwriting the source JSON.
+ *  ★補正の表だけを返す。補正の無い合算はここに出さず、mixed-raw 側に出す。 */
 function selectMixedMachine(stored?: Machine, source?: Machine): Machine | undefined {
   // A combined dataset must not be replaced by a single store's correction.
-  if (stored && "mixedSources" in stored) {
-    return stored.setting1Correction ? onlyLowSetting(stored) ?? undefined : stored;
-  }
+  if (stored && "mixedSources" in stored) return onlyLowSetting(stored) ?? undefined;
   // Validated dates use YYYY-MM-DD, so string comparison preserves date order.
   if (source?.setting1Correction && (!stored || source.lastUpdated >= stored.lastUpdated)) {
     return onlyLowSetting(source) ?? undefined;
   }
+  // 合算の印が無い旧形式は、補正済みの表をそのまま保存したもの。補正なしの合算ではない。
   return stored?.setting1Correction ? onlyLowSetting(stored) ?? undefined : stored;
+}
+
+/** 店舗混合の合算を、設定1補正をかけずに実測のまま出す。合算JSONが無い機種は出さない。 */
+function rawMixedMachine(stored?: Machine): Machine | undefined {
+  if (!stored || !("mixedSources" in stored)) return undefined;
+  return withoutLowSetting(stored) ?? undefined;
 }
 
 /** JSONの置き場所（店舗フォルダ）から店舗IDを引く。推定表の店舗照合に使う。 */
@@ -103,6 +125,12 @@ async function loadHallMachines(dataSubdir?: string): Promise<Machine[]> {
     const machines = [...ids].map((id) => selectMixedMachine(storedById.get(id), sourceById.get(id)))
       .filter((machine): machine is Machine => machine !== undefined);
     return machines.sort(compareMachines);
+  }
+  if (dataSubdir === RAW_MIXED_HALL_SUBDIR) {
+    return (await readMachines(hallDir(LOW_SETTING_HALL_SUBDIR)))
+      .map((machine) => rawMixedMachine(machine))
+      .filter((machine): machine is Machine => machine !== undefined)
+      .sort(compareMachines);
   }
   const machines = await readMachines(dir);
   return machines
@@ -138,6 +166,9 @@ async function loadHallMachine(id: string, dataSubdir?: string): Promise<Machine
     const source = await readMachine(hallDir(), id);
     if (!existsSync(dir)) return source ? onlyLowSetting(source) ?? undefined : undefined;
     return selectMixedMachine(await readMachine(dir, id), source);
+  }
+  if (dataSubdir === RAW_MIXED_HALL_SUBDIR) {
+    return rawMixedMachine(await readMachine(hallDir(LOW_SETTING_HALL_SUBDIR), id));
   }
   const machine = await readMachine(dir, id);
   return machine ? withoutLowSetting(machine) ?? undefined : undefined;
