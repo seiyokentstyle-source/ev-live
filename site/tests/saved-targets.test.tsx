@@ -73,6 +73,50 @@ describe('published target contract', () => {
   });
 });
 
+describe('海門回想の掲載条件', () => {
+  const kaimonTarget = (): PublishedTarget => {
+    const value = target();
+    value.machineId = value.definition.machineId = 'mcd43a818';
+    value.definition.profileKey = 'game_ceiling_after_nonrunthrough_joui_5050';
+    value.rate = value.definition.rate = '50/50';
+    value.definition.filters = {
+      kaimon_count: { mode: 'range', lo: '2', hi: '3' },
+      kaimon_since_pay: { mode: 'range', lo: '-50.5', hi: '1000' },
+      kaimon_day_seen: { mode: 'range', lo: '1', hi: '2' },
+    };
+    return value;
+  };
+  it('keeps all three exact conditions and a full upper-profile key without changing aggregates', () => {
+    const input = kaimonTarget();
+    const parsed = parseSavedTargetCatalog(catalog([input])).targets[0];
+    expect(parsed.definition).toEqual(input.definition);
+    expect(parsed.rows).toEqual(input.rows);
+    input.definition.filters.kaimon_day_seen = { mode: 'missing', lo: '', hi: '' };
+    expect(parseSavedTargetCatalog(catalog([input])).targets[0].definition.filters.kaimon_day_seen.mode).toBe('missing');
+  });
+  it('rejects other machines, non-upper aims, unsupported modes and invalid numeric domains', () => {
+    for (const [key, filter] of [
+      ['kaimon_count', { mode: 'range', lo: '1.5', hi: '3' }],
+      ['kaimon_count', { mode: 'range', lo: '-1', hi: '' }],
+      ['kaimon_day_seen', { mode: 'range', lo: '2', hi: '3' }],
+      ['kaimon_day_seen', { mode: 'range', lo: '0', hi: '3' }],
+      ['kaimon_since_pay', { mode: 'range', lo: 'Infinity', hi: '' }],
+      ['kaimon_since_pay', { mode: 'category', lo: '', hi: '', value: '500' }],
+      ['kaimon_day_seen', { mode: 'missing', lo: '0', hi: '' }],
+      ['kaimon_count', { mode: 'range', lo: '1', hi: '2', windowG: 1000 }],
+    ] as const) {
+      const input = kaimonTarget();
+      input.definition.filters = { [key]: filter as TargetFilter };
+      expect(() => parseSavedTargetCatalog(catalog([input]))).toThrow();
+    }
+    for (const patch of [{ machineId: 'other' }, { profileKey: 'at' }, { profileKey: 'a'.repeat(65) }]) {
+      const input = kaimonTarget(); Object.assign(input.definition, patch);
+      if (patch.machineId) input.machineId = patch.machineId;
+      expect(() => parseSavedTargetCatalog(catalog([input]))).toThrow();
+    }
+  });
+});
+
 describe('optional saved-target investment and play aggregates', () => {
   const row = { g: 100, ev: 1234, n: 60, days: 8 };
   it('keeps historical sparse rows unchanged', () => {

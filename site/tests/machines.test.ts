@@ -107,6 +107,44 @@ describe("collection fallback selection", () => {
     for (const machine of await getMachines("mixed")) expect(machine).not.toHaveProperty("counterEstimate");
     expect(await getMachine("lycoris", "mixed")).not.toHaveProperty("counterEstimate");
   });
+  it("shows each hall's regenerated Lycoris profiles and selects the mixed correction without reusing Shinjuku", async () => {
+    const base = machine("lycoris");
+    const profileKeys = ["reset", "after_kake", "after_other"];
+    const profiles = profileKeys.flatMap((key, index) => ["4652", "5050"].map(rate => ({
+      ...structuredClone(base.profiles[0]), key: `${key}_${rate}`,
+      label: `${key}（推定）・${rate === "4652" ? "46/52" : "50/50"}`,
+      baseAnchors: base.profiles[0].baseAnchors.map(anchor => ({ ...anchor, ev: 100 + index, rtp: 101 })),
+    })));
+    const input = { ...base, meta: { ...base.meta, samples: "100" }, profiles,
+      calcSpec: { items: [{ k: "推定獲得枚数", v: "同じモデルを各店舗の履歴へ適用。平均設定2.3は補正前の仮定" }] } };
+    const combined = {
+      ...input, mixedSources: { schemaVersion: 1, halls: ["shinjuku", "kabuki"], inputSha256: "c".repeat(64) },
+      meta: { ...input.meta, samples: "300" },
+      profiles: profiles.map(profile => ({ ...profile,
+        baseAnchors: profile.baseAnchors.map(anchor => ({ ...anchor, ev: 222, rtp: 102 })) })),
+      setting1Correction: { schemaVersion: 1, sourceHallId: "mixed", targetRtp: 0.979,
+        payoutScale: 0.97, method: "payout-scale",
+        profiles: profiles.map(profile => ({ ...profile,
+          baseAnchors: profile.baseAnchors.map(anchor => ({ ...anchor, ev: -333, rtp: 99 })) })),
+      },
+    };
+    await writeMachine("lycoris", input, "kabuki");
+    await writeMachine("lycoris", combined, "mixed");
+    await writeCatalog("lycoris");
+    for (const [hall, expectedEv, expectedSamples] of [["kabuki", 100, "100"], ["mixed-raw", 222, "300"], ["mixed", -333, "300"]] as const) {
+      const display = await getHallDisplay("lycoris", hall);
+      expect(display?.kind).toBe("machine");
+      if (display?.kind !== "machine") throw new Error(`missing numeric ${hall}`);
+      expect(display.machine.profiles.map(profile => profile.key)).toEqual(profiles.map(profile => profile.key));
+      expect(display.machine.profiles[0].baseAnchors[0].ev).toBe(expectedEv);
+      expect(display.machine.meta.samples).toBe(expectedSamples);
+      expect(display.machine).not.toHaveProperty("counterEstimate");
+      expect(display.machine).not.toHaveProperty("provisionalSetting1");
+      expect(display.machine.calcSpec?.items.map(item => item.v).join(" ")).toContain("補正前の仮定");
+    }
+    expect(await getHallDisplay("lycoris", "shinjuku")).toBeUndefined();
+    expect((await getMachineHallSummaries("lycoris")).map(item => item.hallId)).toEqual(["kabuki", "mixed", "mixed-raw"]);
+  });
   it.each(["shinjuku", "kabuki"])("publishes newly observed unknown machines from a %s catalog without any numeric JSON", async hallId => {
     await writeCatalog("futuremachine", false, hallId, true);
     expect(await getMachineIds()).toEqual(["futuremachine"]);

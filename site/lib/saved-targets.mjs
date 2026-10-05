@@ -16,6 +16,17 @@ const ordinalFilterKeys = new Set(['next_ordinal', 'recorded_next_ordinal']);
 const numericFilterKeys = new Set(['next_ordinal', 'recorded_next_ordinal', 'prev_first_main_payout', 'prev_main_count', 'daily_single_count', 'daily_intermediate_failures', 'previous_same_first_type_run', 'sessions_since_single', 'through_since_chain']);
 const gameFilterKeys = new Set(['day_g', 'recent_net', 'recent_hits']);
 const recentFilterKeys = new Set(['recent_net', 'recent_hits']);
+const kaimonFilterKeys = new Set(['kaimon_count', 'kaimon_since_pay', 'kaimon_day_seen']);
+
+function kaimonFilter(key, item) {
+  if (!record(item) || !['all', 'range', 'missing'].includes(item.mode)) fail();
+  const lo = string(item.lo, 24, true), hi = string(item.hi, 24, true);
+  if (item.mode !== 'range' && (lo || hi)) fail();
+  if ([lo, hi].some((v, index) => v && (!Number.isFinite(Number(v)) || Math.abs(Number(v)) > 100000000 ||
+      key !== 'kaimon_since_pay' && (Number(v) < 0 || !Number.isSafeInteger(Number(v))) ||
+      key === 'kaimon_day_seen' && Number(v) > 1 + index)) || lo && hi && Number(lo) >= Number(hi)) fail();
+  return { mode: item.mode, lo, hi };
+}
 
 function gameFilter(key, item) {
   if (!record(item) || !['all', 'range', 'missing'].includes(item.mode)) fail();
@@ -65,6 +76,11 @@ function definition(value) {
   for (const key of Object.keys(value.filters).sort()) {
     const item = value.filters[key];
     if (record(item) && Object.hasOwn(item, 'windowG') && !recentFilterKeys.has(key)) fail();
+    if (kaimonFilterKeys.has(key)) {
+      if (value.machineId !== 'mcd43a818' || typeof value.profileKey !== 'string'
+          || !/^(?:joui|game_ceiling_joui|game_ceiling_after_nonrunthrough_joui)(?:_(?:4652|5050))?$/.test(value.profileKey)) fail();
+      filters[key] = kaimonFilter(key, item); continue;
+    }
     if (gameFilterKeys.has(key)) { filters[key] = gameFilter(key, item); continue; }
     if (!filterKeys.has(key)) { filters[key] = hypothesisFilter(key, item); continue; }
     if (!record(item) || !['all', 'range', 'missing'].includes(item.mode)) fail();
@@ -72,7 +88,7 @@ function definition(value) {
     if ([lo, hi].some(v => v && !Number.isFinite(Number(v))) || lo && hi && Number(lo) >= Number(hi)) fail();
     filters[key] = { mode: item.mode, lo, hi };
   }
-  return { schema: 'interval-target/v1', machineId: matching(value.machineId, /^[a-z0-9]{1,40}$/), hallId: 'shinjuku', profileKey: matching(value.profileKey, /^[a-z0-9_]{1,40}$/), startG, endG, filters, rate: value.rate, stopRule: 'evlive' };
+  return { schema: 'interval-target/v1', machineId: matching(value.machineId, /^[a-z0-9]{1,40}$/), hallId: 'shinjuku', profileKey: matching(value.profileKey, /^[a-z0-9_]{1,64}$/), startG, endG, filters, rate: value.rate, stopRule: 'evlive' };
 }
 
 /** Only aggregate values cross into the public feed or a rendered page. */
