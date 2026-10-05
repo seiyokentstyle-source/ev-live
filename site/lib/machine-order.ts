@@ -3,6 +3,7 @@ import type { MachineSummary } from "./ev/types";
 /** meta.samples は表示用に桁区切りの入った文字列（"4,807"）で来る。
  *  並べ替えに使うので数値へ戻す。読めない値は 0 として最後尾に送る。 */
 export function sampleCount(machine: MachineSummary): number {
+  if (machine.totalSamples !== undefined) return machine.totalSamples;
   const n = Number(String(machine.meta.samples).replace(/[^0-9]/g, ""));
   return Number.isFinite(n) ? n : 0;
 }

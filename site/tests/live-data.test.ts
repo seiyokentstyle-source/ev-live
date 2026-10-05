@@ -6,6 +6,7 @@ import { getHall } from "../lib/halls";
 import { getSavedTargetCatalog, getSavedTargetSnapshot } from "../lib/saved-target-catalog";
 import { buildLiveMachine, buildLiveCollection, getLiveIndex, getLiveMachine, liveIndexEntry } from "../lib/live-data";
 import { collectedFixture } from "./fixtures/collection-status";
+import { selectMachineListSummaries } from "../lib/machine-list-summary";
 import { GET as indexGET } from "../app/live-data/index.json/route";
 import { GET as machineGET, generateStaticParams } from "../app/live-data/[hall]/[id]/route";
 import type { PublishedTarget, SavedTargetCatalog } from "../lib/saved-targets.mjs";
@@ -41,6 +42,41 @@ beforeEach(() => {
 });
 
 describe("live data publication", () => {
+  it("keeps every hall's own samples in the live feed while the list sums physical halls once", async () => {
+    const samples = new Map([["shinjuku", "100"], ["kabuki", "40"], ["mixed", "140"], ["mixed-raw", "140"]]);
+    const machines = new Map([...samples].map(([hall, count]) => [hall,
+      validateMachine({ ...fixture, meta: { ...fixture.meta, samples: count } })]));
+    vi.mocked(getHallDisplays).mockImplementation(async hall => {
+      const machine = machines.get(hall);
+      return machine ? [{ kind: "machine", machine }] : [];
+    });
+    vi.mocked(getHallDisplay).mockImplementation(async (_id, hall) => {
+      const machine = machines.get(hall);
+      return machine ? { kind: "machine", machine } : undefined;
+    });
+    const index = await getLiveIndex();
+    expect(new Map(index.machines.map(entry => [entry.hallId, entry.summary.meta.samples]))).toEqual(samples);
+    expect(index.machines.every(entry => !("totalSamples" in entry.summary))).toBe(true);
+    const list = selectMachineListSummaries(index.machines);
+    expect(list).toHaveLength(1);
+    expect(list[0]).toMatchObject({ totalSamples: 140, summaryHallId: "shinjuku", meta: { samples: "100" } });
+    const detail = await getLiveMachine(fixture.id, "kabuki");
+    expect(detail?.machine.meta.samples).toBe("40");
+    expect(detail?.machine).not.toHaveProperty("totalSamples");
+    expect(index.machines.find(entry => entry.hallId === "kabuki")?.revision).toBe(detail?.revision);
+  });
+
+  it("publishes a pending hall as zero rather than adding its collected events to list totals", async () => {
+    const machine = validateMachine({ ...fixture, meta: { ...fixture.meta, samples: "25" } });
+    const collection = collectedFixture(fixture.id);
+    vi.mocked(getHallDisplays).mockImplementation(async hall => hall === "shinjuku"
+      ? [{ kind: "machine", machine }] : hall === "kabuki" ? [{ kind: "collection", collection }] : []);
+    const index = await getLiveIndex();
+    const pending = index.machines.find(entry => entry.hallId === "kabuki")!;
+    expect(pending.summary.meta).toMatchObject({ samples: "0", collection: { rows: 1200, events: 1100 } });
+    expect(selectMachineListSummaries(index.machines)[0]).toMatchObject({ totalSamples: 25, meta: { samples: "25" } });
+  });
+
   it("changes the revision for new samples and for recalculated rows on the same date", () => {
     const original = buildLiveMachine(fixture, "shinjuku", catalog());
     const increased = structuredClone(fixture);

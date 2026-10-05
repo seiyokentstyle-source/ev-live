@@ -7,7 +7,7 @@ import { selectMachineListSummaries } from "../lib/machine-list-summary";
 import { MachineCard } from "../components/machine-list/MachineCard";
 import { LiveMachineClient } from "../app/machines/[id]/MachineDetailClient";
 import { computeAnchors, defaultConditions, generateRows } from "../lib/ev/calc";
-import { getHall } from "../lib/halls";
+import { getHall, HALLS } from "../lib/halls";
 import { validateMachine } from "../lib/ev/validate";
 import numericFixture from "../app/preview/ev-table/machine.json";
 import { catalogFixture, collectedFixture } from "./fixtures/collection-status";
@@ -122,21 +122,69 @@ describe("multi-hall machine list", () => {
     expect(selectMachineListSummaries([
       { hallId: "unregistered", summary }, { hallId: "akihabara", summary }, { hallId: "shinjuku", summary },
       { hallId: "unregistered", summary: collectedFixture("unknownonly").summary },
-    ])).toEqual([{ ...summary, summaryHallId: "shinjuku" }]);
+    ])).toEqual([{ ...summary, summaryHallId: "shinjuku", totalSamples: 0 }]);
   });
-  it("includes non-default-only machines once and preserves the selected hall's counts", () => {
+  it("sums physical halls once while preserving each hall's original metadata and virtual-only cards", () => {
     const shinjuku = { ...collectedFixture("same").summary, meta: { samples: "123", source: "新宿" } };
     const kabuki = { ...collectedFixture("same").summary, meta: { samples: "456", source: "歌舞伎" } };
     const entries = [{ hallId: "kabuki", summary: kabuki }, { hallId: "mixed", summary: collectedFixture("mixedonly").summary },
-      { hallId: "shinjuku", summary: shinjuku }, { hallId: "kabuki", summary: collectedFixture("kabukionly").summary }];
+      { hallId: "shinjuku", summary: shinjuku }, { hallId: "kabuki", summary: collectedFixture("kabukionly").summary },
+      { hallId: "kabuki", summary: kabuki },
+      ...["mixed", "mixed-raw"].map(hallId => ({ hallId, summary: { ...shinjuku, meta: { samples: "579", source: "混合" } } }))];
+    const before = JSON.stringify(entries);
     const selected = selectMachineListSummaries(entries);
     expect(selected).toHaveLength(3);
-    expect(selected.find(item => item.id === "same")).toMatchObject({ summaryHallId: "shinjuku", meta: { samples: "123" } });
+    expect(selected.find(item => item.id === "same")).toMatchObject({ summaryHallId: "shinjuku", meta: { samples: "123" }, totalSamples: 579 });
+    expect(selected.find(item => item.id === "same")?.meta).toBe(shinjuku.meta);
+    expect(selected.find(item => item.id === "mixedonly")?.totalSamples).toBe(0);
+    expect(JSON.stringify(entries)).toBe(before);
     const only = selected.find(item => item.id === "kabukionly")!;
     const html = renderToString(createElement(MachineCard, { machine: only, isFavorite: false,
       match: { type: "none" }, onOpen: vi.fn(), onToggleFavorite: vi.fn() }));
     expect(html).toContain("歌舞伎のお店");
     expect(html).toContain("収集済み 1,200行");
-    expect(html).not.toContain("サンプル（主ボーナス");
+    expect(html).toContain("全店舗合計");
+    expect(html).toContain("サンプル（主ボーナス");
+    expect(only.totalSamples).toBe(0);
+  });
+  it("shows available samples from another hall even if the representative hall is pending", () => {
+    const pending = collectedFixture("same").summary;
+    const numeric = { ...pending, meta: { samples: "1,234", source: "歌舞伎" } };
+    const [selected] = selectMachineListSummaries([
+      { hallId: "shinjuku", summary: pending }, { hallId: "kabuki", summary: numeric },
+    ]);
+    expect(selected).toMatchObject({ totalSamples: 1234, summaryHallId: "shinjuku", meta: { samples: "0" } });
+    const html = renderToString(createElement(MachineCard, { machine: selected, isFavorite: false,
+      match: { type: "none" }, onOpen: vi.fn(), onToggleFavorite: vi.fn() }));
+    expect(html).toContain("全店舗合計");
+    expect(html).toContain("1,234");
+    expect(html).toContain("ゴジラのお店：");
+    expect(html).toContain("収集済み 1,200行");
+  });
+  it("includes newly registered physical halls and excludes aliases of virtual data sources", () => {
+    const template = getHall("kabuki")!;
+    const countBefore = HALLS.length;
+    HALLS.push({ ...template, id: "new-store", dataSubdir: "new-store" },
+      { ...template, id: "virtual-alias", dataSubdir: "mixed" },
+      { ...template, id: "raw-alias", dataSubdir: "mixed-raw" });
+    try {
+      const summary = { ...collectedFixture().summary, meta: { samples: "100", source: "fixture" } };
+      const [selected] = selectMachineListSummaries(["shinjuku", "new-store", "virtual-alias", "raw-alias"]
+        .map(hallId => ({ hallId, summary })));
+      expect(selected.totalSamples).toBe(200);
+    } finally {
+      HALLS.splice(countBefore);
+    }
+  });
+  it("does not add unavailable machines, observation rows or malformed sample counts", () => {
+    const summary = collectedFixture().summary;
+    const [selected] = selectMachineListSummaries([
+      { hallId: "shinjuku", summary },
+      { hallId: "kabuki", summary: { ...summary, available: false, meta: { samples: "999", source: "fixture" } } },
+    ]);
+    expect(selected.totalSamples).toBe(0);
+    for (const samples of ["", "-", "-5", "1.5", "1,2", "5 samples"]) {
+      expect(selectMachineListSummaries([{ hallId: "shinjuku", summary: { ...summary, meta: { samples, source: "fixture" } } }])[0].totalSamples).toBe(0);
+    }
   });
 });

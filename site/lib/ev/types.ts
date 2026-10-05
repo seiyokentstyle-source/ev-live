@@ -498,7 +498,13 @@ export type Machine = {
 // Machine contract above continues to require a date string.
 export type MachineSummary = Pick<Machine,
   "id" | "name" | "manufacturer" | "aliases" | "thumb" | "available" | "lastUpdated" | "meta"
-> & { releaseDate: string | null; /** The hall whose counts are shown on a combined machine-list card. */ summaryHallId?: string };
+> & {
+  releaseDate: string | null;
+  /** The representative hall whose metadata is retained on a machine-list card. */
+  summaryHallId?: string;
+  /** Machine-list only: EV samples summed once per physical source hall. */
+  totalSamples?: number;
+};
 
 export type PivotConfig = {
   axisKey: string;

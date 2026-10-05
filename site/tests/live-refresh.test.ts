@@ -3,6 +3,7 @@ import { buildLiveCollection, type LiveIndex, type LiveMachine, type LiveSnapsho
 import { collectedFixture } from "./fixtures/collection-status";
 import { validateMachine } from "../lib/ev/validate";
 import { LIVE_REFRESH_MS, startLiveMachineRefresh, startLiveRefresh } from "../lib/live-refresh";
+import { selectMachineListSummaries } from "../lib/machine-list-summary";
 import fixture from "../app/preview/ev-table/machine.json";
 
 const original: LiveMachine = {
@@ -163,6 +164,68 @@ describe("live machine snapshots", () => {
     await vi.advanceTimersByTimeAsync(0);
     expect(request).toHaveBeenCalledOnce();
     expect(onUpdate).not.toHaveBeenCalled();
+  });
+});
+
+describe("all-hall sample counts during list refresh", () => {
+  function allHallIndex(kabukiSamples: string, pending = false): LiveIndex {
+    const main = indexFor().machines[0];
+    const secondary = pending
+      ? indexFor(buildLiveCollection(collectedFixture(original.machine.id))).machines[0]
+      : { ...main, revision: "c".repeat(64) };
+    return { schema: "evlive-live-index/v1", machines: [
+      { ...main, summary: { ...main.summary, meta: { ...main.summary.meta, samples: "100" } } },
+      { ...secondary, hallId: "kabuki", summary: { ...secondary.summary,
+        meta: { ...secondary.summary.meta, samples: kabukiSamples } } },
+      ...["mixed", "mixed-raw"].map(hallId => ({ ...main, hallId,
+        summary: { ...main.summary, meta: { ...main.summary.meta, samples: "9,999" } } })),
+      { ...main, id: "other", summary: { ...main.summary, id: "other", name: "比較用機種",
+        meta: { ...main.summary.meta, samples: "175" } } },
+    ] };
+  }
+
+  it("refreshes totals and ordering when only a secondary hall changes, then removes its pending samples", async () => {
+    const initial = allHallIndex("50"), increased = allHallIndex("100"), pending = allHallIndex("0", true);
+    request.mockResolvedValueOnce(response(initial)).mockResolvedValueOnce(response(increased))
+      .mockResolvedValueOnce(response(pending)).mockRejectedValue(new Error("offline"));
+    let displayed = selectMachineListSummaries(initial.machines);
+    stop = startLiveRefresh(index => { displayed = selectMachineListSummaries(index.machines); });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(displayed.map(machine => machine.id)).toEqual(["other", original.machine.id]);
+    expect(displayed.find(machine => machine.id === original.machine.id)).toMatchObject({
+      totalSamples: 150, summaryHallId: "shinjuku", meta: { samples: "100" },
+    });
+
+    await vi.advanceTimersByTimeAsync(LIVE_REFRESH_MS);
+    expect(displayed.map(machine => machine.id)).toEqual([original.machine.id, "other"]);
+    expect(displayed[0]).toMatchObject({ totalSamples: 200, meta: { samples: "100" } });
+    // The default hall's revision did not change; the list still refreshes its aggregate.
+    expect(increased.machines[0].revision).toBe(initial.machines[0].revision);
+
+    await vi.advanceTimersByTimeAsync(LIVE_REFRESH_MS);
+    expect(displayed.map(machine => machine.id)).toEqual(["other", original.machine.id]);
+    expect(displayed[1]).toMatchObject({ totalSamples: 100, meta: { samples: "100" } });
+    expect(pending.machines[1].summary.meta.collection?.rows).toBe(1200);
+    expect(pending.machines[1].summary).not.toHaveProperty("totalSamples");
+    expect(pending.machines[1].summary.meta.samples).toBe("0");
+    const lastGood = displayed;
+    await vi.advanceTimersByTimeAsync(LIVE_REFRESH_MS);
+    expect(displayed).toBe(lastGood);
+    expect(request).toHaveBeenCalledTimes(4);
+    expect(request.mock.calls.every(([url]) => String(url).includes("/live-data/index.json?"))).toBe(true);
+  });
+
+  it("does not replace zero confirmed samples with collection rows or virtual-hall totals", async () => {
+    const index = allHallIndex("0", true);
+    const held = indexFor(buildLiveCollection(collectedFixture(original.machine.id))).machines[0];
+    index.machines[0] = held;
+    request.mockResolvedValue(response(index));
+    let displayed = selectMachineListSummaries(index.machines);
+    stop = startLiveRefresh(next => { displayed = selectMachineListSummaries(next.machines); });
+    await vi.advanceTimersByTimeAsync(0);
+    const machine = displayed.find(item => item.id === original.machine.id)!;
+    expect(machine).toMatchObject({ totalSamples: 0, meta: { samples: "0", collection: { rows: 1200 } } });
+    expect(machine.summaryHallId).toBe("shinjuku");
   });
 });
 

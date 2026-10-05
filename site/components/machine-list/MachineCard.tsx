@@ -20,6 +20,9 @@ type MachineCardProps = {
 
 export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavorite }: MachineCardProps) {
   const pendingStatus = collectionStatus(machine.meta);
+  const hallName = machine.summaryHallId ? getHall(machine.summaryHallId)?.name ?? machine.summaryHallId : null;
+  const hasTotal = machine.totalSamples !== undefined;
+  const samples = hasTotal ? machine.totalSamples!.toLocaleString("ja-JP") : machine.meta.samples;
   return (
     <article
       role="button"
@@ -67,14 +70,15 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
         {/* 2. サンプル件数。EV Live の信頼性はここに出るので、
               カード内でいちばん読ませる数値にする。ただし期待値と誤読されない大きさに留める。 */}
         <div className="mt-auto pt-3">
-          {machine.summaryHallId ? <p className="mono mb-1 text-[9px] text-muted">{getHall(machine.summaryHallId)?.name ?? machine.summaryHallId}</p> : null}
-          {pendingStatus ? <p className="mono text-[11px] leading-relaxed text-ink-soft">{pendingStatus}</p> : <>
+          {hasTotal || hallName ? <p className="mono mb-1 text-[9px] text-muted">{hasTotal ? "全店舗合計" : hallName}</p> : null}
+          {pendingStatus && !hasTotal ? <p className="mono text-[11px] leading-relaxed text-ink-soft">{pendingStatus}</p> : <>
           <p className="text-[9px] font-medium tracking-[0.16em] text-muted">サンプル（主ボーナス・AT突入）</p>
           <p className="mono mt-0.5 flex items-baseline gap-0.5 text-[17px] font-bold leading-none text-ink">
-            {machine.meta.samples}
+            {samples}
             <span className="text-[10px] font-normal text-ink-soft">回</span>
           </p>
           </>}
+          {hasTotal && pendingStatus ? <p className="mono mt-1 text-[10px] leading-relaxed text-ink-soft">{hallName ? `${hallName}：` : ""}{pendingStatus}</p> : null}
         </div>
 
         {/* 3. メーカー */}
