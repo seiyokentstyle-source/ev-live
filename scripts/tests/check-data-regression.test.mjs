@@ -295,9 +295,10 @@ test("collection metadata or its machine file cannot disappear with an allow sig
   r.write(machine("2026-09-07", "0"));
   assert.equal(r.check(), 1);
   assert.match(r.messages.join("\n"), /meta.collectionが失われています/);
-  // Acquiring an EV model must not silently discard the collection baseline.
+  // 期待値表になった（EVサンプル1件以上）ときだけ、保留ページ専用の件数欄は消えてよい
+  // （利用者指定 2026-10-08）。サンプル0のままの削除とファイル削除は従来どおり止める。
   r.write(machine());
-  assert.equal(r.check(), 1);
+  assert.equal(r.check(), 0);
   unlinkSync(join(r.dir, FILE));
   assert.equal(r.check(), 1);
   assert.match(r.messages.join("\n"), /収集履歴の減少・欠落/);

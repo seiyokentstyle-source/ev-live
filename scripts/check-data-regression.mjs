@@ -162,7 +162,9 @@ export function checkDataRegression({
       const beforeCollection = collectionOf(before, `${baseRef}:${file}`);
       const afterCollection = collectionOf(after, file);
       if (beforeCollection && !afterCollection) {
-        collectionLosses.push(`${name}: meta.collectionが失われています`);
+        // 保留から期待値表への切り替え（利用者指定 2026-10-08）。保存履歴の件数は保留ページ
+        // 専用の欄なので、EVサンプルが1件以上ある期待値表になったときだけ消えてよい。
+        if (!(hN !== null && hN > 0)) collectionLosses.push(`${name}: meta.collectionが失われています`);
       } else if (beforeCollection) {
         for (const key of COLLECTION_COUNTS) {
           if (afterCollection[key] < beforeCollection[key]) {
