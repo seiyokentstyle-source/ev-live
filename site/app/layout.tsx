@@ -5,7 +5,9 @@ export const metadata: Metadata = {
   title: "EV Live",
   description: "期待値ガチ勢向け 実戦EVチェッカー",
   // Metadata URLs do not automatically inherit Next.js's basePath.
-  manifest: `${process.env.PAGES_BASE_PATH || ""}/manifest.json`
+  manifest: `${process.env.PAGES_BASE_PATH || ""}/manifest.json`,
+  // サービスイン前は検索に出さない（利用者指定 2026-10-08）。公開時にこの行を外す。
+  robots: { index: false, follow: false }
 };
 
 export const viewport: Viewport = {
