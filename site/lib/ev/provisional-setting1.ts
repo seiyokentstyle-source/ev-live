@@ -1,4 +1,5 @@
 import type { ProvisionalSetting1 } from "./types";
+import bundledCatalog from "../../../data/provisional-setting1.json";
 
 export const PROVISIONAL_SETTING1_LABEL = "公表設定1を仮定した暫定・グラフ未補正の参考表";
 const record = (value: unknown): value is Record<string, any> => Boolean(value && typeof value === "object" && !Array.isArray(value));
@@ -86,15 +87,42 @@ export function validateProvisionalSetting1(value: unknown): ProvisionalSetting1
   return value as ProvisionalSetting1;
 }
 
-/** Explicitly opted-in models only. A valid model for one machine cannot be relabelled as another. */
-export function validateMachineProvisionalSetting1(value: unknown, machineId: string): ProvisionalSetting1 {
+export type ProvisionalSetting1Catalog = {
+  schemaVersion: 1;
+  machines: Array<{ id: string; name: string; reference: ProvisionalSetting1 }>;
+};
+
+/** The bundled, producer-owned catalog is reviewed input, never a live payload registry. */
+export function validateProvisionalSetting1Catalog(value: unknown): ProvisionalSetting1Catalog {
+  fields(value, ["schemaVersion", "machines"], "catalog");
+  check(value.schemaVersion === 1 && Array.isArray(value.machines), "catalog schema");
+  const ids = new Set<string>();
+  const names = new Set<string>();
+  for (const entry of value.machines) {
+    fields(entry, ["id", "name", "reference"], "catalog machine");
+    check(typeof entry.id === "string" && /^[a-z0-9]{1,40}$/.test(entry.id)
+      && nonempty(entry.name) && !ids.has(entry.id) && !names.has(entry.name), "catalog machine identity");
+    ids.add(entry.id);
+    names.add(entry.name);
+    validateProvisionalSetting1(entry.reference);
+  }
+  return value as ProvisionalSetting1Catalog;
+}
+
+const registered = new Map(validateProvisionalSetting1Catalog(bundledCatalog).machines
+  .map(entry => [entry.id, entry]));
+
+/** Matching only a series name, alias or ID is insufficient to attach another machine's model. */
+export function getRegisteredProvisionalSetting1(machineId: string, machineName: string): ProvisionalSetting1 | undefined {
+  const entry = registered.get(machineId);
+  return entry?.name === machineName ? entry.reference : undefined;
+}
+
+/** Replay live rows and compare their inputs with the bundled registration, not their own claims. */
+export function validateMachineProvisionalSetting1(value: unknown, machineId: string, machineName: string): ProvisionalSetting1 {
   const reference = validateProvisionalSetting1(value);
-  const registered: Record<string, ProvisionalSetting1["publicInputs"]> = {
-    lycoris: { firstHitMeanGames: 328.8, setting1Rtp: 0.979, medalsPerGame: 50 / 31.8, bonusNetMedalsPerGame: 8.4, nominalCeilingGames: 850 },
-    worlddai: { firstHitMeanGames: 306.5, setting1Rtp: 0.978, medalsPerGame: 50 / 30, bonusNetMedalsPerGame: 8, nominalCeilingGames: 999 },
-  };
-  const inputs = Object.hasOwn(registered, machineId) ? registered[machineId] : undefined;
+  const inputs = getRegisteredProvisionalSetting1(machineId, machineName)?.publicInputs;
   check(inputs && Object.entries(inputs).every(([key, expected]) =>
-    near(reference.publicInputs[key as keyof typeof inputs], expected, 1e-12)), "model is not registered for this machine");
+    reference.publicInputs[key as keyof typeof inputs] === expected), "model is not registered for this machine");
   return reference;
 }

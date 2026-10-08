@@ -18,6 +18,7 @@ function pendingMachine() {
   const machine = validateMachine(structuredClone(fixture));
   machine.id = "lycoris";
   const collection = collectedFixture(machine.id);
+  machine.name = collection.summary.name;
   machine.meta = collection.summary.meta;
   machine.profiles = machine.profiles.map(profile => ({ ...profile, dataPending: true, baseAnchors: [], zones: [], sessions: 0, pendingReason: collection.pendingReason }));
   machine.counterEstimate = estimateFixture();

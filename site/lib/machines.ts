@@ -13,6 +13,7 @@ import { readCollectionCatalog } from "./collection-status-catalog";
 import type { CollectedMachine } from "./collection-status-contract";
 import { selectMachineListSummaries } from "./machine-list-summary";
 import { inlineSourceAggregations, sourceAggregatesDir } from "./source-aggregations.mjs";
+import { getRegisteredProvisionalSetting1 } from "./ev/provisional-setting1";
 
 // Data lives at the repository root (data/machines), while the site builds from
 // site/. Resolve against the repo root so it works whether the cwd is site/
@@ -198,6 +199,30 @@ export function displaySummary(display: HallDisplay): MachineSummary {
   return display.kind === "machine" ? machineSummary(display.machine) : display.collection.summary;
 }
 
+function hasSavedHistory(summary: MachineSummary): boolean {
+  const collection = summary.meta.collection;
+  return Boolean(collection && collection.rows > 0 && collection.units > 0 && collection.days > 0);
+}
+
+/** Reference numbers never replace a usable EV/estimate, nor unlock a held numerical profile. */
+function withPendingReference(machine: Machine): Machine {
+  if (machine.counterEstimate || machine.provisionalSetting1 || machine.meta.samples !== "0"
+    || !hasSavedHistory(machine) || !machine.profiles.every(profile => profile.dataPending === true
+      && profile.baseAnchors.length === 0 && (profile.sessions === undefined || profile.sessions === 0))) return machine;
+  const reference = getRegisteredProvisionalSetting1(machine.id, machine.name);
+  return reference ? { ...machine, provisionalSetting1: reference } : machine;
+}
+
+/** Only an observation in this hall permits a catalog fallback. The catalog contains no hall data. */
+function collectionDisplay(collection: CollectedMachine, source?: Machine): HallDisplay {
+  const matched = source?.available && source.id === collection.summary.id && source.name === collection.summary.name ? source : undefined;
+  if (matched?.counterEstimate) return { kind: "collection", collection, counterEstimate: matched.counterEstimate };
+  const reference = hasSavedHistory(collection.summary)
+    ? matched?.provisionalSetting1 ?? getRegisteredProvisionalSetting1(collection.summary.id, collection.summary.name)
+    : undefined;
+  return { kind: "collection", collection, ...(reference ? { provisionalSetting1: reference } : {}) };
+}
+
 /** Numeric publications and their admission rules remain unchanged by observations. */
 export async function getHallDisplays(hallId: string): Promise<HallDisplay[]> {
   const hall = getHall(hallId);
@@ -205,13 +230,11 @@ export async function getHallDisplays(hallId: string): Promise<HallDisplay[]> {
   const [machines, observations] = await Promise.all([
     getAvailableMachines(hall.dataSubdir), readCollectionCatalog(path.dirname(machinesDir), hallId),
   ]);
-  const displays = new Map<string, HallDisplay>(machines.map(machine => [machine.id, { kind: "machine", machine }]));
+  const displays = new Map<string, HallDisplay>(machines.map(machine => [machine.id, { kind: "machine", machine: withPendingReference(machine) }]));
   for (const { forcePending, ...collection } of observations) {
     if (forcePending || !displays.has(collection.summary.id)) {
       const source = machines.find(machine => machine.id === collection.summary.id);
-      const { provisionalSetting1, counterEstimate } = source ?? {};
-      displays.set(collection.summary.id, { kind: "collection", collection,
-        ...(provisionalSetting1 ? { provisionalSetting1 } : {}), ...(counterEstimate ? { counterEstimate } : {}) });
+      displays.set(collection.summary.id, collectionDisplay(collection, source));
     }
   }
   return [...displays.values()].sort((a, b) => compareMachines(displaySummary(a), displaySummary(b)));
@@ -226,11 +249,9 @@ export async function getHallDisplay(id: string, hallId: string): Promise<HallDi
   const entry = observations.find(item => item.summary.id === id);
   if (entry && (entry.forcePending || !machine?.available)) {
     const { forcePending: _, ...collection } = entry;
-    return { kind: "collection", collection,
-      ...(machine?.available && machine.provisionalSetting1 ? { provisionalSetting1: machine.provisionalSetting1 } : {}),
-      ...(machine?.available && machine.counterEstimate ? { counterEstimate: machine.counterEstimate } : {}) };
+    return collectionDisplay(collection, machine);
   }
-  return machine?.available ? { kind: "machine", machine } : undefined;
+  return machine?.available ? { kind: "machine", machine: withPendingReference(machine) } : undefined;
 }
 
 export async function getMachineListSummaries(): Promise<MachineSummary[]> {

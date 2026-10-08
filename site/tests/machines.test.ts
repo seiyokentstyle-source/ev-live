@@ -6,9 +6,10 @@ import fixture from "../app/preview/ev-table/machine.json";
 import { onlyLowSetting, withoutLowSetting } from "../lib/ev/low-setting";
 import { validateMachine } from "../lib/ev/validate";
 import { normalizeSearchText } from "../lib/search/normalize";
-import { catalogFixture } from "./fixtures/collection-status";
+import { catalogFixture, collectedFixture } from "./fixtures/collection-status";
 import { referenceFixture } from "./fixtures/provisional-setting1";
 import { estimateFixture } from "./fixtures/counter-estimate";
+import { getRegisteredProvisionalSetting1 } from "../lib/ev/provisional-setting1";
 
 let root: string;
 let getMachine: typeof import("../lib/machines").getMachine;
@@ -22,12 +23,19 @@ let getMachineListSummaries: typeof import("../lib/machines").getMachineListSumm
 function machine(id = "target") {
   const data = structuredClone(fixture);
   data.id = id;
+  if (id === "lycoris" || id === "worlddai") data.name = collectedFixture(id).summary.name;
   data.aliases = ["nickname"];
   data.profiles = [
     { ...data.profiles[0], key: "measured", label: "実測" },
     { ...data.profiles[0], key: "estimated", label: "設定1想定" }
   ];
   return data;
+}
+
+function pendingMachine(id = "worlddai") {
+  const input = machine(id);
+  return validateMachine({ ...input, meta: collectedFixture(id).summary.meta,
+    profiles: input.profiles.slice(0, 1).map(({ ev: _ev, ...profile }) => ({ ...profile, baseAnchors: [], zones: [], dataPending: true, sessions: 0 })) });
 }
 
 function correctionMachine(id = "target", lastUpdated = "2026-09-07", ev = -2400) {
@@ -81,6 +89,86 @@ async function writeCatalog(id = "held", forcePending = false, hallId = "kabuki"
 }
 
 describe("collection fallback selection", () => {
+  it("adds a registered reference to saved pending machines without modifying their stored JSON or counts", async () => {
+    const input = pendingMachine();
+    await writeMachine(input.id, input, "kabuki");
+    const file = path.join(root, "data", "machines", "kabuki", `${input.id}.json`);
+    const before = await fs.readFile(file, "utf8");
+    const display = await getHallDisplay(input.id, "kabuki");
+    expect(display).toEqual({ kind: "machine", machine: { ...input,
+      provisionalSetting1: getRegisteredProvisionalSetting1(input.id, input.name) } });
+    expect(await getHallDisplays("kabuki")).toEqual([display]);
+    expect(await getMachine(input.id, "kabuki")).toEqual(input);
+    expect(await fs.readFile(file, "utf8")).toBe(before);
+    expect(await getHallDisplay(input.id, "shinjuku")).toBeUndefined();
+    expect(await getHallDisplay(input.id, "akihabara")).toBeUndefined();
+  });
+
+  it.each(["shinjuku", "kabuki"])("adds a catalog-only reference in its observed %s hall and keeps the live detail consistent", async hall => {
+    await writeCatalog("worlddai", false, hall);
+    const display = await getHallDisplay("worlddai", hall);
+    expect(display).toMatchObject({ kind: "collection", collection: { summary: { id: "worlddai", name: "ワールドダイスター",
+      meta: { samples: "0", collection: collectedFixture("worlddai").summary.meta.collection } } },
+      provisionalSetting1: getRegisteredProvisionalSetting1("worlddai", "ワールドダイスター") });
+    expect(await getHallDisplays(hall)).toEqual([display]);
+    const { getLiveMachine, getLiveIndex } = await import("../lib/live-data");
+    const live = await getLiveMachine("worlddai", hall);
+    expect(live).toMatchObject({ schema: "evlive-live-collection/v1",
+      machine: display?.kind === "collection" ? display.collection.summary : undefined,
+      provisionalSetting1: getRegisteredProvisionalSetting1("worlddai", "ワールドダイスター") });
+    expect(live?.machine).not.toHaveProperty("profiles");
+    await fs.mkdir(path.join(root, "data", "saved-targets"), { recursive: true });
+    await fs.writeFile(path.join(root, "data", "saved-targets", "targets.json"), JSON.stringify({
+      schema: "evlive-saved-targets/v1", updatedAt: "2026-10-09T00:00:00.000Z", targets: [],
+    }));
+    expect((await getLiveIndex()).machines.find(entry => entry.hallId === hall)?.revision).toBe(live?.revision);
+    expect(await getHallDisplay("worlddai", hall === "shinjuku" ? "kabuki" : "shinjuku")).toBeUndefined();
+    expect(await getHallDisplay("worlddai", "mixed")).toBeUndefined();
+  });
+
+  it("keeps measured tables and estimates ahead of a public reference while respecting forcePending", async () => {
+    const measured = machine("worlddai");
+    await writeMachine(measured.id, measured, "kabuki");
+    await writeCatalog(measured.id);
+    let display = await getHallDisplay(measured.id, "kabuki");
+    expect(display?.kind === "machine" && display.machine).not.toHaveProperty("provisionalSetting1");
+    await writeCatalog(measured.id, true);
+    display = await getHallDisplay(measured.id, "kabuki");
+    expect(display).toMatchObject({ kind: "collection", provisionalSetting1: getRegisteredProvisionalSetting1(measured.id, measured.name) });
+    expect(display).not.toHaveProperty("machine");
+    expect(await getHallDisplays("kabuki")).toEqual([display]);
+    const estimated = { ...pendingMachine("lycoris"), counterEstimate: estimateFixture() };
+    await writeMachine(estimated.id, estimated);
+    expect(await getHallDisplay(estimated.id, "shinjuku")).toMatchObject({ kind: "machine", machine: estimated });
+    await writeCatalog(estimated.id, true, "shinjuku");
+    display = await getHallDisplay(estimated.id, "shinjuku");
+    expect(display).toMatchObject({ kind: "collection", counterEstimate: estimated.counterEstimate });
+    expect(display).not.toHaveProperty("provisionalSetting1");
+  });
+
+  it("does not attach a reference to an unregistered identity, an empty collection or a non-pending profile", async () => {
+    const base = pendingMachine();
+    for (const input of [
+      { ...base, name: "ワールドダイスターII" },
+      { ...base, id: "unknown" },
+      { ...base, meta: { ...base.meta, samples: "1" } },
+      { ...base, meta: { samples: "0", source: "未取得" } },
+      { ...base, meta: { ...base.meta, collection: { ...base.meta.collection!, rows: 0, events: 0 } } },
+      { ...base, profiles: base.profiles.map(profile => ({ ...profile, dataPending: false,
+        baseAnchors: [{ g: 0, ev: -100, rtp: 99 }, { g: 10, ev: 100, rtp: 101 }] })) },
+    ]) {
+      await writeMachine(input.id, input, "kabuki");
+      const display = await getHallDisplay(input.id, "kabuki");
+      expect(display?.kind === "machine" && display.machine).not.toHaveProperty("provisionalSetting1");
+    }
+    await writeCatalog("worlddai", true);
+    const file = path.join(root, "data", "halls", "kabuki", "collection-status.json");
+    const catalog = catalogFixture("worlddai", true);
+    Object.assign(catalog.machines[0].collection, { rows: 0, events: 0 });
+    await fs.writeFile(file, JSON.stringify(catalog));
+    expect(await getHallDisplay("worlddai", "kabuki")).not.toHaveProperty("provisionalSetting1");
+  });
+
   it("keeps a separately validated reference when an explicit hold overrides the machine, without copying it to another hall", async () => {
     const input = machine("lycoris");
     input.meta.samples = "0";

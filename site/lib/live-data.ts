@@ -38,7 +38,7 @@ export type LiveSnapshot = LiveMachine | LiveCollection;
 export function buildLiveCollection(value: CollectedMachine, reference?: ProvisionalSetting1, estimate?: CounterEstimate, hallId?: string): LiveCollection {
   const { summary: machine, ...pending } = validateCollectedMachine(value);
   const attachment = {
-    ...(reference === undefined ? {} : { provisionalSetting1: validateMachineProvisionalSetting1(reference, machine.id) }),
+    ...(reference === undefined ? {} : { provisionalSetting1: validateMachineProvisionalSetting1(reference, machine.id, machine.name) }),
     ...(estimate === undefined ? {} : { counterEstimate: validateMachineCounterEstimate(estimate, machine.id, hallId) }),
   };
   assertSingleAttachment(attachment);

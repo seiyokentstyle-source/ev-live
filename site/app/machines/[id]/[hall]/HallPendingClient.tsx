@@ -19,7 +19,7 @@ type HallPendingClientProps = {
 };
 
 /** 未集計・算出保留の店舗のページ。他店の実測値は転載しない。
- *  公表入力だけの暫定参考表は、同じ店舗の検証済み機種から独立して渡された場合に限る。 */
+ *  公表入力だけの暫定参考表は、この店舗の収集が確認でき、機種IDと正式名が登録に一致する場合に限る。 */
 export function HallPendingClient({ machine, hall, collection, provisionalSetting1, counterEstimate }: HallPendingClientProps) {
   const counts = collection?.summary.meta.collection;
   return (

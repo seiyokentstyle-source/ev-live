@@ -2,7 +2,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import fixture from "../app/preview/ev-table/machine.json";
 import { validateMachine } from "../lib/ev/validate";
-import { validateProvisionalSetting1, validateMachineProvisionalSetting1 } from "../lib/ev/provisional-setting1";
+import { getRegisteredProvisionalSetting1, validateProvisionalSetting1, validateMachineProvisionalSetting1, validateProvisionalSetting1Catalog } from "../lib/ev/provisional-setting1";
+import referenceCatalog from "../../data/provisional-setting1.json";
 import { machineSummary } from "../lib/ev/summary";
 import { buildLiveCollection, liveIndexEntry } from "../lib/live-data";
 import { fetchLiveMachine } from "../lib/live-refresh";
@@ -18,6 +19,7 @@ function pendingMachine() {
   const machine = validateMachine(structuredClone(fixture));
   machine.id = "lycoris";
   const collection = collectedFixture(machine.id);
+  machine.name = collection.summary.name;
   machine.meta = collection.summary.meta;
   machine.profiles = machine.profiles.map(profile => ({ ...profile, dataPending: true, baseAnchors: [], zones: [], sessions: 0, pendingReason: collection.pendingReason }));
   machine.provisionalSetting1 = referenceFixture("lycoris");
@@ -85,10 +87,27 @@ describe("public-spec provisional reference", () => {
   });
 
   it("rejects a model attached to another or an unregistered machine", () => {
-    expect(() => validateMachineProvisionalSetting1(referenceFixture("lycoris"), "worlddai")).toThrow("not registered");
-    expect(() => validateMachineProvisionalSetting1(referenceFixture("lycoris"), "saoii")).toThrow("not registered");
-    expect(() => validateMachineProvisionalSetting1(referenceFixture("lycoris"), "constructor")).toThrow("not registered");
-    expect(validateMachineProvisionalSetting1(referenceFixture("worlddai"), "worlddai").rates[1].anchors[0].rtp).toBe(97.8);
+    expect(() => validateMachineProvisionalSetting1(referenceFixture("lycoris"), "worlddai", "ワールドダイスター")).toThrow("not registered");
+    expect(() => validateMachineProvisionalSetting1(referenceFixture("lycoris"), "saoii", "Lリコリス・リコイル")).toThrow("not registered");
+    expect(() => validateMachineProvisionalSetting1(referenceFixture("lycoris"), "constructor", "Lリコリス・リコイル")).toThrow("not registered");
+    expect(() => validateMachineProvisionalSetting1(referenceFixture("lycoris"), "lycoris", "リコリスの別機種")).toThrow("not registered");
+    expect(() => validateMachineProvisionalSetting1(referenceFixture(), "lycoris", "Lリコリス・リコイル")).toThrow("not registered");
+    expect(validateMachineProvisionalSetting1(referenceFixture("worlddai"), "worlddai", "ワールドダイスター").rates[1].anchors[0].rtp).toBe(97.8);
+  });
+
+  it("registers every reviewed catalog entry without admitting duplicate, malformed or numerically corrupt registrations", () => {
+    for (const entry of validateProvisionalSetting1Catalog(referenceCatalog).machines) {
+      expect(getRegisteredProvisionalSetting1(entry.id, entry.name)).toEqual(entry.reference);
+      expect(validateMachineProvisionalSetting1(entry.reference, entry.id, entry.name)).toEqual(entry.reference);
+      expect(getRegisteredProvisionalSetting1(entry.id, `${entry.name}II`)).toBeUndefined();
+    }
+    const duplicate = structuredClone(referenceCatalog);
+    duplicate.machines.push(duplicate.machines[0]);
+    expect(() => validateProvisionalSetting1Catalog(duplicate)).toThrow("identity");
+    const corrupt = structuredClone(referenceCatalog);
+    corrupt.machines[0].reference.rates[0].anchors[0].ev += 1;
+    expect(() => validateProvisionalSetting1Catalog(corrupt)).toThrow("model replay");
+    expect(() => validateProvisionalSetting1Catalog({ ...referenceCatalog, observations: [] })).toThrow("catalog fields");
   });
 
   it("shows the reference next to preserved pending status and reason while suppressing old attachments", () => {
@@ -124,6 +143,10 @@ describe("public-spec provisional reference", () => {
       corrupt.provisionalSetting1!.rates[0].anchors[0].ev += 100;
       fetchMock.mockResolvedValue({ ok: true, json: async () => corrupt } as Response);
       await expect(fetchLiveMachine(entry, new AbortController().signal)).rejects.toThrow("model replay");
+      const renamed = structuredClone(payload);
+      renamed.machine.name = "別機種";
+      fetchMock.mockResolvedValue({ ok: true, json: async () => renamed } as Response);
+      await expect(fetchLiveMachine(entry, new AbortController().signal)).rejects.toThrow("not registered");
     } finally { fetchMock.mockRestore(); }
   });
 });

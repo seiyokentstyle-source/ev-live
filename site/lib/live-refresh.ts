@@ -23,7 +23,7 @@ export async function fetchLiveMachine(
     const { summary: machine, ...pending } = validateCollectedMachine({ ...data.pending, summary: data.machine });
     const attachment = {
       ...(data.provisionalSetting1 === undefined ? {} : {
-        provisionalSetting1: validateMachineProvisionalSetting1(data.provisionalSetting1, machine.id) }),
+        provisionalSetting1: validateMachineProvisionalSetting1(data.provisionalSetting1, machine.id, machine.name) }),
       ...(data.counterEstimate === undefined ? {} : {
         counterEstimate: validateMachineCounterEstimate(data.counterEstimate, machine.id, item.hallId) }),
     };

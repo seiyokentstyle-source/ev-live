@@ -80,7 +80,7 @@ export function validateMachine(data: unknown): Machine {
   }
   assert(Array.isArray(machine.profiles) && machine.profiles.length > 0, "profiles are required");
   if (machine.provisionalSetting1 !== undefined) {
-    validateMachineProvisionalSetting1(machine.provisionalSetting1, machine.id);
+    validateMachineProvisionalSetting1(machine.provisionalSetting1, machine.id, machine.name);
     assert(machine.meta?.samples === "0" && machine.profiles.every(profile => profile.dataPending === true
       && profile.baseAnchors.length === 0 && (profile.sessions === undefined || profile.sessions === 0)),
     "provisionalSetting1 must preserve pending profiles and zero EV samples");

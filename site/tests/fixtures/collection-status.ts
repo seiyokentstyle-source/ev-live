@@ -1,8 +1,9 @@
 import type { CollectedMachine } from "../../lib/collection-status-contract";
 
 export function collectedFixture(id = "held"): CollectedMachine {
+  const name = id === "lycoris" ? "Lリコリス・リコイル" : id === "worlddai" ? "ワールドダイスター" : "保留機種";
   return {
-    summary: { id, name: "保留機種", manufacturer: "メーカー", aliases: ["保留機種", "held"],
+    summary: { id, name, manufacturer: "メーカー", aliases: [name, "held"],
       releaseDate: "2026-01-01", lastUpdated: "2026-09-26", available: true, thumb: null,
       meta: { samples: "0", source: "保存済み履歴／期待値算出保留",
         collection: { rows: 1200, events: 1100, units: 2, days: 3, firstDate: "2026-09-23", lastDate: "2026-09-26" } } },
