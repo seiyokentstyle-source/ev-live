@@ -43,11 +43,13 @@ export function aggregateFilterTable(data, axes, selection, fallbackStart, heldM
     if (n <= 0) continue;
     const total = byGame.get(row[0]) ?? { n: 0, normal: 0, payout: 0, held: 0, medals: 0 };
     total.n += n; total.normal += normal; total.payout += payout;
-    const medals = normalInvestmentMedals(row[0], normal / n, data.medalsPerGame, schedule);
-    if (schedule) total.medals += n * medals;
-    // v2 rows share one exact normal-game investment. Cap within each row
-    // before merging; capping the merged mean would overstate the benefit.
-    if (heldMedals > 0) total.held += n * Math.min(heldMedals, medals);
+    if (schedule || heldMedals > 0) {
+      const medals = normalInvestmentMedals(row[0], normal / n, data.medalsPerGame, schedule);
+      if (schedule) total.medals += n * medals;
+      // v2 rows share one exact normal-game investment. Cap within each row
+      // before merging; capping the merged mean would overstate the benefit.
+      if (heldMedals > 0) total.held += n * Math.min(heldMedals, medals);
+    }
     byGame.set(row[0], total);
   }
   const baseAnchors = [...byGame.entries()].filter(([, total]) => {
