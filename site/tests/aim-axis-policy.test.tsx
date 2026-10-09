@@ -68,6 +68,49 @@ describe("short-ceiling runthrough aim replacement", () => {
   }
   const keys = (values: Profile[]) => groupProfiles(values).groups.map(group => group.key);
 
+  function bonusSplitProfiles(): Profile[] {
+    return splitProfiles().filter(value => !value.key.includes("_joui_")).map(value => {
+      if (/^game_ceiling_(4652|5050)$/.test(value.key)) return { ...value, aimKind: "bonus" };
+      if (value.aimKind !== "at_runthrough") return value;
+      return { ...value, ceiling: "短縮天井428G", gRange: { ...value.gRange, end: 420 },
+        baseAnchors: value.baseAnchors.map((anchor, i) => i === value.baseAnchors.length - 1 ? { ...anchor, g: 420 } : anchor) };
+    });
+  }
+
+  it("replaces a bonus main table only with its complete rate-matched aftermath split", () => {
+    const values = [...bonusSplitProfiles(), ...["4652", "5050"].map(rate => profile(undefined, `reset_${rate}`))];
+    const before = structuredClone(values);
+    const result = groupProfiles(values, "m020bda5f");
+    expect(result.groups.map(group => group.key)).toEqual([
+      "game_ceiling_after_nonrunthrough", "game_ceiling_after_runthrough", "reset"
+    ]);
+    const short = result.groups.find(group => group.key === "game_ceiling_after_runthrough")!;
+    expect(short.ceiling).toBe("短縮天井428G");
+    for (const rate of ["4652", "5050"]) {
+      expect(short.variants[rate]).toBe(values.find(value => value.key === `game_ceiling_after_runthrough_${rate}`));
+      expect(short.variants[rate].baseAnchors.every(anchor => anchor.g <= 428)).toBe(true);
+    }
+    expect(values).toEqual(before);
+  });
+
+  it.each(["unknown-session", "missing-rate", "pending-split"])(
+    "preserves a bonus main table when the aftermath split has %s", incomplete => {
+      let values = bonusSplitProfiles();
+      const after = values.find(value => value.key === "game_ceiling_after_runthrough_5050")!;
+      if (incomplete === "unknown-session") after.sessions! -= 1;
+      else if (incomplete === "missing-rate") values = values.filter(value => value !== after);
+      else after.dataPending = true;
+      expect(keys(values)).toContain("game_ceiling");
+    }
+  );
+
+  it("keeps other explicit categories and the separate bonus upper table unchanged", () => {
+    const values = splitProfiles().map(value => /^game_ceiling_(4652|5050)$/.test(value.key)
+      ? { ...value, aimKind: "cz" as const }
+      : /^game_ceiling_joui_(4652|5050)$/.test(value.key) ? { ...value, aimKind: "bonus" as const } : value);
+    expect(keys(values)).toEqual(expect.arrayContaining(["game_ceiling", "game_ceiling_joui"]));
+  });
+
   it("replaces complete rate pairs with disjoint aims and retains each generated ceiling and data", () => {
     const values = splitProfiles();
     const before = structuredClone(values);

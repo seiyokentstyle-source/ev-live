@@ -239,7 +239,9 @@ function parseProfile(profile: Profile): { baseKey: string; baseLabel: string; r
 
 /** 同じ母集団を分けた狙い方が揃った場合だけ、重複する旧通常表を外す。 */
 function replacedByRunthroughGroups(group: ProfileGroup, groups: Map<string, ProfileGroup>): boolean {
-  if (group.aimKind) return false;
+  // ボーナス間の主表も、前回状態で完全に分割できれば短縮天井の表へ分ける。
+  // CZ間など、別の分類が明示された表は置き換えない。
+  if (group.aimKind && !(group.key === "game_ceiling" && group.aimKind === "bonus")) return false;
   const replacements: Array<[string, AimKind]> = group.key === "game_ceiling"
     ? [["game_ceiling_after_nonrunthrough", "at_non_runthrough"],
        ["game_ceiling_after_runthrough", "at_runthrough"]]

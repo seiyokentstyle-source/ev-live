@@ -49,6 +49,7 @@ export function ConditionsBar({
   const range = dataRange(machine.meta.source);
   const calcSpec = machine.calcSpec;
   const pendingStatus = collectionStatus(machine.meta);
+  const selectedCeilingText = ceilingText?.trim();
 
   const rows: Row[] = [];
   if (pendingStatus) {
@@ -62,8 +63,9 @@ export function ConditionsBar({
     // それ以外の条件は生成側の文字列を使う。
     if (rateLabel) rows.push({ k: "レート（表示中）", v: rateLabel });
     if (czLabel) rows.push({ k: `道中${czTerm ?? "CZ"}（表示中）`, v: `${czLabel} の状態から次のボーナスまで` });
-    if (ceilingText) rows.push({ k: "天井（表示中のタブ）", v: ceilingText });
-    rows.push(...visibleCalcSpecItems(calcSpec.items).filter(item => item.k !== "機械割" && item.k !== "換算機械割"));
+    if (selectedCeilingText) rows.push({ k: "天井（表示中のタブ）", v: selectedCeilingText });
+    rows.push(...visibleCalcSpecItems(calcSpec.items).filter(item => item.k !== "機械割" && item.k !== "換算機械割"
+      && !(selectedCeilingText && item.k === "期待値表の実G上限")));
     rows.push({ k: "機械割・換算機械割", v: rtpExplanation(machine.economics.gamesPerHour, ev?.bet || 3) });
     rows.push({ k: "時給換算", v: `${machine.economics.gamesPerHour}G/時で消化する前提` });
   } else if (mode === "ev" && ev) {
@@ -72,7 +74,7 @@ export function ConditionsBar({
     rows.push({ k: "賭け枚数", v: `${ev.bet ?? 3}枚掛け` });
     rows.push({ k: "通常時の使用枚数", v: `${ev.use}枚/G（ベース${(50 / ev.use).toFixed(1)}G/50枚）` });
     if (ev.junzou) rows.push({ k: "AT純増", v: `${ev.junzou}枚/G（AT中Gは総獲得÷純増で推定）` });
-    rows.push({ k: "天井", v: ceilingText || `${ev.ceiling}G` });
+    rows.push({ k: "天井", v: selectedCeilingText || `${ev.ceiling}G` });
     if (ev.preg) rows.push({ k: "前兆", v: `${ev.preg}G（打ち始めから自力当選しない前提）` });
     if (czLabel) rows.push({ k: `道中${czTerm ?? "CZ"}`, v: `${czLabel} の状態から次のボーナスまで` });
     rows.push({ k: "時給換算", v: `${machine.economics.gamesPerHour}G/時` });
