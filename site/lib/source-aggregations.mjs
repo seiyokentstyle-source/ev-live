@@ -15,14 +15,13 @@ export function sourceAggregatesDir(machinesDir) {
  */
 export function inlineSourceAggregations(machine, aggregatesDir) {
   if (!machine || typeof machine !== 'object' || !Array.isArray(machine.profiles)) return machine;
-  const inlineProfile = (profile) => {
-    const data = profile?.evFilters?.aggregation;
-    if (!data || data.rowsAsset === undefined) return profile;
+  const inline = (data, profileKey) => {
+    if (!data || data.rowsAsset === undefined) return data;
     const { rowsAsset, ...parameters } = data;
     const sha256 = rowsAsset?.sha256, rowCount = rowsAsset?.rowCount;
     if (typeof sha256 !== 'string' || !/^[a-f0-9]{64}$/.test(sha256) ||
         !Number.isSafeInteger(rowCount) || rowCount < 0) {
-      throw new Error(`Invalid source aggregate reference in profile ${profile.key}`);
+      throw new Error(`Invalid source aggregate reference in profile ${profileKey}`);
     }
     let body;
     try {
@@ -43,7 +42,15 @@ export function inlineSourceAggregations(machine, aggregatesDir) {
     } else {
       throw new Error(`Source aggregate ${sha256} has an invalid payload`);
     }
-    return { ...profile, evFilters: { ...profile.evFilters, aggregation: { ...parameters, ...rows } } };
+    return { ...parameters, ...rows };
+  };
+  const inlineProfile = (profile) => {
+    const filters = profile?.evFilters;
+    if (!filters) return profile;
+    return { ...profile, evFilters: { ...filters,
+      ...(filters.aggregation ? { aggregation: inline(filters.aggregation, profile.key) } : {}),
+      ...(filters.tableAggregations ? { tableAggregations: Object.fromEntries(
+        Object.entries(filters.tableAggregations).map(([key, data]) => [key, inline(data, `${profile.key}/${key}`)])) } : {}) } };
   };
   return { ...machine,
     profiles: machine.profiles.map(inlineProfile),

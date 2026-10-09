@@ -239,8 +239,11 @@ describe("published table continuity when holdings change", () => {
       for (const g of [0, 10, 20]) rows.push([g, index, 100, (400.4 - g) * 100, 80_000]);
     }
     const aggregate: DecodedFilterAggregation = { ...data, axisKeys: ["h"], rows };
+    const tableAggregations = Object.fromEntries(heavenAxes[0].options.map((option, index) => [
+      `h${option.value}`, { ...data, axisKeys: [], rows: rows.filter(row => row[1] === index).map(row => row.filter((_, i) => i !== 1)) },
+    ]));
     const profile: Profile = { ...source, key: "heaven_4652",
-      evFilters: { axes: heavenAxes, tables, aggregation: aggregate } };
+      evFilters: { axes: heavenAxes, tables, aggregation: aggregate, tableAggregations } };
     const original = structuredClone(profile);
     for (const option of heavenAxes[0].options) {
       const selection = { h: option.value }, originalTable = tables[`h${option.value}`];

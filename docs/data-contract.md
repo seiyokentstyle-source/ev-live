@@ -326,6 +326,11 @@ guardはこの旧出力だけを読み取り時に互換比較する。
 `evFilters.aggregation` があれば従来の `tables` より優先する。
 ただし `heaven_` の固定帯は既存の `tables[key]` を保持し、各軸を単一選択とする。
 他の狙い方から複数値を引き継いだ軸は不問に戻し、複数値指定の合算で代用しない。
+`heaven_` の持ちメダル調整には、帯ごとの任意マップ `evFilters.tableAggregations` を使う。
+キーは既存の `tables` と対応し、各値はv2・`axisKeys: []` の独立集計とする。
+行は `[g, n, sumNormalGames, sumPayoutMedals]` で、その帯に採用された件数と収支を再現する。
+不問用の `aggregation` から帯を切り出して代用せず、専用集計がなければ再集計待ちにする。
+0枚では元の固定表を使う。帯別集計も以下と同じ圧縮・asset分離・検証経路を通す。
 形式は `{ schema: "evlive-filter-aggregates/v1" | "evlive-filter-aggregates/v2", axisKeys, rows, costPerGame,
 exchange, medalsPerGame, junzou, bet, investmentMinimum, minPlay?, roundingEpsilon }`。
 `axisKeys` は `axes` と同じキー・順序で、

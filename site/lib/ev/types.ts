@@ -152,6 +152,8 @@ export type EvFilters = {
   selectionPolicy?: Record<string, unknown>;
   /** 完全一致条件の合計から再集計する新形式。tables より優先。 */
   aggregation?: FilterAggregation;
+  /** heaven_の既存帯ごとの独立した持ちメダル分布。キーはtablesと対応し、各集計の軸は空。 */
+  tableAggregations?: Record<string, FilterAggregation>;
   /** 末尾候補. */
   tails?: string[];
   /** ○のつく日候補. */

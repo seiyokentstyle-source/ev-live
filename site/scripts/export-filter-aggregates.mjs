@@ -40,7 +40,8 @@ export async function exportFilterAggregates(sourceDir, outputDir, halls) {
         delete machine.setting1Correction;
       }
       const profiles = [...machine.profiles, ...(machine.setting1Correction?.profiles ?? [])];
-      if (profiles.some(profile => profile.evFilters?.aggregation?.rowsAsset)) {
+      if (profiles.some(profile => profile.evFilters?.aggregation?.rowsAsset ||
+          Object.values(profile.evFilters?.tableAggregations ?? {}).some(data => data.rowsAsset))) {
         throw new Error(`Source aggregates must contain their row payload: ${entry.name}`);
       }
       const assets = new Map();

@@ -1,4 +1,4 @@
-import type { AimKind, BaseAnchor, DecodedFilterAggregation, EvFilterTable, FilterAxis, Profile } from "./types";
+import type { AimKind, BaseAnchor, DecodedFilterAggregation, EvFilterTable, FilterAggregation, FilterAxis, Profile } from "./types";
 import { aggregateFilterTable, type AggregateFilterTable } from "./filter-aggregation";
 
 // Machine JSON ships one profile per (狙い方 × レート) combination. Rate variants
@@ -387,6 +387,17 @@ export function applyHeldMedalTableEV<T extends { baseAnchors: BaseAnchor[] }>(
   })) };
 }
 
+/** Fixed heaven bands have independent eligibility; never borrow the unrestricted distribution. */
+export function selectedFilterAggregation(profile: Profile, axes: FilterAxis[], selection: FilterSelection): FilterAggregation | undefined {
+  const key = filterSelectionKey(axes, selection);
+  if (key === null) return undefined;
+  if (profile.key.startsWith("heaven_") && key) {
+    if (axes.some(axis => new Set(splitFilterValue(selection[axis.key])).size > 1)) return undefined;
+    return profile.evFilters?.tableAggregations?.[key];
+  }
+  return profile.evFilters?.aggregation;
+}
+
 export function selectedFilterTable(profile: Profile, axes: FilterAxis[], selection: FilterSelection,
   decoded?: DecodedFilterAggregation, heldMedals = 0): EvFilterTable | AggregateFilterTable | undefined {
   // These historical bands have separate published tables; never silently
@@ -396,16 +407,19 @@ export function selectedFilterTable(profile: Profile, axes: FilterAxis[], select
   }
   const key = filterSelectionKey(axes, selection);
   if (key === null || (!key && heldMedals === 0)) return undefined;
-  const aggregation = profile.evFilters?.aggregation;
+  const independentHeavenBand = profile.key.startsWith("heaven_") && Boolean(key);
+  const originalHeavenTable = independentHeavenBand ? profile.evFilters?.tables[key] : undefined;
+  if (independentHeavenBand && heldMedals === 0) return originalHeavenTable;
+  const aggregation = selectedFilterAggregation(profile, axes, selection);
+  if (independentHeavenBand && (!originalHeavenTable || !aggregation)) return undefined;
   if (heldMedals > 0 && aggregation?.schema !== "evlive-filter-aggregates/v2") {
     throw new Error("Held-medal calculation requires an exact v2 investment distribution");
   }
-  const originalHeavenTable = profile.key.startsWith("heaven_") ? profile.evFilters?.tables[key] : undefined;
-  if (originalHeavenTable && heldMedals === 0) return originalHeavenTable;
   if (!aggregation) return profile.evFilters?.tables[key];
   const prepared = decoded ?? (aggregation.rows !== undefined ? aggregation : undefined);
   if (!prepared) return undefined;
-  const table = aggregateFilterTable(prepared, axes, selection, profile.gRange.start, heldMedals);
+  const table = aggregateFilterTable(prepared, independentHeavenBand ? [] : axes,
+    independentHeavenBand ? {} : selection, profile.gRange.start, heldMedals);
   if (!originalHeavenTable) return table;
   return applyHeldMedalTableEV(originalHeavenTable, table.baseAnchors);
 }

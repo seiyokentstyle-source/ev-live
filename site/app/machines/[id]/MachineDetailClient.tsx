@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
 import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
-import { applyHeldMedalTableEV, compatibleFilterSelection, declaredFilterAxes, filterSelectionKey, groupProfiles, profileCeilingText, resolveProfile, selectedFilterTable } from "@/lib/ev/profiles";
+import { applyHeldMedalTableEV, compatibleFilterSelection, declaredFilterAxes, filterSelectionKey, groupProfiles, profileCeilingText, resolveProfile, selectedFilterAggregation, selectedFilterTable } from "@/lib/ev/profiles";
 import { aimTabs, savedTargetAimKey, savedTargetIdFromAim } from "@/lib/ev/aim-selection";
 import { useFilterAggregation } from "@/lib/ev/use-filter-aggregation";
 import { AxisPicker } from "@/components/ev/AxisPicker";
@@ -74,6 +74,7 @@ type MachineDetailClientProps = {
 };
 
 const NO_SAVED_TARGETS: DisplayTarget[] = [];
+const NO_FILTER_AXES: FilterAxis[] = [];
 
 export function MachineDetailClient({ machine: initialMachine, hall, savedTargets: initialTargets = NO_SAVED_TARGETS, revision = "" }: MachineDetailClientProps) {
   const initial = useMemo<LiveMachine>(() => ({
@@ -209,13 +210,16 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
   // 選択→キー。axes の並び順に key+値 を連結する（生成側も同じ順で作っている）。
   const filterKey = filterSelectionKey(evAxes, evSel);
   const anySelected = evAxes.some((axis) => evSel[axis.key] != null);
+  const independentHeavenBand = profile.key.startsWith("heaven_") && anySelected;
+  const selectedAggregation = selectedFilterAggregation(profile, evAxes, evSel);
   // 等価は持ち枚数で収支が変わらない。0枚は既存の表をそのまま表示する。
   const needsHeldAdjustment = heldMedals > 0 && activeRate !== "5050";
-  const supportsHeldMedals = evFilters?.aggregation?.schema === "evlive-filter-aggregates/v2";
+  const supportsHeldMedals = selectedAggregation?.schema === "evlive-filter-aggregates/v2";
   const heldMedalsUnavailable = needsHeldAdjustment && !supportsHeldMedals;
   const appliedHeldMedals = needsHeldAdjustment && supportsHeldMedals ? heldMedals : 0;
-  const aggregationState = useFilterAggregation(evFilters?.aggregation, evAxes,
-    (anySelected || appliedHeldMedals > 0) && mode === "ev" && !aimTarget && !(dataView === "theory" && machine.theoretical));
+  const aggregationState = useFilterAggregation(selectedAggregation, independentHeavenBand ? NO_FILTER_AXES : evAxes,
+    (anySelected || appliedHeldMedals > 0) && !(independentHeavenBand && appliedHeldMedals === 0)
+    && mode === "ev" && !aimTarget && !(dataView === "theory" && machine.theoretical));
   const selectedTable = useMemo(() => selectedFilterTable(profile, evAxes, evSel, aggregationState.data, appliedHeldMedals),
     [profile, evAxes, evSel, aggregationState.data, appliedHeldMedals]);
 
