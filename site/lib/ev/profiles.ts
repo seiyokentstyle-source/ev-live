@@ -1,4 +1,4 @@
-import type { AimKind, DecodedFilterAggregation, EvFilterTable, FilterAxis, Profile } from "./types";
+import type { AimKind, BaseAnchor, DecodedFilterAggregation, EvFilterTable, FilterAxis, Profile } from "./types";
 import { aggregateFilterTable, type AggregateFilterTable } from "./filter-aggregation";
 
 // Machine JSON ships one profile per (狙い方 × レート) combination. Rate variants
@@ -376,14 +376,38 @@ export function isExactFilterTableKey(axes: FilterAxis[], key: string): boolean 
   return count(0, 0) === 1;
 }
 
+/** Investment method changes EV only; retain the published G range, sample and duration metadata. */
+export function applyHeldMedalTableEV<T extends { baseAnchors: BaseAnchor[] }>(
+  original: T, adjustedAnchors: BaseAnchor[],
+): T | undefined {
+  const adjusted = new Map(adjustedAnchors.map(anchor => [anchor.g, anchor]));
+  if (original.baseAnchors.some(anchor => !adjusted.has(anchor.g))) return undefined;
+  return { ...original, baseAnchors: original.baseAnchors.map(anchor => ({
+    ...anchor, ev: adjusted.get(anchor.g)!.ev,
+  })) };
+}
+
 export function selectedFilterTable(profile: Profile, axes: FilterAxis[], selection: FilterSelection,
-  decoded?: DecodedFilterAggregation): EvFilterTable | AggregateFilterTable | undefined {
+  decoded?: DecodedFilterAggregation, heldMedals = 0): EvFilterTable | AggregateFilterTable | undefined {
+  // These historical bands have separate published tables; never silently
+  // turn a carried multi-selection into a new combined cohort.
+  if (profile.key.startsWith("heaven_") && axes.some(axis => new Set(splitFilterValue(selection[axis.key])).size > 1)) {
+    return undefined;
+  }
   const key = filterSelectionKey(axes, selection);
-  if (!key) return undefined;
+  if (key === null || (!key && heldMedals === 0)) return undefined;
   const aggregation = profile.evFilters?.aggregation;
+  if (heldMedals > 0 && aggregation?.schema !== "evlive-filter-aggregates/v2") {
+    throw new Error("Held-medal calculation requires an exact v2 investment distribution");
+  }
+  const originalHeavenTable = profile.key.startsWith("heaven_") ? profile.evFilters?.tables[key] : undefined;
+  if (originalHeavenTable && heldMedals === 0) return originalHeavenTable;
   if (!aggregation) return profile.evFilters?.tables[key];
   const prepared = decoded ?? (aggregation.rows !== undefined ? aggregation : undefined);
-  return prepared ? aggregateFilterTable(prepared, axes, selection, profile.gRange.start) : undefined;
+  if (!prepared) return undefined;
+  const table = aggregateFilterTable(prepared, axes, selection, profile.gRange.start, heldMedals);
+  if (!originalHeavenTable) return table;
+  return applyHeldMedalTableEV(originalHeavenTable, table.baseAnchors);
 }
 
 /** 明示された空配列も新形式。旧軸を復活させない。 */
@@ -408,6 +432,7 @@ export function compatibleFilterSelection(
 
   const next: Record<string, string | null> = {};
   for (const axis of axes) {
+    if (profile.key.startsWith("heaven_") && new Set(splitFilterValue(selection[axis.key])).size > 1) continue;
     const kept = joinFilterValues(axis, splitFilterValue(selection[axis.key])
       .filter(part => axis.options.some((option) => option.value === part)));
     if (kept != null) next[axis.key] = kept;

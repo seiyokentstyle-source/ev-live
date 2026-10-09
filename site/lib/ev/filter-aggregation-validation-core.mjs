@@ -9,8 +9,9 @@ export function validateAggregateMatchModes(value, axes) {
 }
 
 /** Apply the same row contract to inline JSON and decompressed assets. */
-export function validateAggregateRows(value, axes, expectedRows, axisMatchModes) {
+export function validateAggregateRows(value, axes, expectedRows, axisMatchModes, schema = 'evlive-filter-aggregates/v1') {
   const fail = message => { throw new Error(`Invalid machine data: aggregation ${message}`); };
+  if (!['evlive-filter-aggregates/v1', 'evlive-filter-aggregates/v2'].includes(schema)) fail('schema is unsupported');
   if (!Array.isArray(value) || (expectedRows !== undefined && value.length !== expectedRows)) fail("row count is invalid");
   const modes = validateAggregateMatchModes(axisMatchModes, axes);
   const cells = new Set();
@@ -25,7 +26,10 @@ export function validateAggregateRows(value, axes, expectedRows, axisMatchModes)
     const [n, normal, payout] = row.slice(axes.length + 1);
     // Payout is a signed medal change, including losses during recorded CZs.
     if (!Number.isSafeInteger(n) || n < 0 || normal < 0 || (n === 0 && (normal !== 0 || payout !== 0))) fail("totals are invalid");
-    const key = JSON.stringify(row.slice(0, axes.length + 1));
+    if (schema === 'evlive-filter-aggregates/v2' && n <= 0) fail('v2 sample count must be positive');
+    const keyParts = row.slice(0, axes.length + 1);
+    if (schema === 'evlive-filter-aggregates/v2') keyParts.push(normal / n);
+    const key = JSON.stringify(keyParts);
     if (cells.has(key)) fail("cells must be unique");
     cells.add(key);
   }

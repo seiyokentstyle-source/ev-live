@@ -51,6 +51,20 @@ function decoded(profile: Profile): DecodedFilterAggregation {
 }
 
 describe('VVV2 normal CZ cohort publication', () => {
+  it('preserves v2 investment distributions when splitting the CZ cohorts', () => {
+    const machine = makeMachine(false);
+    for (const profile of [...machine.profiles, ...machine.setting1Correction!.profiles]) {
+      profile.evFilters!.aggregation!.schema = 'evlive-filter-aggregates/v2';
+    }
+    const result = splitCzThroughProfiles(machine);
+    expect(validateMachine(result)).toEqual(result);
+    for (const profile of [...result.profiles, ...result.setting1Correction!.profiles]) {
+      expect(profile.evFilters!.aggregation!.schema).toBe('evlive-filter-aggregates/v2');
+      const aggregate = decoded(profile);
+      const held = aggregateFilterTable(aggregate, profile.evFilters!.axes!, {}, profile.gRange.start, 100);
+      expect(held.baseAnchors.map(row => row.n)).toEqual(profile.baseAnchors.map(row => row.n));
+    }
+  });
   it.each([false, true])('splits both rates and corrected data with unchanged inputs (gzip=%s)', compressed => {
     const machine = makeMachine(compressed), original = structuredClone(machine);
     const result = splitCzThroughProfiles(machine);

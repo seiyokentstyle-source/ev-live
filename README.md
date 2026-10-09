@@ -1,4 +1,4 @@
-# EV Live
+# EVOT
 
 パチスロ期待値の**データ中心**リポジトリ。主役は `data/machines/**/*.json` で、
 表示用の Next.js サイトは従属物として `site/` に置いている。

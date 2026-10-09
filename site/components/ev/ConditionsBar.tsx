@@ -23,6 +23,7 @@ type ConditionsBarProps = {
   profileSampleNote?: string;
   /** 道中の当たりの呼び名（既定CZ / マギレコはBB）. */
   czTerm?: string;
+  heldMedals?: number;
 };
 
 type Row = { k: string; v: string };
@@ -42,7 +43,8 @@ export function ConditionsBar({
   profileSessions,
   profileSessionUnit,
   profileSampleNote,
-  czTerm
+  czTerm,
+  heldMedals = 0
 }: ConditionsBarProps) {
   const [open, setOpen] = useState(false);
   const ev = machine.evCalc;
@@ -108,6 +110,9 @@ export function ConditionsBar({
     if (mode === "ev" && profileSampleNote) rows.push({ k: "この狙い方の数え方", v: profileSampleNote });
   }
 
+  if (mode === "ev" && !pendingStatus) {
+    rows.push({ k: "持ちメダル", v: `${heldMedals.toLocaleString("ja-JP")}枚。交換価値で使用し、不足分を現金投資として計算。等価交換では期待値は変わりません。` });
+  }
   if (rows.length === 0) return null;
   const summary = rows.slice(0, 3).map((r) => r.v.split("（")[0]).join(" / ");
 

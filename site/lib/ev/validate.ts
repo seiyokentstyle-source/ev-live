@@ -136,7 +136,7 @@ export function validateMachine(data: unknown): Machine {
         `profile ${profile.key} selectionPolicy must be an object`);
       if (filters.aggregation !== undefined) {
         const aggregate = filters.aggregation;
-        assert(isRecord(aggregate) && aggregate.schema === "evlive-filter-aggregates/v1",
+        assert(isRecord(aggregate) && ["evlive-filter-aggregates/v1", "evlive-filter-aggregates/v2"].includes(aggregate.schema as string),
           `profile ${profile.key} aggregation schema is invalid`);
         const fields = new Set(["schema", "axisKeys", "axisMatchModes", "rows", "rowsGzip", "rowCount", "rowsAsset", "costPerGame", "exchange", "medalsPerGame", "junzou", "bet", "investmentMinimum", "minPlay", "roundingEpsilon"]);
         assert(Object.keys(aggregate).every(key => fields.has(key)), `profile ${profile.key} aggregation contains unsupported fields`);
@@ -163,7 +163,7 @@ export function validateMachine(data: unknown): Machine {
         } else if (aggregate.rows !== undefined) {
           assert(aggregate.rowsGzip === undefined && aggregate.rowCount === undefined,
             `profile ${profile.key} aggregation must contain rows or compressed rows, not both`);
-          validateAggregateRows(aggregate.rows, filters.axes, undefined, aggregate.axisMatchModes);
+          validateAggregateRows(aggregate.rows, filters.axes, undefined, aggregate.axisMatchModes, aggregate.schema);
         } else {
           assert(typeof aggregate.rowsGzip === "string" && aggregate.rowsGzip.length > 0
             && aggregate.rowsGzip.length % 4 === 0 && /^[A-Za-z0-9+/]+={0,2}$/.test(aggregate.rowsGzip),

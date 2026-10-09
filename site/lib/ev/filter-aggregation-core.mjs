@@ -1,7 +1,7 @@
 /** Match Python's half-even EV rounding, including its floating-point tolerance. */
 export function roundAggregateEV(value, epsilon = 1e-8) {
   if (!Number.isFinite(value) || !Number.isFinite(epsilon) || epsilon < 0 || epsilon >= 0.25) {
-    throw new Error("Invalid EVLIVE rounding value or tolerance");
+    throw new Error("Invalid EVOT rounding value or tolerance");
   }
   const floor = Math.floor(value);
   const fraction = Math.abs(value - (floor + 0.5)) <= epsilon ? 0.5 : value - floor;
@@ -11,7 +11,13 @@ export function roundAggregateEV(value, epsilon = 1e-8) {
 }
 
 /** Merge counts and totals before calculating means; shared by server and browser. */
-export function aggregateFilterTable(data, axes, selection, fallbackStart) {
+export function aggregateFilterTable(data, axes, selection, fallbackStart, heldMedals = 0) {
+  if (!Number.isSafeInteger(heldMedals) || heldMedals < 0) throw new Error('Held medals must be a nonnegative safe integer');
+  if (heldMedals > 0 && data.schema !== 'evlive-filter-aggregates/v2') {
+    throw new Error('Held-medal calculation requires an exact v2 investment distribution');
+  }
+  const exchangeGap = data.costPerGame / data.medalsPerGame - data.exchange;
+  if (heldMedals > 0 && (!Number.isFinite(exchangeGap) || exchangeGap < -1e-9)) throw new Error('Invalid held-medal exchange rates');
   // 1軸で複数の値を選んだときは "a|b" で渡る。どれかに当てはまる行を足し合わせる
   // （件数・通常時G・獲得の合計なので、区間をまとめても平均の計算は正確）。
   const selected = axes.map(axis => {
@@ -32,8 +38,11 @@ export function aggregateFilterTable(data, axes, selection, fallbackStart) {
     })) continue;
     const [n, normal, payout] = row.slice(axes.length + 1);
     if (n <= 0) continue;
-    const total = byGame.get(row[0]) ?? { n: 0, normal: 0, payout: 0 };
+    const total = byGame.get(row[0]) ?? { n: 0, normal: 0, payout: 0, held: 0 };
     total.n += n; total.normal += normal; total.payout += payout;
+    // v2 rows share one exact normal-game investment. Cap within each row
+    // before merging; capping the merged mean would overstate the benefit.
+    if (heldMedals > 0) total.held += n * Math.min(heldMedals, normal / n * data.medalsPerGame);
     byGame.set(row[0], total);
   }
   const baseAnchors = [...byGame.entries()].filter(([, total]) => {
@@ -41,7 +50,8 @@ export function aggregateFilterTable(data, axes, selection, fallbackStart) {
     const enoughInvestment = data.investmentMinimum === "mean" ? investment / total.n >= 1 : investment >= 1;
     return enoughInvestment && (data.minPlay === undefined || total.normal / total.n >= data.minPlay);
   }).sort(([a], [b]) => a - b).map(([g, total]) => {
-    const profit = total.payout * data.exchange - total.normal * data.costPerGame;
+    const cashProfit = total.payout * data.exchange - total.normal * data.costPerGame;
+    const profit = heldMedals > 0 ? cashProfit + total.held * Math.max(0, exchangeGap) : cashProfit;
     const games = total.normal + (data.junzou > 0 ? total.payout / data.junzou : 0);
     return { g, n: total.n, ev: roundAggregateEV(profit / total.n, data.roundingEpsilon),
       inv: total.normal * data.medalsPerGame / total.n, playG: games / total.n,

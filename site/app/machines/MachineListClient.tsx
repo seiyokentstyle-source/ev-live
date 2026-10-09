@@ -100,9 +100,9 @@ export function MachineListClient({ machines: initialMachines }: MachineListClie
       <header className="glass-surface flex shrink-0 items-center justify-between gap-3 px-4 py-3">
         <div className="min-w-0">
           {/* ロゴは発光させず、Ice Blue → Pale Pink の屈折で色が変わったように見せる。 */}
-          <p className="flex items-baseline gap-1.5 text-[22px] font-black leading-none tracking-tight">
+          <p className="flex items-baseline text-[22px] font-black leading-none tracking-tight" aria-label="EVOT">
             <span className="logo-gradient">EV</span>
-            <span className="text-ink">Live</span>
+            <span className="text-ink">OT</span>
           </p>
           <p className="mt-1.5 truncate text-[11px] text-ink-soft">期待値ガチ勢向け</p>
         </div>

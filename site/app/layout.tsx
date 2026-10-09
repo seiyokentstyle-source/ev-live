@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "EV Live",
+  title: "EVOT",
   description: "期待値ガチ勢向け 実戦EVチェッカー",
   // Metadata URLs do not automatically inherit Next.js's basePath.
   manifest: `${process.env.PAGES_BASE_PATH || ""}/manifest.json`,

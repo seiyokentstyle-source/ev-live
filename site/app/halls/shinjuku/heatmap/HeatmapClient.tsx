@@ -72,7 +72,7 @@ export function HeatmapClient({ data, floor }: { data: HeatmapData | null; floor
           <h1>新宿 <span>台番号ヒートマップ</span></h1>
           <p>ゴジラのお店 · 平均差枚（推定）</p>
         </div>
-        <span className={styles.brand}><span className="logo-gradient">EV</span> Live</span>
+        <span className={styles.brand} aria-label="EVOT"><span className="logo-gradient">EV</span>OT</span>
       </header>
 
       <section className={styles.controls} aria-label="表示条件">

@@ -31,6 +31,21 @@ beforeEach(clearAggregationDecodeCache);
 afterEach(() => { clearAggregationDecodeCache(); vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 
 describe("external aggregate loading", () => {
+  it.each([false, true])("uses the v2 exact-investment contract for external assets (gzip=%s)", async compressed => {
+    const rows = [[1, 0, 1, 50, 200], [1, 0, 2, 300, 400]];
+    const item = asset(compressed ? { rowsGzip: gzipSync(JSON.stringify(rows)).toString("base64"), rowCount: 2 } : { rows }, 2);
+    const source: FilterAggregation = { ...item.source, schema: "evlive-filter-aggregates/v2",
+      costPerGame: 1.5 * 1000 / 46, exchange: 1000 / 52 };
+    fetchBody(item.body);
+    const decoded = await decodeFilterAggregation(source, axes);
+    expect(decoded.rows).toEqual(rows);
+    const held = selectedFilterTable(profile(source), axes, {}, decoded, 100)!;
+    const profit = 600 * 1000 / 52 - 350 * 1.5 * 1000 / 46 + (75 + 2 * 100) * (1000 / 46 - 1000 / 52);
+    expect(held.baseAnchors[0].ev).toBe(Math.round(profit / 3));
+    expect(held.baseAnchors[0].n).toBe(3);
+    // The same cells are invalid under v1, which permits only one cell per g/axis.
+    await expect(decodeFilterAggregation({ ...source, schema: "evlive-filter-aggregates/v1" }, axes)).rejects.toThrow(/unique/);
+  });
   it.each([false, true])("loads and verifies a %s compressed asset only when requested", async compressed => {
     const item = asset(compressed ? { rowsGzip: gzipSync(JSON.stringify(raw.rows)).toString("base64"), rowCount: 1 } : { rows: raw.rows });
     fetchBody(item.body);

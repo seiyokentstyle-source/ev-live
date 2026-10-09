@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
 import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
-import { compatibleFilterSelection, declaredFilterAxes, filterSelectionKey, groupProfiles, profileCeilingText, resolveProfile, selectedFilterTable } from "@/lib/ev/profiles";
+import { applyHeldMedalTableEV, compatibleFilterSelection, declaredFilterAxes, filterSelectionKey, groupProfiles, profileCeilingText, resolveProfile, selectedFilterTable } from "@/lib/ev/profiles";
 import { aimTabs, savedTargetAimKey, savedTargetIdFromAim } from "@/lib/ev/aim-selection";
 import { useFilterAggregation } from "@/lib/ev/use-filter-aggregation";
 import { AxisPicker } from "@/components/ev/AxisPicker";
@@ -137,6 +137,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
   const [dataView, setDataView] = useState<"hall" | "theory">("hall");
   const [activeGroupKey, setActiveGroupKey] = useState(grouped.groups[0].key);
   const [activeRate, setActiveRate] = useState<string | null>(grouped.defaultRate);
+  const [heldMedals, setHeldMedals] = useState(0);
   const [selection, setSelection] = useState<Conditions>(() => defaultConditions(machine));
   const [pivotAxis, setPivotAxis] = useState<string | null>(null);
   const [pivotValues, setPivotValues] = useState<string[]>([]);
@@ -208,10 +209,15 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
   // 選択→キー。axes の並び順に key+値 を連結する（生成側も同じ順で作っている）。
   const filterKey = filterSelectionKey(evAxes, evSel);
   const anySelected = evAxes.some((axis) => evSel[axis.key] != null);
+  // 等価は持ち枚数で収支が変わらない。0枚は既存の表をそのまま表示する。
+  const needsHeldAdjustment = heldMedals > 0 && activeRate !== "5050";
+  const supportsHeldMedals = evFilters?.aggregation?.schema === "evlive-filter-aggregates/v2";
+  const heldMedalsUnavailable = needsHeldAdjustment && !supportsHeldMedals;
+  const appliedHeldMedals = needsHeldAdjustment && supportsHeldMedals ? heldMedals : 0;
   const aggregationState = useFilterAggregation(evFilters?.aggregation, evAxes,
-    anySelected && mode === "ev" && !aimTarget && !(dataView === "theory" && machine.theoretical));
-  const selectedTable = useMemo(() => selectedFilterTable(profile, evAxes, evSel, aggregationState.data),
-    [profile, evAxes, evSel, aggregationState.data]);
+    (anySelected || appliedHeldMedals > 0) && mode === "ev" && !aimTarget && !(dataView === "theory" && machine.theoretical));
+  const selectedTable = useMemo(() => selectedFilterTable(profile, evAxes, evSel, aggregationState.data, appliedHeldMedals),
+    [profile, evAxes, evSel, aggregationState.data, appliedHeldMedals]);
 
   // 単独の表が無い軸も選べる。次の軸を指定して掛け合わせへ進めるようにし、
   // 完全一致する集計が無い途中状態では空表を表示する。
@@ -219,10 +225,15 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
 
   // 絞り込みが効いていれば、その条件の表示用プロファイルを作る。
   const displayProfile = useMemo(() => {
-    if (!anySelected) return profile;
+    if (!anySelected && appliedHeldMedals === 0) return profile;
     if (useFilters) {
       const tbl = selectedTable;
       if (!tbl) return { ...profile, baseAnchors: [], gRange: { ...profile.gRange, end: profile.gRange.start } };
+      if (!anySelected) {
+        // 持ち枚数は投資方法だけを変える。元の開始G・母数・投入枚数・消化Gは保持する。
+        return applyHeldMedalTableEV(profile, tbl.baseAnchors)
+          ?? { ...profile, baseAnchors: [], gRange: { ...profile.gRange, end: profile.gRange.start } };
+      }
       // start は「その条件に達するG」。手前は母数が無いので表に出さない（アンカーが無いのに
       // 0Gから最初のアンカー値で埋めると、あり得ない条件の期待値を描いてしまう）。
       const start = tbl.start ?? profile.gRange.start;
@@ -253,9 +264,9 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
       firstHitRate: hits.length ? Math.round(hits.reduce((sum, h) => sum + h[2], 0) / hits.length) : undefined
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile, useFilters, filterKey, anySelected, evSamples, machine.evCalc, evSel, selectedTable]);
+  }, [profile, useFilters, filterKey, anySelected, evSamples, machine.evCalc, evSel, selectedTable, appliedHeldMedals]);
 
-  const evFiltered = displayProfile !== profile;
+  const evFiltered = anySelected && displayProfile !== profile;
   const evFilterStats = useMemo(() => {
     if (!evFiltered) return { units: 0, hits: 0 };
     if (useFilters) {
@@ -271,7 +282,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [evFiltered, useFilters, filterKey, evSamples, evSel, selectedTable]);
   // 絞り込み結果がアンカー2本未満（データ不足）かどうか。
-  const evEmpty = evFiltered && displayProfile.baseAnchors.length < (evFilters?.aggregation ? 1 : 2);
+  const evEmpty = (evFiltered || appliedHeldMedals > 0) && displayProfile.baseAnchors.length < (evFilters?.aggregation ? 1 : 2);
 
   const tabs = useMemo(
     () => aimTabs(grouped.groups, savedTargets),
@@ -417,6 +428,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
         profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
         profileSessionUnit={displayProfile.sessionUnit}
         profileSampleNote={displayProfile.sampleNote}
+        heldMedals={heldMedals}
       /> : null}
 
       {mode === 'targets' ? (
@@ -434,7 +446,8 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
       <ProfileBar tabs={tabs} activeKey={aimTarget ? savedTargetAimKey(aimTarget.id) : group.key} onChange={switchAim} />
       {aimTarget ? <SavedTargets machine={machine} targets={savedTargets} selectedId={aimTarget.id}
         showSelector={false} onSelect={id => { setAimTargetId(id); setTargetId(id); }} /> : <>
-      {hasRatePairs ? <RateSelector rates={grouped.rates} value={activeRate} onChange={switchRate} /> : null}
+      {hasRatePairs ? <RateSelector rates={grouped.rates} value={activeRate} onChange={switchRate}
+        heldMedals={heldMedals} onHeldMedalsChange={setHeldMedals} /> : null}
       {hasEvFilter && !isPending ? (
         <EvFilter
           axes={evAxes}
@@ -443,7 +456,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
           units={evFilterStats.units}
           hits={evFilterStats.hits}
           hitUnit={displayProfile.sessionUnit}
-          multiple={Boolean(evFilters?.aggregation)}
+          multiple={Boolean(evFilters?.aggregation) && !profile.key.startsWith("heaven_")}
         />
       ) : null}
 
@@ -454,6 +467,11 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
           <br />
           集計でき次第、期待値を表示します。
           </>}
+        </EmptyState>
+      ) : heldMedalsUnavailable ? (
+        <EmptyState title="持ちメダルの集計待ち">
+          この表は持ちメダルを反映するための再集計が必要です。
+          <button type="button" onClick={() => setHeldMedals(0)} className="mt-3 rounded border border-line px-3 py-2 text-xs">0枚に戻して現金投資の表を表示</button>
         </EmptyState>
       ) : aggregationState.status === "loading" ? (
         <EmptyState>絞り込み条件を計算中です。</EmptyState>

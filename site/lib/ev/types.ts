@@ -118,7 +118,7 @@ export type FilterAxis = {
 export type FilterAxisMatchMode = "single" | "bitmask";
 
 export type FilterAggregationParameters = {
-  schema: "evlive-filter-aggregates/v1";
+  schema: "evlive-filter-aggregates/v1" | "evlive-filter-aggregates/v2";
   axisKeys: string[];
   /** 省略時は全軸single。bitmaskは1軸30選択肢まで。 */
   axisMatchModes?: FilterAxisMatchMode[];
@@ -132,7 +132,8 @@ export type FilterAggregationParameters = {
   roundingEpsilon: number;
 };
 
-/** [g, ...optionIndexes, n, sumNormalGames, sumPayoutMedals]。-1 は不明。 */
+/** [g, ...optionIndexes, n, sumNormalGames, sumPayoutMedals]。-1 は不明。
+ * v2 は1行内の通常投入Gが全件同じ。g・軸値・通常投入Gごとに集約し、持ちメダルを各投資に適用できる。 */
 export type DecodedFilterAggregation = FilterAggregationParameters & { rows: number[][] };
 export type FilterAggregationRowsAsset = { sha256: string; rowCount: number };
 export type FilterAggregationRowPayload =

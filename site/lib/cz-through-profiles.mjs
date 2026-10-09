@@ -7,7 +7,7 @@ const RATE_LABEL = { '4652': '46/52', '5050': '50/50' };
 const fail = message => { throw new Error(`Invalid CZ cohort aggregation: ${message}`); };
 
 function decodeRows(data, axes) {
-  if (data.schema !== 'evlive-filter-aggregates/v1' ||
+  if (!['evlive-filter-aggregates/v1', 'evlive-filter-aggregates/v2'].includes(data.schema) ||
       JSON.stringify(data.axisKeys) !== JSON.stringify(axes.map(axis => axis.key))) fail('axis contract');
   for (const field of ['costPerGame', 'exchange', 'medalsPerGame', 'bet']) {
     if (!Number.isFinite(data[field]) || data[field] <= 0) fail(field);
@@ -19,7 +19,7 @@ function decodeRows(data, axes) {
   validateAggregateMatchModes(data.axisMatchModes, axes);
   if (data.rows !== undefined) {
     if (data.rowsGzip !== undefined || data.rowCount !== undefined || data.rowsAsset !== undefined) fail('conflicting row payloads');
-    return validateAggregateRows(data.rows, axes, undefined, data.axisMatchModes);
+    return validateAggregateRows(data.rows, axes, undefined, data.axisMatchModes, data.schema);
   }
   if (data.rowsAsset !== undefined) {
     if (data.rowsGzip !== undefined || data.rowCount !== undefined) fail('conflicting row payloads');
@@ -35,7 +35,7 @@ function decodeRows(data, axes) {
   } catch {
     fail('compressed rows could not be decoded');
   }
-  return validateAggregateRows(rows, axes, data.rowCount, data.axisMatchModes);
+  return validateAggregateRows(rows, axes, data.rowCount, data.axisMatchModes, data.schema);
 }
 
 function splitProfile(profile) {
