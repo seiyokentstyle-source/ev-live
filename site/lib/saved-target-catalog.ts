@@ -2,16 +2,19 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { existsSync } from 'node:fs';
 import { parseMachineSavedTargets, parseSavedTargetCatalog, savedTargetReplaySource } from './saved-targets.mjs';
+import { getHall, isListedHall } from './halls';
 
 export async function getSavedTargetCatalog() {
   const paths = [path.join(process.cwd(), 'data', 'saved-targets', 'targets.json'), path.join(process.cwd(), '..', 'data', 'saved-targets', 'targets.json')];
   const file = paths.find(candidate => existsSync(candidate));
   if (!file) throw new Error('Saved target catalog is missing');
-  return parseSavedTargetCatalog(JSON.parse(await fs.readFile(file, 'utf8')));
+  const catalog = parseSavedTargetCatalog(JSON.parse(await fs.readFile(file, 'utf8')));
+  return { ...catalog, targets: catalog.targets.filter(target => isListedHall(getHall(target.hallId))) };
 }
 
 /** Kept on the server: only current catalog members reach a client page. */
 export async function getSavedTargetSnapshot(machineId: string, dataSubdir = '', hallId = 'shinjuku') {
+  if (!isListedHall(getHall(hallId))) return { refreshed: [], replaySource: null };
   if (!/^[a-z0-9]{1,40}$/.test(machineId) || (dataSubdir && !/^[a-z0-9_-]+$/.test(dataSubdir))) throw new Error('Invalid saved target source');
   const roots = [path.join(process.cwd(), 'data', 'machines'), path.join(process.cwd(), '..', 'data', 'machines')];
   const root = roots.find(candidate => existsSync(candidate));

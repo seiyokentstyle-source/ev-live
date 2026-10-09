@@ -231,7 +231,7 @@ describe("collection fallback selection", () => {
       expect(display.machine.calcSpec?.items.map(item => item.v).join(" ")).toContain("補正前の仮定");
     }
     expect(await getHallDisplay("lycoris", "shinjuku")).toBeUndefined();
-    expect((await getMachineHallSummaries("lycoris")).map(item => item.hallId)).toEqual(["kabuki", "mixed", "mixed-raw"]);
+    expect((await getMachineHallSummaries("lycoris")).map(item => item.hallId)).toEqual(["mixed", "mixed-raw", "kabuki"]);
   });
   it.each(["shinjuku", "kabuki"])("publishes newly observed unknown machines from a %s catalog without any numeric JSON", async hallId => {
     await writeCatalog("futuremachine", false, hallId, true);
@@ -250,7 +250,7 @@ describe("collection fallback selection", () => {
     expect(await getHallDisplay("held", "akihabara")).toBeUndefined();
     expect(await getHallDisplays("kabuki")).toHaveLength(1);
     expect(await getMachineIds()).toEqual(["held"]);
-    expect((await getMachineHallSummaries("held")).map(item => item.hallId)).toEqual(["shinjuku", "kabuki", "mixed"]);
+    expect((await getMachineHallSummaries("held")).map(item => item.hallId)).toEqual(["mixed", "shinjuku", "kabuki"]);
     expect((await getMachineListSummaries())[0]).toMatchObject({ id: "held", summaryHallId: "shinjuku" });
     await writeCatalog("newonly");
     expect((await getMachineIds()).sort()).toEqual(["held", "newonly"]);
@@ -279,11 +279,29 @@ describe("collection fallback selection", () => {
     expect(await getMachine(assumed.id, "kabuki")).toBeUndefined();
     expect(await getHallDisplay(assumed.id, "kabuki")).toMatchObject({ kind: "collection" });
     expect(await getHallDisplay(assumed.id, "mixed")).toMatchObject({ kind: "machine" });
-    expect((await getMachineHallSummaries(assumed.id)).map(item => item.hallId)).toEqual(["kabuki", "mixed"]);
+    expect((await getMachineHallSummaries(assumed.id)).map(item => item.hallId)).toEqual(["mixed", "kabuki"]);
   });
 });
 
 describe("single-machine data loading", () => {
+  it("preserves mixed-only source files and mixed contributions without publishing individual routes", async () => {
+    const source = machine("subsetonly");
+    const combined = { ...correctionMachine("subsetonly"), mixedSources: {
+      schemaVersion: 1, halls: ["akiba_espace"], inputSha256: "a".repeat(64),
+    } };
+    await writeMachine("subsetonly", source, "akiba_espace");
+    await writeMachine("subsetonly", combined, "mixed");
+    await writeMachine("hiddenonly", machine("hiddenonly"), "akiba_espace");
+    const sourceFile = path.join(root, "data", "machines", "akiba_espace", "subsetonly.json");
+    const before = await fs.readFile(sourceFile, "utf8");
+    expect(await getMachine("subsetonly", "akiba_espace")).toBeDefined();
+    expect(await getHallDisplay("subsetonly", "akiba_espace")).toBeUndefined();
+    expect(await getHallDisplays("akiba_espace")).toEqual([]);
+    expect(await getMachineIds()).toEqual(["subsetonly"]);
+    expect((await getMachineHallSummaries("subsetonly")).map(item => item.hallId)).toEqual(["mixed", "mixed-raw"]);
+    expect(await getHallDisplay("subsetonly", "mixed-raw")).toMatchObject({ kind: "machine", machine: { meta: combined.meta } });
+    expect(await fs.readFile(sourceFile, "utf8")).toBe(before);
+  });
   it("loads just the requested JSON even if an unrelated machine is invalid", async () => {
     const input = machine();
     await writeMachine("target", input);

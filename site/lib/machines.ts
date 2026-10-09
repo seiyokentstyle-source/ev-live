@@ -5,7 +5,7 @@ import { withoutForeignCounterEstimate } from "./ev/counter-estimate";
 import { validateMachine } from "./ev/validate";
 import { LOW_SETTING_HALL_SUBDIR, RAW_MIXED_HALL_SUBDIR, onlyLowSetting, withoutLowSetting } from "./ev/low-setting";
 import { compareMachines } from "./machine-order";
-import { HALLS, getReadyHalls, getHall } from "./halls";
+import { HALLS, getReadyHalls, getHall, isListedHall } from "./halls";
 import { machineSummary } from "./ev/summary";
 import { normalizeMachineMetadata } from "./machine-metadata";
 import type { HeatmapCoverageMachine } from "./heatmap/coverage";
@@ -226,7 +226,7 @@ function collectionDisplay(collection: CollectedMachine, source?: Machine): Hall
 /** Numeric publications and their admission rules remain unchanged by observations. */
 export async function getHallDisplays(hallId: string): Promise<HallDisplay[]> {
   const hall = getHall(hallId);
-  if (!hall?.ready) return [];
+  if (!isListedHall(hall) || !hall.ready) return [];
   const [machines, observations] = await Promise.all([
     getAvailableMachines(hall.dataSubdir), readCollectionCatalog(path.dirname(machinesDir), hallId),
   ]);
@@ -242,7 +242,7 @@ export async function getHallDisplays(hallId: string): Promise<HallDisplay[]> {
 
 export async function getHallDisplay(id: string, hallId: string): Promise<HallDisplay | undefined> {
   const hall = getHall(hallId);
-  if (!hall?.ready || !/^[a-z0-9]{1,40}$/.test(id)) return undefined;
+  if (!isListedHall(hall) || !hall.ready || !/^[a-z0-9]{1,40}$/.test(id)) return undefined;
   const [machine, observations] = await Promise.all([
     getMachine(id, hall.dataSubdir), readCollectionCatalog(path.dirname(machinesDir), hallId),
   ]);

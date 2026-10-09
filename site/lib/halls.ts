@@ -1,12 +1,5 @@
-// 集計対象ホール（地域）の定義。
-//
-// 機種を選んだあと「どの店舗のデータで見るか」を選ばせるための一覧。
-// data/machines/*.json はスクレイパーが上書きする資産で店舗の次元を持たないため、
-// 店舗はサイト側のこの表だけで持つ（データ側は触らない）。
-//
-// ★現状 ready=true は新宿だけ。data/machines/*.json は全て
-//   マルハン新宿東宝ビル店（scraper の address_text）で集めたもの。
-//   他店の収集を始めたら、その店の JSON の置き場を dataDir に足して ready を立てる。
+// 集計元の店舗情報は全て保持し、画面・公開ルートは可視店舗だけを選ぶ。
+// mixed-only の店舗もデータ上の区分と店舗混合への寄与を失わない。
 import publishedHalls from "../../data/published-halls.json";
 
 export type Hall = {
@@ -23,6 +16,8 @@ export type Hall = {
   /** data/machines 配下のどこを読むか。'' は直下（既存＝新宿）.
    *  スクレイパー側 halls.py の「データ小分け」と必ず同じ値にすること. */
   dataSubdir: string;
+  /** 省略はlisted。mixed-onlyは個別表示せず、混合の集計元として保持する。 */
+  visibility?: "listed" | "mixed-only";
 };
 
 const DEFAULT_HALLS: Hall[] = [
@@ -76,10 +71,16 @@ const DEFAULT_HALLS: Hall[] = [
 
 // The publisher exports registered backend halls here after selecting a store.
 // New stores therefore use the existing routes without a second manual list.
-const publishedById = new Map<string, Hall>(publishedHalls.map((hall) => [hall.id, hall]));
+const registeredHalls: Hall[] = publishedHalls.map(hall => {
+  if (hall.visibility !== undefined && hall.visibility !== "listed" && hall.visibility !== "mixed-only") {
+    throw new Error(`Invalid hall visibility: ${hall.id}`);
+  }
+  return { ...hall, visibility: hall.visibility as Hall["visibility"] };
+});
+const publishedById = new Map<string, Hall>(registeredHalls.map((hall) => [hall.id, hall]));
 export const HALLS: Hall[] = [
   ...DEFAULT_HALLS.map((hall) => publishedById.get(hall.id) ?? hall),
-  ...publishedHalls.filter((hall) => !DEFAULT_HALLS.some((item) => item.id === hall.id)),
+  ...registeredHalls.filter((hall) => !DEFAULT_HALLS.some((item) => item.id === hall.id)),
 ];
 
 /** 既定の店舗。店舗を指定しない導線から来たときはここへ送る. */
@@ -89,7 +90,18 @@ export function getHall(id: string): Hall | undefined {
   return HALLS.find((hall) => hall.id === id);
 }
 
-/** データが揃っている店舗だけ. */
+export function isListedHall(hall: Hall | undefined): hall is Hall {
+  return hall !== undefined && (hall.visibility === undefined || hall.visibility === "listed");
+}
+
+/** 混合を先頭に、地域内の登録順を保った表示店舗。未登録店舗は作らない。 */
+export function getVisibleHalls(halls: readonly Hall[] = HALLS): Hall[] {
+  const priority = (hall: Hall) => hall.id === "mixed" ? 0 : hall.id === "mixed-raw" ? 1
+    : ({ 新宿: 2, 池袋: 3, 秋葉原: 4 } as Record<string, number>)[hall.area] ?? 5;
+  return halls.filter(isListedHall).sort((a, b) => priority(a) - priority(b));
+}
+
+/** 個別表示でき、データが揃っている店舗だけ. */
 export function getReadyHalls(): Hall[] {
-  return HALLS.filter((hall) => hall.ready);
+  return getVisibleHalls().filter((hall) => hall.ready);
 }

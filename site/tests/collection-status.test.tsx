@@ -124,7 +124,7 @@ describe("multi-hall machine list", () => {
       { hallId: "unregistered", summary: collectedFixture("unknownonly").summary },
     ])).toEqual([{ ...summary, summaryHallId: "shinjuku", totalSamples: 0 }]);
   });
-  it("sums physical halls once while preserving each hall's original metadata and virtual-only cards", () => {
+  it("prefers raw mixed samples without double counting and retains each hall's metadata", () => {
     const shinjuku = { ...collectedFixture("same").summary, meta: { samples: "123", source: "新宿" } };
     const kabuki = { ...collectedFixture("same").summary, meta: { samples: "456", source: "歌舞伎" } };
     const entries = [{ hallId: "kabuki", summary: kabuki }, { hallId: "mixed", summary: collectedFixture("mixedonly").summary },
@@ -146,6 +146,36 @@ describe("multi-hall machine list", () => {
     expect(html).toContain("全店舗合計");
     expect(html).toContain("サンプル（主ボーナス");
     expect(only.totalSamples).toBe(0);
+  });
+  it("keeps mixed-only contributions in totals while omitting their standalone cards and names", () => {
+    const summary = (id: string, samples: string) => ({ ...collectedFixture(id).summary, meta: { samples, source: "fixture" } });
+    const entries = [
+      { hallId: "shinjuku", summary: summary("same", "100") },
+      { hallId: "akiba_espace", summary: summary("same", "50") },
+      { hallId: "mixed", summary: summary("same", "150") },
+      { hallId: "mixed-raw", summary: summary("same", "150") },
+      { hallId: "akiba_espace", summary: summary("subsetonly", "50") },
+      { hallId: "mixed-raw", summary: summary("subsetonly", "50") },
+      { hallId: "akiba_espace", summary: summary("unpublished", "50") },
+    ];
+    const selected = selectMachineListSummaries(entries);
+    expect(selected).toHaveLength(2);
+    expect(selected.find(item => item.id === "same")).toMatchObject({ totalSamples: 150, summaryHallId: "shinjuku" });
+    const only = selected.find(item => item.id === "subsetonly")!;
+    expect(only).toMatchObject({ totalSamples: 50, summaryHallId: "mixed-raw" });
+    expect(selectMachineListSummaries(entries.filter(entry => entry.hallId !== "akiba_espace"))).toEqual(selected);
+    const html = renderToString(createElement(MachineCard, { machine: only, isFavorite: false,
+      match: { type: "none" }, onOpen: vi.fn(), onToggleFavorite: vi.fn() }));
+    expect(html).toContain("全店舗合計");
+    expect(html).not.toContain("電気街口のお店");
+  });
+  it("uses confirmed raw mixed zero and falls back to visible physical counts for legacy entries", () => {
+    const summary = collectedFixture().summary;
+    const entry = (hallId: string, samples: string) => ({ hallId, summary: { ...summary, meta: { samples, source: "fixture" } } });
+    const physical = [entry("shinjuku", "100"), entry("akiba_espace", "500"), entry("kabuki", "50")];
+    expect(selectMachineListSummaries(physical)[0].totalSamples).toBe(150);
+    expect(selectMachineListSummaries([...physical, entry("mixed-raw", "0")])[0].totalSamples).toBe(0);
+    expect(selectMachineListSummaries([...physical, entry("mixed-raw", "-")])[0].totalSamples).toBe(150);
   });
   it("shows available samples from another hall even if the representative hall is pending", () => {
     const pending = collectedFixture("same").summary;

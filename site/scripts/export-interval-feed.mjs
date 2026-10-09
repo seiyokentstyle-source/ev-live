@@ -1,12 +1,15 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { hallPublicationPolicy } from './hall-publication-policy.mjs';
 
-export async function exportIntervalFeed(sourceDir, outputDir) {
+export async function exportIntervalFeed(sourceDir, outputDir, halls) {
   const source = path.resolve(sourceDir), output = path.resolve(outputDir);
   if (source === output || source.startsWith(output + path.sep) || output.startsWith(source + path.sep)) throw new Error('Source and output must be separate');
   const machines = [], payloads = new Map();
-  for (const file of (await fs.readdir(source)).filter((f) => /^[a-z0-9]+\.json$/.test(f)).sort()) {
+  const policy = await hallPublicationPolicy(halls);
+  const files = policy.isListedId('shinjuku') ? (await fs.readdir(source)).filter((f) => /^[a-z0-9]+\.json$/.test(f)).sort() : [];
+  for (const file of files) {
     const data = JSON.parse(await fs.readFile(path.join(source, file), 'utf8'));
     if (!data.available) continue;
     if (file !== `${data.id}.json` || typeof data.name !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(data.lastUpdated)) throw new Error(`Invalid machine ${file}`);

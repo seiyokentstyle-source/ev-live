@@ -1,4 +1,5 @@
 import type { LiveIndex, LiveSnapshot } from "./live-data";
+import { getHall, isListedHall } from "./halls";
 import { validateMachine } from "./ev/validate";
 import { validateCollectedMachine } from "./collection-status-contract";
 import { validateMachineProvisionalSetting1 } from "./ev/provisional-setting1";
@@ -10,6 +11,8 @@ export const LIVE_REFRESH_MS = 60_000;
 export async function fetchLiveMachine(
   item: LiveIndex["machines"][number], signal: AbortSignal
 ): Promise<LiveSnapshot> {
+  const hall = getHall(item.hallId);
+  if (!isListedHall(hall) || !hall.ready) throw new Error("Live hall unavailable");
   const response = await fetch(
     `${basePath}/live-data/${encodeURIComponent(item.hallId)}/${encodeURIComponent(item.id)}.json?revision=${item.revision}`,
     { cache: "no-store", signal }
@@ -75,7 +78,12 @@ export function startLiveRefresh(onIndex: (index: LiveIndex, signal: AbortSignal
             typeof item.summary.meta?.samples === "string" && Array.isArray(item.summary.aliases))) {
         throw new Error("Invalid live index");
       }
-      if (!signal.aborted && !stopped) await onIndex(index, signal);
+      // Older cached indexes can still contain a hall that has become mixed-only.
+      const visibleIndex = { ...index, machines: index.machines.filter(item => {
+        const hall = getHall(item.hallId);
+        return isListedHall(hall) && hall.ready;
+      }) };
+      if (!signal.aborted && !stopped) await onIndex(visibleIndex, signal);
     } catch {
       // A failed/offline/partially deployed response must not replace the displayed snapshot.
       // The next timer or return to the page retries it.

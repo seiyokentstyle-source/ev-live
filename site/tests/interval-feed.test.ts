@@ -17,6 +17,11 @@ test('publishes the same revision and removes stale machine envelopes', async ()
   expect(index.machines[0]).toMatchObject({ ready: true, rows: 10, sourceRevision: envelope.sourceRevision });
   const published = await fs.readFile(path.join(output, 'shinjuku/magia.json'), 'utf8');
   expect(published).not.toContain('private'); expect(JSON.parse(published)).toEqual(envelope);
+  const sourceBefore = await fs.readFile(file, 'utf8');
+  const hidden = await exportIntervalFeed(source, output, [{ id: 'shinjuku', dataSubdir: '', visibility: 'mixed-only' }]);
+  expect(hidden.machines).toEqual([]);
+  expect(await fs.readdir(path.join(output, 'shinjuku'))).toEqual([]);
+  expect(await fs.readFile(file, 'utf8')).toBe(sourceBefore);
   await fs.writeFile(file, JSON.stringify({ ...base, lastUpdated: '2026-09-03', intervalExplorer: { ...envelope, lastUpdated: '2026-09-03', rows: 12, sourceRevision: 'b'.repeat(64) } }));
   index = await exportIntervalFeed(source, output);
   expect(index.machines[0]).toMatchObject({ lastUpdated: '2026-09-03', rows: 12 });

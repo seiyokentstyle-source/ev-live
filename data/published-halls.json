@@ -1,6 +1,7 @@
 [
   {
     "id": "shinjuku",
+    "visibility": "listed",
     "area": "新宿",
     "name": "ゴジラのお店",
     "note": "共通の機種仕様・集計条件で算出。未検証・サンプル不足の条件は保留",
@@ -9,6 +10,7 @@
   },
   {
     "id": "kabuki",
+    "visibility": "listed",
     "area": "新宿",
     "name": "歌舞伎のお店",
     "note": "Daidataの保存済み履歴を共通の機種仕様・集計条件で算出。保留機種は保留表示",
@@ -17,6 +19,7 @@
   },
   {
     "id": "akiba_espace",
+    "visibility": "mixed-only",
     "area": "秋葉原",
     "name": "電気街口のお店",
     "note": "共通の機種仕様・集計条件で算出。未検証・サンプル不足の条件は保留",

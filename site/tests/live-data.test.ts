@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import fixture from "../app/preview/ev-table/machine.json";
 import { validateMachine } from "../lib/ev/validate";
 import { getAvailableMachines, getMachine, getHallDisplays, getHallDisplay } from "../lib/machines";
-import { getHall, HALLS } from "../lib/halls";
+import { getHall, getReadyHalls } from "../lib/halls";
 import { getSavedTargetCatalog, getSavedTargetSnapshot } from "../lib/saved-target-catalog";
 import { buildLiveMachine, buildLiveCollection, getLiveIndex, getLiveMachine, liveIndexEntry } from "../lib/live-data";
 import { collectedFixture } from "./fixtures/collection-status";
@@ -123,7 +123,7 @@ describe("live data publication", () => {
     vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: "d".repeat(64) });
     const stale = await getLiveMachine(fixture.id, "shinjuku");
     expect(stale?.schema === "evlive-live-machine/v1" && stale.savedTargets).toEqual([]);
-    expect((await getLiveIndex()).machines[0].revision).toBe(stale?.revision);
+    expect((await getLiveIndex()).machines.find(item => item.hallId === "shinjuku")?.revision).toBe(stale?.revision);
     vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: target.sourceRevision });
     const current = await getLiveMachine(fixture.id, "shinjuku");
     expect(current?.schema === "evlive-live-machine/v1" && current.savedTargets).toHaveLength(1);
@@ -148,7 +148,7 @@ describe("live data publication", () => {
     expect(detail.machine.meta.samples).toBe(index.machines[0].summary.meta.samples);
     // This fixture supplies one machine per hall. Every ready registry entry,
     // including newly published stores, must have matching index/detail routes.
-    const expectedRoutes = HALLS.filter(hall => hall.ready).map(hall => ({
+    const expectedRoutes = getReadyHalls().map(hall => ({
       hall: hall.id, id: `${fixture.id}.json`
     }));
     expect(await generateStaticParams()).toEqual(expectedRoutes);
@@ -157,15 +157,19 @@ describe("live data publication", () => {
     }))).toEqual(expectedRoutes);
   });
 
-  it("keeps the two Akihabara stores and their detail data directories separate", async () => {
+  it("retains both Akihabara data directories without publishing the mixed-only store", async () => {
     expect(getHall("akihabara")).toMatchObject({
       id: "akihabara", name: "萌えスロのお店", dataSubdir: "akihabara"
     });
     expect(getHall("akiba_espace")).toMatchObject({
       id: "akiba_espace", name: "電気街口のお店", dataSubdir: "akiba_espace"
     });
-    expect((await getLiveMachine(fixture.id, "akiba_espace"))?.machine.id).toBe(fixture.id);
-    expect(getMachine).toHaveBeenCalledExactlyOnceWith(fixture.id, "akiba_espace");
+    expect(await getLiveMachine(fixture.id, "akiba_espace")).toBeUndefined();
+    expect(getMachine).not.toHaveBeenCalled();
+    const response = await machineGET(new Request("https://example.test/"), {
+      params: Promise.resolve({ hall: "akiba_espace", id: `${fixture.id}.json` }),
+    });
+    expect(response.status).toBe(404);
   });
 
   it("does not publish pending halls, unavailable machines, or arbitrary paths", async () => {

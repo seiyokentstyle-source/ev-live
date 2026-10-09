@@ -4,7 +4,7 @@ import fixture from "../app/preview/ev-table/machine.json";
 import { validateMachine } from "../lib/ev/validate";
 import { machineSummary } from "../lib/ev/summary";
 import { getMachine, getMachineHallSummaries, getMachineIds, getHallDisplay } from "../lib/machines";
-import { HALLS, getHall } from "../lib/halls";
+import { getVisibleHalls, getHall } from "../lib/halls";
 import { getSavedTargetCatalog, getSavedTargetSnapshot } from "../lib/saved-target-catalog";
 import MachineHallPage, { generateStaticParams as hallParams } from "../app/machines/[id]/page";
 import MachineDetailPage, { generateStaticParams as detailParams } from "../app/machines/[id]/[hall]/page";
@@ -42,7 +42,8 @@ describe("machines collected only outside the default hall", () => {
   it("exports the hall selector and all hall paths, including the live mixed endpoint's page", async () => {
     expect(await hallParams()).toContainEqual({ id: mixed.id });
     const params = await detailParams();
-    for (const hall of HALLS) expect(params).toContainEqual({ id: mixed.id, hall: hall.id });
+    for (const hall of getVisibleHalls()) expect(params).toContainEqual({ id: mixed.id, hall: hall.id });
+    expect(params.some(param => param.hall === "akiba_espace")).toBe(false);
   });
 
   it("renders the mixed data without requiring a default-hall machine", async () => {
@@ -77,8 +78,10 @@ describe("machines collected only outside the default hall", () => {
     const page = await MachineHallPage({ params: Promise.resolve({ id: mixed.id }) });
     const html = renderToStaticMarkup(page);
     const articles = [...html.matchAll(/<article\b[\s\S]*?<\/article>/g)].map((match) => match[0]);
-    expect(articles).toHaveLength(HALLS.length);
-    for (const [index, hall] of HALLS.entries()) {
+    expect(articles).toHaveLength(getVisibleHalls().length);
+    expect(html).not.toContain("電気街口のお店");
+    expect(html).not.toContain("akiba_espace");
+    for (const [index, hall] of getVisibleHalls().entries()) {
       if (hall.id === "mixed") {
         expect(articles[index]).toContain("サンプル 123回");
         expect(articles[index]).toContain("データあり");
@@ -93,5 +96,11 @@ describe("machines collected only outside the default hall", () => {
     await expect(MachineHallPage({ params: Promise.resolve({ id: "missing" }) })).rejects.toThrow("NOT_FOUND");
     await expect(MachineDetailPage({ params: Promise.resolve({ id: "missing", hall: "mixed" }) })).rejects.toThrow("NOT_FOUND");
     await expect(MachineDetailPage({ params: Promise.resolve({ id: mixed.id, hall: "unknown" }) })).rejects.toThrow("NOT_FOUND");
+  });
+
+  it("rejects a mixed-only direct URL even if its stored table exists", async () => {
+    vi.mocked(getHallDisplay).mockResolvedValue({ kind: "machine", machine: mixed });
+    await expect(MachineDetailPage({ params: Promise.resolve({ id: mixed.id, hall: "akiba_espace" }) })).rejects.toThrow("NOT_FOUND");
+    expect(getHallDisplay).not.toHaveBeenCalled();
   });
 });

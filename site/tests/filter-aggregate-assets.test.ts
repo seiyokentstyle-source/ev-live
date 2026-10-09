@@ -36,6 +36,46 @@ function machineWithRows(compressed = false) {
 }
 
 describe('content-addressed aggregate publication', () => {
+  it('removes hidden-only generated assets while keeping mixed assets and every source file', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'evlive-aggregates-'));
+    temporaryRoots.push(root);
+    const source = path.join(root, 'source'), output = path.join(root, 'output');
+    await fs.mkdir(path.join(source, 'akiba_espace'), { recursive: true });
+    await fs.mkdir(path.join(source, 'mixed'));
+    const hidden = machineWithRows();
+    const mixed = structuredClone(hidden);
+    mixed.profiles[0].evFilters!.aggregation!.rows![0][4] += 100;
+    const hiddenFile = path.join(source, 'akiba_espace', `${hidden.id}.json`);
+    const mixedFile = path.join(source, 'mixed', `${mixed.id}.json`);
+    await fs.writeFile(hiddenFile, JSON.stringify(hidden));
+    await fs.writeFile(mixedFile, JSON.stringify(mixed));
+    const before = await Promise.all([hiddenFile, mixedFile].map(file => fs.readFile(file, 'utf8')));
+    expect((await exportFilterAggregates(source, output, [])).assets).toBe(2);
+    const mixedAssets = new Map<string, string>();
+    externalizeMachineAggregations(mixed, (hash, body) => mixedAssets.set(`${hash}.json`, body));
+    expect((await exportFilterAggregates(source, output)).assets).toBe(1);
+    expect(await fs.readdir(output)).toEqual([...mixedAssets.keys()]);
+    expect(await fs.readFile(path.join(output, [...mixedAssets.keys()][0]), 'utf8')).toBe([...mixedAssets.values()][0]);
+    expect(await Promise.all([hiddenFile, mixedFile].map(file => fs.readFile(file, 'utf8')))).toEqual(before);
+  });
+
+  it('retains root-store corrected mixed fallbacks if that store becomes mixed-only', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'evlive-aggregates-'));
+    temporaryRoots.push(root);
+    const source = path.join(root, 'source'), output = path.join(root, 'output');
+    await fs.mkdir(source);
+    const machine = machineWithRows();
+    const corrected = structuredClone(machine.profiles);
+    corrected[0].evFilters!.aggregation!.rows![0][4] += 1;
+    machine.setting1Correction = { schemaVersion: 1, sourceHallId: 'shinjuku', targetRtp: 0.97,
+      payoutScale: 0.9, method: 'payout-scale', profiles: corrected };
+    await fs.writeFile(path.join(source, `${machine.id}.json`), JSON.stringify(machine));
+    expect((await exportFilterAggregates(source, output, [{ id: 'shinjuku', dataSubdir: '', visibility: 'mixed-only' }])).assets).toBe(1);
+    const correctedAssets = new Map<string, string>();
+    externalizeMachineAggregations({ ...machine, profiles: corrected }, (hash, body) => correctedAssets.set(`${hash}.json`, body));
+    expect(await fs.readdir(output)).toEqual([...correctedAssets.keys()]);
+  });
+
   it.each([false, true])('publishes matching split CZ assets and live profiles (gzip=%s)', async compressed => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), 'evlive-aggregates-'));
     temporaryRoots.push(root);

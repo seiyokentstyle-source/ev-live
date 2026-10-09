@@ -56,6 +56,16 @@ describe('published target contract', () => {
     await fs.writeFile(source, JSON.stringify(catalog([]))); await exportSavedTargets(source, output);
     expect(JSON.parse(await fs.readFile(output, 'utf8')).targets).toEqual([]);
   });
+  it('withdraws a mixed-only hall from generated saved targets without deleting the source', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'evlive-targets-')); roots.push(root);
+    const source = path.join(root, 'source.json'), output = path.join(root, 'public/saved-targets.json');
+    const original = JSON.stringify(catalog());
+    await fs.writeFile(source, original);
+    expect((await exportSavedTargets(source, output)).targets).toHaveLength(1);
+    expect((await exportSavedTargets(source, output, [{ id: 'shinjuku', dataSubdir: '', visibility: 'mixed-only' }])).targets).toEqual([]);
+    expect(JSON.parse(await fs.readFile(output, 'utf8')).targets).toEqual([]);
+    expect(await fs.readFile(source, 'utf8')).toBe(original);
+  });
   it('rejects malformed aggregates and values at or beyond the stopping G', () => {
     expect(() => parseSavedTargetCatalog(catalog([{ ...target(), rows: [{ g: 201, ev: 1, n: 10, days: 1 }] }]))).toThrow();
     expect(() => parseSavedTargetCatalog(catalog([{ ...target(), rows: [{ g: 100, ev: 1, n: 0, days: 0 }] }]))).toThrow();

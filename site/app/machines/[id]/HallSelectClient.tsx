@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { MachineSummary } from "@/lib/ev/types";
 import type { MachineHallSummary } from "@/lib/machines";
-import { DEFAULT_HALL_ID, HALLS } from "@/lib/halls";
+import { DEFAULT_HALL_ID, getVisibleHalls } from "@/lib/halls";
 import { useLiveIndex } from "@/lib/use-live-data";
 import { TableFoot } from "@/components/ui/DataTable";
 import { rewriteManufacturer } from "@/lib/ev/profiles";
@@ -23,10 +23,11 @@ export function HallSelectClient({ machine: initialMachine, hallMachines }: Hall
   const machine = index?.machines.find(item => item.id === initialMachine.id && item.hallId === DEFAULT_HALL_ID)?.summary ?? initialMachine;
   const router = useRouter();
   const simpleSet = simpleEvSet(machine.id);
+  const halls = getVisibleHalls();
   const hallSummary = (hallId: string) => index
     ? index.machines.find(item => item.id === machine.id && item.hallId === hallId)?.summary
     : hallMachines.find(item => item.hallId === hallId)?.summary;
-  const readyCount = HALLS.filter((hall) => {
+  const readyCount = halls.filter((hall) => {
     const summary = hallSummary(hall.id);
     return hall.ready && summary?.available && !collectionPending(summary.meta);
   }).length;
@@ -51,7 +52,7 @@ export function HallSelectClient({ machine: initialMachine, hallMachines }: Hall
 
       <main className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
         <div className="flex flex-col gap-3 pb-2">
-          {HALLS.map((hall) => {
+          {halls.map((hall) => {
             const href = `/machines/${machine.id}/${hall.id}`;
             const hallMachine = hallSummary(hall.id);
             const hasData = hall.ready && Boolean(hallMachine?.available);
@@ -116,7 +117,7 @@ export function HallSelectClient({ machine: initialMachine, hallMachines }: Hall
         </div>
       </main>
 
-      <TableFoot left={`${HALLS.length}店舗 / 集計済み${readyCount}店舗`} right="店舗を選ぶと期待値表へ" />
+      <TableFoot left={`${halls.length}店舗 / 集計済み${readyCount}店舗`} right="店舗を選ぶと期待値表へ" />
     </div>
   );
 }

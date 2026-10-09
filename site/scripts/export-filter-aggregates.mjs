@@ -4,13 +4,15 @@ import { fileURLToPath } from 'node:url';
 import { externalizeMachineAggregations } from '../lib/filter-aggregate-assets.mjs';
 import { splitCzThroughProfiles } from '../lib/cz-through-profiles.mjs';
 import { inlineSourceAggregations, sourceAggregatesDir } from '../lib/source-aggregations.mjs';
+import { hallPublicationPolicy } from './hall-publication-policy.mjs';
 
-export async function exportFilterAggregates(sourceDir, outputDir) {
+export async function exportFilterAggregates(sourceDir, outputDir, halls) {
   const source = path.resolve(sourceDir), output = path.resolve(outputDir);
   if (source === output || source.startsWith(output + path.sep) || output.startsWith(source + path.sep)) {
     throw new Error('Source and output must be separate');
   }
   await fs.mkdir(output, { recursive: true });
+  const policy = await hallPublicationPolicy(halls);
   const emitted = new Set();
   let bytes = 0;
   const visit = async (directory) => {
@@ -18,13 +20,25 @@ export async function exportFilterAggregates(sourceDir, outputDir) {
     for (const entry of entries) {
       const filename = path.join(directory, entry.name);
       // Only regular machine files and hall directories; never follow symlinks.
-      if (entry.isDirectory()) { await visit(filename); continue; }
+      if (entry.isDirectory()) {
+        if (policy.isListedSubdir(path.relative(source, filename))) await visit(filename);
+        continue;
+      }
       if (!entry.isFile() || !/^[a-z0-9]+\.json$/.test(entry.name)) continue;
       // Rows the scraper stored beside the machine JSON are restored first, so the
       // checks and CZ cohort splitting below see exactly the same payload as before.
-      const machine = inlineSourceAggregations(JSON.parse(await fs.readFile(filename, 'utf8')),
+      let machine = inlineSourceAggregations(JSON.parse(await fs.readFile(filename, 'utf8')),
         sourceAggregatesDir(source));
       if (!Array.isArray(machine.profiles)) continue;
+      if (directory === source && !policy.isListedSubdir('')) {
+        // The root store also supplies legacy corrected-mixed fallbacks. Keep
+        // those profiles without emitting the hidden store's measured tables.
+        const profiles = machine.setting1Correction?.profiles ??
+          ((machine.calcSpec?.items ?? []).some(item => item.k.includes('獲得は実測ではない'))
+            ? machine.profiles : machine.profiles.filter(profile => profile.label.includes('設定1想定')));
+        machine = { ...machine, profiles };
+        delete machine.setting1Correction;
+      }
       const profiles = [...machine.profiles, ...(machine.setting1Correction?.profiles ?? [])];
       if (profiles.some(profile => profile.evFilters?.aggregation?.rowsAsset)) {
         throw new Error(`Source aggregates must contain their row payload: ${entry.name}`);

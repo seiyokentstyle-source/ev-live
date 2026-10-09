@@ -5,6 +5,7 @@ import type { MachineSummary } from "./ev/types";
 import type { LiveIndex, LiveSnapshot } from "./live-data";
 import { startLiveMachineRefresh, startLiveRefresh } from "./live-refresh";
 import { selectMachineListSummaries } from "./machine-list-summary";
+import { getHall, isListedHall } from "./halls";
 
 export function useLiveIndex(): LiveIndex | null {
   const [index, setIndex] = useState<LiveIndex | null>(null);
@@ -14,6 +15,7 @@ export function useLiveIndex(): LiveIndex | null {
 
 export function useLiveMachines(initial: MachineSummary[], hallId?: string): MachineSummary[] {
   const index = useLiveIndex();
+  if (hallId && !isListedHall(getHall(hallId))) return [];
   if (!index) return initial;
   return hallId ? index.machines.filter(item => item.hallId === hallId).map(item => item.summary)
     : selectMachineListSummaries(index.machines);

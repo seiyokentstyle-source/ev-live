@@ -6,7 +6,7 @@ import { validateMachineProvisionalSetting1 } from "./ev/provisional-setting1";
 import { assertSingleAttachment, validateMachineCounterEstimate } from "./ev/counter-estimate";
 import { validateMachine } from "./ev/validate";
 import { machineSummary } from "./ev/summary";
-import { getHall, getReadyHalls } from "./halls";
+import { getHall, getReadyHalls, isListedHall } from "./halls";
 import { getHallDisplays, getHallDisplay } from "./machines";
 import { validateCollectedMachine, type CollectedMachine } from "./collection-status-contract";
 import { getSavedTargetCatalog, getSavedTargetSnapshot } from "./saved-target-catalog";
@@ -98,7 +98,7 @@ export async function getLiveMachineParams(): Promise<Array<{ hall: string; id: 
 
 export async function getLiveMachine(machineId: string, hallId: string): Promise<LiveSnapshot | undefined> {
   const hall = getHall(hallId);
-  if (!hall?.ready || !/^[a-z0-9]{1,40}$/.test(machineId)) return undefined;
+  if (!isListedHall(hall) || !hall.ready || !/^[a-z0-9]{1,40}$/.test(machineId)) return undefined;
   const display = await getHallDisplay(machineId, hallId);
   if (!display) return undefined;
   if (display.kind === "collection") return buildLiveCollection(display.collection, display.provisionalSetting1, display.counterEstimate, hallId);

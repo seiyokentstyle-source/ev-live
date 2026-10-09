@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { buildLiveCollection, type LiveIndex, type LiveMachine, type LiveSnapshot } from "../lib/live-data";
 import { collectedFixture } from "./fixtures/collection-status";
 import { validateMachine } from "../lib/ev/validate";
-import { LIVE_REFRESH_MS, startLiveMachineRefresh, startLiveRefresh } from "../lib/live-refresh";
+import { fetchLiveMachine, LIVE_REFRESH_MS, startLiveMachineRefresh, startLiveRefresh } from "../lib/live-refresh";
 import { selectMachineListSummaries } from "../lib/machine-list-summary";
 import fixture from "../app/preview/ev-table/machine.json";
 
@@ -178,7 +178,7 @@ describe("all-hall sample counts during list refresh", () => {
       { ...secondary, hallId: "kabuki", summary: { ...secondary.summary,
         meta: { ...secondary.summary.meta, samples: kabukiSamples } } },
       ...["mixed", "mixed-raw"].map(hallId => ({ ...main, hallId,
-        summary: { ...main.summary, meta: { ...main.summary.meta, samples: "9,999" } } })),
+        summary: { ...main.summary, meta: { ...main.summary.meta, samples: String(100 + Number(kabukiSamples)) } } })),
       { ...main, id: "other", summary: { ...main.summary, id: "other", name: "比較用機種",
         meta: { ...main.summary.meta, samples: "175" } } },
     ] };
@@ -215,7 +215,7 @@ describe("all-hall sample counts during list refresh", () => {
     expect(request.mock.calls.every(([url]) => String(url).includes("/live-data/index.json?"))).toBe(true);
   });
 
-  it("does not replace zero confirmed samples with collection rows or virtual-hall totals", async () => {
+  it("uses raw mixed samples when physical hall snapshots are pending", async () => {
     const index = allHallIndex("0", true);
     const held = indexFor(buildLiveCollection(collectedFixture(original.machine.id))).machines[0];
     index.machines[0] = held;
@@ -224,12 +224,28 @@ describe("all-hall sample counts during list refresh", () => {
     stop = startLiveRefresh(next => { displayed = selectMachineListSummaries(next.machines); });
     await vi.advanceTimersByTimeAsync(0);
     const machine = displayed.find(item => item.id === original.machine.id)!;
-    expect(machine).toMatchObject({ totalSamples: 0, meta: { samples: "0", collection: { rows: 1200 } } });
+    expect(machine).toMatchObject({ totalSamples: 100, meta: { samples: "0", collection: { rows: 1200 } } });
     expect(machine.summaryHallId).toBe("shinjuku");
   });
 });
 
 describe("live refresh lifecycle", () => {
+  it("filters mixed-only stores from a cached index while retaining the mixed aggregate", async () => {
+    const entry = indexFor().machines[0];
+    const index: LiveIndex = { schema: "evlive-live-index/v1", machines:
+      ["akiba_espace", "unregistered", "akihabara", "mixed-raw", "shinjuku"].map(hallId => ({ ...entry, hallId })) };
+    request.mockResolvedValue(response(index));
+    const onIndex = vi.fn();
+    stop = startLiveRefresh(onIndex);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(onIndex.mock.calls[0][0].machines.map((item: { hallId: string }) => item.hallId)).toEqual(["mixed-raw", "shinjuku"]);
+    expect(index.machines).toHaveLength(5);
+  });
+  it("rejects a mixed-only detail before making any request", async () => {
+    await expect(fetchLiveMachine({ ...indexFor().machines[0], hallId: "akiba_espace" }, new AbortController().signal))
+      .rejects.toThrow("Live hall unavailable");
+    expect(request).not.toHaveBeenCalled();
+  });
   it.each(["focus", "online", "pageshow", "visibilitychange"])("checks again when %s returns the user to live data", async event => {
     request.mockResolvedValue(response(indexFor()));
     const onIndex = vi.fn();
