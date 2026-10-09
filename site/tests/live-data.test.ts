@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import fixture from "../app/preview/ev-table/machine.json";
 import { validateMachine } from "../lib/ev/validate";
 import { getAvailableMachines, getMachine, getHallDisplays, getHallDisplay } from "../lib/machines";
-import { getHall } from "../lib/halls";
+import { getHall, HALLS } from "../lib/halls";
 import { getSavedTargetCatalog, getSavedTargetSnapshot } from "../lib/saved-target-catalog";
 import { buildLiveMachine, buildLiveCollection, getLiveIndex, getLiveMachine, liveIndexEntry } from "../lib/live-data";
 import { collectedFixture } from "./fixtures/collection-status";
@@ -146,14 +146,26 @@ describe("live data publication", () => {
     expect(detail.schema).toBe("evlive-live-machine/v1");
     expect(index.machines[0].revision).toBe(detail.revision);
     expect(detail.machine.meta.samples).toBe(index.machines[0].summary.meta.samples);
-    // 低設定想定店舗混合は ready=true で、設定1想定を持つ機種だけが並ぶ。
-    // 店舗が増えればここも増える＝ready の店舗×機種ぶんのルートが出る、を固定する。
-    expect(await generateStaticParams()).toEqual([
-      { hall: "shinjuku", id: `${fixture.id}.json` },
-      { hall: "kabuki", id: `${fixture.id}.json` },
-      { hall: "mixed", id: `${fixture.id}.json` },
-      { hall: "mixed-raw", id: `${fixture.id}.json` }
-    ]);
+    // This fixture supplies one machine per hall. Every ready registry entry,
+    // including newly published stores, must have matching index/detail routes.
+    const expectedRoutes = HALLS.filter(hall => hall.ready).map(hall => ({
+      hall: hall.id, id: `${fixture.id}.json`
+    }));
+    expect(await generateStaticParams()).toEqual(expectedRoutes);
+    expect(index.machines.map((entry: { hallId: string; id: string }) => ({
+      hall: entry.hallId, id: `${entry.id}.json`
+    }))).toEqual(expectedRoutes);
+  });
+
+  it("keeps the two Akihabara stores and their detail data directories separate", async () => {
+    expect(getHall("akihabara")).toMatchObject({
+      id: "akihabara", name: "萌えスロのお店", dataSubdir: "akihabara"
+    });
+    expect(getHall("akiba_espace")).toMatchObject({
+      id: "akiba_espace", name: "電気街口のお店", dataSubdir: "akiba_espace"
+    });
+    expect((await getLiveMachine(fixture.id, "akiba_espace"))?.machine.id).toBe(fixture.id);
+    expect(getMachine).toHaveBeenCalledExactlyOnceWith(fixture.id, "akiba_espace");
   });
 
   it("does not publish pending halls, unavailable machines, or arbitrary paths", async () => {
