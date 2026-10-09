@@ -25,5 +25,32 @@
     "note": "共通の機種仕様・集計条件で算出。未検証・サンプル不足の条件は保留",
     "ready": true,
     "dataSubdir": "akiba_espace"
+  },
+  {
+    "id": "seibu_shinjuku",
+    "area": "新宿",
+    "name": "西武新宿のお店",
+    "note": "共通の機種仕様・集計条件で算出。未検証・サンプル不足の条件は保留",
+    "ready": true,
+    "dataSubdir": "seibu_shinjuku",
+    "visibility": "mixed-only"
+  },
+  {
+    "id": "ueno_honkan",
+    "area": "上野",
+    "name": "上野本館のお店",
+    "note": "共通の機種仕様・集計条件で算出。未検証・サンプル不足の条件は保留",
+    "ready": true,
+    "dataSubdir": "ueno_honkan",
+    "visibility": "mixed-only"
+  },
+  {
+    "id": "ueno_shinkan",
+    "area": "上野",
+    "name": "上野新館のお店",
+    "note": "共通の機種仕様・集計条件で算出。未検証・サンプル不足の条件は保留",
+    "ready": true,
+    "dataSubdir": "ueno_shinkan",
+    "visibility": "mixed-only"
   }
 ]
