@@ -1,6 +1,7 @@
 import type { DecodedFilterAggregation, FilterAggregation, FilterAggregationRowPayload, FilterAxis } from "./types";
 import { validateAggregateRows } from "./filter-aggregation-validation";
 import { aggregationAssetPath, validateAggregationAssetPayload } from "./aggregation-asset";
+import { validateNormalCostSchedule } from "./normal-cost-core.mjs";
 
 // One active profile and one recently used profile. Never expand a whole machine.
 const CACHE_LIMIT = 2;
@@ -12,6 +13,11 @@ export function clearAggregationDecodeCache(): void {
 }
 
 export function decodeFilterAggregation(data: FilterAggregation, axes: FilterAxis[]): Promise<DecodedFilterAggregation> {
+  try {
+    validateNormalCostSchedule(data.normalCostSchedule, data.medalsPerGame, data.schema);
+  } catch (error) {
+    return Promise.reject(error);
+  }
   if (data.rows !== undefined) {
     return Promise.resolve().then(() => ({ ...data, rows: validateAggregateRows(data.rows, axes, undefined, data.axisMatchModes, data.schema) }));
   }

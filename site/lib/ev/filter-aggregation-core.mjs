@@ -1,3 +1,5 @@
+import { normalInvestmentMedals, validateNormalCostSchedule } from './normal-cost-core.mjs';
+
 /** Match Python's half-even EV rounding, including its floating-point tolerance. */
 export function roundAggregateEV(value, epsilon = 1e-8) {
   if (!Number.isFinite(value) || !Number.isFinite(epsilon) || epsilon < 0 || epsilon >= 0.25) {
@@ -12,6 +14,7 @@ export function roundAggregateEV(value, epsilon = 1e-8) {
 
 /** Merge counts and totals before calculating means; shared by server and browser. */
 export function aggregateFilterTable(data, axes, selection, fallbackStart, heldMedals = 0) {
+  const schedule = validateNormalCostSchedule(data.normalCostSchedule, data.medalsPerGame, data.schema);
   if (!Number.isSafeInteger(heldMedals) || heldMedals < 0) throw new Error('Held medals must be a nonnegative safe integer');
   if (heldMedals > 0 && data.schema !== 'evlive-filter-aggregates/v2') {
     throw new Error('Held-medal calculation requires an exact v2 investment distribution');
@@ -38,23 +41,27 @@ export function aggregateFilterTable(data, axes, selection, fallbackStart, heldM
     })) continue;
     const [n, normal, payout] = row.slice(axes.length + 1);
     if (n <= 0) continue;
-    const total = byGame.get(row[0]) ?? { n: 0, normal: 0, payout: 0, held: 0 };
+    const total = byGame.get(row[0]) ?? { n: 0, normal: 0, payout: 0, held: 0, medals: 0 };
     total.n += n; total.normal += normal; total.payout += payout;
+    const medals = normalInvestmentMedals(row[0], normal / n, data.medalsPerGame, schedule);
+    if (schedule) total.medals += n * medals;
     // v2 rows share one exact normal-game investment. Cap within each row
     // before merging; capping the merged mean would overstate the benefit.
-    if (heldMedals > 0) total.held += n * Math.min(heldMedals, normal / n * data.medalsPerGame);
+    if (heldMedals > 0) total.held += n * Math.min(heldMedals, medals);
     byGame.set(row[0], total);
   }
   const baseAnchors = [...byGame.entries()].filter(([, total]) => {
-    const investment = total.normal * data.costPerGame;
+    const investment = schedule ? total.medals * (data.costPerGame / data.medalsPerGame) : total.normal * data.costPerGame;
     const enoughInvestment = data.investmentMinimum === "mean" ? investment / total.n >= 1 : investment >= 1;
     return enoughInvestment && (data.minPlay === undefined || total.normal / total.n >= data.minPlay);
   }).sort(([a], [b]) => a - b).map(([g, total]) => {
-    const cashProfit = total.payout * data.exchange - total.normal * data.costPerGame;
+    const medals = schedule ? total.medals : total.normal * data.medalsPerGame;
+    const investment = schedule ? medals * (data.costPerGame / data.medalsPerGame) : total.normal * data.costPerGame;
+    const cashProfit = total.payout * data.exchange - investment;
     const profit = heldMedals > 0 ? cashProfit + total.held * Math.max(0, exchangeGap) : cashProfit;
     const games = total.normal + (data.junzou > 0 ? total.payout / data.junzou : 0);
     return { g, n: total.n, ev: roundAggregateEV(profit / total.n, data.roundingEpsilon),
-      inv: total.normal * data.medalsPerGame / total.n, playG: games / total.n,
+      inv: medals / total.n, playG: games / total.n,
       rtp: games > 0 ? 100 + profit / (20 * data.bet * games) * 100 : 100 };
   });
   const first = baseAnchors[0];

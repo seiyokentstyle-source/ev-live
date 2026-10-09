@@ -1,6 +1,7 @@
 import { gunzipSync, gzipSync } from 'node:zlib';
 import { aggregateFilterTable } from './ev/filter-aggregation-core.mjs';
 import { validateAggregateMatchModes, validateAggregateRows } from './ev/filter-aggregation-validation-core.mjs';
+import { validateNormalCostSchedule } from './ev/normal-cost-core.mjs';
 
 const TARGET = /^cz_ceiling_(4652|5050)$/;
 const RATE_LABEL = { '4652': '46/52', '5050': '50/50' };
@@ -13,6 +14,7 @@ function decodeRows(data, axes) {
     if (!Number.isFinite(data[field]) || data[field] <= 0) fail(field);
   }
   if (!Number.isFinite(data.junzou) || data.junzou < 0) fail('junzou');
+  validateNormalCostSchedule(data.normalCostSchedule, data.medalsPerGame, data.schema);
   if (!['mean', 'total'].includes(data.investmentMinimum)) fail('investmentMinimum');
   if (data.minPlay !== undefined && (!Number.isFinite(data.minPlay) || data.minPlay < 0)) fail('minPlay');
   if (!Number.isFinite(data.roundingEpsilon) || data.roundingEpsilon < 0 || data.roundingEpsilon >= 0.25) fail('roundingEpsilon');

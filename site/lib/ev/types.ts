@@ -116,6 +116,7 @@ export type FilterAxis = {
 
 /** 生履歴を含まない、軸値・打ち始めGごとの合計。 */
 export type FilterAxisMatchMode = "single" | "bitmask";
+export type NormalCostSchedule = Array<{ fromGame: number; medalsPerGame: number }>;
 
 export type FilterAggregationParameters = {
   schema: "evlive-filter-aggregates/v1" | "evlive-filter-aggregates/v2";
@@ -125,6 +126,8 @@ export type FilterAggregationParameters = {
   costPerGame: number;
   exchange: number;
   medalsPerGame: number;
+  /** v2のみ。fromGame消化後から適用する通常時の投入枚数/G。 */
+  normalCostSchedule?: NormalCostSchedule;
   junzou: number;
   bet: number;
   investmentMinimum: "mean" | "total";

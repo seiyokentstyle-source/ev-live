@@ -2,6 +2,7 @@ import type { Axis, FilterAggregation, FilterAxis, Machine, SelectAxis } from ".
 import { isExactFilterTableKey } from "./profiles";
 import { validateAggregateMatchModes, validateAggregateRows } from "./filter-aggregation-validation";
 import { validateAggregationRowsAsset } from "./aggregation-asset";
+import { validateNormalCostSchedule } from "./normal-cost-core.mjs";
 import { validateSettingAimDayDigitNets } from "./setting-aim-day-nets";
 import { validateHeatmapCoverage } from "./heatmap-coverage";
 import { validateMachineProvisionalSetting1 } from "./provisional-setting1";
@@ -151,12 +152,13 @@ export function validateMachine(data: unknown): Machine {
       for (const { aggregate, axes } of aggregates) {
         assert(isRecord(aggregate) && ["evlive-filter-aggregates/v1", "evlive-filter-aggregates/v2"].includes(aggregate.schema as string),
           `profile ${profile.key} aggregation schema is invalid`);
-        const fields = new Set(["schema", "axisKeys", "axisMatchModes", "rows", "rowsGzip", "rowCount", "rowsAsset", "costPerGame", "exchange", "medalsPerGame", "junzou", "bet", "investmentMinimum", "minPlay", "roundingEpsilon"]);
+        const fields = new Set(["schema", "axisKeys", "axisMatchModes", "rows", "rowsGzip", "rowCount", "rowsAsset", "costPerGame", "exchange", "medalsPerGame", "normalCostSchedule", "junzou", "bet", "investmentMinimum", "minPlay", "roundingEpsilon"]);
         assert(Object.keys(aggregate).every(key => fields.has(key)), `profile ${profile.key} aggregation contains unsupported fields`);
         assert(Array.isArray(axes) && axes.every(axis => isRecord(axis) && Array.isArray(axis.options)) && Array.isArray(aggregate.axisKeys)
           && JSON.stringify(aggregate.axisKeys) === JSON.stringify(axes.map(axis => axis.key)),
         `profile ${profile.key} aggregation axisKeys must match the declared axes`);
         validateAggregateMatchModes(aggregate.axisMatchModes, axes);
+        validateNormalCostSchedule(aggregate.normalCostSchedule, aggregate.medalsPerGame, aggregate.schema);
         for (const key of ["costPerGame", "exchange", "medalsPerGame", "bet"] as const) {
           assert(Number.isFinite(aggregate[key]) && aggregate[key] > 0,
             `profile ${profile.key} aggregation ${key} must be positive and finite`);
