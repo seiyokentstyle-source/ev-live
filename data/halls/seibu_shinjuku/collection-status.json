@@ -1,0 +1,104 @@
+{
+  "schema": "evlive-collection-status/v1",
+  "hallId": "seibu_shinjuku",
+  "source": "daidata",
+  "storeId": "100950",
+  "lastUpdated": "2026-10-09",
+  "machines": [
+    {
+      "id": "mebc58d07",
+      "name": "スマスロ モンスターハンターライズ：サンブレイク",
+      "manufacturer": "エンターライズ",
+      "aliases": [
+        "スマスロ モンスターハンターライズ：サンブレイク",
+        "モンハン",
+        "モンハンライズ"
+      ],
+      "releaseDate": "2024-01-01",
+      "lastUpdated": "2026-10-09",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 8,
+      "collection": {
+        "rows": 1275,
+        "events": 1235,
+        "units": 8,
+        "days": 5,
+        "firstDate": "2026-10-05",
+        "lastDate": "2026-10-09"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "seibu_shinjuku",
+        "machineName": "スマスロ モンスターハンターライズ：サンブレイク",
+        "targetDate": "2026-10-09",
+        "inputSha256": "7829fa579978b0fabf5e23e8c39c6859e603f40f2bc458931b163a12d4e313fb"
+      }
+    },
+    {
+      "id": "m8a798229",
+      "name": "スマスロ 獣王",
+      "manufacturer": "未登録",
+      "aliases": [
+        "スマスロ 獣王"
+      ],
+      "releaseDate": "2024-01-01",
+      "lastUpdated": "2026-10-09",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 797,
+        "events": 782,
+        "units": 3,
+        "days": 5,
+        "firstDate": "2026-10-05",
+        "lastDate": "2026-10-09"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "seibu_shinjuku",
+        "machineName": "スマスロ 獣王",
+        "targetDate": "2026-10-09",
+        "inputSha256": "47206b5a63826b88fef2c640222f055e15ab49b33fd1cda3d99a41e760e5d9b6"
+      }
+    },
+    {
+      "id": "m020bda5f",
+      "name": "スマスロパリピ孔明",
+      "manufacturer": "未登録",
+      "aliases": [
+        "スマスロパリピ孔明"
+      ],
+      "releaseDate": "2024-01-01",
+      "lastUpdated": "2026-10-09",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 1,
+      "collection": {
+        "rows": 169,
+        "events": 164,
+        "units": 1,
+        "days": 5,
+        "firstDate": "2026-10-05",
+        "lastDate": "2026-10-09"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "seibu_shinjuku",
+        "machineName": "スマスロパリピ孔明",
+        "targetDate": "2026-10-09",
+        "inputSha256": "de92612a89544992cf6de97d560d8720847a4aeb0d8856ffb44f5fcdf739065f"
+      }
+    }
+  ]
+}
