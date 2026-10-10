@@ -13,7 +13,7 @@ type RateSelectorProps = {
 
 export function RateSelector({ rates, value, onChange, heldMedals = 0, onHeldMedalsChange }: RateSelectorProps) {
   return (
-    <ControlBar label={onHeldMedalsChange ? undefined : "レート"} collapsible>
+    <ControlBar label="レート" collapsible>
       <div className="flex min-w-0 items-end gap-2">
       {onHeldMedalsChange ? (
         <label className="mono flex shrink-0 flex-col gap-0.5">
