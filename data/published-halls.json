@@ -52,5 +52,14 @@
     "ready": true,
     "dataSubdir": "ueno_shinkan",
     "visibility": "mixed-only"
+  },
+  {
+    "id": "espace_shibuya_shinkan",
+    "area": "渋谷",
+    "name": "渋谷新館のお店",
+    "note": "共通の機種仕様・集計条件で算出。未検証・サンプル不足の条件は保留",
+    "ready": true,
+    "dataSubdir": "espace_shibuya_shinkan",
+    "visibility": "mixed-only"
   }
 ]
