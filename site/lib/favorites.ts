@@ -1,6 +1,21 @@
+import type { MachineSummary } from "./ev/types";
+import { machineFavoriteIds } from "./machine-identity";
+
 export const FAVORITES_STORAGE_KEY = "evlive.favorites.v1";
 
 export type FavoriteMap = Record<string, boolean>;
+
+export function isMachineFavorite(machine: Pick<MachineSummary, "id" | "name">, favorites: FavoriteMap): boolean {
+  return machineFavoriteIds(machine).some(id => favorites[id]);
+}
+
+export function toggleMachineFavorite(machine: Pick<MachineSummary, "id" | "name">, favorites: FavoriteMap): FavoriteMap {
+  const ids = machineFavoriteIds(machine), selected = isMachineFavorite(machine, favorites);
+  const next = { ...favorites };
+  for (const id of ids) delete next[id];
+  if (!selected) next[ids[0]] = true;
+  return next;
+}
 
 export function readFavorites(): FavoriteMap {
   if (typeof window === "undefined") return {};

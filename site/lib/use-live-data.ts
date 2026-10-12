@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import type { MachineSummary } from "./ev/types";
 import type { LiveIndex, LiveSnapshot } from "./live-data";
 import { startLiveMachineRefresh, startLiveRefresh } from "./live-refresh";
-import { selectMachineListSummaries } from "./machine-list-summary";
+import { selectMachineListSummaries, selectMachineHallSummaries } from "./machine-list-summary";
+import { sameMachineSelection } from "./machine-identity";
 import { getHall, isListedHall } from "./halls";
 
 export function useLiveIndex(): LiveIndex | null {
@@ -17,7 +18,7 @@ export function useLiveMachines(initial: MachineSummary[], hallId?: string): Mac
   const index = useLiveIndex();
   if (hallId && !isListedHall(getHall(hallId))) return [];
   if (!index) return initial;
-  return hallId ? index.machines.filter(item => item.hallId === hallId).map(item => item.summary)
+  return hallId ? selectMachineHallSummaries(index.machines.filter(item => item.hallId === hallId)).map(item => item.summary)
     : selectMachineListSummaries(index.machines);
 }
 
@@ -30,5 +31,5 @@ export function useLiveMachine(initial: LiveSnapshot, hallId: string): LiveSnaps
       setCurrent({ hallId, data: next });
     });
   }, [initial, hallId]);
-  return current.hallId === hallId && current.data.machine.id === initial.machine.id ? current.data : initial;
+  return current.hallId === hallId && sameMachineSelection(current.data.machine, initial.machine) ? current.data : initial;
 }

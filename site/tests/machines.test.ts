@@ -88,6 +88,96 @@ async function writeCatalog(id = "held", forcePending = false, hallId = "kabuki"
   await fs.writeFile(path.join(dir, "collection-status.json"), JSON.stringify(catalog));
 }
 
+describe("known source-name aliases", () => {
+  const pairs = [
+    ["m4ab6796b", "Lパリピ孔明", "m020bda5f", "スマスロパリピ孔明"],
+    ["m2bcf2c11", "L獣王", "m8a798229", "スマスロ 獣王"],
+    ["m04a5dfa2", "Lモンスターハンターライズ：サンブレイク", "mebc58d07", "スマスロ モンスターハンターライズ：サンブレイク"],
+  ];
+  it.each(pairs)("keeps both %s URLs and each hall's original data while publishing one selection", async (oldId, oldName, id, name) => {
+    const pending = { ...pendingMachine(oldId), name: oldName };
+    const measured = { ...machine(id), name, meta: { samples: "80", source: "歌舞伎" } };
+    const mixed = { ...measured, meta: { samples: "302", source: "店舗混合" },
+      mixedSources: { schemaVersion: 1, halls: ["kabuki"], inputSha256: "a".repeat(64) } };
+    await writeMachine(oldId, pending);
+    await writeMachine(id, measured, "kabuki");
+    await writeMachine(oldId, { ...pending, mixedSources: mixed.mixedSources }, "mixed");
+    await writeMachine(id, mixed, "mixed");
+    const originals = await Promise.all(["", "mixed"].map(dir => fs.readFile(path.join(root, "data", "machines", dir, `${oldId}.json`), "utf8")));
+    for (const route of [oldId, id]) {
+      expect(await getHallDisplay(route, "shinjuku")).toMatchObject({ kind: "machine", machine: {
+        id: oldId, name: oldName, meta: { samples: "0" }, profiles: [{ dataPending: true, baseAnchors: [] }],
+      } });
+      expect(await getHallDisplay(route, "kabuki")).toMatchObject({ kind: "machine", machine: { id, name, meta: { samples: "80" } } });
+      expect(await getHallDisplay(route, "mixed-raw")).toMatchObject({ kind: "machine", machine: { id, name, meta: { samples: "302" } } });
+      expect((await getMachineHallSummaries(route)).map(entry => entry.hallId)).toEqual(["mixed", "mixed-raw", "shinjuku", "kabuki"]);
+      expect(await getMachineIds()).toContain(route);
+    }
+    expect(await getHallDisplays("mixed-raw")).toHaveLength(1);
+    const selected = await getMachineListSummaries();
+    expect(selected).toHaveLength(1);
+    expect(selected[0]).toMatchObject({ id, totalSamples: 302 });
+    await fs.mkdir(path.join(root, "data", "saved-targets"), { recursive: true });
+    await fs.writeFile(path.join(root, "data", "saved-targets", "targets.json"), JSON.stringify({
+      schema: "evlive-saved-targets/v1", updatedAt: "2026-10-09T00:00:00.000Z", targets: [],
+    }));
+    const { getLiveIndex, getLiveMachine, getLiveMachineParams } = await import("../lib/live-data");
+    const index = await getLiveIndex();
+    expect(index.machines.filter(entry => entry.hallId === "mixed-raw")).toHaveLength(1);
+    for (const endpoint of await getLiveMachineParams()) {
+      const rawId = endpoint.id.replace(/\.json$/, "");
+      expect((await getLiveMachine(rawId, endpoint.hall))?.machine.id).toBe(rawId);
+    }
+    expect((await getLiveMachine(oldId, "kabuki"))?.machine.id).toBe(id);
+    expect(await Promise.all(["", "mixed"].map(dir => fs.readFile(path.join(root, "data", "machines", dir, `${oldId}.json`), "utf8")))).toEqual(originals);
+  });
+
+  it("applies an explicit hold across aliases only within the observed hall", async () => {
+    const [oldId, oldName, id, name] = pairs[0];
+    const measured = { ...machine(id), name };
+    await writeMachine(id, measured);
+    await writeMachine(id, measured, "kabuki");
+    await writeMachine(id, { ...measured, mixedSources: { schemaVersion: 1, halls: ["kabuki"], inputSha256: "a".repeat(64) } }, "mixed");
+    const catalog = catalogFixture(oldId, true, "shinjuku");
+    Object.assign(catalog.machines[0], { name: oldName, aliases: [oldName] });
+    catalog.machines[0].sourceIntegrity.machineName = oldName;
+    const dir = path.join(root, "data", "halls", "shinjuku");
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(path.join(dir, "collection-status.json"), JSON.stringify(catalog));
+    expect(await getHallDisplays("shinjuku")).toHaveLength(1);
+    for (const route of [oldId, id]) {
+      expect(await getHallDisplay(route, "shinjuku")).toMatchObject({ kind: "collection", collection: { summary: { id: oldId, meta: { samples: "0" } } } });
+      expect(await getHallDisplay(route, "kabuki")).toMatchObject({ kind: "machine", machine: { id } });
+      expect(await getHallDisplay(route, "mixed-raw")).toMatchObject({ kind: "machine", machine: { id } });
+    }
+  });
+
+  it("does not borrow a similarly named sequel from a registered alias ID", async () => {
+    const [oldId, oldName, id, name] = pairs[0];
+    await writeMachine(oldId, { ...machine(oldId), name: `${oldName}II` });
+    await writeMachine(id, { ...machine(id), name }, "kabuki");
+    expect(await getHallDisplay(id, "shinjuku")).toBeUndefined();
+    expect(await getMachineListSummaries()).toHaveLength(2);
+  });
+
+  it("keeps both Tokyo Revengers sources pending behind one selection and both original URLs", async () => {
+    const oldId = "m39a9f4f4", id = "m50246ef0";
+    await writeMachine(oldId, { ...pendingMachine(oldId), name: "スマスロ 東京リベンジャーズ(リベスロ)" });
+    await writeMachine(id, { ...pendingMachine(id), name: "スマスロ 東京リベンジャーズ" }, "kabuki");
+    for (const route of [oldId, id]) {
+      expect(await getMachineIds()).toContain(route);
+      for (const hall of ["shinjuku", "kabuki"]) {
+        expect(await getHallDisplay(route, hall)).toMatchObject({ kind: "machine", machine: {
+          id: hall === "shinjuku" ? oldId : id, meta: { samples: "0" }, profiles: [{ dataPending: true, baseAnchors: [] }],
+        } });
+      }
+    }
+    const selected = await getMachineListSummaries();
+    expect(selected).toHaveLength(1);
+    expect(selected[0]).toMatchObject({ id, totalSamples: 0, meta: { samples: "0" } });
+  });
+});
+
 describe("collection fallback selection", () => {
   it("adds a registered reference to saved pending machines without modifying their stored JSON or counts", async () => {
     const input = pendingMachine();

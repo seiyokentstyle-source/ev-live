@@ -4,6 +4,7 @@ import { validateMachine } from "./ev/validate";
 import { validateCollectedMachine } from "./collection-status-contract";
 import { validateMachineProvisionalSetting1 } from "./ev/provisional-setting1";
 import { assertSingleAttachment, validateMachineCounterEstimate } from "./ev/counter-estimate";
+import { findMachineHallSummary } from "./machine-list-summary";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 export const LIVE_REFRESH_MS = 60_000;
@@ -44,7 +45,7 @@ export function startLiveMachineRefresh(
 ): () => void {
   let revision = initial.revision;
   return startLiveRefresh(async (index, signal) => {
-    const item = index.machines.find(candidate => candidate.id === initial.machine.id && candidate.hallId === hallId);
+    const item = findMachineHallSummary(index.machines, initial.machine, hallId);
     if (!item || item.revision === revision) return;
     const next = await fetchLiveMachine(item, signal);
     if (signal.aborted) return;

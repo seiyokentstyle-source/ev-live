@@ -10,10 +10,11 @@ import { machineSummary } from "./ev/summary";
 import { normalizeMachineMetadata } from "./machine-metadata";
 import type { HeatmapCoverageMachine } from "./heatmap/coverage";
 import { readCollectionCatalog } from "./collection-status-catalog";
-import type { CollectedMachine } from "./collection-status-contract";
+import type { CollectedMachine, CollectionStatusEntry } from "./collection-status-contract";
 import { selectMachineListSummaries } from "./machine-list-summary";
 import { inlineSourceAggregations, sourceAggregatesDir } from "./source-aggregations.mjs";
 import { getRegisteredProvisionalSetting1 } from "./ev/provisional-setting1";
+import { machineSelectionKey, machineRouteIds, matchesMachineRoute, preferredMachineIdentity } from "./machine-identity";
 
 // Data lives at the repository root (data/machines), while the site builds from
 // site/. Resolve against the repo root so it works whether the cwd is site/
@@ -178,7 +179,10 @@ async function loadHallMachine(id: string, dataSubdir?: string): Promise<Machine
 /** Route IDs include machines collected only in a non-default hall. */
 export async function getMachineIds(): Promise<string[]> {
   const halls = await Promise.all(getReadyHalls().map((hall) => getHallDisplays(hall.id)));
-  return [...new Set(halls.flatMap((items) => items.map(item => displaySummary(item).id)))];
+  return [...new Set(halls.flatMap(items => items.flatMap(item => {
+    const summary = displaySummary(item);
+    return machineRouteIds(summary.id).filter(id => matchesMachineRoute(id, summary));
+  })))];
 }
 
 export type MachineHallSummary = { hallId: string; summary: MachineSummary };
@@ -230,28 +234,46 @@ export async function getHallDisplays(hallId: string): Promise<HallDisplay[]> {
   const [machines, observations] = await Promise.all([
     getAvailableMachines(hall.dataSubdir), readCollectionCatalog(path.dirname(machinesDir), hallId),
   ]);
+  return mergeHallDisplays(machines, observations);
+}
+
+function mergeHallDisplays(machines: Machine[], observations: CollectionStatusEntry[]): HallDisplay[] {
   const displays = new Map<string, HallDisplay>(machines.map(machine => [machine.id, { kind: "machine", machine: withPendingReference(machine) }]));
+  const held = new Set(observations.filter(entry => entry.forcePending).map(entry => machineSelectionKey(entry.summary)));
   for (const { forcePending, ...collection } of observations) {
     if (forcePending || !displays.has(collection.summary.id)) {
       const source = machines.find(machine => machine.id === collection.summary.id);
       displays.set(collection.summary.id, collectionDisplay(collection, source));
     }
   }
-  return [...displays.values()].sort((a, b) => compareMachines(displaySummary(a), displaySummary(b)));
+  const selected = new Map<string, HallDisplay>();
+  const numeric = (display: HallDisplay) => display.kind === "machine"
+    && display.machine.profiles.some(profile => !profile.dataPending && profile.baseAnchors.length > 0);
+  for (const display of displays.values()) {
+    const summary = displaySummary(display), key = machineSelectionKey(summary);
+    const forced = observations.some(entry => entry.forcePending && entry.summary.id === summary.id);
+    if (held.has(key) && !forced) continue;
+    const previous = selected.get(key);
+    if (!previous || (numeric(display) !== numeric(previous) ? numeric(display)
+      : preferredMachineIdentity(summary, displaySummary(previous)))) selected.set(key, display);
+  }
+  return [...selected.values()].sort((a, b) => compareMachines(displaySummary(a), displaySummary(b)));
 }
 
 export async function getHallDisplay(id: string, hallId: string): Promise<HallDisplay | undefined> {
   const hall = getHall(hallId);
   if (!isListedHall(hall) || !hall.ready || !/^[a-z0-9]{1,40}$/.test(id)) return undefined;
-  const [machine, observations] = await Promise.all([
-    getMachine(id, hall.dataSubdir), readCollectionCatalog(path.dirname(machinesDir), hallId),
+  const candidates = machineRouteIds(id);
+  const [machines, observations] = await Promise.all([
+    Promise.all(candidates.map(candidate => getMachine(candidate, hall.dataSubdir))),
+    readCollectionCatalog(path.dirname(machinesDir), hallId),
   ]);
-  const entry = observations.find(item => item.summary.id === id);
-  if (entry && (entry.forcePending || !machine?.available)) {
-    const { forcePending: _, ...collection } = entry;
-    return collectionDisplay(collection, machine);
-  }
-  return machine?.available ? { kind: "machine", machine: withPendingReference(machine) } : undefined;
+  const displays = mergeHallDisplays(
+    machines.filter((machine): machine is Machine => Boolean(machine?.available && matchesMachineRoute(id, machine))),
+    observations.filter(entry => matchesMachineRoute(id, entry.summary)));
+  // An unexpected name on the requested ID is still its own machine, never an alias.
+  return displays.find(display => displaySummary(display).id === id
+    && machineSelectionKey(displaySummary(display)).startsWith("id:")) ?? displays[0];
 }
 
 export async function getMachineListSummaries(): Promise<MachineSummary[]> {

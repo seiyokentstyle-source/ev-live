@@ -72,6 +72,32 @@ afterEach(() => {
 });
 
 describe("live machine snapshots", () => {
+  it("follows a verified alias switch using the raw detail ID and revision, then returns to a hold", async () => {
+    const held = collectedFixture("m4ab6796b");
+    held.summary.name = "Lパリピ孔明";
+    const pending = buildLiveCollection(held);
+    const numeric = { ...updated, machine: { ...updated.machine, id: "m020bda5f", name: "スマスロパリピ孔明" } };
+    request.mockResolvedValueOnce(response(indexFor(numeric))).mockResolvedValueOnce(response(numeric))
+      .mockResolvedValueOnce(response(indexFor(pending))).mockResolvedValueOnce(response(pending));
+    const onUpdate = vi.fn();
+    stop = startLiveMachineRefresh(pending, "shinjuku", onUpdate);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(onUpdate.mock.calls[0][0]).toEqual(numeric);
+    expect(request.mock.calls[1][0]).toContain(`/m020bda5f.json?revision=${numeric.revision}`);
+    await vi.advanceTimersByTimeAsync(LIVE_REFRESH_MS);
+    expect(onUpdate.mock.calls[1][0]).toEqual(pending);
+    expect(request.mock.calls[3][0]).toContain(`/m4ab6796b.json?revision=${pending.revision}`);
+    expect(onUpdate.mock.calls[1][0].machine).not.toHaveProperty("profiles");
+  });
+
+  it("does not accept a different raw payload ID just because its display identity matches", async () => {
+    const numeric = { ...updated, machine: { ...updated.machine, id: "m020bda5f", name: "スマスロパリピ孔明" } };
+    const wrongId = { ...numeric, machine: { ...numeric.machine, id: "m4ab6796b", name: "Lパリピ孔明" } };
+    request.mockResolvedValue(response(wrongId));
+    await expect(fetchLiveMachine(indexFor(numeric).machines[0], new AbortController().signal))
+      .rejects.toThrow("revision mismatch");
+  });
+
   it("switches between numeric and collection-only snapshots without keeping prior financial fields", async () => {
     const collection = buildLiveCollection(collectedFixture(original.machine.id));
     request.mockResolvedValueOnce(response(indexFor(collection))).mockResolvedValueOnce(response(collection))

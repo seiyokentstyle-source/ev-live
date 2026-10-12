@@ -205,4 +205,13 @@ describe("live data publication", () => {
     expect(detail?.machine).not.toHaveProperty("profiles");
     expect(detail?.machine).not.toHaveProperty("economics");
   });
+
+  it("reads saved targets under the selected raw ID when entering from an alias URL", async () => {
+    const machine = validateMachine({ ...fixture, id: "m020bda5f", name: "スマスロパリピ孔明" });
+    vi.mocked(getHallDisplay).mockResolvedValue({ kind: "machine", machine });
+    const detail = await getLiveMachine("m4ab6796b", "kabuki");
+    expect(detail?.machine.id).toBe(machine.id);
+    expect(getSavedTargetSnapshot).toHaveBeenCalledExactlyOnceWith(machine.id, "kabuki", "kabuki");
+    expect(detail).toEqual(buildLiveMachine(machine, "kabuki", catalog()));
+  });
 });

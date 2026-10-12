@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { MachineSummary } from "@/lib/ev/types";
 import { useLiveMachines } from "@/lib/use-live-data";
-import { readFavorites, writeFavorites, type FavoriteMap } from "@/lib/favorites";
+import { readFavorites, writeFavorites, isMachineFavorite, toggleMachineFavorite, type FavoriteMap } from "@/lib/favorites";
 import { normalizeSearchText } from "@/lib/search/normalize";
 import { rewriteManufacturer } from "@/lib/ev/profiles";
 import { compareMachines } from "@/lib/machine-order";
@@ -57,14 +57,14 @@ export function MachineListClient({ machines: initialMachines }: MachineListClie
   }, []);
 
   const makers = useMemo(() => Array.from(new Set(machines.map((machine) => machine.manufacturer))).sort(), [machines]);
-  const favoriteCount = useMemo(() => machines.filter((machine) => favorites[machine.id]).length, [favorites, machines]);
+  const favoriteCount = useMemo(() => machines.filter((machine) => isMachineFavorite(machine, favorites)).length, [favorites, machines]);
   const normalizedQuery = normalizeSearchText(query);
 
   const results = useMemo<MachineResult[]>(() => {
     return machines
       .map((machine) => {
         const match = getSearchMatch(machine, normalizedQuery);
-        return match ? { machine, match, isFavorite: Boolean(favorites[machine.id]) } : undefined;
+        return match ? { machine, match, isFavorite: isMachineFavorite(machine, favorites) } : undefined;
       })
       .filter((result): result is MachineResult => result !== undefined)
       .filter((result) => {
@@ -78,10 +78,9 @@ export function MachineListClient({ machines: initialMachines }: MachineListClie
       });
   }, [favorites, maker, machines, normalizedQuery]);
 
-  function toggleFavorite(id: string): void {
+  function toggleFavorite(machine: MachineSummary): void {
     setFavorites((current) => {
-      const next = { ...current, [id]: !current[id] };
-      if (!next[id]) delete next[id];
+      const next = toggleMachineFavorite(machine, current);
       writeFavorites(next);
       return next;
     });
@@ -136,7 +135,7 @@ export function MachineListClient({ machines: initialMachines }: MachineListClie
                 isFavorite={result.isFavorite}
                 match={result.match}
                 onOpen={() => router.push(`/machines/${result.machine.id}`)}
-                onToggleFavorite={() => toggleFavorite(result.machine.id)}
+                onToggleFavorite={() => toggleFavorite(result.machine)}
               />
             ))}
           </div>

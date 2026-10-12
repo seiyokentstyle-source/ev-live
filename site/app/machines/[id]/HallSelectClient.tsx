@@ -10,6 +10,7 @@ import { TableFoot } from "@/components/ui/DataTable";
 import { rewriteManufacturer } from "@/lib/ev/profiles";
 import { collectionPending, collectionStatus } from "@/lib/ev/collection-status";
 import { simpleEvSet } from "@/lib/ev/simple-ev-tables";
+import { findMachineHallSummary } from "@/lib/machine-list-summary";
 
 type HallSelectClientProps = {
   machine: MachineSummary;
@@ -20,12 +21,12 @@ type HallSelectClientProps = {
  *  機種選択 → ここ → 期待値稼働／設定狙い／AT獲得 の順になる。 */
 export function HallSelectClient({ machine: initialMachine, hallMachines }: HallSelectClientProps) {
   const index = useLiveIndex();
-  const machine = index?.machines.find(item => item.id === initialMachine.id && item.hallId === DEFAULT_HALL_ID)?.summary ?? initialMachine;
+  const machine = index ? findMachineHallSummary(index.machines, initialMachine, DEFAULT_HALL_ID)?.summary ?? initialMachine : initialMachine;
   const router = useRouter();
   const simpleSet = simpleEvSet(machine.id);
   const halls = getVisibleHalls();
   const hallSummary = (hallId: string) => index
-    ? index.machines.find(item => item.id === machine.id && item.hallId === hallId)?.summary
+    ? findMachineHallSummary(index.machines, machine, hallId)?.summary
     : hallMachines.find(item => item.hallId === hallId)?.summary;
   const readyCount = halls.filter((hall) => {
     const summary = hallSummary(hall.id);

@@ -105,7 +105,7 @@ export async function getLiveMachine(machineId: string, hallId: string): Promise
   const machine = display.machine;
   const [catalog, targets] = await Promise.all([
     getSavedTargetCatalog(),
-    getSavedTargetSnapshot(machineId, hall.dataSubdir, hall.id)
+    getSavedTargetSnapshot(machine.id, hall.dataSubdir, hall.id)
   ]);
   return buildLiveMachine(machine, hall.id, catalog, targets.refreshed, targets.replaySource);
 }
