@@ -46,10 +46,32 @@ describe("shared Lycoris accounting and honest reference comparison", () => {
     input.referenceComparison!.checks.at(-1)!.actualRtpPercent = 97.91;
     expect(() => validateSharedLedger("lycoris", input)).toThrow(/global equation/);
   });
-  it("rejects reference reports that differ from the published all-condition anchors", () => {
+  it("keeps all-state and upper-AT reference cohorts independent of the visible post-AT profiles", () => {
     const input = fixture();
-    input.profiles.find(p => p.key === "after_other_5050")!.baseAnchors[0].rtp = 100.3;
+    const postAt = input.profiles.find(p => p.key === "after_other_5050")!;
+    postAt.baseAnchors[0].rtp = 101.2;
+    postAt.baseAnchors[0].n = 70;
+    postAt.baseAnchors[1].rtp = 108.5;
+    postAt.baseAnchors[1].n = 60;
+    input.profiles = input.profiles.filter(p => p.key !== "after_upper_5050");
+    expect(() => validateSharedLedger("lycoris", input)).not.toThrow();
+  });
+  it.each(["reset_5050", "zone_50_100_5050", "zone_150_250_5050"])(
+    "rejects a reference RTP mismatch for the same published cohort: %s", key => {
+    const input = fixture();
+    input.profiles.find(p => p.key === key)!.baseAnchors[0].rtp += 1;
     expect(() => validateSharedLedger("lycoris", input)).toThrow(/published comparison/);
+  });
+  it("rejects a reset reference sample count mismatch", () => {
+    const input = fixture();
+    input.profiles.find(p => p.key === "reset_5050")!.baseAnchors[0].n -= 1;
+    expect(() => validateSharedLedger("lycoris", input)).toThrow(/published comparison/);
+  });
+  it.each(["actualRtpPercent", "displayRtpPercent"] as const)(
+    "still rejects non-finite independent reference values: %s", field => {
+    const input = fixture();
+    input.referenceComparison!.checks.find(check => check.key === "normal_300_850")![field] = NaN;
+    expect(() => validateSharedLedger("lycoris", input)).toThrow(/comparison values/);
   });
   it("rejects claims that the unobserved reference conditions were verified", () => {
     const input = fixture();

@@ -32,9 +32,11 @@ export type ReferenceComparison = {
 
 const targets: Record<string, [number, "eq" | "gte", string | null, number]> = {
   reset_0_600: [100, "gte", "reset_5050", 0],
-  normal_300_850: [100.3, "eq", "after_other_5050", 300],
-  normal_400_850: [106.1, "eq", "after_other_5050", 400],
-  after_upper_0_850: [105.1, "eq", "after_upper_5050", 0],
+  // These reference cohorts are calculated independently of the visible post-AT
+  // profiles: after_other excludes run-throughs and includes upper-AT endings.
+  normal_300_850: [100.3, "eq", null, 300],
+  normal_400_850: [106.1, "eq", null, 400],
+  after_upper_0_850: [105.1, "eq", null, 0],
   zone_50_100: [105.7, "eq", "zone_50_100_5050", 50],
   zone_150_250: [101, "eq", "zone_150_250_5050", 150],
   overall_0: [97.9, "eq", null, 0],
