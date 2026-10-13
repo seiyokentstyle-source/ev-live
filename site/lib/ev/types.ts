@@ -128,6 +128,8 @@ export type FilterAggregationParameters = {
   medalsPerGame: number;
   /** v2のみ。fromGame消化後から適用する通常時の投入枚数/G。 */
   normalCostSchedule?: NormalCostSchedule;
+  /** v2のみ。最終列に合計消化Gを保持し、獲得÷純増による再推定をしない。 */
+  totalPlayGames?: true;
   junzou: number;
   bet: number;
   investmentMinimum: "mean" | "total";
@@ -135,7 +137,7 @@ export type FilterAggregationParameters = {
   roundingEpsilon: number;
 };
 
-/** [g, ...optionIndexes, n, sumNormalGames, sumPayoutMedals]。-1 は不明。
+/** [g, ...optionIndexes, n, sumNormalGames, sumPayoutMedals, sumTotalPlayGames?]。-1 は不明。
  * v2 は1行内の通常投入Gが全件同じ。g・軸値・通常投入Gごとに集約し、持ちメダルを各投資に適用できる。 */
 export type DecodedFilterAggregation = FilterAggregationParameters & { rows: number[][] };
 export type FilterAggregationRowsAsset = { sha256: string; rowCount: number };
@@ -365,8 +367,9 @@ export type Setting1Correction = {
   sourceHallId: "shinjuku" | "mixed";
   targetRtp: number;
   payoutScale: number;
-  method: "payout-scale" | "assumed-payout" | "official-calibration";
+  method: "payout-scale" | "assumed-payout" | "official-calibration" | "shared-ledger";
   calibration?: import("./official-calibration").OfficialCalibration;
+  referenceComparison?: import("./shared-ledger").ReferenceComparison;
   profiles: Profile[];
 };
 

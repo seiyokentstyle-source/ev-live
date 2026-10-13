@@ -21,7 +21,7 @@ function decodeRows(data, axes) {
   validateAggregateMatchModes(data.axisMatchModes, axes);
   if (data.rows !== undefined) {
     if (data.rowsGzip !== undefined || data.rowCount !== undefined || data.rowsAsset !== undefined) fail('conflicting row payloads');
-    return validateAggregateRows(data.rows, axes, undefined, data.axisMatchModes, data.schema);
+    return validateAggregateRows(data.rows, axes, undefined, data.axisMatchModes, data.schema, data.totalPlayGames);
   }
   if (data.rowsAsset !== undefined) {
     if (data.rowsGzip !== undefined || data.rowCount !== undefined) fail('conflicting row payloads');
@@ -37,7 +37,7 @@ function decodeRows(data, axes) {
   } catch {
     fail('compressed rows could not be decoded');
   }
-  return validateAggregateRows(rows, axes, data.rowCount, data.axisMatchModes, data.schema);
+  return validateAggregateRows(rows, axes, data.rowCount, data.axisMatchModes, data.schema, data.totalPlayGames);
 }
 
 function splitProfile(profile) {

@@ -419,6 +419,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
 
       {mode !== 'targets' && !(mode === 'ev' && aimTarget) ? <ConditionsBar
         machine={machine}
+        profile={displayProfile}
         mode={mode}
         rateLabel={grouped.rates.find((r) => r.value === activeRate)?.label ?? activeRate}
         czLabel={(() => {

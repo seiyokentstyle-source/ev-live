@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { AimMode } from "./ModeSelector";
-import type { Machine } from "@/lib/ev/types";
+import type { Machine, Profile } from "@/lib/ev/types";
 import { visibleCalcSpecItems } from "@/lib/ev/profiles";
 import { collectionStatus } from "@/lib/ev/collection-status";
 import { rtpExplanation } from "@/lib/ev/rtp";
@@ -24,6 +24,8 @@ type ConditionsBarProps = {
   /** 道中の当たりの呼び名（既定CZ / マギレコはBB）. */
   czTerm?: string;
   heldMedals?: number;
+  /** 表示中の表が使う消化Gの計算条件。 */
+  profile?: Profile;
 };
 
 type Row = { k: string; v: string };
@@ -44,7 +46,8 @@ export function ConditionsBar({
   profileSessionUnit,
   profileSampleNote,
   czTerm,
-  heldMedals = 0
+  heldMedals = 0,
+  profile
 }: ConditionsBarProps) {
   const [open, setOpen] = useState(false);
   const ev = machine.evCalc;
@@ -52,6 +55,7 @@ export function ConditionsBar({
   const calcSpec = machine.calcSpec;
   const pendingStatus = collectionStatus(machine.meta);
   const selectedCeilingText = ceilingText?.trim();
+  const hasTotalPlayGames = profile?.evFilters?.aggregation?.totalPlayGames === true;
 
   const rows: Row[] = [];
   if (pendingStatus) {
@@ -75,7 +79,9 @@ export function ConditionsBar({
     if (rateLabel) rows.push({ k: "レート", v: rateLabel });
     rows.push({ k: "賭け枚数", v: `${ev.bet ?? 3}枚掛け` });
     rows.push({ k: "通常時の使用枚数", v: `${ev.use}枚/G（ベース${(50 / ev.use).toFixed(1)}G/50枚）` });
-    if (ev.junzou) rows.push({ k: "AT純増", v: `${ev.junzou}枚/G（AT中Gは総獲得÷純増で推定）` });
+    if (ev.junzou) rows.push({ k: "AT純増", v: hasTotalPlayGames
+      ? `${ev.junzou}枚/G（ボーナス中の消化Gの推定に使用）`
+      : `${ev.junzou}枚/G（AT中Gは総獲得÷純増で推定）` });
     rows.push({ k: "天井", v: selectedCeilingText || `${ev.ceiling}G` });
     if (ev.preg) rows.push({ k: "前兆", v: `${ev.preg}G（打ち始めから自力当選しない前提）` });
     if (czLabel) rows.push({ k: `道中${czTerm ?? "CZ"}`, v: `${czLabel} の状態から次のボーナスまで` });
@@ -111,6 +117,7 @@ export function ConditionsBar({
   }
 
   if (mode === "ev" && !pendingStatus) {
+    if (hasTotalPlayGames) rows.push({ k: "消化G", v: "通常時・CZ・AT中のボーナス以外の消化Gと、獲得から推定したボーナス中Gを合計。機械割と時給には、この表と同じ条件の合計を使用" });
     rows.push({ k: "持ちメダル", v: `${heldMedals.toLocaleString("ja-JP")}枚。交換価値で使用し、不足分を現金投資として計算。等価交換では期待値は変わりません。` });
   }
   if (rows.length === 0) return null;

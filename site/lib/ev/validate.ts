@@ -8,6 +8,7 @@ import { validateHeatmapCoverage } from "./heatmap-coverage";
 import { validateMachineProvisionalSetting1 } from "./provisional-setting1";
 import { assertSingleAttachment, validateMachineCounterEstimate } from "./counter-estimate";
 import { validateOfficialCalibration } from "./official-calibration";
+import { validateSharedLedger } from "./shared-ledger";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -153,11 +154,12 @@ export function validateMachine(data: unknown): Machine {
       for (const { aggregate, axes } of aggregates) {
         assert(isRecord(aggregate) && ["evlive-filter-aggregates/v1", "evlive-filter-aggregates/v2"].includes(aggregate.schema as string),
           `profile ${profile.key} aggregation schema is invalid`);
-        const fields = new Set(["schema", "axisKeys", "axisMatchModes", "rows", "rowsGzip", "rowCount", "rowsAsset", "costPerGame", "exchange", "medalsPerGame", "normalCostSchedule", "junzou", "bet", "investmentMinimum", "minPlay", "roundingEpsilon"]);
+        const fields = new Set(["schema", "axisKeys", "axisMatchModes", "rows", "rowsGzip", "rowCount", "rowsAsset", "costPerGame", "exchange", "medalsPerGame", "normalCostSchedule", "totalPlayGames", "junzou", "bet", "investmentMinimum", "minPlay", "roundingEpsilon"]);
         assert(Object.keys(aggregate).every(key => fields.has(key)), `profile ${profile.key} aggregation contains unsupported fields`);
         assert(Array.isArray(axes) && axes.every(axis => isRecord(axis) && Array.isArray(axis.options)) && Array.isArray(aggregate.axisKeys)
           && JSON.stringify(aggregate.axisKeys) === JSON.stringify(axes.map(axis => axis.key)),
         `profile ${profile.key} aggregation axisKeys must match the declared axes`);
+        assert(aggregate.totalPlayGames === undefined || (aggregate.totalPlayGames === true && aggregate.schema === "evlive-filter-aggregates/v2"), "aggregation totalPlayGames requires v2 and true");
         validateAggregateMatchModes(aggregate.axisMatchModes, axes);
         validateNormalCostSchedule(aggregate.normalCostSchedule, aggregate.medalsPerGame, aggregate.schema);
         for (const key of ["costPerGame", "exchange", "medalsPerGame", "bet"] as const) {
@@ -179,7 +181,7 @@ export function validateMachine(data: unknown): Machine {
         } else if (aggregate.rows !== undefined) {
           assert(aggregate.rowsGzip === undefined && aggregate.rowCount === undefined,
             `profile ${profile.key} aggregation must contain rows or compressed rows, not both`);
-          validateAggregateRows(aggregate.rows, axes, undefined, aggregate.axisMatchModes, aggregate.schema);
+          validateAggregateRows(aggregate.rows, axes, undefined, aggregate.axisMatchModes, aggregate.schema, aggregate.totalPlayGames);
         } else {
           assert(typeof aggregate.rowsGzip === "string" && aggregate.rowsGzip.length > 0
             && aggregate.rowsGzip.length % 4 === 0 && /^[A-Za-z0-9+/]+={0,2}$/.test(aggregate.rowsGzip),
@@ -289,7 +291,7 @@ export function validateMachine(data: unknown): Machine {
       "setting1Correction targetRtp must be between 0 and 1");
     assert(Number.isFinite(correction.payoutScale) && correction.payoutScale > 0,
       "setting1Correction payoutScale must be positive and finite");
-    assert(correction.method === "payout-scale" || correction.method === "assumed-payout" || correction.method === "official-calibration",
+    assert(correction.method === "payout-scale" || correction.method === "assumed-payout" || correction.method === "official-calibration" || correction.method === "shared-ledger",
       "unknown setting1Correction method");
     assert(correction.method !== "assumed-payout" || correction.payoutScale === 1,
       "assumed payout must not be corrected twice");
@@ -301,6 +303,7 @@ export function validateMachine(data: unknown): Machine {
     // Reuse the public profile contract, without recursively validating the bundle.
     validateMachine({ ...machine, profiles: correction.profiles, setting1Correction: undefined });
     if (correction.method === "official-calibration") validateOfficialCalibration(machine.id, correction);
+    if (correction.method === "shared-ledger") validateSharedLedger(machine.id, correction);
     for (const profile of correction.profiles) {
       const tables = [profile, ...Object.values(profile.evFilters?.tables ?? {})];
       for (const table of tables) {

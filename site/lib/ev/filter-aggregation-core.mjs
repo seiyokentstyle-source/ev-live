@@ -39,10 +39,11 @@ export function aggregateFilterTable(data, axes, selection, fallbackStart, heldM
         ? value < 0 || !indexes.some(index => (value & 2 ** index) !== 0)
         : !indexes.includes(value);
     })) continue;
-    const [n, normal, payout] = row.slice(axes.length + 1);
+    const [n, normal, payout, play] = row.slice(axes.length + 1);
     if (n <= 0) continue;
-    const total = byGame.get(row[0]) ?? { n: 0, normal: 0, payout: 0, held: 0, medals: 0 };
+    const total = byGame.get(row[0]) ?? { n: 0, normal: 0, payout: 0, play: 0, held: 0, medals: 0 };
     total.n += n; total.normal += normal; total.payout += payout;
+    if (data.totalPlayGames) total.play += play;
     if (schedule || heldMedals > 0) {
       const medals = normalInvestmentMedals(row[0], normal / n, data.medalsPerGame, schedule);
       if (schedule) total.medals += n * medals;
@@ -61,7 +62,7 @@ export function aggregateFilterTable(data, axes, selection, fallbackStart, heldM
     const investment = schedule ? medals * (data.costPerGame / data.medalsPerGame) : total.normal * data.costPerGame;
     const cashProfit = total.payout * data.exchange - investment;
     const profit = heldMedals > 0 ? cashProfit + total.held * Math.max(0, exchangeGap) : cashProfit;
-    const games = total.normal + (data.junzou > 0 ? total.payout / data.junzou : 0);
+    const games = data.totalPlayGames ? total.play : total.normal + (data.junzou > 0 ? total.payout / data.junzou : 0);
     return { g, n: total.n, ev: roundAggregateEV(profit / total.n, data.roundingEpsilon),
       inv: medals / total.n, playG: games / total.n,
       rtp: games > 0 ? 100 + profit / (20 * data.bet * games) * 100 : 100 };

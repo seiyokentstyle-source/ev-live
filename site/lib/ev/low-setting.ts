@@ -54,6 +54,7 @@ function correctedMachine(machine: Machine): Machine | null {
   const correction = machine.setting1Correction;
   if (!correction) return null;
   const calibrated = correction.method === "official-calibration";
+  const sharedLedger = correction.method === "shared-ledger";
   const next: Machine = {
     ...machine,
     profiles: correction.profiles,
@@ -64,15 +65,20 @@ function correctedMachine(machine: Machine): Machine | null {
     calcSpec: {
       items: [
         { k: "参照データ", v: "収集元として記載された店舗の履歴を使用。狙い方・絞り込み条件・当たり方と母数を揃えて算出" },
-        { k: "設定1への補正", v: calibrated
+        { k: "設定1への補正", v: sharedLedger
+          ? "完結した全状態の区間を同じ投資・消化Gで計算し、全体の等価機械割97.9%から共通のボーナス単価を逆算。条件別の参考機械割に合わせる倍率は使用しません"
+          : calibrated
           ? "提供された条件別機械割と全体97.9%を基準に獲得を校正した推定。等価・前回連チャン不問で照合し、46/52は交換差を反映"
           : correction.method === "assumed-payout"
           ? `公表設定1の機械割${(correction.targetRtp * 100).toFixed(1)}%から獲得を逆算済み。追加の獲得補正は行わない`
           : `機種全体の機械割を公表設定1の${(correction.targetRtp * 100).toFixed(1)}%に合わせる獲得倍率${(correction.payoutScale * 100).toFixed(2)}%を、全ての狙い方と絞り込みに適用` },
-        { k: "補正の前提", v: calibrated
+        { k: "補正の前提", v: sharedLedger
+          ? "通常表は駆け抜け後・通常AT後・上位AT後を合算。前回連チャンで絞っても共通単価は変えません。CZ・ATの時間を同じ式で集計し、獲得枚数と液晶Gは履歴からの推定として扱います"
+          : calibrated
           ? "履歴から推定した当選G・前回連チャン数・母数を維持。同じ区間の校正獲得をすべての打ち始めGと絞り込みに使用。連チャン別の値を個別に目標へ合わせ直すことはしません"
           : "当選G分布と条件別の母数は収集対象店舗の実測のまま。獲得の仮定を変えて期待値・機械割・消化時間を再計算。各条件の機械割を一律に設定1の値へ揃える処理ではない" },
         ...(calibrated ? (correction.calibration?.assumptions ?? []).map(v => ({ k: "参考値との照合条件", v })) : []),
+        ...(sharedLedger ? [{ k: "参考機械割との比較", v: "提供画像との一致は未確認です。特にゾーン前兆の終了位置と上位CZ失敗を外部履歴から確定できないため、画像と同条件の再現値ではありません" }] : []),
         ...(machine.calcSpec?.items ?? []).filter((item) => item.k !== "設定1想定の補正"),
       ],
     },

@@ -14,14 +14,15 @@ export function clearAggregationDecodeCache(): void {
 
 export function decodeFilterAggregation(data: FilterAggregation, axes: FilterAxis[]): Promise<DecodedFilterAggregation> {
   try {
+    if (data.totalPlayGames !== undefined && (data.totalPlayGames !== true || data.schema !== "evlive-filter-aggregates/v2")) throw new Error("Invalid aggregation totalPlayGames");
     validateNormalCostSchedule(data.normalCostSchedule, data.medalsPerGame, data.schema);
   } catch (error) {
     return Promise.reject(error);
   }
   if (data.rows !== undefined) {
-    return Promise.resolve().then(() => ({ ...data, rows: validateAggregateRows(data.rows, axes, undefined, data.axisMatchModes, data.schema) }));
+    return Promise.resolve().then(() => ({ ...data, rows: validateAggregateRows(data.rows, axes, undefined, data.axisMatchModes, data.schema, data.totalPlayGames) }));
   }
-  const axisIdentity = JSON.stringify([data.schema, data.axisMatchModes, data.rowsAsset, axes.map(axis => [axis.key, axis.options.map(option => option.value)])]);
+  const axisIdentity = JSON.stringify([data.schema, data.totalPlayGames, data.axisMatchModes, data.rowsAsset, axes.map(axis => [axis.key, axis.options.map(option => option.value)])]);
   const previous = cache.get(data);
   if (previous?.axes === axisIdentity) {
     cache.delete(data); cache.set(data, previous);
@@ -46,7 +47,7 @@ export function decodeFilterAggregation(data: FilterAggregation, axes: FilterAxi
     }
     let rows: number[][];
     if (payload.rows !== undefined) {
-      rows = validateAggregateRows(payload.rows, axes, data.rowsAsset?.rowCount, data.axisMatchModes, data.schema);
+      rows = validateAggregateRows(payload.rows, axes, data.rowsAsset?.rowCount, data.axisMatchModes, data.schema, data.totalPlayGames);
     } else {
       if (typeof DecompressionStream === "undefined") throw new Error("Gzip decompression is unavailable");
       const binary = atob(payload.rowsGzip);
@@ -54,7 +55,7 @@ export function decodeFilterAggregation(data: FilterAggregation, axes: FilterAxi
       for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
       const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"), { signal: controller.signal });
       const text = await new Response(stream).text();
-      rows = validateAggregateRows(JSON.parse(text), axes, payload.rowCount, data.axisMatchModes, data.schema);
+      rows = validateAggregateRows(JSON.parse(text), axes, payload.rowCount, data.axisMatchModes, data.schema, data.totalPlayGames);
     }
     const { rowsAsset: _asset, rowsGzip: _encoded, rowCount: _count, ...parameters } = data;
     return { ...parameters, rows };
