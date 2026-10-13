@@ -7,6 +7,7 @@ import { validateSettingAimDayDigitNets } from "./setting-aim-day-nets";
 import { validateHeatmapCoverage } from "./heatmap-coverage";
 import { validateMachineProvisionalSetting1 } from "./provisional-setting1";
 import { assertSingleAttachment, validateMachineCounterEstimate } from "./counter-estimate";
+import { validateOfficialCalibration } from "./official-calibration";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -271,6 +272,13 @@ export function validateMachine(data: unknown): Machine {
     }
   }
 
+  if (machine.officialCalibrationHold !== undefined) {
+    const held = machine.officialCalibrationHold;
+    assert(machine.id === "lycoris" && isRecord(held) && held.schemaVersion === 1
+      && held.status === "held" && held.method === "session-payout-linear-v1"
+      && held.source === "user-provided-reference" && machine.setting1Correction === undefined,
+      "official calibration hold cannot coexist with a correction");
+  }
   if (machine.setting1Correction !== undefined) {
     const correction = machine.setting1Correction;
     assert(isRecord(correction), "setting1Correction must be an object");
@@ -281,7 +289,7 @@ export function validateMachine(data: unknown): Machine {
       "setting1Correction targetRtp must be between 0 and 1");
     assert(Number.isFinite(correction.payoutScale) && correction.payoutScale > 0,
       "setting1Correction payoutScale must be positive and finite");
-    assert(correction.method === "payout-scale" || correction.method === "assumed-payout",
+    assert(correction.method === "payout-scale" || correction.method === "assumed-payout" || correction.method === "official-calibration",
       "unknown setting1Correction method");
     assert(correction.method !== "assumed-payout" || correction.payoutScale === 1,
       "assumed payout must not be corrected twice");
@@ -292,6 +300,7 @@ export function validateMachine(data: unknown): Machine {
       "setting1Correction must preserve the source profile order and keys");
     // Reuse the public profile contract, without recursively validating the bundle.
     validateMachine({ ...machine, profiles: correction.profiles, setting1Correction: undefined });
+    if (correction.method === "official-calibration") validateOfficialCalibration(machine.id, correction);
     for (const profile of correction.profiles) {
       const tables = [profile, ...Object.values(profile.evFilters?.tables ?? {})];
       for (const table of tables) {

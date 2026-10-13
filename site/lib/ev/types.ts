@@ -365,7 +365,8 @@ export type Setting1Correction = {
   sourceHallId: "shinjuku" | "mixed";
   targetRtp: number;
   payoutScale: number;
-  method: "payout-scale" | "assumed-payout";
+  method: "payout-scale" | "assumed-payout" | "official-calibration";
+  calibration?: import("./official-calibration").OfficialCalibration;
   profiles: Profile[];
 };
 
@@ -476,6 +477,8 @@ export type Machine = {
   counterEstimate?: CounterEstimate;
   /** 店舗の実測表とは別に生成した補正版。表示する店舗の選択後は取り除く。 */
   setting1Correction?: Setting1Correction;
+  /** Supplied benchmarks could not all be satisfied; never expose the raw table as corrected. */
+  officialCalibrationHold?: import("./official-calibration").OfficialCalibration;
   /** 店舗ごとに品質検証してから履歴を合算した生成物。 */
   mixedSources?: { schemaVersion: 1; halls: string[]; inputSha256: string };
   /** 公開を選んだ狙い目の再集計。掲載の有無・名称は別の公開カタログが決める。 */
