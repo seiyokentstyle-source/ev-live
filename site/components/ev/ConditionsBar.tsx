@@ -80,7 +80,7 @@ export function ConditionsBar({
     rows.push({ k: "賭け枚数", v: `${ev.bet ?? 3}枚掛け` });
     rows.push({ k: "通常時の使用枚数", v: `${ev.use}枚/G（ベース${(50 / ev.use).toFixed(1)}G/50枚）` });
     if (ev.junzou) rows.push({ k: "AT純増", v: hasTotalPlayGames
-      ? `${ev.junzou}枚/G（ボーナス中の消化Gの推定に使用）`
+      ? `${ev.junzou}枚/G（ボーナス中の公表値。消化Gは集計済みの値を使用）`
       : `${ev.junzou}枚/G（AT中Gは総獲得÷純増で推定）` });
     rows.push({ k: "天井", v: selectedCeilingText || `${ev.ceiling}G` });
     if (ev.preg) rows.push({ k: "前兆", v: `${ev.preg}G（打ち始めから自力当選しない前提）` });
@@ -117,7 +117,7 @@ export function ConditionsBar({
   }
 
   if (mode === "ev" && !pendingStatus) {
-    if (hasTotalPlayGames) rows.push({ k: "消化G", v: "通常時・CZ・AT中のボーナス以外の消化Gと、獲得から推定したボーナス中Gを合計。機械割と時給には、この表と同じ条件の合計を使用" });
+    if (hasTotalPlayGames) rows.push({ k: "消化G", v: "通常時・CZ・AT中を含む集計済みの総消化Gを使用。獲得÷純増の時間は重ねて加えず、機械割と時給を同じ合計で計算。区間判定の推定条件は上記参照" });
     rows.push({ k: "持ちメダル", v: `${heldMedals.toLocaleString("ja-JP")}枚。交換価値で使用し、不足分を現金投資として計算。等価交換では期待値は変わりません。` });
   }
   if (rows.length === 0) return null;
