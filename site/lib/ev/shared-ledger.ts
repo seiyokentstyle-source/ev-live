@@ -37,8 +37,10 @@ const targets: Record<string, [number, "eq" | "gte", string | null, number]> = {
   normal_300_850: [100.3, "eq", null, 300],
   normal_400_850: [106.1, "eq", null, 400],
   after_upper_0_850: [105.1, "eq", null, 0],
-  zone_50_100: [105.7, "eq", "zone_50_100_5050", 50],
-  zone_150_250: [101, "eq", "zone_150_250_5050", 150],
+  // Zone references use the assumed precursor extension independently; no
+  // additional zone profiles are needed in the original three-way display.
+  zone_50_100: [105.7, "eq", null, 50],
+  zone_150_250: [101, "eq", null, 150],
   overall_0: [97.9, "eq", null, 0],
 };
 

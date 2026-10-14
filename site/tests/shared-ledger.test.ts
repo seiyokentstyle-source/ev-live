@@ -56,10 +56,20 @@ describe("shared Lycoris accounting and honest reference comparison", () => {
     input.profiles = input.profiles.filter(p => p.key !== "after_upper_5050");
     expect(() => validateSharedLedger("lycoris", input)).not.toThrow();
   });
-  it.each(["reset_5050", "zone_50_100_5050", "zone_150_250_5050"])(
-    "rejects a reference RTP mismatch for the same published cohort: %s", key => {
+  it("allows independently calculated zone references without adding visible zone profiles", () => {
+    const input = fixture();
+    input.profiles = input.profiles.filter(p => !p.key.startsWith("zone_"));
+    expect(() => validateSharedLedger("lycoris", input)).not.toThrow();
+  });
+  it.each(["zone_50_100_5050", "zone_150_250_5050"])(
+    "does not bind an independent zone comparison to a differently scoped profile: %s", key => {
     const input = fixture();
     input.profiles.find(p => p.key === key)!.baseAnchors[0].rtp += 1;
+    expect(() => validateSharedLedger("lycoris", input)).not.toThrow();
+  });
+  it("rejects a reset reference RTP mismatch for the same published cohort", () => {
+    const input = fixture();
+    input.profiles.find(p => p.key === "reset_5050")!.baseAnchors[0].rtp += 1;
     expect(() => validateSharedLedger("lycoris", input)).toThrow(/published comparison/);
   });
   it("rejects a reset reference sample count mismatch", () => {
@@ -69,9 +79,11 @@ describe("shared Lycoris accounting and honest reference comparison", () => {
   });
   it.each(["actualRtpPercent", "displayRtpPercent"] as const)(
     "still rejects non-finite independent reference values: %s", field => {
-    const input = fixture();
-    input.referenceComparison!.checks.find(check => check.key === "normal_300_850")![field] = NaN;
-    expect(() => validateSharedLedger("lycoris", input)).toThrow(/comparison values/);
+    for (const key of ["normal_300_850", "zone_50_100", "zone_150_250"]) {
+      const input = fixture();
+      input.referenceComparison!.checks.find(check => check.key === key)![field] = NaN;
+      expect(() => validateSharedLedger("lycoris", input)).toThrow(/comparison values/);
+    }
   });
   it("rejects claims that the unobserved reference conditions were verified", () => {
     const input = fixture();
