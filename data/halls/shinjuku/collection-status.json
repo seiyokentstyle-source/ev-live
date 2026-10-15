@@ -21,10 +21,10 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 269,
-        "events": 264,
+        "rows": 460,
+        "events": 453,
         "units": 2,
-        "days": 5,
+        "days": 7,
         "firstDate": "2026-06-17",
         "lastDate": "2026-10-12"
       },
@@ -33,7 +33,7 @@
         "hallId": "shinjuku",
         "machineName": "スロット Re:ゼロから始める異世界生活 Season2",
         "targetDate": "2026-10-12",
-        "inputSha256": "a8171cb2968c21365fab26cb064a6a2c2ae5eaa1f5083ccee69264cc04f78799"
+        "inputSha256": "37990df4fb4853b13429e948171f4cf2a834701b76634028bc29c97c6e3c43f7"
       }
     },
     {
