@@ -37,6 +37,37 @@
       }
     },
     {
+      "id": "m6161fbda",
+      "name": "バーサスリヴァイズ",
+      "manufacturer": "未確認",
+      "aliases": [
+        "バーサスリヴァイズ"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-15",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 1,
+      "collection": {
+        "rows": 14,
+        "events": 13,
+        "units": 1,
+        "days": 1,
+        "firstDate": "2026-10-15",
+        "lastDate": "2026-10-15"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "shinjuku",
+        "machineName": "バーサスリヴァイズ",
+        "targetDate": "2026-10-15",
+        "inputSha256": "7d3835a75153411e6b3ec564d4d8b6c1cf6526e9271de8c319671bd8d8314503"
+      }
+    },
+    {
       "id": "mc95bb74e",
       "name": "L少女☆歌劇 レヴュースタァライト -The SLOT-",
       "manufacturer": "未確認",
