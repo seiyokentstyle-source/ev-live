@@ -52,10 +52,10 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 686,
-        "events": 676,
+        "rows": 702,
+        "events": 691,
         "units": 2,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-09-14",
         "lastDate": "2026-10-12"
       },
@@ -64,7 +64,7 @@
         "hallId": "shinjuku",
         "machineName": "L少女☆歌劇 レヴュースタァライト -The SLOT-",
         "targetDate": "2026-10-12",
-        "inputSha256": "04d60af0beaf6fe0d2f36d725b1d41b0361960a5407764bb0c0b586c86dc4c1b"
+        "inputSha256": "214600343e50d83ab15400dfa62a2f1c3216ec59ae1de68f2038742adba210b9"
       }
     }
   ]
