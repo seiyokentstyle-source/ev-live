@@ -3,7 +3,7 @@
   "hallId": "shinjuku",
   "source": "site_seven",
   "storeId": "00001050",
-  "lastUpdated": "2026-10-12",
+  "lastUpdated": "2026-10-15",
   "machines": [
     {
       "id": "m21cfd44f",
@@ -13,7 +13,7 @@
         "スロット Re:ゼロから始める異世界生活 Season2"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-12",
+      "lastUpdated": "2026-10-15",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -21,19 +21,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 553,
-        "events": 545,
+        "rows": 565,
+        "events": 556,
         "units": 2,
-        "days": 8,
+        "days": 9,
         "firstDate": "2026-06-17",
-        "lastDate": "2026-10-12"
+        "lastDate": "2026-10-15"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "shinjuku",
         "machineName": "スロット Re:ゼロから始める異世界生活 Season2",
-        "targetDate": "2026-10-12",
-        "inputSha256": "00386041b19c90724b908f8266cd02cb0e75e482f1cc8a3ade99d53973d8d954"
+        "targetDate": "2026-10-15",
+        "inputSha256": "6e295c5445b378a1242f3a739265a6fa02afa47488da2662a3e72258b5457b94"
       }
     },
     {
