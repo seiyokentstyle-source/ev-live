@@ -16,5 +16,6 @@ export async function hallPublicationPolicy(halls) {
   return {
     isListedId: id => !ids.has(id),
     isListedSubdir: subdir => !subdirs.has(subdir),
+    isReadyId: id => registry.find(hall => hall.id === id)?.ready !== false,
   };
 }

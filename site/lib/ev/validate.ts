@@ -47,7 +47,7 @@ export function validateMachine(data: unknown): Machine {
   // Explorer envelopes are delivered separately. Saved-target refreshes are
   // selected server-side against current publication membership, so detached
   // entries must not linger in the public Machine/React payload either.
-  const { intervalExplorer: _privateExplorer, savedTargets: _savedTargets, ...publicData } = data;
+  const { intervalExplorer: _privateExplorer, intervalExplorerStatus: _privateExplorerStatus, savedTargets: _savedTargets, ...publicData } = data;
   const machine = publicData as Machine;
 
   assert(typeof machine.id === "string" && machine.id.length > 0, "id is required");

@@ -259,7 +259,7 @@ guardはこの旧出力だけを読み取り時に互換比較する。
 
 ビルド時に `/live-data/index.json` と `/live-data/<店舗id>/<機種id>.json` を静的出力する。
 一覧は機種の表示用情報と更新判定用の `revision`、詳細は検証済みの `machine` と
-掲載中の `savedTargets` を持つ。`intervalExplorer` や掲載対象外の狙い目は含めない。
+掲載中の `savedTargets` を持つ。`intervalExplorer`、`intervalExplorerStatus` や掲載対象外の狙い目は含めない。
 `revision` は公開する内容全体のSHA-256とし、同じ更新日内のサンプル増加・再計算も検知する。
 
 画面表示中は60秒ごと、および画面に戻ったときに一覧を取得し、変更のあった機種の詳細だけを
@@ -283,6 +283,34 @@ guardはこの旧出力だけを読み取り時に互換比較する。
 ページ・ライブ更新と集計アセットの書き出しには同じ変換を適用する。
 収集側の機種JSONは変更せず、次回の収集後も同じ分離を行う。
 分割軸を持たない旧形式は、別の集団を推測で作らず従来の表を維持する。
+
+## 探索ツール向けの店舗別配信
+
+ビルド時の `site/scripts/export-interval-feed.mjs` は、EVOT と同じ機種JSONの
+`intervalExplorer` を暗号化されたまま別配信する。期待値表・集計値の再計算や書き換えはしない。
+
+- 従来の `/ev-live/interval-feed/index.json` は `evlive-interval-feed/v1` の新宿専用を維持する。
+- `/ev-live/interval-feed/index-v2.json` は `{ schema: "evlive-interval-feed/v2", halls, machines }`。
+  `halls` は `{ id, name, evotHallId }[]`、`machines` は従来と同じ
+  `{ id, machine, hallId, lastUpdated, ready, ... }[]`。機種の識別は必ず `(hallId, id)` の組とする。
+- 対象は `shinjuku`、`kabuki`、`mixed`。掲載方針が `mixed-only` の5店舗は個別配信しない。
+  それらの収集値は生成側が検証して合算した `mixed` の入力にだけ含まれる。
+- `mixed` は補正前の区間データなので、表示名は「店舗混合（補正なし）」、
+  `evotHallId` は `mixed-raw`。設定1補正後の EVOT `mixed` 表と同じ計算結果だとは扱わない。
+- `ready: true` には `sourceRevision`（64桁SHA-256）、`rows`（非負整数）、`dataFrom` が必須。
+  ペイロードは `/ev-live/interval-feed/<hallId>/<id>.json`、従来の
+  `evlive-interval-envelope/v1` を維持し、機種・店舗・最終日を入力JSONと照合する。
+- `ready: false` には `reason` として `missing_envelope`、`counter_unverified`、
+  `unsupported_replay`、`encryption_key_unavailable`、`model_too_large` のいずれかを付ける。旧版の未生成JSONは
+  `missing_envelope`。既存 v1 の項目にはこの追加フィールドを付けない。
+- 生成側の任意フィールド `intervalExplorerStatus` は
+  `{ schema: "interval-explorer-status/v1", id, hallId, lastUpdated, ready, sourceRevision? , reason?, detail? }`。
+  存在する場合は機種・店舗・日付・readyを照合し、利用可能なら暗号化ペイロードの版も一致させる。
+  不一致や未知の形式はビルド失敗とし、別店舗・旧日付のペイロードへ代替しない。
+  `detail` は配信しない。配信対象から外れた機種・店舗の古いペイロードは削除する。
+
+探索側の画面設定を変更しても EVOT の画面設定や収集設定は書き換わらない。
+逆方向の反映は、次節の明示的な狙い目掲載と、生成側によるその条件の再集計で行う。
 
 ## 手動で掲載する狙い目
 
@@ -406,7 +434,11 @@ basePath付きの固定内部URLから取得し、SHA-256・envelope・件数を
 `endG`（未指定はnull）、`filters`、`rate: "46/52" | "50/50"`、`stopRule: "evlive"`。
 フィルターは軸キーごとの `{ mode: "all" | "range" | "missing", lo, hi }`。
 上下限は数値文字列／空文字列で、`hi` は排他的上限。空のrangeは「記録あり」を意味し、
-allやmissingとは異なる。現在の店舗は新宿（`shinjuku`）。
+allやmissingとは異なる。店舗IDは入力元の `shinjuku`、`kabuki`、`mixed`。
+`mixed` の保存条件・条件ハッシュは入力元IDのまま保持し、EVOTでは `mixed-raw` のみに掲載する。
+設定1補正の `mixed` 表や別店舗には掲載しない。個別非掲載の店舗IDは受け付けない。
+新規対応の歌舞伎・混合では、現在の暗号化入力の版を検証できない場合は保存狙い目を表示しない。
+入力版が未付与の古い追加時集計への互換表示は、従来の新宿だけに限定する。
 
 公開する集計行は `{ g, ev, n, days, inv?, playG? }`。`ev` は期待値（円）またはnull、
 `n` は該当区間数、`days` は収集日数。開始Gの昇順・重複なしで、終了G未満の行を持つ。
@@ -438,7 +470,8 @@ allやmissingとは異なる。現在の店舗は新宿（`shinjuku`）。
 ビルド時に `site/scripts/export-saved-targets.mjs` が検証・許可項目への絞り込みを行い、
 公開状態確認用の `/ev-live/saved-targets.json` を出力する。生履歴・イベント・秘密鍵は
 カタログや集計結果に含めない。公開リンクは
-`/ev-live/machines/<machineId>/shinjuku/?target=<id>`。
+`/ev-live/machines/<machineId>/<evotHallId>/?target=<id>`。
+`evotHallId` は新宿・歌舞伎では入力元IDと同じで、入力元 `mixed` では `mixed-raw` とする。
 
 ## 店舗の台番号ヒートマップ
 

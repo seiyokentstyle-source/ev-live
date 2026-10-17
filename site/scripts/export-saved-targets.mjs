@@ -3,12 +3,16 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseSavedTargetCatalog } from '../lib/saved-targets.mjs';
 import { hallPublicationPolicy } from './hall-publication-policy.mjs';
+import { intervalHall } from '../lib/interval-halls.mjs';
 
 export async function exportSavedTargets(source, output, halls) {
   if (path.resolve(source) === path.resolve(output)) throw new Error('Source and output must be separate');
   const catalog = parseSavedTargetCatalog(JSON.parse(await fs.readFile(source, 'utf8')));
   const policy = await hallPublicationPolicy(halls);
-  catalog.targets = catalog.targets.filter(target => policy.isListedId(target.hallId));
+  catalog.targets = catalog.targets.filter(target => {
+    const hall = intervalHall(target.hallId);
+    return hall && policy.isListedId(hall.id) && policy.isListedId(hall.evotHallId);
+  });
   await fs.mkdir(path.dirname(output), { recursive: true });
   await fs.writeFile(output, JSON.stringify(catalog));
   return catalog;

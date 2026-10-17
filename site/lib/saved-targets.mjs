@@ -1,3 +1,5 @@
+import { intervalHall, intervalHallForEvot } from './interval-halls.mjs';
+
 const record = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 const fail = () => { throw new Error('Invalid saved target data'); };
 const string = (value, max, empty = false) => {
@@ -69,7 +71,7 @@ function hypothesisFilter(key, item) {
 }
 
 function definition(value) {
-  if (!record(value) || value.schema !== 'interval-target/v1' || value.hallId !== 'shinjuku' || !['46/52', '50/50'].includes(value.rate) || value.stopRule !== 'evlive' || !record(value.filters)) fail();
+  if (!record(value) || value.schema !== 'interval-target/v1' || !intervalHall(value.hallId) || !['46/52', '50/50'].includes(value.rate) || value.stopRule !== 'evlive' || !record(value.filters)) fail();
   const startG = integer(value.startG, 100000), endG = value.endG === null ? null : integer(value.endG, 100000);
   if (endG !== null && endG <= startG) fail();
   const filters = {};
@@ -88,7 +90,7 @@ function definition(value) {
     if ([lo, hi].some(v => v && !Number.isFinite(Number(v))) || lo && hi && Number(lo) >= Number(hi)) fail();
     filters[key] = { mode: item.mode, lo, hi };
   }
-  return { schema: 'interval-target/v1', machineId: matching(value.machineId, /^[a-z0-9]{1,40}$/), hallId: 'shinjuku', profileKey: matching(value.profileKey, /^[a-z0-9_]{1,64}$/), startG, endG, filters, rate: value.rate, stopRule: 'evlive' };
+  return { schema: 'interval-target/v1', machineId: matching(value.machineId, /^[a-z0-9]{1,40}$/), hallId: value.hallId, profileKey: matching(value.profileKey, /^[a-z0-9_]{1,64}$/), startG, endG, filters, rate: value.rate, stopRule: 'evlive' };
 }
 
 /** Only aggregate values cross into the public feed or a rendered page. */
@@ -160,10 +162,14 @@ function refreshedRows(target, latest) {
 
 /** The catalog alone controls membership; stale collector entries cannot reattach a target. */
 export function selectSavedTargets(catalog, machineId, hallId, refreshed = [], replaySource) {
+  const sourceHall = intervalHallForEvot(hallId);
+  if (!sourceHall) return [];
   // null means an advertised source could not be validated. undefined is only
   // for historical machines which have never supplied an interval attachment.
-  if (replaySource === null) return [];
-  return catalog.targets.filter(target => target.machineId === machineId && target.hallId === hallId).flatMap(target => {
+  // Only the original Shinjuku catalog predates encrypted replay metadata.
+  // New halls must prove that their aggregate snapshot belongs to the current source.
+  if (replaySource === null || replaySource === undefined && sourceHall.id !== 'shinjuku') return [];
+  return catalog.targets.filter(target => target.machineId === machineId && target.hallId === sourceHall.id).flatMap(target => {
     const latest = refreshed.find(item => item.id === target.id && item.conditionKey === target.conditionKey && item.dataThrough >= target.dataThrough &&
       (replaySource === undefined || item.sourceRevision === replaySource) &&
       (target.definition.endG === null || item.rows.every(row => row.g < target.definition.endG)));
@@ -176,10 +182,18 @@ export function selectSavedTargets(catalog, machineId, hallId, refreshed = [], r
 
 /** Read only public revision metadata; ciphertext is never copied to the page. */
 export function savedTargetReplaySource(machine, hallId) {
-  if (!record(machine) || machine.intervalExplorer === undefined) return undefined;
+  const sourceHall = intervalHallForEvot(hallId);
+  if (!sourceHall) return null;
+  if (!record(machine)) return undefined;
+  const status = machine.intervalExplorerStatus;
+  if (status !== undefined && (!record(status) || status.schema !== 'interval-explorer-status/v1' ||
+      status.id !== machine.id || status.hallId !== sourceHall.id || status.lastUpdated !== machine.lastUpdated || status.ready !== true)) return null;
+  if (machine.intervalExplorer === undefined) return status === undefined && sourceHall.id === 'shinjuku' ? undefined : null;
   const source = machine.intervalExplorer;
   if (!record(source) || source.schema !== 'evlive-interval-envelope/v1' ||
-      source.id !== machine.id || source.hallId !== hallId ||
+      source.id !== machine.id || source.hallId !== sourceHall.id ||
+      source.lastUpdated !== undefined && source.lastUpdated !== machine.lastUpdated ||
+      status !== undefined && status.sourceRevision !== source.sourceRevision ||
       typeof source.sourceRevision !== 'string' || !/^[a-f0-9]{64}$/.test(source.sourceRevision)) return null;
   return source.sourceRevision;
 }

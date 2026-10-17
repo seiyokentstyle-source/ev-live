@@ -77,9 +77,69 @@ describe('published target contract', () => {
     expect(parseMachineSavedTargets([{ ...value, paths: ['private'] }])[0]).toEqual({ id: value.id, conditionKey: value.conditionKey, sourceRevision: value.sourceRevision, dataThrough: value.dataThrough, rows: value.rows });
   });
   it('does not serialize unpublished collector entries in public Machine props', () => {
-    const machine = validateMachine({ ...fixture, savedTargets: [target()], intervalExplorer: { ciphertext: 'private feed' } });
+    const machine = validateMachine({ ...fixture, savedTargets: [target()], intervalExplorer: { ciphertext: 'private feed' }, intervalExplorerStatus: { detail: 'private diagnostic' } });
     expect(machine).not.toHaveProperty('savedTargets');
     expect(machine).not.toHaveProperty('intervalExplorer');
+    expect(machine).not.toHaveProperty('intervalExplorerStatus');
+  });
+});
+
+describe('source hall identity and EVOT display mapping', () => {
+  const hallTarget = (hallId: 'shinjuku' | 'kabuki' | 'mixed', suffix: string): PublishedTarget => {
+    const value = target();
+    return { ...value, id: value.id.slice(0, -1) + suffix, hallId, definition: { ...value.definition, hallId } };
+  };
+
+  it('isolates the same machine and condition in each hall without changing aggregate values', () => {
+    const targets = [hallTarget('shinjuku', '1'), hallTarget('kabuki', '2'), hallTarget('mixed', '3')];
+    const parsed = parseSavedTargetCatalog(catalog(targets));
+    for (const [source, display] of [['shinjuku', 'shinjuku'], ['kabuki', 'kabuki'], ['mixed', 'mixed-raw']]) {
+      const selected = selectSavedTargets(parsed, 'test', display, [], target().sourceRevision);
+      expect(selected).toHaveLength(1);
+      expect(selected[0].hallId).toBe(source);
+      expect(selected[0].definition.hallId).toBe(source);
+      expect(selected[0].rows).toEqual(target().rows);
+    }
+    expect(selectSavedTargets(parsed, 'test', 'mixed', [], target().sourceRevision)).toEqual([]);
+    expect(selectSavedTargets(parsed, 'other', 'mixed-raw', [], target().sourceRevision)).toEqual([]);
+    expect(selectSavedTargets(parsed, 'test', 'kabuki')).toEqual([]);
+    expect(selectSavedTargets(parsed, 'test', 'mixed-raw')).toEqual([]);
+  });
+
+  it('rejects hidden or display-only hall IDs as source definitions', () => {
+    for (const hallId of ['akiba_espace', 'ueno_honkan', 'mixed-raw', '../kabuki', 'unknown']) {
+      const value = { ...target(), hallId, definition: { ...target().definition, hallId } };
+      expect(() => parseSavedTargetCatalog(catalog([value as PublishedTarget]))).toThrow('Invalid saved target');
+    }
+    const kabuki = hallTarget('kabuki', '2');
+    expect(() => parseSavedTargetCatalog(catalog([{ ...kabuki, hallId: 'shinjuku' }]))).toThrow();
+  });
+
+  it('binds mixed replay only to the uncorrected display and checks producer status', () => {
+    const value = hallTarget('mixed', '3');
+    const envelope = { schema: 'evlive-interval-envelope/v1', id: 'test', hallId: 'mixed', lastUpdated: value.dataThrough, sourceRevision: value.sourceRevision };
+    const status = { schema: 'interval-explorer-status/v1', id: 'test', hallId: 'mixed', lastUpdated: value.dataThrough, ready: true, sourceRevision: value.sourceRevision };
+    const machine = { id: 'test', lastUpdated: value.dataThrough, intervalExplorer: envelope, intervalExplorerStatus: status };
+    expect(savedTargetReplaySource(machine, 'mixed-raw')).toBe(value.sourceRevision);
+    expect(savedTargetReplaySource(machine, 'mixed')).toBeNull();
+    expect(savedTargetReplaySource(machine, 'shinjuku')).toBeNull();
+    expect(savedTargetReplaySource({ id: 'test' }, 'mixed-raw')).toBeNull();
+    expect(savedTargetReplaySource({ id: 'test' }, 'kabuki')).toBeNull();
+    for (const patch of [{ ready: false, reason: 'counter_unverified' }, { hallId: 'kabuki' }, { sourceRevision: 'd'.repeat(64) }, { lastUpdated: '2026-09-02' }]) {
+      expect(savedTargetReplaySource({ ...machine, intervalExplorerStatus: { ...status, ...patch } }, 'mixed-raw')).toBeNull();
+    }
+    expect(savedTargetReplaySource({ ...machine, intervalExplorer: undefined }, 'mixed-raw')).toBeNull();
+    expect(savedTargetReplaySource({ ...machine, intervalExplorer: { ...envelope, lastUpdated: '2026-09-02' } }, 'mixed-raw')).toBeNull();
+  });
+
+  it('withdraws mixed source targets when the uncorrected display becomes hidden', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'evlive-target-halls-')); roots.push(root);
+    const source = path.join(root, 'source.json'), output = path.join(root, 'public.json');
+    await fs.writeFile(source, JSON.stringify(catalog([hallTarget('mixed', '3'), hallTarget('kabuki', '2')])));
+    const visible = await exportSavedTargets(source, output, []);
+    expect(visible.targets.map((item: PublishedTarget) => item.hallId)).toEqual(['mixed', 'kabuki']);
+    const hidden = await exportSavedTargets(source, output, [{ id: 'mixed-raw', dataSubdir: 'mixed-raw', visibility: 'mixed-only' }]);
+    expect(hidden.targets.map((item: PublishedTarget) => item.hallId)).toEqual(['kabuki']);
   });
 });
 
