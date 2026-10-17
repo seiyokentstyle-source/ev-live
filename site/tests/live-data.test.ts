@@ -208,10 +208,48 @@ describe("live data publication", () => {
 
   it("reads saved targets under the selected raw ID when entering from an alias URL", async () => {
     const machine = validateMachine({ ...fixture, id: "m020bda5f", name: "スマスロパリピ孔明" });
+    const published: PublishedTarget = { ...target, machineId: machine.id, hallId: "kabuki",
+      definition: { ...target.definition, machineId: machine.id, hallId: "kabuki" } };
+    const selectedCatalog = catalog([published]);
     vi.mocked(getHallDisplay).mockResolvedValue({ kind: "machine", machine });
+    vi.mocked(getSavedTargetCatalog).mockResolvedValue(selectedCatalog);
+    vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: target.sourceRevision });
     const detail = await getLiveMachine("m4ab6796b", "kabuki");
     expect(detail?.machine.id).toBe(machine.id);
     expect(getSavedTargetSnapshot).toHaveBeenCalledExactlyOnceWith(machine.id, "kabuki", "kabuki");
-    expect(detail).toEqual(buildLiveMachine(machine, "kabuki", catalog()));
+    expect(detail).toEqual(buildLiveMachine(machine, "kabuki", selectedCatalog, [], target.sourceRevision));
+  });
+
+  it("does not reread source JSON when no published target matches the hall and machine", async () => {
+    vi.mocked(getSavedTargetSnapshot).mockRejectedValue(new Error("Unexpected large source read"));
+    // The same ID in another hall and another ID in this hall do not qualify.
+    vi.mocked(getSavedTargetCatalog).mockResolvedValue(catalog([{ ...target, machineId: "other" }]));
+    const detail = await getLiveMachine(fixture.id, "mixed-raw");
+    expect(detail).toEqual(buildLiveMachine(validateMachine(fixture), "mixed-raw", catalog()));
+    const index = await getLiveIndex();
+    expect(index.machines.find(item => item.hallId === "mixed-raw")?.revision).toBe(detail?.revision);
+    expect(getSavedTargetSnapshot).not.toHaveBeenCalled();
+    vi.mocked(getSavedTargetCatalog).mockResolvedValue(catalog([target]));
+    await getLiveMachine(fixture.id, "kabuki");
+    expect(getSavedTargetSnapshot).not.toHaveBeenCalled();
+  });
+
+  it.each([["kabuki", "kabuki"], ["mixed", "mixed-raw"]] as const)("still checks the current source for a published %s target", async (sourceHall, displayHall) => {
+    const published: PublishedTarget = { ...target, hallId: sourceHall, definition: { ...target.definition, hallId: sourceHall } };
+    vi.mocked(getSavedTargetCatalog).mockResolvedValue(catalog([published]));
+    vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: "d".repeat(64) });
+    const stale = await getLiveMachine(fixture.id, displayHall);
+    expect(stale?.schema === "evlive-live-machine/v1" && stale.savedTargets).toEqual([]);
+    expect(getSavedTargetSnapshot).toHaveBeenCalledExactlyOnceWith(fixture.id, displayHall, displayHall);
+    vi.mocked(getSavedTargetSnapshot).mockResolvedValue({ refreshed: [], replaySource: target.sourceRevision });
+    const current = await getLiveMachine(fixture.id, displayHall);
+    expect(current?.schema === "evlive-live-machine/v1" && current.savedTargets).toEqual([{ ...published, refreshed: false }]);
+    expect(current?.machine).toEqual(stale?.machine);
+    const index = await getLiveIndex();
+    expect(index.machines.find(item => item.hallId === displayHall)?.revision).toBe(current?.revision);
+    expect(vi.mocked(getSavedTargetSnapshot).mock.calls.every(call => call[2] === displayHall)).toBe(true);
+    const calls = vi.mocked(getSavedTargetSnapshot).mock.calls.length;
+    await getLiveMachine(fixture.id, "mixed");
+    expect(getSavedTargetSnapshot).toHaveBeenCalledTimes(calls);
   });
 });

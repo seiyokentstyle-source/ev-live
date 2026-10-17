@@ -10,6 +10,7 @@ import { getHall, getReadyHalls, isListedHall } from "./halls";
 import { getHallDisplays, getHallDisplay } from "./machines";
 import { validateCollectedMachine, type CollectedMachine } from "./collection-status-contract";
 import { getSavedTargetCatalog, getSavedTargetSnapshot } from "./saved-target-catalog";
+import { intervalHallForEvot } from "./interval-halls.mjs";
 import {
   selectSavedTargets,
   savedTargetReplaySource,
@@ -96,6 +97,16 @@ export async function getLiveMachineParams(): Promise<Array<{ hall: string; id: 
   return halls.flat();
 }
 
+async function publishedTargetSnapshot(machineId: string, hallId: string, dataSubdir: string, catalog: SavedTargetCatalog) {
+  const sourceHall = intervalHallForEvot(hallId);
+  // Most machines have no published target. Do not reread their potentially
+  // large source JSON just to return an empty target list (especially mixed).
+  if (!sourceHall || !catalog.targets.some(target => target.machineId === machineId && target.hallId === sourceHall.id)) {
+    return { refreshed: [], replaySource: null };
+  }
+  return getSavedTargetSnapshot(machineId, dataSubdir, hallId);
+}
+
 export async function getLiveMachine(machineId: string, hallId: string): Promise<LiveSnapshot | undefined> {
   const hall = getHall(hallId);
   if (!isListedHall(hall) || !hall.ready || !/^[a-z0-9]{1,40}$/.test(machineId)) return undefined;
@@ -103,10 +114,8 @@ export async function getLiveMachine(machineId: string, hallId: string): Promise
   if (!display) return undefined;
   if (display.kind === "collection") return buildLiveCollection(display.collection, display.provisionalSetting1, display.counterEstimate, hallId);
   const machine = display.machine;
-  const [catalog, targets] = await Promise.all([
-    getSavedTargetCatalog(),
-    getSavedTargetSnapshot(machine.id, hall.dataSubdir, hall.id)
-  ]);
+  const catalog = await getSavedTargetCatalog();
+  const targets = await publishedTargetSnapshot(machine.id, hall.id, hall.dataSubdir, catalog);
   return buildLiveMachine(machine, hall.id, catalog, targets.refreshed, targets.replaySource);
 }
 
@@ -117,7 +126,7 @@ export async function getLiveIndex(): Promise<LiveIndex> {
     return Promise.all(displays.map(async (display) => {
       if (display.kind === "collection") return liveIndexEntry(hall.id, buildLiveCollection(display.collection, display.provisionalSetting1, display.counterEstimate, hall.id));
       const machine = display.machine;
-      const targets = await getSavedTargetSnapshot(machine.id, hall.dataSubdir, hall.id);
+      const targets = await publishedTargetSnapshot(machine.id, hall.id, hall.dataSubdir, catalog);
       return liveIndexEntry(hall.id, buildLiveMachine(machine, hall.id, catalog, targets.refreshed, targets.replaySource));
     }));
   }));
