@@ -52,7 +52,8 @@ describe("machines collected only outside the default hall", () => {
     expect(page.props.initial.machine).toEqual(mixed);
     expect(page.props.hall.id).toBe("mixed");
     expect(getMachine).toHaveBeenCalledExactlyOnceWith(mixed.id, "mixed");
-    expect(getSavedTargetSnapshot).toHaveBeenCalledExactlyOnceWith(mixed.id, "mixed", "mixed");
+    expect(getSavedTargetSnapshot).not.toHaveBeenCalled();
+    expect(page.props.initial.savedTargets).toEqual([]);
     expect(getMachineHallSummaries).not.toHaveBeenCalled();
   });
 
