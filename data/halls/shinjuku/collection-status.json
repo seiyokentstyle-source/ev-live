@@ -44,7 +44,7 @@
         "バーサスリヴァイズ"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-15",
+      "lastUpdated": "2026-10-17",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -52,19 +52,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 14,
-        "events": 13,
+        "rows": 213,
+        "events": 208,
         "units": 1,
-        "days": 1,
-        "firstDate": "2026-10-15",
-        "lastDate": "2026-10-15"
+        "days": 5,
+        "firstDate": "2026-10-13",
+        "lastDate": "2026-10-17"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "shinjuku",
         "machineName": "バーサスリヴァイズ",
-        "targetDate": "2026-10-15",
-        "inputSha256": "7d3835a75153411e6b3ec564d4d8b6c1cf6526e9271de8c319671bd8d8314503"
+        "targetDate": "2026-10-17",
+        "inputSha256": "9576588d3f8ad758cdd9e4c52f6ecc9e628e31e2219b27dd7a57314595abc80f"
       }
     },
     {
