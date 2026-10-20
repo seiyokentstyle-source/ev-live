@@ -37,6 +37,37 @@
       }
     },
     {
+      "id": "m407111cd",
+      "name": "L魔法少女にあこがれて",
+      "manufacturer": "未確認",
+      "aliases": [
+        "L魔法少女にあこがれて"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 14,
+      "collection": {
+        "rows": 904,
+        "events": 890,
+        "units": 14,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "L魔法少女にあこがれて",
+        "targetDate": "2026-10-19",
+        "inputSha256": "1d962de3b67bf6a4f0dc9559563d1f9efc46a94cce857904c529f8d344c80bb3"
+      }
+    },
+    {
       "id": "m987b4879",
       "name": "L虚構推理",
       "manufacturer": "ディ・ライト",
