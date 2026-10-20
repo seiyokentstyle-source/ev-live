@@ -6,6 +6,37 @@
   "lastUpdated": "2026-10-19",
   "machines": [
     {
+      "id": "m059e2c90",
+      "name": "Lバンドリ！",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Lバンドリ！"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 6,
+      "collection": {
+        "rows": 225,
+        "events": 219,
+        "units": 6,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "Lバンドリ！",
+        "targetDate": "2026-10-19",
+        "inputSha256": "8c1ebcf832916c62d3b144a8b2ae0b600493bf4e577bbf9c2724de789273a591"
+      }
+    },
+    {
       "id": "m987b4879",
       "name": "L虚構推理",
       "manufacturer": "ディ・ライト",
