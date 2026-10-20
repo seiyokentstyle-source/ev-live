@@ -37,6 +37,39 @@
       }
     },
     {
+      "id": "m1545c941",
+      "name": "Lパチスロ 炎炎ノ消防隊2",
+      "manufacturer": "SANKYO",
+      "aliases": [
+        "Lパチスロ 炎炎ノ消防隊2",
+        "炎炎2",
+        "炎炎ノ消防隊2"
+      ],
+      "releaseDate": "2026-02-02",
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "sample_insufficient",
+      "pendingReason": "前回の集計では有効サンプルが10件で、新規掲載基準の30件に届いていないため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 2,
+      "collection": {
+        "rows": 52,
+        "events": 50,
+        "units": 2,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "Lパチスロ 炎炎ノ消防隊2",
+        "targetDate": "2026-10-19",
+        "inputSha256": "46157562f6fea95f07402022a3abf27c05db6f0920dca97d9e00deaefc30c45d"
+      }
+    },
+    {
       "id": "m25a41de5",
       "name": "L Ｔｏ　ＬＯＶＥるダークネス",
       "manufacturer": "未確認",
