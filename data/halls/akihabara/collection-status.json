@@ -353,6 +353,38 @@
       }
     },
     {
+      "id": "mda0de10f",
+      "name": "Lパチスロうみねこのなく頃に2",
+      "manufacturer": "オーイズミ",
+      "aliases": [
+        "Lパチスロうみねこのなく頃に2",
+        "うみねこ2"
+      ],
+      "releaseDate": "2026-02-02",
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "sample_insufficient",
+      "pendingReason": "前回の集計では有効サンプルが8件で、新規掲載基準の30件に届いていないため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 2,
+      "collection": {
+        "rows": 12,
+        "events": 10,
+        "units": 2,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "Lパチスロうみねこのなく頃に2",
+        "targetDate": "2026-10-19",
+        "inputSha256": "d1a95f6617b27775048d11b38a4e61c711e2df3409520130c045d708e3241e9c"
+      }
+    },
+    {
       "id": "me9b2f482",
       "name": "L 無職転生 ～異世界行ったら本気だす～",
       "manufacturer": "未確認",
