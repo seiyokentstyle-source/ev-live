@@ -1,0 +1,41 @@
+{
+  "schema": "evlive-collection-status/v1",
+  "hallId": "akihabara",
+  "source": "site_seven",
+  "storeId": "06007007",
+  "lastUpdated": "2026-10-19",
+  "machines": [
+    {
+      "id": "m987b4879",
+      "name": "L虚構推理",
+      "manufacturer": "ディ・ライト",
+      "aliases": [
+        "L虚構推理",
+        "きょこすい"
+      ],
+      "releaseDate": "2026-04-06",
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "sample_insufficient",
+      "pendingReason": "前回の集計では有効サンプルが4件で、新規掲載基準の30件に届いていないため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 2,
+      "collection": {
+        "rows": 32,
+        "events": 30,
+        "units": 2,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "L虚構推理",
+        "targetDate": "2026-10-19",
+        "inputSha256": "3fe333849668db8ad70c6565e56aebd0c3b66668c06e56ada40d050c6353904a"
+      }
+    }
+  ]
+}
