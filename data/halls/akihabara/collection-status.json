@@ -319,6 +319,37 @@
         "targetDate": "2026-10-19",
         "inputSha256": "9166a246213ade97795f7fbb6b08871d0b67abc1da48816d6425b29df9e4713f"
       }
+    },
+    {
+      "id": "mf5da8673",
+      "name": "パチスロ　アイドルマスター　ミリオンライブ！",
+      "manufacturer": "未確認",
+      "aliases": [
+        "パチスロ　アイドルマスター　ミリオンライブ！"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 1,
+      "collection": {
+        "rows": 190,
+        "events": 189,
+        "units": 1,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "パチスロ　アイドルマスター　ミリオンライブ！",
+        "targetDate": "2026-10-19",
+        "inputSha256": "684971f82b032fe21f497792302a29293823585ae15d9b73b3a8c0a600dfca10"
+      }
     }
   ]
 }
