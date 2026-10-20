@@ -68,6 +68,38 @@
       }
     },
     {
+      "id": "m34233650",
+      "name": "L真打吉宗",
+      "manufacturer": "大都技研",
+      "aliases": [
+        "L真打吉宗",
+        "吉宗"
+      ],
+      "releaseDate": "2026-04-06",
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "sample_insufficient",
+      "pendingReason": "前回の集計では有効サンプルが5件で、新規掲載基準の30件に届いていないため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 2,
+      "collection": {
+        "rows": 37,
+        "events": 35,
+        "units": 2,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "L真打吉宗",
+        "targetDate": "2026-10-19",
+        "inputSha256": "c7db3f3383c789e9993f4d2343d50029d7983be27a65cd24604763fd01758e99"
+      }
+    },
+    {
       "id": "m407111cd",
       "name": "L魔法少女にあこがれて",
       "manufacturer": "未確認",
