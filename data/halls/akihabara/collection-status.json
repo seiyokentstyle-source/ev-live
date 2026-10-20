@@ -68,6 +68,38 @@
       }
     },
     {
+      "id": "m695e7825",
+      "name": "スマスロ シャーマンキング",
+      "manufacturer": "エレコ",
+      "aliases": [
+        "スマスロ シャーマンキング",
+        "シャーマン"
+      ],
+      "releaseDate": "2024-01-01",
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "sample_insufficient",
+      "pendingReason": "前回の集計では有効サンプルが9件で、新規掲載基準の30件に届いていないため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 2,
+      "collection": {
+        "rows": 56,
+        "events": 54,
+        "units": 2,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "スマスロ シャーマンキング",
+        "targetDate": "2026-10-19",
+        "inputSha256": "590fc018a05930e036afc1be0e029a1fcead14003f6b898cb8a821955b174a31"
+      }
+    },
+    {
       "id": "m987b4879",
       "name": "L虚構推理",
       "manufacturer": "ディ・ライト",
