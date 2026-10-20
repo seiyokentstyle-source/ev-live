@@ -259,6 +259,37 @@
       }
     },
     {
+      "id": "mb4736276",
+      "name": "Lパチスロ　ガールズ＆パンツァー最終章",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Lパチスロ　ガールズ＆パンツァー最終章"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 5,
+      "collection": {
+        "rows": 293,
+        "events": 288,
+        "units": 5,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "Lパチスロ　ガールズ＆パンツァー最終章",
+        "targetDate": "2026-10-19",
+        "inputSha256": "d45ef98fee492e710dc3562db4eb027dfe03f2d6db4f1dd76858d4923a514063"
+      }
+    },
+    {
       "id": "mc95bb74e",
       "name": "L少女☆歌劇 レヴュースタァライト -The SLOT-",
       "manufacturer": "未確認",
