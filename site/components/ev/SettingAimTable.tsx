@@ -5,6 +5,8 @@ import type { SettingAim } from "@/lib/ev/types";
 import { settingAimTotals } from "@/lib/ev/setting-aim";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
 import { MonthTabs, monthOf } from "./MonthTabs";
+import { UnitName } from "./UnitCell";
+import { unitTail } from "@/lib/ev/unit-label";
 import { ControlBar, FilterSelect, SegmentedControl, FilterGroup } from "@/components/ui/Controls";
 import { EmptyState, RowHead, TableFoot, TableNote, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
@@ -23,10 +25,7 @@ function rateCell(value: number | null): string {
   return value === null ? "—" : `${value.toFixed(1)}`;
 }
 
-function tailOf(unit: string): string {
-  const digits = unit.replace(/\D/g, "");
-  return digits.length > 0 ? digits.slice(-1) : "";
-}
+const tailOf = unitTail;
 
 // 日にち（DD部分）の数字。"2026-06-10"→"10"。"1のつく日"の判定に使う。
 function dayOfMonth(date: string): string {
@@ -198,7 +197,7 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
                   const alt = stripe(index);
                   return (
                     <tr key={unit.unit}>
-                      <RowHead>{unit.unit}</RowHead>
+                      <RowHead><UnitName unit={unit.unit} /></RowHead>
                       <Td alt={alt} bold tone={unit.avg === null ? "text-muted" : rtpToneClass(unit.avg)}>
                         {unit.avg === null ? "—" : unit.avg.toFixed(1)}
                       </Td>
@@ -253,7 +252,7 @@ export function SettingAimTable({ aim }: SettingAimTableProps) {
                 const alt = stripe(index);
                 return (
                   <tr key={unit.unit}>
-                    <RowHead sub={`${formatSigned(unit.net)}枚`}>{unit.unit}</RowHead>
+                    <RowHead sub={`${formatSigned(unit.net)}枚`}><UnitName unit={unit.unit} /></RowHead>
                     <Td alt={alt} bold tone={unit.avg === null ? "text-muted" : rtpToneClass(unit.avg)}>
                       {unit.avg === null ? "—" : unit.avg.toFixed(1)}
                     </Td>

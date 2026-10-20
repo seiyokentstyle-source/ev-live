@@ -4,16 +4,15 @@ import { useMemo, useState } from "react";
 import type { Harakiri } from "@/lib/ev/types";
 import { MonthTabs, monthOf } from "./MonthTabs";
 import { ControlBar, FilterGroup, FilterSelect, SegmentedControl } from "@/components/ui/Controls";
+import { UnitName } from "./UnitCell";
+import { unitTail } from "@/lib/ev/unit-label";
 import { EmptyState, RowHead, TableFoot, TableNote, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
 
 type HarakiriTableProps = {
   harakiri: Harakiri;
 };
 
-function tailOf(unit: string): string {
-  const digits = unit.replace(/\D/g, "");
-  return digits.length > 0 ? digits.slice(-1) : "";
-}
+const tailOf = unitTail;
 
 // 率の強弱で色を付ける（全体率との比較ではなく絶対値の目安）。
 function rateToneClass(rate: number, rush: number): string {
@@ -107,7 +106,7 @@ export function HarakiriTable({ harakiri }: HarakiriTableProps) {
                 const key = "date" in row ? row.date : row.unit;
                 return (
                   <tr key={key}>
-                    <RowHead>{"date" in row ? shortDate(row.date) : row.unit}</RowHead>
+                    <RowHead>{"date" in row ? shortDate(row.date) : <UnitName unit={row.unit} />}</RowHead>
                     <Td alt={alt} bold tone={rateToneClass(row.rate, row.rush)}>
                       {row.rush === 0 ? "—" : row.rate.toFixed(1)}
                     </Td>
