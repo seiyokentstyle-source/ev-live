@@ -106,7 +106,7 @@
         "L少女☆歌劇 レヴュースタァライト -The SLOT-"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-18",
+      "lastUpdated": "2026-10-19",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -114,19 +114,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1120,
-        "events": 1103,
+        "rows": 1144,
+        "events": 1126,
         "units": 2,
-        "days": 17,
+        "days": 18,
         "firstDate": "2026-09-14",
-        "lastDate": "2026-10-18"
+        "lastDate": "2026-10-19"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "shinjuku",
         "machineName": "L少女☆歌劇 レヴュースタァライト -The SLOT-",
-        "targetDate": "2026-10-18",
-        "inputSha256": "c80110be119d8745c0f5f23752a52c2e87ded18e35ea2d10261c18765f297bd6"
+        "targetDate": "2026-10-19",
+        "inputSha256": "23c479c0ef065af098de2ed44575e92b89e7344927fc9ac68422737024b0343a"
       }
     }
   ]
