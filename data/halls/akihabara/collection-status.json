@@ -132,6 +132,37 @@
       }
     },
     {
+      "id": "m66898dde",
+      "name": "戦国コレクション５",
+      "manufacturer": "未確認",
+      "aliases": [
+        "戦国コレクション５"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 1,
+      "collection": {
+        "rows": 89,
+        "events": 88,
+        "units": 1,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "戦国コレクション５",
+        "targetDate": "2026-10-19",
+        "inputSha256": "97ec509a91df31a5ac7f21392af05576267e91ea355abf0a36da1bd1260f8165"
+      }
+    },
+    {
       "id": "m695e7825",
       "name": "スマスロ シャーマンキング",
       "manufacturer": "エレコ",
