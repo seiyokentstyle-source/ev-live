@@ -133,6 +133,38 @@
       }
     },
     {
+      "id": "m6da68764",
+      "name": "この素晴らしい世界に祝福を！",
+      "manufacturer": "Sammy",
+      "aliases": [
+        "この素晴らしい世界に祝福を！",
+        "このすば"
+      ],
+      "releaseDate": "2022-04-04",
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "sample_insufficient",
+      "pendingReason": "前回の集計では有効サンプルが21件で、新規掲載基準の30件に届いていないため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 1,
+      "collection": {
+        "rows": 122,
+        "events": 121,
+        "units": 1,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "この素晴らしい世界に祝福を！",
+        "targetDate": "2026-10-19",
+        "inputSha256": "5189fa2ce757852479cddcab414022d3e695a14c434f578c33a11b87b6c0b33c"
+      }
+    },
+    {
       "id": "m987b4879",
       "name": "L虚構推理",
       "manufacturer": "ディ・ライト",
