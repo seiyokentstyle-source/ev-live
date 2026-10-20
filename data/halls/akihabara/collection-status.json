@@ -68,6 +68,39 @@
       }
     },
     {
+      "id": "m46e81450",
+      "name": "スマスロ 攻殻機動隊",
+      "manufacturer": "Sammy",
+      "aliases": [
+        "スマスロ 攻殻機動隊",
+        "攻殻機動隊",
+        "こうかく"
+      ],
+      "releaseDate": "2026-02-02",
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "sample_insufficient",
+      "pendingReason": "前回の集計では有効サンプルが26件で、新規掲載基準の30件に届いていないため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 6,
+      "collection": {
+        "rows": 113,
+        "events": 107,
+        "units": 6,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "スマスロ 攻殻機動隊",
+        "targetDate": "2026-10-19",
+        "inputSha256": "7a4d6596734a8be72af952a061eb765b4e993fe5bb850f5b01d940552abd161a"
+      }
+    },
+    {
       "id": "m695e7825",
       "name": "スマスロ シャーマンキング",
       "manufacturer": "エレコ",
