@@ -37,6 +37,37 @@
       }
     },
     {
+      "id": "m25a41de5",
+      "name": "L Ｔｏ　ＬＯＶＥるダークネス",
+      "manufacturer": "未確認",
+      "aliases": [
+        "L Ｔｏ　ＬＯＶＥるダークネス"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 42,
+      "collection": {
+        "rows": 1785,
+        "events": 1743,
+        "units": 42,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "L Ｔｏ　ＬＯＶＥるダークネス",
+        "targetDate": "2026-10-19",
+        "inputSha256": "f1fe557c496433c50da37d8c2b0e4ccc7ef76c4c3e6572d34b826c746c522528"
+      }
+    },
+    {
       "id": "m407111cd",
       "name": "L魔法少女にあこがれて",
       "manufacturer": "未確認",
