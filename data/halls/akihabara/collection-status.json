@@ -192,6 +192,37 @@
         "targetDate": "2026-10-19",
         "inputSha256": "1a6afef5afb00fa8cfb3b7759750ce374218820c361a889709c02831017058f8"
       }
+    },
+    {
+      "id": "mf3030a40",
+      "name": "パチスロ　戦姫絶唱シンフォギア　勇気の歌",
+      "manufacturer": "未確認",
+      "aliases": [
+        "パチスロ　戦姫絶唱シンフォギア　勇気の歌"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-19",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 1,
+      "collection": {
+        "rows": 119,
+        "events": 118,
+        "units": 1,
+        "days": 1,
+        "firstDate": "2026-10-19",
+        "lastDate": "2026-10-19"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "akihabara",
+        "machineName": "パチスロ　戦姫絶唱シンフォギア　勇気の歌",
+        "targetDate": "2026-10-19",
+        "inputSha256": "9166a246213ade97795f7fbb6b08871d0b67abc1da48816d6425b29df9e4713f"
+      }
     }
   ]
 }
