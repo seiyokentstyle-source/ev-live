@@ -49,6 +49,9 @@ const nextConfig = {
   // 店舗混合や東京喰種の大きい機種JSON（数MB）は、CIでの1ページ生成が既定の60秒を超えて
   // 配信全体が失敗した（2026-10-21）。ページ単位の上限だけを延ばす。
   staticPageGenerationTimeout: 300,
+  // 静的書き出しは、各ワーカーが全店舗の機種JSON（計200MB超）を展開して持つ。
+  // 3ワーカー×4GBでも足りなくなった（2026-10-21）ので、2ワーカー×6GBにする。
+  ...(staticExport ? { experimental: { cpus: 2 } } : {}),
   ...(staticExport ? { output: "export" } : {}),
   ...(basePath ? { basePath, assetPrefix: basePath } : {}),
   images: { unoptimized: true },
