@@ -143,8 +143,10 @@ export function profileCeilingText(profile: Profile, machineId?: string, profile
 const KEPT_AIM_QUALIFIERS = /上位AT後|下位AT後|前回(?:BB|RB|BIG|REG)後/g;
 export function shortAimLabel(label: string): string {
   const s1 = label.includes("設定1");
-  const reset = /リセット|朝一リセット/.test(label);
-  let base = label.split("（")[0].replace(/天井$/, "").replace("ボーナス間", "ボナ間");
+  const reset = /リセ/.test(label);
+  // ヴヴヴ2の区切りはBBとRB（LABEL_REWRITES と同じ言い換え）。
+  let base = label.split("（")[0].replace(/天井$/, "").replace("ボーナス間", "ボナ間")
+    .replace("AT・RB間", "BB・RB間");
   if (base === "朝一") base = reset ? "リセット" : "朝一";
   else if (reset && !base.startsWith("リセ") && !base.startsWith("朝一")) base = `リセ${base}`;
   const quals = [...new Set(label.slice(base.length).match(KEPT_AIM_QUALIFIERS) ?? [])];
@@ -152,6 +154,15 @@ export function shortAimLabel(label: string): string {
   if (stop) quals.push(`${stop[1]}Gやめ`);
   if (s1) quals.push("設定1");
   return quals.length ? `${base}（${quals.join("・")}）` : base;
+}
+
+/** 狙い方タブの見出し。言い換え前の元の見出しから短くする（言い換え後は「設定1想定」が
+ *  落ちて通常の表と同じ名前になることがあるため）。機種ごとに付けた専用の見出しはそのまま。 */
+export function aimTabLabel(group: ProfileGroup): string {
+  const profile = group.order[0];
+  if (!profile || group.label !== parseProfile(profile).baseLabel) return group.label;
+  const raw = profile.label.replace(SAMPLE_SUFFIX_RE, "").replace(RATE_LABEL_RE, "").trim();
+  return shortAimLabel(raw);
 }
 
 /** 狙い方タブの2行目は天井のG数だけにする（利用者指定 2026-10-22）。

@@ -138,6 +138,8 @@ describe("short aim label", () => {
       ["天国間（通常・実測）", "天国間"],
       ["巫門遁甲解放まで", "巫門遁甲解放まで"],
       ["AT間天井（上位AT後・128Gまで見てやめ）", "AT間（上位AT後・128Gやめ）"],
+      ["AT・RB間天井（通常）", "BB・RB間"],
+      ["CZ間天井（回数不問・リセ）", "リセCZ間"],
     ];
     for (const [input, expected] of cases) expect(shortAimLabel(input)).toBe(expected);
   });

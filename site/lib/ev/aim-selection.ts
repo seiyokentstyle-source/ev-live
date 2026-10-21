@@ -1,4 +1,4 @@
-import type { ProfileGroup } from "./profiles";
+import { aimTabLabel, type ProfileGroup } from "./profiles";
 
 const TARGET_PREFIX = "saved-target:";
 
@@ -13,7 +13,7 @@ export function savedTargetIdFromAim(key: string, targets: Array<{ id: string }>
 
 export function aimTabs(groups: ProfileGroup[], targets: Array<{ id: string; name: string; rate: string }>) {
   return [
-    ...groups.map(group => ({ key: group.key, label: group.label, ceiling: group.ceiling })),
+    ...groups.map(group => ({ key: group.key, label: aimTabLabel(group), ceiling: group.ceiling })),
     ...targets.map(target => ({ key: savedTargetAimKey(target.id), label: target.name,
       ceiling: `保存した狙い目・${target.rate}` }))
   ];
