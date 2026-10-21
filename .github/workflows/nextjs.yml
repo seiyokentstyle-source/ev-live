@@ -75,6 +75,9 @@ jobs:
         env:
           PAGES_BASE_PATH: /ev-live
           STATIC_EXPORT: "true"
+          # 店舗混合などの大きい機種JSONで、ページ生成ワーカーが既定のヒープ上限に達して
+          # 落ちた（2026-10-21）。ワーカー3本×4GBでランナーのメモリ内に収める。
+          NODE_OPTIONS: --max-old-space-size=4096
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
