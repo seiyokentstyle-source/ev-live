@@ -273,8 +273,20 @@ const KABANERI_ST_AIMS: Record<string, { label: string; order: number }> = {
   reset: { label: "リセット", order: 3 }
 };
 
+// シャーマンキングの狙い方は「巫門遁甲解放まで・ボナ間・リセボナ間」の3つ（利用者指定 2026-10-21）。
+const SHAMAN_AIMS: Record<string, { label: string; order: number }> = {
+  point_release: { label: "巫門遁甲解放まで", order: 0 },
+  cz_ceiling: { label: "ボナ間", order: 1 },
+  cz_s1: { label: "ボナ間（設定1想定）", order: 2 },
+  cz_reset: { label: "リセボナ間", order: 3 }
+};
+
 /** 機種に合わせた狙い方の見出し・並び順。 */
 function machineAimGroups(groups: ProfileGroup[], machineId?: string): ProfileGroup[] {
+  if (machineId === "m695e7825") {
+    return groups.map(group => ({ ...group, label: SHAMAN_AIMS[group.key]?.label ?? group.label }))
+      .sort((a, b) => (SHAMAN_AIMS[a.key]?.order ?? 4) - (SHAMAN_AIMS[b.key]?.order ?? 4));
+  }
   // ゴッドイーターの該当表は上位後だけ。「非駆け抜け」との合算ではない。
   if (machineId === "m19571085") {
     return groups.map(group => isGodEaterUpperAim(machineId, group.key) ? { ...group, label: "上位後" } : group);

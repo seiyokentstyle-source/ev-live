@@ -91,3 +91,14 @@ describe("visibleCalcSpecItems", () => {
     expect(visibleCalcSpecItems([])).toEqual([]);
   });
 });
+
+describe("shaman king aims", () => {
+  test("shows release, bonus interval and reset bonus interval in that order", () => {
+    const { groups } = groupProfiles([
+      makeProfile("cz_ceiling_4652", "ボーナス間天井（回数不問・通常）・46/52"),
+      makeProfile("cz_reset_4652", "ボーナス間（リセット時 500G+α）（回数不問・朝一リセット想定）・46/52"),
+      makeProfile("point_release_4652", "巫門遁甲ポイント解放まで（スルー到達型）・46/52")
+    ], "m695e7825");
+    expect(groups.map(group => group.label)).toEqual(["巫門遁甲解放まで", "ボナ間", "リセボナ間"]);
+  });
+});
