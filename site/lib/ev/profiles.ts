@@ -137,6 +137,17 @@ export function profileCeilingText(profile: Profile, machineId?: string, profile
   return profile.aimKind ? profile.ceiling : rewriteCeiling(profile.ceiling, machineId, profileKey);
 }
 
+/** 狙い方タブの2行目は天井のG数だけにする（利用者指定 2026-10-22）。
+ *  やめ方・補正・「天国に入るまで打つ」などの説明は出さない。固定天井が無い表は「天井なし」、
+ *  天井の数字が無い表（解放まで・やめ方だけ等）は2行目を出さない。 */
+export function ceilingHint(ceiling: string): string {
+  const head = ceiling.split("／")[0];
+  if (/天井なし|最長|実測/.test(head)) return "天井なし";
+  const main = head.split("（")[0];
+  const token = main.match(/\d+(?:〜\d+)?(?:G|pt|あべし|周期)(?:\+α)?/);
+  return token ? token[0] : "";
+}
+
 // 絞り込み軸の見出しも同じ扱い。軸のラベルはデータ側（evFilters.axes）が配るので、
 // 生成側だけ直しても夜間の再生成まで古い文言が出続ける。ここを通して即時に反映する。
 // ★選択肢（「3のつく日」＝3/13/23）は言い換えない。「3の特定日」では意味が通らず、

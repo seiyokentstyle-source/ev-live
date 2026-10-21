@@ -102,3 +102,18 @@ describe("shaman king aims", () => {
     expect(groups.map(group => group.label)).toEqual(["巫門遁甲解放まで", "ボナ間", "リセボナ間"]);
   });
 });
+
+describe("aim tab ceiling hint", () => {
+  test("keeps only the ceiling games", async () => {
+    const { ceilingHint } = await import("../lib/ev/profiles");
+    expect(ceilingHint("999G／AT当選でやめ／獲得を97.3%に補正")).toBe("999G");
+    expect(ceilingHint("ボーナス間 800G+α")).toBe("800G+α");
+    expect(ceilingHint("リセット天井 799G／設定変更時はAT間799G+α")).toBe("799G");
+    expect(ceilingHint("CZ間 最長963G（実測・固定G天井なし）")).toBe("天井なし");
+    expect(ceilingHint("天国間（天井なし・実測）／天国に入るまで打つ")).toBe("天井なし");
+    expect(ceilingHint("CZ間 液晶最大1200G（実G目安約890G）")).toBe("1200G");
+    expect(ceilingHint("ボーナス間 950pt+α")).toBe("950pt+α");
+    expect(ceilingHint("解放AT終了まで／通常AT・ボーナス経由AT当選後も続行")).toBe("");
+    expect(ceilingHint("AT当選でやめ")).toBe("");
+  });
+});
