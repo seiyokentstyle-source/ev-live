@@ -137,6 +137,23 @@ export function profileCeilingText(profile: Profile, machineId?: string, profile
   return profile.aimKind ? profile.ceiling : rewriteCeiling(profile.ceiling, machineId, profileKey);
 }
 
+/** 狙い方タブの見出しを短くする（利用者指定 2026-10-22）。打ち方を分ける区別
+ *  （上位AT後・前回BB後・駆け抜け後・設定1・リセット）だけ残し、「回数不問」「通常」
+ *  「実測」「固定G天井なし」などの説明は出さない。天井の数字は2行目（ceilingHint）に出る。 */
+const KEPT_AIM_QUALIFIERS = /上位AT後|下位AT後|前回(?:BB|RB|BIG|REG)後/g;
+export function shortAimLabel(label: string): string {
+  const s1 = label.includes("設定1");
+  const reset = /リセット|朝一リセット/.test(label);
+  let base = label.split("（")[0].replace(/天井$/, "").replace("ボーナス間", "ボナ間");
+  if (base === "朝一") base = reset ? "リセット" : "朝一";
+  else if (reset && !base.startsWith("リセ") && !base.startsWith("朝一")) base = `リセ${base}`;
+  const quals = [...new Set(label.slice(base.length).match(KEPT_AIM_QUALIFIERS) ?? [])];
+  const stop = label.match(/(\d+)Gまで見てやめ/);
+  if (stop) quals.push(`${stop[1]}Gやめ`);
+  if (s1) quals.push("設定1");
+  return quals.length ? `${base}（${quals.join("・")}）` : base;
+}
+
 /** 狙い方タブの2行目は天井のG数だけにする（利用者指定 2026-10-22）。
  *  やめ方・補正・「天国に入るまで打つ」などの説明は出さない。固定天井が無い表は「天井なし」、
  *  天井の数字が無い表（解放まで・やめ方だけ等）は2行目を出さない。 */

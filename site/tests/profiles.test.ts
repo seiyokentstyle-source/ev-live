@@ -117,3 +117,28 @@ describe("aim tab ceiling hint", () => {
     expect(ceilingHint("AT当選でやめ")).toBe("");
   });
 });
+
+describe("short aim label", () => {
+  test("keeps only what separates the strategies", async () => {
+    const { shortAimLabel } = await import("../lib/ev/profiles");
+    const cases: Array<[string, string]> = [
+      ["朝一（リセット想定・実測）", "リセット"],
+      ["朝一（実測）", "朝一"],
+      ["AT間天井（通常）", "AT間"],
+      ["AT間天井（設定1想定）", "AT間（設定1）"],
+      ["CZ間天井（回数不問・通常）", "CZ間"],
+      ["CZ間天井（設定1想定・回数不問）", "CZ間（設定1）"],
+      ["CZ間天井（回数不問・朝一リセット想定）", "リセCZ間"],
+      ["ボーナス間（リセット時 500G+α）（回数不問・朝一リセット想定）", "リセボナ間"],
+      ["ボーナス間（固定G天井なし・実測）（回数不問・通常）", "ボナ間"],
+      ["AT間天井（通常（下位AT後））", "AT間（下位AT後）"],
+      ["AT間天井（上位AT後）", "AT間（上位AT後）"],
+      ["ボーナス間天井（前回BB後・通常）", "ボナ間（前回BB後）"],
+      ["AT間・駆け抜け後（短縮天井596G）", "AT間・駆け抜け後"],
+      ["天国間（通常・実測）", "天国間"],
+      ["巫門遁甲解放まで", "巫門遁甲解放まで"],
+      ["AT間天井（上位AT後・128Gまで見てやめ）", "AT間（上位AT後・128Gやめ）"],
+    ];
+    for (const [input, expected] of cases) expect(shortAimLabel(input)).toBe(expected);
+  });
+});
