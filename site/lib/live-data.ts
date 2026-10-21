@@ -89,12 +89,13 @@ export function liveIndexEntry(hallId: string, payload: LiveSnapshot): LiveIndex
 
 /** Only published machines in ready halls get a static detail endpoint. */
 export async function getLiveMachineParams(): Promise<Array<{ hall: string; id: string }>> {
-  const halls = await Promise.all(getReadyHalls().map(async (hall) => {
-    const displays = await getHallDisplays(hall.id);
-    return displays.map(display => ({ hall: hall.id,
-      id: `${display.kind === "machine" ? display.machine.id : display.collection.summary.id}.json` }));
-  }));
-  return halls.flat();
+  // 全店舗を同時に展開しないよう、1店舗ずつ読む。
+  const params: Array<{ hall: string; id: string }> = [];
+  for (const hall of getReadyHalls()) {
+    for (const display of await getHallDisplays(hall.id)) params.push({ hall: hall.id,
+      id: `${display.kind === "machine" ? display.machine.id : display.collection.summary.id}.json` });
+  }
+  return params;
 }
 
 async function publishedTargetSnapshot(machineId: string, hallId: string, dataSubdir: string, catalog: SavedTargetCatalog) {
@@ -121,14 +122,16 @@ export async function getLiveMachine(machineId: string, hallId: string): Promise
 
 export async function getLiveIndex(): Promise<LiveIndex> {
   const catalog = await getSavedTargetCatalog();
-  const halls = await Promise.all(getReadyHalls().map(async (hall) => {
+  // 全店舗を同時に展開しないよう、1店舗ずつ読んで索引の項目だけ残す。
+  const machines = [];
+  for (const hall of getReadyHalls()) {
     const displays = await getHallDisplays(hall.id);
-    return Promise.all(displays.map(async (display) => {
+    machines.push(...await Promise.all(displays.map(async (display) => {
       if (display.kind === "collection") return liveIndexEntry(hall.id, buildLiveCollection(display.collection, display.provisionalSetting1, display.counterEstimate, hall.id));
       const machine = display.machine;
       const targets = await publishedTargetSnapshot(machine.id, hall.id, hall.dataSubdir, catalog);
       return liveIndexEntry(hall.id, buildLiveMachine(machine, hall.id, catalog, targets.refreshed, targets.replaySource));
-    }));
-  }));
-  return { schema: "evlive-live-index/v1", machines: halls.flat() };
+    })));
+  }
+  return { schema: "evlive-live-index/v1", machines };
 }

@@ -35,20 +35,11 @@ function hallDir(dataSubdir?: string): string {
   return dataSubdir ? path.join(machinesDir, dataSubdir) : machinesDir;
 }
 
-// 静的書き出し中は、同じフォルダを1回だけ読む。店舗混合のフォルダは「補正あり」と
-// 「補正なし」の2店舗から読まれ、どちらも大きい集計を展開するので、二度読むと
-// 一覧ページの生成が1ページ60秒の上限に近づく。開発サーバでは毎回読み直す。
-const buildReadCache = new Map<string, Promise<Machine[]>>();
-
+// 2026-10-21：以前は静的書き出し中に全店舗の機種を1回だけ読んでワーカーに残していた。
+// 店舗混合などでデータが200MBを超え、ワーカーごとに展開したままでは4GB（Next.jsは
+// ワーカーのヒープ指定を外す）を超えてビルドが落ちたため、毎回読み直して使い終わったら手放す。
 async function readMachines(dir: string): Promise<Machine[]> {
-  if (process.env.STATIC_EXPORT !== "true") return readMachinesUncached(dir);
-  let cached = buildReadCache.get(dir);
-  if (!cached) {
-    cached = readMachinesUncached(dir);
-    buildReadCache.set(dir, cached);
-  }
-  // 呼び出し側が並べ替え・加工しても、ほかの店舗の結果に響かないよう配列は複製する。
-  return [...await cached];
+  return readMachinesUncached(dir);
 }
 
 async function readMachinesUncached(dir: string): Promise<Machine[]> {
@@ -178,11 +169,15 @@ async function loadHallMachine(id: string, dataSubdir?: string): Promise<Machine
 
 /** Route IDs include machines collected only in a non-default hall. */
 export async function getMachineIds(): Promise<string[]> {
-  const halls = await Promise.all(getReadyHalls().map((hall) => getHallDisplays(hall.id)));
-  return [...new Set(halls.flatMap(items => items.flatMap(item => {
-    const summary = displaySummary(item);
-    return machineRouteIds(summary.id).filter(id => matchesMachineRoute(id, summary));
-  })))];
+  // 全店舗を同時に展開しないよう、1店舗ずつ読んでIDだけ残す。
+  const ids = new Set<string>();
+  for (const hall of getReadyHalls()) {
+    for (const item of await getHallDisplays(hall.id)) {
+      const summary = displaySummary(item);
+      for (const id of machineRouteIds(summary.id)) if (matchesMachineRoute(id, summary)) ids.add(id);
+    }
+  }
+  return [...ids];
 }
 
 export type MachineHallSummary = { hallId: string; summary: MachineSummary };
@@ -277,7 +272,10 @@ export async function getHallDisplay(id: string, hallId: string): Promise<HallDi
 }
 
 export async function getMachineListSummaries(): Promise<MachineSummary[]> {
-  const halls = await Promise.all(getReadyHalls().map(async hall =>
-    (await getHallDisplays(hall.id)).map(display => ({ hallId: hall.id, summary: displaySummary(display) }))));
-  return selectMachineListSummaries(halls.flat());
+  // 全店舗を同時に展開しないよう、1店舗ずつ読んで一覧用の要約だけ残す。
+  const halls: Array<{ hallId: string; summary: MachineSummary }> = [];
+  for (const hall of getReadyHalls()) {
+    for (const display of await getHallDisplays(hall.id)) halls.push({ hallId: hall.id, summary: displaySummary(display) });
+  }
+  return selectMachineListSummaries(halls);
 }
