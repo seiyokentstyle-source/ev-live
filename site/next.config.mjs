@@ -46,6 +46,9 @@ const nextConfig = {
   // export emits foo.html (no per-route index.html), so trailing-slash URLs
   // (the convention documented in CLAUDE.md) 404. Emit foo/index.html instead.
   trailingSlash: true,
+  // 店舗混合や東京喰種の大きい機種JSON（数MB）は、CIでの1ページ生成が既定の60秒を超えて
+  // 配信全体が失敗した（2026-10-21）。ページ単位の上限だけを延ばす。
+  staticPageGenerationTimeout: 300,
   ...(staticExport ? { output: "export" } : {}),
   ...(basePath ? { basePath, assetPrefix: basePath } : {}),
   images: { unoptimized: true },
