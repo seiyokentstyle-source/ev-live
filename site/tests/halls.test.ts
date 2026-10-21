@@ -6,7 +6,8 @@ describe("hall visibility and order", () => {
     expect(getHall("akiba_espace")).toMatchObject({ ready: true, dataSubdir: "akiba_espace", visibility: "mixed-only" });
     expect(HALLS.some(hall => hall.id === "akiba_espace")).toBe(true);
     expect(getVisibleHalls().map(hall => hall.id)).toEqual(["mixed", "mixed-raw", "shinjuku", "kabuki", "akihabara"]);
-    expect(getReadyHalls().map(hall => hall.id)).toEqual(["mixed", "mixed-raw", "shinjuku", "kabuki"]);
+    // 萌えスロのお店（akihabara）は 2026-10-20 に集計済みとして登録された。
+    expect(getReadyHalls().map(hall => hall.id)).toEqual(["mixed", "mixed-raw", "shinjuku", "kabuki", "akihabara"]);
     expect(isListedHall(undefined)).toBe(false);
     expect(isListedHall(getHall("shinjuku"))).toBe(true);
   });

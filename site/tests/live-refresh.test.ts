@@ -264,7 +264,7 @@ describe("live refresh lifecycle", () => {
     const onIndex = vi.fn();
     stop = startLiveRefresh(onIndex);
     await vi.advanceTimersByTimeAsync(0);
-    expect(onIndex.mock.calls[0][0].machines.map((item: { hallId: string }) => item.hallId)).toEqual(["mixed-raw", "shinjuku"]);
+    expect(onIndex.mock.calls[0][0].machines.map((item: { hallId: string }) => item.hallId)).toEqual(["akihabara", "mixed-raw", "shinjuku"]);
     expect(index.machines).toHaveLength(5);
   });
   it("rejects a mixed-only detail before making any request", async () => {

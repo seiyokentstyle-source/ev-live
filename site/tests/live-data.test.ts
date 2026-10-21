@@ -173,7 +173,8 @@ describe("live data publication", () => {
   });
 
   it("does not publish pending halls, unavailable machines, or arbitrary paths", async () => {
-    expect(await getLiveMachine(fixture.id, "akihabara")).toBeUndefined();
+    // akihabara は 2026-10-20 から公開済み。未登録の店舗名で確かめる。
+    expect(await getLiveMachine(fixture.id, "unregistered")).toBeUndefined();
     expect(await getLiveMachine("../vvv2", "shinjuku")).toBeUndefined();
     expect(getMachine).not.toHaveBeenCalled();
     vi.mocked(getMachine).mockResolvedValue({ ...validateMachine(fixture), available: false });
