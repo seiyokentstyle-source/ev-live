@@ -13,7 +13,7 @@
         "Lバンドリ！"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-19",
+      "lastUpdated": "2026-10-20",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -21,19 +21,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 225,
-        "events": 219,
+        "rows": 651,
+        "events": 639,
         "units": 6,
-        "days": 1,
+        "days": 2,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-10-19"
+        "lastDate": "2026-10-20"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akihabara",
         "machineName": "Lバンドリ！",
-        "targetDate": "2026-10-19",
-        "inputSha256": "8c1ebcf832916c62d3b144a8b2ae0b600493bf4e577bbf9c2724de789273a591"
+        "targetDate": "2026-10-20",
+        "inputSha256": "66d889f5b6822b3245e5d0aa19de76ee58441862fc75eb0c62e17fd5d8430b63"
       }
     },
     {
