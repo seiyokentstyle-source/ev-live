@@ -120,10 +120,10 @@ describe("ヴヴヴ2の表示（指定どおりの6行）", () => {
     expect(groups.map((g) => [g.label, g.ceiling])).toEqual([
       ["BB・RB間天井", "1500G／BB・RB当選でやめ"],
       ["BB間天井期待値", "1500G／BBまでツッパ"],
-      ["CZ間天井（CZ1回）", "CZ間 999G"],
+      ["CZ(0スルー)", "CZ間 999G"],
       ["朝一（リセット）", "リセット天井 1000G"],
       ["引き戻し狙い", "AT後71G"],
-      ["CZ間天井（CZ1回・リセ）", "リセット天井 3周期"]
+      ["リセCZ(0スルー)", "リセット天井 3周期"]
     ]);
   });
 
@@ -154,7 +154,7 @@ describe("低設定想定店舗混合のタブ（設定1想定）", () => {
     ], "vvv2").groups;
     expect(groups.map((g) => g.label)).toEqual([
       "BB・RB間天井期待値",
-      "CZ間天井（CZ1回）"
+      "CZ(0スルー)"
     ]);
   });
 
@@ -176,7 +176,8 @@ describe("再生成後（生成側が リセットCZ間天井 を出す）でも
     const after = groupProfiles([
       tab("cz_reset", "CZ間（リセット時 3周期）（CZ1回でやめ・朝一リセット想定）", "CZ間 3周期")
     ], "vvv2").groups[0];
-    expect([before.label, before.ceiling]).toEqual(["CZ間天井（CZ1回・リセ）", "リセット天井 3周期"]);
-    expect([after.label, after.ceiling]).toEqual(["CZ間天井（CZ1回・リセ）", "リセット天井 3周期"]);
+    // 2026-10-22 利用者指定でヴヴヴ2のCZ間の名前は「…(0スルー)」。朝一は1本目のCZなので0スルー。
+    expect([before.label, before.ceiling]).toEqual(["リセCZ(0スルー)", "リセット天井 3周期"]);
+    expect([after.label, after.ceiling]).toEqual(["リセCZ(0スルー)", "リセット天井 3周期"]);
   });
 });

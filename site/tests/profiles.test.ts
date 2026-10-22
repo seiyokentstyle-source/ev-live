@@ -147,3 +147,15 @@ describe("short aim label", () => {
     for (const [input, expected] of cases) expect(shortAimLabel(input)).toBe(expected);
   });
 });
+
+describe("vvv2 cz aims", () => {
+  test("names the 0-through and after-first-through tables", async () => {
+    const { groupProfiles, aimTabLabel } = await import("../lib/ev/profiles");
+    const { groups } = groupProfiles([
+      makeProfile("cz_ceiling_4652", "CZ間天井（CZ0スルー・通常）・46/52"),
+      makeProfile("cz_after1_4652", "CZ間天井（CZ1スルー以降・通常）・46/52"),
+      makeProfile("game_ceiling_4652", "AT・RB間天井（通常）・46/52")
+    ], "vvv2");
+    expect(groups.map(aimTabLabel)).toEqual(["CZ(0スルー)", "CZ(1スルー以降)", "BB・RB間"]);
+  });
+});

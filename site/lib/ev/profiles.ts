@@ -321,8 +321,22 @@ const SHAMAN_AIMS: Record<string, { label: string; order: number }> = {
   cz_reset: { label: "リセボナ間", order: 3 }
 };
 
+// ヴヴヴ2のCZ間は「CZ(0スルー)」と「CZ(1スルー以降)」の2つ（利用者指定 2026-10-22）。
+// 0スルー＝前回ボーナスからCZ未当選のサンプル、1スルー以降＝それ以外（スルー回数は軸で選ぶ）。
+const VVV2_AIMS: Record<string, string> = {
+  cz_ceiling: "CZ(0スルー)",
+  cz_after1: "CZ(1スルー以降)",
+  // 設定1想定の表は低設定想定店舗混合にしか出ない。店舗名で分かるので名乗らない。
+  cz_s1: "CZ(0スルー)",
+  cz_after1_s1: "CZ(1スルー以降)",
+  cz_reset: "リセCZ(0スルー)"
+};
+
 /** 機種に合わせた狙い方の見出し・並び順。 */
 function machineAimGroups(groups: ProfileGroup[], machineId?: string): ProfileGroup[] {
+  if (machineId === "vvv2") {
+    return groups.map(group => VVV2_AIMS[group.key] ? { ...group, label: VVV2_AIMS[group.key] } : group);
+  }
   if (machineId === "m695e7825") {
     return groups.map(group => ({ ...group, label: SHAMAN_AIMS[group.key]?.label ?? group.label }))
       .sort((a, b) => (SHAMAN_AIMS[a.key]?.order ?? 4) - (SHAMAN_AIMS[b.key]?.order ?? 4));
