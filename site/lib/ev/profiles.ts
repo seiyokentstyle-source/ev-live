@@ -140,7 +140,8 @@ export function profileCeilingText(profile: Profile, machineId?: string, profile
 /** 狙い方タブの見出しを短くする（利用者指定 2026-10-22）。打ち方を分ける区別
  *  （上位AT後・前回BB後・駆け抜け後・設定1・リセット）だけ残し、「回数不問」「通常」
  *  「実測」「固定G天井なし」などの説明は出さない。天井の数字は2行目（ceilingHint）に出る。 */
-const KEPT_AIM_QUALIFIERS = /上位AT後|下位AT後|前回(?:BB|RB|BIG|REG)後/g;
+// 「0スルー」「1スルー以降」はCZ間などの狙い方そのものを分ける（ヴヴヴ2 2026-10-22 利用者指定）。
+const KEPT_AIM_QUALIFIERS = /上位AT後|下位AT後|前回(?:BB|RB|BIG|REG)後|\d+スルー(?:以降)?/g;
 export function shortAimLabel(label: string): string {
   const s1 = label.includes("設定1");
   const reset = /リセ/.test(label);

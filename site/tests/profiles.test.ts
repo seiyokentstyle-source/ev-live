@@ -140,6 +140,9 @@ describe("short aim label", () => {
       ["AT間天井（上位AT後・128Gまで見てやめ）", "AT間（上位AT後・128Gやめ）"],
       ["AT・RB間天井（通常）", "BB・RB間"],
       ["CZ間天井（回数不問・リセ）", "リセCZ間"],
+      ["CZ間天井（CZ0スルー・通常）", "CZ間（0スルー）"],
+      ["CZ間天井（CZ1スルー以降・通常）", "CZ間（1スルー以降）"],
+      ["CZ間天井（設定1想定・CZ1スルー以降）", "CZ間（1スルー以降・設定1）"],
     ];
     for (const [input, expected] of cases) expect(shortAimLabel(input)).toBe(expected);
   });
