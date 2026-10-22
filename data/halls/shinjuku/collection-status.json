@@ -13,7 +13,7 @@
         "スロット Re:ゼロから始める異世界生活 Season2"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-20",
+      "lastUpdated": "2026-10-21",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -21,19 +21,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1023,
-        "events": 1007,
+        "rows": 1041,
+        "events": 1024,
         "units": 2,
-        "days": 16,
+        "days": 17,
         "firstDate": "2026-06-17",
-        "lastDate": "2026-10-20"
+        "lastDate": "2026-10-21"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "shinjuku",
         "machineName": "スロット Re:ゼロから始める異世界生活 Season2",
-        "targetDate": "2026-10-20",
-        "inputSha256": "41f2f21f3a19facae5c894e26295ce1ce2cd186c2b96cb5c46ae9474c6c8ebda"
+        "targetDate": "2026-10-21",
+        "inputSha256": "336b622f486ace0f720376731a732724d698956879c6d827438c16a3edabf2f0"
       }
     },
     {
