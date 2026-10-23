@@ -331,7 +331,7 @@
         "Lパチスロ　ガールズ＆パンツァー最終章"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-20",
+      "lastUpdated": "2026-10-21",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -339,19 +339,19 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 747,
-        "events": 737,
+        "rows": 1129,
+        "events": 1114,
         "units": 5,
-        "days": 2,
+        "days": 3,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-10-20"
+        "lastDate": "2026-10-21"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akihabara",
         "machineName": "Lパチスロ　ガールズ＆パンツァー最終章",
-        "targetDate": "2026-10-20",
-        "inputSha256": "64707cf6bde5b8f5080d0ede37a5eb719f5d4be6ef8d32a35d07d67f863c9b42"
+        "targetDate": "2026-10-21",
+        "inputSha256": "a93e1eca61d3fdbab5e29bdd2121b904036018fc7bf60e4ffe5c334bc7706d36"
       }
     },
     {
