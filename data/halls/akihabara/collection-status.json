@@ -3,7 +3,7 @@
   "hallId": "akihabara",
   "source": "site_seven",
   "storeId": "06007007",
-  "lastUpdated": "2026-10-21",
+  "lastUpdated": "2026-10-22",
   "machines": [
     {
       "id": "m059e2c90",
@@ -13,7 +13,7 @@
         "Lバンドリ！"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-21",
+      "lastUpdated": "2026-10-22",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -21,19 +21,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 970,
-        "events": 952,
+        "rows": 1258,
+        "events": 1234,
         "units": 6,
-        "days": 3,
+        "days": 4,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-10-21"
+        "lastDate": "2026-10-22"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akihabara",
         "machineName": "Lバンドリ！",
-        "targetDate": "2026-10-21",
-        "inputSha256": "51e3018983e393e8b1eacd6f4179ba19abc130da0b51e6a0409c2ce194386b3e"
+        "targetDate": "2026-10-22",
+        "inputSha256": "e392719446f2869ddf998d179a8f8e84430d3d540b9cf30f5d54452b536a3e6f"
       }
     },
     {
