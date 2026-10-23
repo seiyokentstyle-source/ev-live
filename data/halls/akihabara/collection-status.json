@@ -77,7 +77,7 @@
         "L Ｔｏ　ＬＯＶＥるダークネス"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-20",
+      "lastUpdated": "2026-10-21",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -85,19 +85,19 @@
       "collectionComplete": true,
       "expectedUnits": 42,
       "collection": {
-        "rows": 4640,
-        "events": 4556,
+        "rows": 6659,
+        "events": 6533,
         "units": 42,
-        "days": 2,
+        "days": 3,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-10-20"
+        "lastDate": "2026-10-21"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akihabara",
         "machineName": "L Ｔｏ　ＬＯＶＥるダークネス",
-        "targetDate": "2026-10-20",
-        "inputSha256": "02da35df79331ef885c33dcebf74963a9568831d561495dff18967ace22a46ca"
+        "targetDate": "2026-10-21",
+        "inputSha256": "285aae251d8db9d31988a93158c232bd8b201532f216523894f92dfb9c638b57"
       }
     },
     {
