@@ -204,7 +204,7 @@
         "戦国コレクション５"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-21",
+      "lastUpdated": "2026-10-22",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -212,19 +212,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 188,
-        "events": 185,
+        "rows": 213,
+        "events": 209,
         "units": 1,
-        "days": 3,
+        "days": 4,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-10-21"
+        "lastDate": "2026-10-22"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akihabara",
         "machineName": "戦国コレクション５",
-        "targetDate": "2026-10-21",
-        "inputSha256": "336e012b145750b5c11a3c147e6dcb2531f487e50c54ede1225d9efe976b6b6e"
+        "targetDate": "2026-10-22",
+        "inputSha256": "c979b6e00503a5dc178fad7cf2e14d0a4a482ae2791f3b869fdba9b51c977c0b"
       }
     },
     {
