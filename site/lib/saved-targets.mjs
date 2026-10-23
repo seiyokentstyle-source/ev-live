@@ -173,7 +173,7 @@ export function selectSavedTargets(catalog, machineId, hallId, refreshed = [], r
     const latest = refreshed.find(item => item.id === target.id && item.conditionKey === target.conditionKey && item.dataThrough >= target.dataThrough &&
       (replaySource === undefined || item.sourceRevision === replaySource) &&
       (target.definition.endG === null || item.rows.every(row => row.g < target.definition.endG)));
-    // A skipped refresh can mean that the EVLIVE rule or selected condition is
+    // A skipped refresh can mean that the EVOT rule or selected condition is
     // no longer supported. Never replace it with cashflows from an older rule.
     if (!latest && replaySource !== undefined && target.sourceRevision !== replaySource) return [];
     return [{ ...target, rows: latest ? refreshedRows(target, latest) : target.rows, dataThrough: latest?.dataThrough ?? target.dataThrough, sourceRevision: latest?.sourceRevision ?? target.sourceRevision, refreshed: Boolean(latest) }];

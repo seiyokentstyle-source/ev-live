@@ -67,7 +67,7 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
           {machine.name}
         </h2>
 
-        {/* 2. サンプル件数。EV Live の信頼性はここに出るので、
+        {/* 2. サンプル件数。EVOT の信頼性はここに出るので、
               カード内でいちばん読ませる数値にする。ただし期待値と誤読されない大きさに留める。 */}
         <div className="mt-auto pt-3">
           {hasTotal || hallName ? <p className="mono mb-1 text-[9px] text-muted">{hasTotal ? "全店舗合計" : hallName}</p> : null}
