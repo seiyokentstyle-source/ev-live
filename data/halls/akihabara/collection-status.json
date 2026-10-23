@@ -140,7 +140,7 @@
         "L魔法少女にあこがれて"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-19",
+      "lastUpdated": "2026-10-22",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -148,19 +148,19 @@
       "collectionComplete": true,
       "expectedUnits": 14,
       "collection": {
-        "rows": 904,
-        "events": 890,
+        "rows": 3498,
+        "events": 3442,
         "units": 14,
-        "days": 1,
+        "days": 4,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-10-19"
+        "lastDate": "2026-10-22"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akihabara",
         "machineName": "L魔法少女にあこがれて",
-        "targetDate": "2026-10-19",
-        "inputSha256": "1d962de3b67bf6a4f0dc9559563d1f9efc46a94cce857904c529f8d344c80bb3"
+        "targetDate": "2026-10-22",
+        "inputSha256": "3e87f55b8758a813b8475eda9e4d75e58f46a5bc0a919978e60a0ce0abab117e"
       }
     },
     {
