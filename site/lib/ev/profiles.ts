@@ -491,13 +491,38 @@ export function selectedFilterTable(profile: Profile, axes: FilterAxis[], select
 }
 
 /** 明示された空配列も新形式。旧軸を復活させない。 */
-export function declaredFilterAxes(profile: Profile): FilterAxis[] | undefined {
+export function declaredFilterAxes(profile: Profile, machineId?: string): FilterAxis[] | undefined {
   const axes = profile.evFilters?.axes;
   if (axes === undefined) return undefined;
-  return axes.map(axis => ({ ...axis, label: rewriteAxisLabel(axis.label),
+  const shaman = machineId === "m695e7825";
+  const release = /^point_release_(4652|5050)$/.test(profile.key);
+  return axes.map(axis => ({ ...axis,
+    label: shaman && release && axis.key === "bonusThrough" ? "累計ボーナス敗北回数"
+      : shaman && release && axis.key === "releaseStage" ? "推定履歴区分"
+      : shaman && !release && axis.key === "bonus" ? "AT後・朝一のボーナス回数"
+      : rewriteAxisLabel(axis.label),
+    options: shaman && release && axis.key === "releaseStage" ? axis.options.map(option => ({
+      ...option,
+      label: ({ "0": "朝一・推定解放前", "1": "推定解放後", "2": "推定有利切断後" } as Record<string, string>)[option.value] ?? option.label
+    })) : axis.options,
     allLabel: axis.key === "cz" && /^cz_ceiling_after_(4652|5050)$/.test(profile.key)
       ? "1スルー以降すべて"
       : profile.aimKind || profile.evFilters?.selectionPolicy ? "不問" : axis.allLabel }));
+}
+
+/** 回数の起点と直前の状態は別条件。旧集計から未配信の内訳を作らない。 */
+export function shamanFilterExplanation(machineId: string, profile: Profile): string | undefined {
+  if (machineId !== "m695e7825") return undefined;
+  const axes = profile.evFilters?.axes ?? [];
+  if (/^point_release_(4652|5050)$/.test(profile.key)) {
+    const meaning = "累計敗北回数は通常ATを挟んでも引き継ぎます。解放・有利切断の区分は履歴からの推定です。";
+    return axes.some(axis => axis.key === "entryState")
+      ? `${meaning}「当該敗北後」と、その回数を保ったままATを挟んだ「当該AT後」を分けて選べます。`
+      : `${meaning}この配信データには「当該敗北後／当該AT後」の内訳がなく、その区別での絞り込みは集計待ちです。`;
+  }
+  return axes.some(axis => axis.key === "bonus")
+    ? "この表のボーナス回数は直前のAT以降（朝一は営業開始以降）の回数です。巫門遁甲の累計敗北回数とは起点が異なります。"
+    : undefined;
 }
 
 /** 狙い方・レート切替後も適用できる絞り込みだけを引き継ぐ。 */
