@@ -369,7 +369,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
 
       {hall.id === "mixed" && machine.calcSpec?.items.some((item) => item.k === "設定1への補正") ? (
         <p className="mono shrink-0 border-b border-line bg-panel px-4 py-2 text-[10px] text-ink-soft">
-          設定1想定の補正表 · 当選G・条件別母数は新宿の実測
+          設定1想定の補正表 · 当選G・条件別母数は収集対象店舗の実測
         </p>
       ) : null}
 

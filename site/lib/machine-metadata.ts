@@ -81,9 +81,34 @@ function normalizeCounterPendingWording(machine: Machine): Machine {
   };
 }
 
+const MAHO_PUBLISHED_SETTING1 = "機械割97.6%／設定1機械割97.6%（公表値: slobase / chonborista）。";
+const MAHO_LEGACY_SETTING1 = MAHO_PUBLISHED_SETTING1
+  + "サイトセブンのBB（AT）獲得が約45%欠けるため、この機械割と実測の初当りG分布から1回あたりの獲得を逆算している";
+const MAHO_MEASURED_HALLS = new Set([
+  "kabuki", "akiba_espace", "seibu_shinjuku", "ueno_honkan", "ueno_shinkan", "espace_shibuya_shinkan",
+]);
+
+// This combined output uses Daidata payouts and a payout-scale correction.
+// The SiteSeven-only assumed-payout explanation does not describe that method.
+function normalizeMahoMixedWording(machine: Machine): Machine {
+  const correction = machine.setting1Correction, sources = machine.mixedSources;
+  if (machine.id !== "m407111cd" || machine.name !== "L魔法少女にあこがれて"
+    || correction?.sourceHallId !== "mixed" || correction.method !== "payout-scale"
+    || correction.targetRtp !== 0.976 || sources?.schemaVersion !== 1
+    || !sources.halls.length || !sources.halls.every(hall => MAHO_MEASURED_HALLS.has(hall))) return machine;
+  const matches = (item: { k: string; v: string }) => item.k === "設定1（公表）" && item.v === MAHO_LEGACY_SETTING1;
+  if (!machine.calcSpec?.items.some(matches)) return machine;
+  return {
+    ...machine,
+    calcSpec: { ...machine.calcSpec, items: machine.calcSpec.items.map(item =>
+      matches(item) ? { ...item, v: MAHO_PUBLISHED_SETTING1 } : item) },
+  };
+}
+
 /** Match both the stable ID and complete name; never match a series substring. */
 export function normalizeMachineMetadata(machine: Machine): Machine {
   machine = normalizeCounterPendingWording(machine);
+  machine = normalizeMahoMixedWording(machine);
   if (A_TYPE_NO_EV[machine.id] === machine.name) return withoutEvTables(machine);
   const metadata = SAO_METADATA[machine.id];
   if (!metadata || metadata.name !== machine.name) return machine;
