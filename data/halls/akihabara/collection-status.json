@@ -339,10 +339,10 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 1831,
-        "events": 1806,
+        "rows": 2298,
+        "events": 2268,
         "units": 5,
-        "days": 5,
+        "days": 6,
         "firstDate": "2026-10-19",
         "lastDate": "2026-10-24"
       },
@@ -351,7 +351,7 @@
         "hallId": "akihabara",
         "machineName": "Lパチスロ　ガールズ＆パンツァー最終章",
         "targetDate": "2026-10-24",
-        "inputSha256": "eed496859361cb65c406c4a8b094be5f1a32ca893b0cf1c143d46ee2a0d1e8e7"
+        "inputSha256": "6069e846aa1900730d1287348cf5fddac0a04d3bdac190790d36addf2a0bb7fb"
       }
     },
     {
