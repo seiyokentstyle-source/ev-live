@@ -32,6 +32,7 @@ import type { DisplayTarget } from "@/lib/saved-targets.mjs";
 import { useLiveMachine } from "@/lib/use-live-data";
 import type { LiveMachine, LiveSnapshot } from "@/lib/live-data";
 import { collectionStatus } from "@/lib/ev/collection-status";
+import { assumedPayoutNotice } from "@/lib/ev/low-setting";
 import { HallPendingClient } from "./[hall]/HallPendingClient";
 
 type PickerState = {
@@ -93,6 +94,7 @@ export function LiveMachineClient({ initial, hall }: { initial: LiveSnapshot; ha
 
 function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: MachineDetailClientProps) {
   const pendingStatus = collectionStatus(machine.meta);
+  const assumedPayout = assumedPayoutNotice(machine, hall.id);
   const grouped = useMemo(() => groupProfiles(machine.profiles, machine.id), [machine.profiles, machine.id]);
   const hasRatePairs = grouped.rates.length >= 2;
   const settingAim = machine.settingAim;
@@ -371,6 +373,10 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
         <p className="mono shrink-0 border-b border-line bg-panel px-4 py-2 text-[10px] text-ink-soft">
           設定1想定の補正表 · 当選G・条件別母数は収集対象店舗の実測
         </p>
+      ) : null}
+
+      {assumedPayout ? (
+        <p className="shrink-0 border-b border-line bg-panel px-4 py-2 text-[11px] text-ink-soft">{assumedPayout}</p>
       ) : null}
 
       {pendingStatus ? (

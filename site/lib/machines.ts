@@ -127,7 +127,7 @@ async function loadHallMachines(dataSubdir?: string): Promise<Machine[]> {
   }
   const machines = await readMachines(dir);
   return machines
-    .map(withoutLowSetting)
+    .map(machine => withoutLowSetting(machine, hallIdOf(dataSubdir)))
     .filter((machine): machine is Machine => machine !== null)
     .sort(compareMachines);
 }
@@ -164,7 +164,7 @@ async function loadHallMachine(id: string, dataSubdir?: string): Promise<Machine
     return rawMixedMachine(await readMachine(hallDir(LOW_SETTING_HALL_SUBDIR), id));
   }
   const machine = await readMachine(dir, id);
-  return machine ? withoutLowSetting(machine) ?? undefined : undefined;
+  return machine ? withoutLowSetting(machine, hallIdOf(dataSubdir)) ?? undefined : undefined;
 }
 
 /** Route IDs include machines collected only in a non-default hall. */
