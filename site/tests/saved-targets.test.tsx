@@ -85,15 +85,15 @@ describe('published target contract', () => {
 });
 
 describe('source hall identity and EVOT display mapping', () => {
-  const hallTarget = (hallId: 'shinjuku' | 'kabuki' | 'mixed', suffix: string): PublishedTarget => {
+  const hallTarget = (hallId: PublishedTarget['definition']['hallId'], suffix: string): PublishedTarget => {
     const value = target();
     return { ...value, id: value.id.slice(0, -1) + suffix, hallId, definition: { ...value.definition, hallId } };
   };
 
   it('isolates the same machine and condition in each hall without changing aggregate values', () => {
-    const targets = [hallTarget('shinjuku', '1'), hallTarget('kabuki', '2'), hallTarget('mixed', '3')];
+    const targets = [hallTarget('shinjuku', '1'), hallTarget('kabuki', '2'), hallTarget('mixed', '3'), hallTarget('akihabara', '4')];
     const parsed = parseSavedTargetCatalog(catalog(targets));
-    for (const [source, display] of [['shinjuku', 'shinjuku'], ['kabuki', 'kabuki'], ['mixed', 'mixed-raw']]) {
+    for (const [source, display] of [['shinjuku', 'shinjuku'], ['kabuki', 'kabuki'], ['mixed', 'mixed-raw'], ['akihabara', 'akihabara']]) {
       const selected = selectSavedTargets(parsed, 'test', display, [], target().sourceRevision);
       expect(selected).toHaveLength(1);
       expect(selected[0].hallId).toBe(source);

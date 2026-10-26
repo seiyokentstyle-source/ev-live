@@ -49,10 +49,11 @@ async function feedFixture() {
   return { source, output, write, v2 };
 }
 
-test('keeps v1 unchanged and separates the same machine in three source halls', async () => {
+test('keeps v1 unchanged and separates the same machine in four source halls', async () => {
   const { source, output, write, v2 } = await feedFixture();
   const original = new Map<string, string>();
-  for (const [hall, subdir, revision] of [['shinjuku', '', 'a'], ['kabuki', 'kabuki', 'b'], ['mixed', 'mixed', 'c']]) {
+  const halls = [['shinjuku', '', 'a'], ['kabuki', 'kabuki', 'b'], ['mixed', 'mixed', 'c'], ['akihabara', 'akihabara', 'd']];
+  for (const [hall, subdir, revision] of halls) {
     const data = feedMachine(hall, revision);
     await write(subdir, data); original.set(subdir, JSON.stringify(data));
   }
@@ -64,8 +65,9 @@ test('keeps v1 unchanged and separates the same machine in three source halls', 
   const index = await v2();
   expect(index.schema).toBe('evlive-interval-feed/v2');
   expect(index.halls.find((hall: { id: string }) => hall.id === 'mixed')).toEqual({ id: 'mixed', name: '店舗混合（補正なし）', evotHallId: 'mixed-raw' });
-  expect(index.machines.map((item: { hallId: string }) => item.hallId)).toEqual(['shinjuku', 'kabuki', 'mixed']);
-  for (const [hall, subdir, revision] of [['shinjuku', '', 'a'], ['kabuki', 'kabuki', 'b'], ['mixed', 'mixed', 'c']]) {
+  expect(index.machines.map((item: { hallId: string }) => item.hallId)).toEqual(['shinjuku', 'kabuki', 'mixed', 'akihabara']);
+  expect(index.halls.find((hall: { id: string }) => hall.id === 'akihabara')).toEqual({ id: 'akihabara', name: '萌えスロのお店', evotHallId: 'akihabara' });
+  for (const [hall, subdir, revision] of halls) {
     const envelope = JSON.parse(await fs.readFile(path.join(output, hall, 'magia.json'), 'utf8'));
     expect(envelope).toEqual(feedMachine(hall, revision).intervalExplorer);
     expect(await fs.readFile(path.join(source, subdir, 'magia.json'), 'utf8')).toBe(original.get(subdir));
@@ -87,14 +89,19 @@ test('never reads hidden hall sources and withdraws previously generated hidden 
   for (const hall of hidden) await expect(fs.stat(path.join(output, hall, 'magia.json'))).rejects.toThrow();
 });
 
-test('withdraws a listed hall when its publication policy changes', async () => {
+test.each(['kabuki', 'akihabara'])('withdraws %s when its publication policy changes without changing its source', async hallId => {
   const { source, output, write, v2 } = await feedFixture();
-  await write('kabuki', feedMachine('kabuki'));
-  await exportIntervalFeed(source, output, []);
-  await exportIntervalFeed(source, output, [{ id: 'kabuki', dataSubdir: 'kabuki', visibility: 'mixed-only' }]);
-  expect((await v2()).machines).toEqual([]);
-  expect((await v2()).halls.some((hall: { id: string }) => hall.id === 'kabuki')).toBe(false);
-  await expect(fs.stat(path.join(output, 'kabuki', 'magia.json'))).rejects.toThrow();
+  const original = feedMachine(hallId);
+  await write(hallId, original);
+  for (const policy of [{ visibility: 'listed', ready: false }, { visibility: 'mixed-only', ready: true }]) {
+    await exportIntervalFeed(source, output, []);
+    expect((await v2()).machines).toHaveLength(1);
+    await exportIntervalFeed(source, output, [{ id: hallId, dataSubdir: hallId, ...policy }]);
+    expect((await v2()).machines).toEqual([]);
+    expect((await v2()).halls.some((hall: { id: string }) => hall.id === hallId)).toBe(false);
+    await expect(fs.stat(path.join(output, hallId, 'magia.json'))).rejects.toThrow();
+    expect(await fs.readFile(path.join(source, hallId, 'magia.json'), 'utf8')).toBe(JSON.stringify(original));
+  }
 });
 
 test.each(['missing_envelope', 'counter_unverified', 'unsupported_replay', 'encryption_key_unavailable', 'model_too_large'])('publishes a bounded unavailable reason: %s', async reason => {

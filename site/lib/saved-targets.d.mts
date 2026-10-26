@@ -1,3 +1,5 @@
+import type { IntervalHallId } from './interval-halls.mjs';
+
 export type TargetRow = {
   g: number; ev: number | null; n: number; days: number;
   /** Mean invested medals and total play games for this exact target cohort. */
@@ -10,7 +12,7 @@ export type TargetFilter =
   | { mode: 'category'; lo: ''; hi: ''; value: string }
   | { mode: 'modulo'; lo: ''; hi: ''; period: number; remainder: number };
 export type TargetDefinition = {
-  schema: 'interval-target/v1'; machineId: string; hallId: 'shinjuku' | 'kabuki' | 'mixed'; profileKey: string;
+  schema: 'interval-target/v1'; machineId: string; hallId: IntervalHallId; profileKey: string;
   startG: number; endG: number | null;
   filters: Record<string, TargetFilter>;
   rate: '46/52' | '50/50'; stopRule: 'evlive';
