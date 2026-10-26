@@ -40,8 +40,8 @@ function hasNoMeasuredPayout(machine: Machine): boolean {
 // 生成側・サイト仕様で単店の主表として認められているモデルだけを選ぶ。
 // 同名の別ID、後継機、他店や混合へこの例外を広げない。
 const ASSUMED_PAYOUT_MODELS = [
-  { id: "m407111cd", name: "L魔法少女にあこがれて", event: "AT当選G" },
-  { id: "mfb4da289", name: "ソードアート・オンラインII", event: "CZ当選G" },
+  { id: "m407111cd", name: "L魔法少女にあこがれて", event: "AT当選G", halls: ["shinjuku", "akihabara"] },
+  { id: "mfb4da289", name: "ソードアート・オンラインII", event: "CZ当選G", halls: ["shinjuku", "akihabara", "kabuki"] },
 ] as const;
 const ASSUMED_PAYOUT_PROFILE_KEYS = new Set([
   "game_ceiling_4652", "game_ceiling_5050", "reset_4652", "reset_5050",
@@ -49,18 +49,21 @@ const ASSUMED_PAYOUT_PROFILE_KEYS = new Set([
 
 /** 登録済みの単店モデルに限り、表の常時表示する前提説明を返す。 */
 export function assumedPayoutNotice(machine: Machine, hallId?: string): string | undefined {
-  if (hallId !== "shinjuku" && hallId !== "akihabara") return undefined;
-  const model = ASSUMED_PAYOUT_MODELS.find(item => item.id === machine.id && item.name === machine.name);
+  const model = ASSUMED_PAYOUT_MODELS.find(item => item.id === machine.id && item.name === machine.name
+    && item.halls.some(hall => hall === hallId));
+  // A separately generated setting-1 correction is not the single-store main
+  // table. Keep the existing classification and validate only profiles shown.
+  const profiles = machine.profiles.filter(profile => !isLowSetting(profile));
   if (!model || !hasNoMeasuredPayout(machine) || machine.mixedSources || machine.officialCalibrationHold
-    || machine.counterEstimate || machine.provisionalSetting1 || machine.profiles.length === 0
-    || machine.profiles.some(profile => !ASSUMED_PAYOUT_PROFILE_KEYS.has(profile.key))
-    || !machine.profiles.some(profile => !profile.dataPending && profile.baseAnchors.length > 0)) return undefined;
+    || machine.counterEstimate || machine.provisionalSetting1 || profiles.length === 0
+    || profiles.some(profile => !ASSUMED_PAYOUT_PROFILE_KEYS.has(profile.key))
+    || !profiles.some(profile => !profile.dataPending && profile.baseAnchors.length > 0)) return undefined;
   return `想定獲得の期待値表 · ${model.event}・母数はこの店舗の実測。獲得枚数は公表設定1機械割から逆算した仮定で、実測の獲得ではありません。`;
 }
 
 /** 獲得実測を必要とする別機能へ想定値を渡さず、生成済みの主表だけを使う。 */
 function assumedPayoutMachine(machine: Machine): Machine {
-  const next = { ...machine, profiles: machine.profiles.map(profile => ({ ...profile,
+  const next = { ...machine, profiles: machine.profiles.filter(profile => !isLowSetting(profile)).map(profile => ({ ...profile,
     label: profile.label.includes("（獲得想定）") ? profile.label
       : `${profile.label.replace(/実測/g, "当選G実測")}（獲得想定）`,
   })) };

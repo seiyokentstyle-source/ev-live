@@ -130,6 +130,49 @@ describe("per-hall numerical table admission", () => {
 });
 
 describe("assumed payout model boundary", () => {
+  it("serves the existing kabuki SAOII main table beside separate setting-1 profiles", async () => {
+    const primary = assumedPayoutFixture("mfb4da289", "kabuki", 600);
+    const input = structuredClone(primary);
+    input.profiles.push(...primary.profiles.filter(profile => profile.key.startsWith("game_ceiling")).map(profile => ({
+      ...profile, key: profile.key.replace("game_ceiling_", "game_ceiling_s1_"),
+      label: `${profile.label}（設定1想定）`, sessions: 9999,
+    })));
+    const before = structuredClone(input);
+    await writeMachine(input, "kabuki");
+    await writeObservation(input, "kabuki");
+    const { getLiveMachine } = await import("../lib/live-data");
+    const { default: detailPage } = await import("../app/machines/[id]/[hall]/page");
+    const live = await getLiveMachine(input.id, "kabuki");
+    expect(live?.schema).toBe("evlive-live-machine/v1");
+    const displayed = live!.machine as Machine;
+    expect(displayed.profiles.map(({ label: _label, ...profile }) => profile))
+      .toEqual(primary.profiles.map(({ label: _label, ...profile }) => profile));
+    expect(displayed.meta).toEqual(primary.meta);
+    const page = await detailPage({ params: Promise.resolve({ id: input.id, hall: "kabuki" }) });
+    expect(page.props.initial).toEqual(live);
+    const html = renderToStaticMarkup(page);
+    expect(html).toContain("想定獲得の期待値表");
+    expect(html).toContain("CZ当選G");
+    expect(html).toContain("獲得枚数は公表設定1機械割から逆算した仮定");
+    expect(input).toEqual(before);
+  });
+
+  it("keeps forcePending authoritative for a generated kabuki SAOII table", async () => {
+    const input = assumedPayoutFixture("mfb4da289", "kabuki");
+    await writeMachine(input, "kabuki");
+    await writeObservation(input, "kabuki", true);
+    const { getLiveMachine } = await import("../lib/live-data");
+    expect(await getLiveMachine(input.id, "kabuki")).toMatchObject({ schema: "evlive-live-collection/v1" });
+  });
+
+  it("does not admit only-correction or unknown main profiles as a kabuki SAOII table", () => {
+    const input = assumedPayoutFixture("mfb4da289", "kabuki");
+    const correction = { ...input.profiles[0], key: "game_ceiling_s1_4652", label: "設定1想定" };
+    expect(withoutLowSetting({ ...input, profiles: [correction] }, "kabuki")).toBeNull();
+    expect(withoutLowSetting({ ...input, profiles: [...input.profiles, correction,
+      { ...input.profiles[0], key: "unknown-main", label: "未検証主表" }] }, "kabuki")).toBeNull();
+  });
+
   it("requires an exact registered identity, source hall, generated profile scope and numerical rows", () => {
     const input = assumedPayoutFixture();
     expect(withoutLowSetting(input)).toBeNull();
