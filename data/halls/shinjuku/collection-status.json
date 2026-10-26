@@ -3,7 +3,7 @@
   "hallId": "shinjuku",
   "source": "site_seven",
   "storeId": "00001050",
-  "lastUpdated": "2026-10-22",
+  "lastUpdated": "2026-10-23",
   "machines": [
     {
       "id": "m21cfd44f",
@@ -75,7 +75,7 @@
         "バーサスリヴァイズ"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-22",
+      "lastUpdated": "2026-10-23",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -83,19 +83,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 370,
-        "events": 360,
+        "rows": 405,
+        "events": 394,
         "units": 1,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-10-13",
-        "lastDate": "2026-10-22"
+        "lastDate": "2026-10-23"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "shinjuku",
         "machineName": "バーサスリヴァイズ",
-        "targetDate": "2026-10-22",
-        "inputSha256": "a95adb1d761eb4403fa21c723959b9aad216b6c1926ee418289d55ad4a091ca1"
+        "targetDate": "2026-10-23",
+        "inputSha256": "0d76851ac4b2551f8a8e7b601672c37024e60675eef12cb7dc4695aecb800851"
       }
     },
     {
