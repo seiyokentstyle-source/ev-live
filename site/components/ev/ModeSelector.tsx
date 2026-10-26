@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { ControlBar, SegmentedControl, type Segment } from "@/components/ui/Controls";
 
 export type AimMode = "ev" | "targets" | "setting" | "payout" | "release" | "harakiri";
@@ -9,6 +10,7 @@ type ModeSelectorProps = {
   onChange: (value: AimMode) => void;
   /** 表示するモード（データのあるものだけ親が渡す）. */
   modes: AimMode[];
+  action?: ReactNode;
 };
 
 const MODES: Array<Segment<AimMode>> = [
@@ -20,10 +22,13 @@ const MODES: Array<Segment<AimMode>> = [
   { value: "harakiri", label: "ハラキリドライブ", hint: "台番号別 発生率" }
 ];
 
-export function ModeSelector({ value, onChange, modes }: ModeSelectorProps) {
+export function ModeSelector({ value, onChange, modes, action }: ModeSelectorProps) {
   return (
-    <ControlBar label="目的" scroll collapsible>
-      <SegmentedControl segments={MODES.filter((mode) => modes.includes(mode.value))} value={value} onChange={onChange} />
+    <ControlBar label="目的" collapsible>
+      <div className="scrollbar-none min-w-0 flex-1 overflow-x-auto">
+        <SegmentedControl segments={MODES.filter((mode) => modes.includes(mode.value))} value={value} onChange={onChange} />
+      </div>
+      {action}
     </ControlBar>
   );
 }

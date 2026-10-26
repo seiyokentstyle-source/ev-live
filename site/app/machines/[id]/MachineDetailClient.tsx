@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
@@ -24,7 +24,7 @@ import { SettingAimTable } from "@/components/ev/SettingAimTable";
 import { AtPayoutTable } from "@/components/ev/AtPayoutTable";
 import { ThroughReleaseTable } from "@/components/ev/ThroughReleaseTable";
 import { HarakiriTable } from "@/components/ev/HarakiriTable";
-import { ControlBar, SegmentedControl } from "@/components/ui/Controls";
+import { ControlBar, SegmentedControl, SEGMENT_ON, SEGMENT_OFF } from "@/components/ui/Controls";
 import { EmptyState } from "@/components/ui/DataTable";
 import { useTableControls } from "@/components/ui/useTableControls";
 import { SavedTargets } from "@/components/ev/SavedTargets";
@@ -118,6 +118,8 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
   );
 
   const [mode, setMode] = useState<AimMode>("ev");
+  const [conditionsOpen, setConditionsOpen] = useState(false);
+  const conditionsPanelId = useId();
   const [targetId, setTargetId] = useState('');
   const [aimTargetId, setAimTargetId] = useState<string | null>(null);
   const aimTarget = savedTargets.find(target => target.id === aimTargetId);
@@ -421,9 +423,19 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
         <TheoreticalTable data={machine.theoretical} gamesPerHour={machine.economics.gamesPerHour} bet={machine.evCalc?.bet || 3} />
       ) : (
         <>
-      {availableModes.length > 1 ? <ModeSelector value={mode} onChange={setMode} modes={availableModes} /> : null}
+      <ModeSelector value={mode} onChange={value => { setMode(value); setConditionsOpen(false); }} modes={availableModes}
+        action={mode !== 'targets' && !(mode === 'ev' && aimTarget) ? (
+          <button type="button" onClick={() => setConditionsOpen(value => !value)}
+            aria-expanded={conditionsOpen} aria-controls={conditionsPanelId}
+            className={`min-h-[34px] shrink-0 rounded-md px-2.5 py-1 text-xs font-bold ${conditionsOpen ? SEGMENT_ON : SEGMENT_OFF}`}>
+            算出条件 {conditionsOpen ? "▲" : "▼"}
+          </button>
+        ) : null} />
 
       {mode !== 'targets' && !(mode === 'ev' && aimTarget) ? <ConditionsBar
+        id={conditionsPanelId}
+        detailsOnly
+        expanded={conditionsOpen}
         machine={machine}
         profile={displayProfile}
         mode={mode}
