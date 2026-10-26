@@ -26,6 +26,10 @@ type ConditionsBarProps = {
   heldMedals?: number;
   /** 表示中の表が使う消化Gの計算条件。 */
   profile?: Profile;
+  /** 目的行のボタンから開く場合は、要約行を出さず詳細だけ表示する。 */
+  detailsOnly?: boolean;
+  expanded?: boolean;
+  id?: string;
 };
 
 type Row = { k: string; v: string };
@@ -47,9 +51,13 @@ export function ConditionsBar({
   profileSampleNote,
   czTerm,
   heldMedals = 0,
-  profile
+  profile,
+  detailsOnly = false,
+  expanded,
+  id
 }: ConditionsBarProps) {
   const [open, setOpen] = useState(false);
+  const isOpen = expanded ?? open;
   const ev = machine.evCalc;
   const range = dataRange(machine.meta.source);
   const calcSpec = machine.calcSpec;
@@ -121,28 +129,29 @@ export function ConditionsBar({
     rows.push({ k: "持ちメダル", v: `${heldMedals.toLocaleString("ja-JP")}枚。交換価値で使用し、不足分を現金投資として計算。等価交換では期待値は変わりません。` });
   }
   if (rows.length === 0) return null;
+  if (detailsOnly && !isOpen) return null;
   const summary = rows.slice(0, 3).map((r) => r.v.split("（")[0]).join(" / ");
 
   return (
-    <div className="collapsible-bar shrink-0 border-b border-line bg-panel">
+    <div id={id} className="collapsible-bar shrink-0 border-b border-line bg-panel">
       {/* 折りたたみ（grid-template-rows）のため、中身は1枚のdivにまとめる。 */}
       <div>
-      <button
+      {!detailsOnly ? <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
+        aria-expanded={isOpen}
         className="flex w-full items-center gap-3 px-3 py-2 text-left"
       >
         <span className="mono w-12 shrink-0 text-[9px] tracking-[0.14em] text-muted">{pendingStatus ? "公表仕様" : "算出条件"}</span>
         <span className="mono flex-1 truncate text-[10px] text-ink-soft">{summary}</span>
-        <span className="mono shrink-0 text-[10px] text-muted">{open ? "閉じる ▲" : "詳細 ▼"}</span>
-      </button>
-      {open ? (
+        <span className="mono shrink-0 text-[10px] text-muted">{isOpen ? "閉じる ▲" : "詳細 ▼"}</span>
+      </button> : null}
+      {isOpen ? (
         <dl className="mono grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 border-t border-line-soft px-3 py-2 text-[10px]">
           {rows.map((r) => (
             <div key={r.k} className="contents">
               <dt className="whitespace-nowrap text-muted">{r.k}</dt>
-              <dd className="text-ink-soft">{r.v}</dd>
+              <dd className="min-w-0 break-words text-ink-soft">{r.v}</dd>
             </div>
           ))}
         </dl>
