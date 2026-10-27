@@ -1,6 +1,7 @@
 import type { LiveIndex, LiveSnapshot } from "./live-data";
 import { getHall, isListedHall } from "./halls";
 import { validateMachine } from "./ev/validate";
+import { validateMachineKatanaEstimate } from "./ev/katana-estimate";
 import { validateCollectedMachine } from "./collection-status-contract";
 import { validateMachineProvisionalSetting1 } from "./ev/provisional-setting1";
 import { assertSingleAttachment, validateMachineCounterEstimate } from "./ev/counter-estimate";
@@ -37,6 +38,7 @@ export async function fetchLiveMachine(
   if (data.schema !== "evlive-live-machine/v1" || !Array.isArray(data.savedTargets)) throw new Error("Invalid live machine");
   const machine = validateMachine(data.machine);
   if (machine.counterEstimate !== undefined) validateMachineCounterEstimate(machine.counterEstimate, machine.id, item.hallId);
+  if (machine.katanaEstimate !== undefined) validateMachineKatanaEstimate(machine.katanaEstimate, machine.id, machine.name, item.hallId);
   return { ...data, machine };
 }
 

@@ -1,4 +1,5 @@
 import type { MachineSavedTarget } from '../saved-targets.mjs';
+import type { KatanaEstimate } from './katana-estimate';
 
 export type AxisValue = string | number;
 
@@ -492,6 +493,8 @@ export type Machine = {
   heatmapCoverage?: HeatmapCoverage;
   /** AT獲得モードのデータ。古い/未生成データでは undefined。 */
   atPayout?: AtPayout;
+  /** 設定未調整の当選帯回収と条件付き逆算を使う刀ポイント参考試算。 */
+  katanaEstimate?: KatanaEstimate;
   /** ハラキリドライブモードのデータ。対応機種（ヴヴヴ2）のみ。古い/未生成データでは undefined。 */
   harakiri?: Harakiri;
   /** 設定1想定の期待値表（スペックからの理論値・実戦データ非依存）。未登録機種では undefined。 */

@@ -5,6 +5,7 @@ import { validateMachine } from "../lib/ev/validate";
 import { fetchLiveMachine, LIVE_REFRESH_MS, startLiveMachineRefresh, startLiveRefresh } from "../lib/live-refresh";
 import { selectMachineListSummaries } from "../lib/machine-list-summary";
 import fixture from "../app/preview/ev-table/machine.json";
+import { katanaEstimateFixture, unavailableKatanaEstimateFixture } from "./fixtures/katana-estimate";
 
 const original: LiveMachine = {
   schema: "evlive-live-machine/v1",
@@ -72,6 +73,41 @@ afterEach(() => {
 });
 
 describe("live machine snapshots", () => {
+  it("refreshes katana rows, receipt mean and period together, then replaces them with a zero-sample result", async () => {
+    const estimate = katanaEstimateFixture();
+    const first: LiveMachine = { ...original, machine: validateMachine({ ...fixture,
+      id: "mfc4a14a4", name: "いざ！番長", aliases: [], lastUpdated: estimate.source.periodEnd, katanaEstimate: estimate }) };
+    const next = structuredClone(first);
+    next.revision = "d".repeat(64);
+    const changed = next.machine.katanaEstimate;
+    if (!changed?.ready) throw new Error("ready fixture required");
+    changed.source.periodEnd = "2026-09-04";
+    changed.sample = { count: 3, totalPayout: 1200, meanPayout: 400, meanAtGames: 133.33333333333334 };
+    changed.rows[0].evYen = 1234;
+    next.machine.lastUpdated = "2026-09-04";
+    const empty: LiveMachine = { ...next, revision: "e".repeat(64), machine: { ...next.machine,
+      katanaEstimate: unavailableKatanaEstimateFixture() } };
+    request.mockResolvedValueOnce(response(indexFor(next))).mockResolvedValueOnce(response(next))
+      .mockResolvedValueOnce(response(indexFor(empty))).mockResolvedValueOnce(response(empty));
+    const onUpdate = vi.fn();
+    stop = startLiveMachineRefresh(first, "shinjuku", onUpdate);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(onUpdate.mock.calls[0][0].machine.katanaEstimate).toEqual(changed);
+    await vi.advanceTimersByTimeAsync(LIVE_REFRESH_MS);
+    expect(onUpdate.mock.calls[1][0].machine.katanaEstimate).toMatchObject({
+      ready: false, status: "unavailable", sample: { count: 0, meanPayout: null, meanAtGames: null }, rows: [],
+    });
+  });
+
+  it("rejects a katana attachment from a different hall during live refresh", async () => {
+    const estimate = katanaEstimateFixture();
+    const payload: LiveMachine = { ...original, machine: validateMachine({ ...fixture,
+      id: "mfc4a14a4", name: "いざ！番長", aliases: [], lastUpdated: estimate.source.periodEnd, katanaEstimate: estimate }) };
+    request.mockResolvedValueOnce(response(payload));
+    await expect(fetchLiveMachine({ ...indexFor(payload).machines[0], hallId: "kabuki" }, new AbortController().signal))
+      .rejects.toThrow("another hall");
+  });
+
   it("follows a verified alias switch using the raw detail ID and revision, then returns to a hold", async () => {
     const held = collectedFixture("m4ab6796b");
     held.summary.name = "Lパリピ孔明";

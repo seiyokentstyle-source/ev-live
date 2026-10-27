@@ -71,6 +71,7 @@ function assumedPayoutMachine(machine: Machine): Machine {
   delete next.theoretical;
   delete next.settingAim;
   delete next.atPayout;
+  delete next.katanaEstimate;
   delete next.harakiri;
   delete next.savedTargets;
   const { stay: calcSpec } = splitCalcSpec(machine);
@@ -153,6 +154,11 @@ export function withoutLowSetting(machine: Machine, hallId?: string): Machine | 
 
 /** 低設定想定店舗混合の表示。推定の表だけにする。無ければ null（一覧に出さない）。 */
 export function onlyLowSetting(machine: Machine): Machine | null {
+  // この参考試算の回収は設定未調整。どの設定1表示経路にも運ばない。
+  if (machine.katanaEstimate !== undefined) {
+    const { katanaEstimate: _katanaEstimate, ...withoutKatana } = machine;
+    machine = withoutKatana;
+  }
   if (machine.officialCalibrationHold) return null;
   const corrected = correctedMachine(machine);
   if (corrected) return corrected;

@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { ControlBar, SegmentedControl, type Segment } from "@/components/ui/Controls";
 
-export type AimMode = "ev" | "targets" | "setting" | "payout" | "release" | "harakiri";
+export type AimMode = "ev" | "targets" | "setting" | "payout" | "katana" | "release" | "harakiri";
 
 type ModeSelectorProps = {
   value: AimMode;
@@ -18,6 +18,7 @@ const MODES: Array<Segment<AimMode>> = [
   { value: "targets", label: "狙い目", hint: "追加した条件" },
   { value: "setting", label: "設定狙い", hint: "台番号別 出率" },
   { value: "payout", label: "AT獲得", hint: "当選G別 平均獲得" },
+  { value: "katana", label: "刀ポイント", hint: "20円等価の参考試算" },
   { value: "release", label: "穢れ解放", hint: "スルー回数別 解放率" },
   { value: "harakiri", label: "ハラキリドライブ", hint: "台番号別 発生率" }
 ];

@@ -5,6 +5,7 @@ import type { CounterEstimate, Machine, MachineSummary, ProvisionalSetting1 } fr
 import { validateMachineProvisionalSetting1 } from "./ev/provisional-setting1";
 import { assertSingleAttachment, validateMachineCounterEstimate } from "./ev/counter-estimate";
 import { validateMachine } from "./ev/validate";
+import { validateMachineKatanaEstimate } from "./ev/katana-estimate";
 import { machineSummary } from "./ev/summary";
 import { getHall, getReadyHalls, isListedHall } from "./halls";
 import { getHallDisplays, getHallDisplay } from "./machines";
@@ -71,6 +72,7 @@ export function buildLiveMachine(
     splitCzThroughProfiles(validateMachine(data))
   ));
   if (machine.counterEstimate !== undefined) validateMachineCounterEstimate(machine.counterEstimate, machine.id, hallId);
+  if (machine.katanaEstimate !== undefined) validateMachineKatanaEstimate(machine.katanaEstimate, machine.id, machine.name, hallId);
   const savedTargets = selectSavedTargets(catalog, machine.id, hallId, refreshed, replaySource);
   // Hash the complete public payload: same-day recalculation and target removal
   // must update an open table even when the headline sample count is unchanged.

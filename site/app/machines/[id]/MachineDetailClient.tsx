@@ -22,6 +22,7 @@ import { RateSelector } from "@/components/ev/RateSelector";
 import { ModeSelector, type AimMode } from "@/components/ev/ModeSelector";
 import { SettingAimTable } from "@/components/ev/SettingAimTable";
 import { AtPayoutTable } from "@/components/ev/AtPayoutTable";
+import { KatanaEstimateTable } from "@/components/ev/KatanaEstimateTable";
 import { ThroughReleaseTable } from "@/components/ev/ThroughReleaseTable";
 import { HarakiriTable } from "@/components/ev/HarakiriTable";
 import { ControlBar, SegmentedControl, SEGMENT_ON, SEGMENT_OFF } from "@/components/ui/Controls";
@@ -101,6 +102,8 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
   const hasSettingAim = Boolean(settingAim && settingAim.units.length > 0);
   const atPayout = machine.atPayout;
   const hasAtPayout = Boolean(atPayout && atPayout.bands.length > 0);
+  const katanaEstimate = hall.id === "mixed" ? undefined : machine.katanaEstimate;
+  const hasKatanaEstimate = katanaEstimate !== undefined;
   const throughRelease = machine.throughRelease;
   const hasThroughRelease = Boolean(throughRelease && throughRelease.rows.length > 0);
   const harakiri = machine.harakiri;
@@ -111,13 +114,18 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
       "targets",
       ...(hasSettingAim ? (["setting"] as const) : []),
       ...(hasAtPayout ? (["payout"] as const) : []),
+      ...(hasKatanaEstimate ? (["katana"] as const) : []),
       ...(hasThroughRelease ? (["release"] as const) : []),
       ...(hasHarakiri ? (["harakiri"] as const) : [])
     ],
-    [hasSettingAim, hasAtPayout, hasThroughRelease, hasHarakiri]
+    [hasSettingAim, hasAtPayout, hasKatanaEstimate, hasThroughRelease, hasHarakiri]
   );
 
   const [mode, setMode] = useState<AimMode>("ev");
+  const [katanaHighState, setKatanaHighState] = useState(false);
+  useEffect(() => {
+    if (!availableModes.includes(mode)) setMode("ev");
+  }, [availableModes, mode]);
   const [conditionsOpen, setConditionsOpen] = useState(false);
   const conditionsPanelId = useId();
   const [targetId, setTargetId] = useState('');
@@ -424,7 +432,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
       ) : (
         <>
       <ModeSelector value={mode} onChange={value => { setMode(value); setConditionsOpen(false); }} modes={availableModes}
-        action={mode !== 'targets' && !(mode === 'ev' && aimTarget) ? (
+        action={mode !== 'targets' && mode !== 'katana' && !(mode === 'ev' && aimTarget) ? (
           <button type="button" onClick={() => setConditionsOpen(value => !value)}
             aria-expanded={conditionsOpen} aria-controls={conditionsPanelId}
             className={`min-h-[34px] shrink-0 rounded-md px-2.5 py-1 text-xs font-bold ${conditionsOpen ? SEGMENT_ON : SEGMENT_OFF}`}>
@@ -432,7 +440,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
           </button>
         ) : null} />
 
-      {mode !== 'targets' && !(mode === 'ev' && aimTarget) ? <ConditionsBar
+      {mode !== 'targets' && mode !== 'katana' && !(mode === 'ev' && aimTarget) ? <ConditionsBar
         id={conditionsPanelId}
         detailsOnly
         expanded={conditionsOpen}
@@ -460,6 +468,8 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
         <SettingAimTable aim={settingAim} />
       ) : mode === "payout" && atPayout ? (
         <AtPayoutTable data={atPayout} />
+      ) : mode === "katana" && katanaEstimate ? (
+        <KatanaEstimateTable data={katanaEstimate} highState={katanaHighState} onHighStateChange={setKatanaHighState} />
       ) : mode === "release" && throughRelease ? (
         <ThroughReleaseTable data={throughRelease} />
       ) : mode === "harakiri" && harakiri ? (

@@ -540,3 +540,40 @@ allやmissingとは異なる。店舗IDは入力元の `shinjuku`、`kabuki`、`
 機種JSONが未生成のIDは検証済みの補完をそのまま使えるが、金額データは復活させない。
 欠落・不正な補完ファイルは利用せず、既存の差枚集計を維持する。
 ヘッダーの期間は表示中の差枚・履歴双方を含み、差枚の集計期間メタデータ自体は変更しない。
+
+## 刀ポイントの参考試算 `katanaEstimate`
+
+いざ！番長（`mfc4a14a4`）の店舗別Machineは、生成側で計算した任意の
+`katanaEstimate`を持てる。`schemaVersion: 1`、
+`modelVersion: "izaban-katana-conditional-inverse-v1"`、
+`classification: "setting-unadjusted-proxy"`を明示する。
+設定未調整の当選帯回収と外部表の条件付き逆算を組み合わせた参考試算であり、
+刀経由ATの実測や設定1に完成した期待値表として表示しない。
+
+`source`は機種名・物理店舗ID・対象期間・朝一を除く通常主表の当選G下2桁50〜99条件・
+最初のAT終了即やめ方針を持つ。対象末日はMachineの`lastUpdated`を超えない。
+`sample`は未丸めの件数・総獲得・平均獲得・推定AT中G、`economics`は現行EVOTの
+費用・純増・賭け枚数と、20円等価・800G/時の単位を持つ。
+`calibration`は元設定の逆算尺度・出典・条件・制限事項・SHA256、
+`quality`と`notes`は未観測獲得の既存0扱いを含む制約を保持する。
+`sourceRevision`は生成側が全入力・全結果に結び付けたSHA256である。
+
+対象が1件以上なら`status: "ready"`・`ready: true`とし、
+`rows`へ高確なし/あり×青/黄/赤×見た目0〜80pt（10pt刻み）の54条件を重複なく出す。
+各行は`highState, color, displayPt, nonAtGames, effectiveAtRate, evYen, rtpPct, totalGames, hourlyYen`。
+回収相当率`effectiveAtRate`は実測のAT当選率ではない。
+
+対象0件なら`status: "unavailable"`・`ready: false`、
+`sample.count`と`totalPayout`は0、`meanPayout`と`meanAtGames`はnull、`rows`は空配列。
+画面は「対象サンプルなし」を表示し、以前の平均・表や固定平均で補わない。
+旧JSONでフィールド自体がない場合は刀タブを表示しない。
+
+表示側は公開済みの行を高確・色・ポイントで選択し、表示の丸めだけを行う。
+EV・機械割・時給・AT中Gの式をフロントへ複製しない。
+平均・母数・期間・54条件は同じMachine revisionで更新する。
+既存の60秒live更新がMachine全体を置き換えるため、同日再計算や0件化も反映される。
+店舗をまたぐpayloadは公開時・live取得時とも拒否する。
+
+設定1補正へ変換する`onlyLowSetting`は、このフィールドを全経路から削除する。
+mixedの画面にも刀タブを出さない。生成側・型検証・表示の順に公開し、
+`data/machines/**`をサイト側で作り直さない。

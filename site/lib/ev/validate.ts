@@ -9,6 +9,7 @@ import { validateMachineProvisionalSetting1 } from "./provisional-setting1";
 import { assertSingleAttachment, validateMachineCounterEstimate } from "./counter-estimate";
 import { validateOfficialCalibration } from "./official-calibration";
 import { validateSharedLedger } from "./shared-ledger";
+import { validateMachineKatanaEstimate } from "./katana-estimate";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -61,6 +62,10 @@ export function validateMachine(data: unknown): Machine {
   );
   assert(typeof machine.releaseDate === "string" && isDateString(machine.releaseDate), "releaseDate must be YYYY-MM-DD");
   assert(typeof machine.lastUpdated === "string" && isDateString(machine.lastUpdated), "lastUpdated must be YYYY-MM-DD");
+  if (machine.katanaEstimate !== undefined) {
+    validateMachineKatanaEstimate(machine.katanaEstimate, machine.id, machine.name);
+    assert(machine.katanaEstimate.source.periodEnd <= machine.lastUpdated, "katanaEstimate source exceeds lastUpdated");
+  }
   if (machine.heatmapCoverage !== undefined) validateHeatmapCoverage(machine.heatmapCoverage, machine.lastUpdated);
   if (machine.mixedSources !== undefined) {
     const mixed = machine.mixedSources;
