@@ -94,7 +94,7 @@ export function MachineListClient({ machines: initialMachines }: MachineListClie
         : "表示できる機種がありません";
 
   return (
-    <div className="app-shell">
+    <div className="app-shell" style={{ paddingBottom: 0 }}>
       {/* 件数は一覧見出しのそばに置き、カードの表示領域を広く保つ。 */}
       <header className="glass-surface flex shrink-0 items-center justify-between gap-3 px-4 py-3">
         <div className="min-w-0">
@@ -127,7 +127,8 @@ export function MachineListClient({ machines: initialMachines }: MachineListClie
 
       {/* Layer 2 が並ぶ面。overscroll-contain で iOS の rubber-band が
           背景ごと動くのを止める。 */}
-      <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-4 py-4 [-webkit-overflow-scrolling:touch]">
+      {/* ナビの周囲まで一覧を敷き、末尾のカードにはナビを避ける余白を残す。 */}
+      <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-4 pt-4 pb-[calc(6rem+env(safe-area-inset-bottom))] scroll-pb-[calc(6rem+env(safe-area-inset-bottom))] [-webkit-overflow-scrolling:touch]">
         {results.length > 0 ? (
           <div className="grid grid-cols-2 items-stretch gap-3 pb-2">
             {results.map((result) => (
