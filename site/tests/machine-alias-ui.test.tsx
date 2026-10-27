@@ -24,7 +24,7 @@ const entries = [
 describe("source aliases in rendered navigation", () => {
   it("renders one SSR card with the published mixed total", () => {
     const html = renderToStaticMarkup(createElement(MachineListClient, { machines: selectMachineListSummaries(entries) }));
-    expect(html).toContain("全1機種");
+    expect(html).toContain("1件 / 1機種");
     expect(html).toContain("スマスロパリピ孔明");
     expect(html).not.toContain("Lパリピ孔明</");
   });

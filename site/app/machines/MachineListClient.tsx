@@ -11,7 +11,7 @@ import { compareMachines } from "@/lib/machine-order";
 import { MachineCard, type MachineSearchMatch } from "@/components/machine-list/MachineCard";
 import { MakerFilter } from "@/components/machine-list/MakerFilter";
 import { SearchInput } from "@/components/machine-list/SearchInput";
-import { EmptyState, TableFoot } from "@/components/ui/DataTable";
+import { EmptyState } from "@/components/ui/DataTable";
 import { HomeNavigation } from "@/components/HomeNavigation";
 
 type MachineListClientProps = {
@@ -95,7 +95,7 @@ export function MachineListClient({ machines: initialMachines }: MachineListClie
 
   return (
     <div className="app-shell">
-      {/* 詳細ページのヘッダーと同じ骨格・同じ余白。件数は他ページと揃えてフッターの左に出す。 */}
+      {/* 件数は一覧見出しのそばに置き、カードの表示領域を広く保つ。 */}
       <header className="glass-surface flex shrink-0 items-center justify-between gap-3 px-4 py-3">
         <div className="min-w-0">
           {/* ロゴは発光させず、Ice Blue → Pale Pink の屈折で色が変わったように見せる。 */}
@@ -105,7 +105,12 @@ export function MachineListClient({ machines: initialMachines }: MachineListClie
           </p>
           <p className="mt-1.5 truncate text-[11px] text-ink-soft">期待値ガチ勢向け</p>
         </div>
-        <h1 className="shrink-0 text-sm font-bold text-ink-soft">機種一覧</h1>
+        <div className="shrink-0 text-right">
+          <h1 className="text-sm font-bold text-ink-soft">機種一覧</h1>
+          <p className="mono mt-1 text-[10px] text-muted" aria-live="polite">
+            {`${results.length.toLocaleString("ja-JP")}件 / ${machines.length.toLocaleString("ja-JP")}機種`}
+          </p>
+        </div>
       </header>
 
       {/* 検索＋メーカー絞り込みはヘッダーの直下に密着させる。詳細ページの ControlBar と
@@ -141,10 +146,6 @@ export function MachineListClient({ machines: initialMachines }: MachineListClie
         )}
       </main>
 
-      <TableFoot
-        left={`${results.length.toLocaleString("ja-JP")}件 / 全${machines.length.toLocaleString("ja-JP")}機種`}
-        right="登録不要で閲覧可"
-      />
       <HomeNavigation />
     </div>
   );
