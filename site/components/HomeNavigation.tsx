@@ -7,7 +7,7 @@ export function HomeNavigation() {
   return (
     <nav
       aria-label="メインナビゲーション"
-      className="glass-floating mx-4 mb-3 mt-2 grid shrink-0 grid-cols-2 gap-1.5 p-1.5 [&:active]:scale-100"
+      className="glass-floating absolute inset-x-4 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-30 grid grid-cols-2 gap-1.5 p-1.5 [&:active]:scale-100"
     >
       <Link
         href="/machines"
