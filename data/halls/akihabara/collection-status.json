@@ -456,7 +456,7 @@
         "パチスロ　戦姫絶唱シンフォギア　勇気の歌"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-24",
+      "lastUpdated": "2026-10-25",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -464,19 +464,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 567,
-        "events": 561,
+        "rows": 678,
+        "events": 671,
         "units": 1,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-10-24"
+        "lastDate": "2026-10-25"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akihabara",
         "machineName": "パチスロ　戦姫絶唱シンフォギア　勇気の歌",
-        "targetDate": "2026-10-24",
-        "inputSha256": "766ff388098da197eeb215b10512aedec8d3092351d68b618e75190544731407"
+        "targetDate": "2026-10-25",
+        "inputSha256": "b7825b45e179ae847b1b303b58c16a78c06b7e31ccb86b3edbeec29758032f96"
       }
     },
     {
