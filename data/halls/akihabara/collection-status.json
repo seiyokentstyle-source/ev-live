@@ -3,7 +3,7 @@
   "hallId": "akihabara",
   "source": "site_seven",
   "storeId": "06007007",
-  "lastUpdated": "2026-10-24",
+  "lastUpdated": "2026-10-25",
   "machines": [
     {
       "id": "m059e2c90",
@@ -362,7 +362,7 @@
         "L少女☆歌劇 レヴュースタァライト -The SLOT-"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-24",
+      "lastUpdated": "2026-10-25",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -370,19 +370,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 711,
-        "events": 699,
+        "rows": 867,
+        "events": 853,
         "units": 2,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-10-24"
+        "lastDate": "2026-10-25"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akihabara",
         "machineName": "L少女☆歌劇 レヴュースタァライト -The SLOT-",
-        "targetDate": "2026-10-24",
-        "inputSha256": "908f1b614a5fa12d05bab112d7fa42c2bfaab90d4605988096a2e1e8e22dffaa"
+        "targetDate": "2026-10-25",
+        "inputSha256": "2b2644dead13fbd7862685b9a1b02ad584f38a4f1a8987b7b97656a69b3e2382"
       }
     },
     {
