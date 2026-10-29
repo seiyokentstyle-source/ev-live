@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
 import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
-import { applyHeldMedalTableEV, compatibleFilterSelection, declaredFilterAxes, filterSelectionKey, groupProfiles, profileCeilingText, resolveProfile, selectedFilterAggregation, selectedFilterTable } from "@/lib/ev/profiles";
+import { applyHeldMedalTableEV, compatibleFilterSelection, declaredFilterAxes, filterSelectionKey, groupProfiles, profileCeilingText, resolveProfile, selectedFilterAggregation, selectedFilterTable, shamanFilterExplanation } from "@/lib/ev/profiles";
 import { aimTabs, savedTargetAimKey, savedTargetIdFromAim } from "@/lib/ev/aim-selection";
 import { useFilterAggregation } from "@/lib/ev/use-filter-aggregation";
 import { AxisPicker } from "@/components/ev/AxisPicker";
@@ -182,7 +182,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
   // 軸の一覧。新形式は axes をそのまま使い、旧データは従来のフィールドから組み立てる。
   const evAxes: FilterAxis[] = useMemo(() => {
     // 見出しだけ現在の表記に直す（データ再生成を待たずに文言を反映するため）。
-    const declared = declaredFilterAxes(profile);
+    const declared = declaredFilterAxes(profile, machine.id);
     if (declared !== undefined) return declared;
     const out: FilterAxis[] = [];
     const tails = useFilters
@@ -214,9 +214,10 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
       });
     }
     return out;
-  }, [profile, evFilters, evSamples, useFilters, czTerm]);
+  }, [profile, machine.id, evFilters, evSamples, useFilters, czTerm]);
 
   const hasEvFilter = evAxes.length > 0 && (useFilters || Boolean(machine.evCalc));
+  const filterExplanation = shamanFilterExplanation(machine.id, profile);
   const setAxis = (key: string, value: string | null) => setEvSel((prev) => ({ ...prev, [key]: value }));
 
   // 選択→キー。axes の並び順に key+値 を連結する（生成側も同じ順で作っている）。
@@ -491,6 +492,12 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
           hitUnit={displayProfile.sessionUnit}
           multiple={Boolean(evFilters?.aggregation) && !profile.key.startsWith("heaven_")}
         />
+      ) : null}
+
+      {filterExplanation && !isPending ? (
+        <p className="border-b border-line bg-panel px-3 py-2 text-[11px] leading-relaxed text-ink-soft">
+          {filterExplanation}
+        </p>
       ) : null}
 
       {isPending ? (
