@@ -51,11 +51,11 @@ export function selectMachineListSummaries(entries: Array<{ hallId: string; summ
     if (!entry.summary.available) continue;
     const id = machineSelectionKey(entry.summary);
     if (!selected.has(id)) {
-      selected.set(id, { ...entry.summary, aliases: machineSearchAliases(entry.summary), summaryHallId: entry.hallId, totalSamples: 0 });
+      selected.set(id, { ...entry.summary, aliases: machineSearchAliases(entry.summary), summaryHallId: entry.hallId, totalSamples: 0, totalGames: undefined });
       countedHalls.set(id, new Set());
     } else if (preferMachineSummary(entry.summary, selected.get(id)!)) {
       selected.set(id, { ...entry.summary, aliases: machineSearchAliases(entry.summary), summaryHallId: entry.hallId,
-        totalSamples: selected.get(id)!.totalSamples });
+        totalSamples: selected.get(id)!.totalSamples, totalGames: selected.get(id)!.totalGames });
     }
     const hall = HALLS.find(hall => hall.id === entry.hallId)!;
     const sampleCount = sourceSampleCount(entry.summary.meta.samples);
@@ -64,6 +64,7 @@ export function selectMachineListSummaries(entries: Array<{ hallId: string; summ
     if (virtualHalls.has(hall.id) || virtualHalls.has(hall.dataSubdir) || counted.has(hall.id)) continue;
     counted.add(hall.id);
     selected.get(id)!.totalSamples! += sampleCount ?? 0;
+    if (entry.summary.games !== undefined) selected.get(id)!.totalGames = (selected.get(id)!.totalGames ?? 0) + entry.summary.games;
   }
   for (const [id, totalSamples] of mixedSamples) selected.get(id)!.totalSamples = totalSamples;
   return [...selected.values()].sort(compareMachines);

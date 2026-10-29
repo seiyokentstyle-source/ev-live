@@ -519,6 +519,10 @@ export type MachineSummary = Pick<Machine,
   summaryHallId?: string;
   /** Machine-list only: EV samples summed once per physical source hall. */
   totalSamples?: number;
+  /** この店舗の設定狙い表の総回転（台×日の合計）。表が無い店舗では undefined。 */
+  games?: number;
+  /** Machine-list only: 総回転を実店舗ごとに1回ずつ合計した値。どの店舗にも無ければ undefined。 */
+  totalGames?: number;
 };
 
 export type PivotConfig = {

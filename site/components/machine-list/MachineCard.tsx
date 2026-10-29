@@ -23,6 +23,7 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
   const hallName = machine.summaryHallId ? getHall(machine.summaryHallId)?.name ?? machine.summaryHallId : null;
   const hasTotal = machine.totalSamples !== undefined;
   const samples = hasTotal ? machine.totalSamples!.toLocaleString("ja-JP") : machine.meta.samples;
+  const games = hasTotal ? machine.totalGames : machine.games;
   return (
     <article
       role="button"
@@ -73,9 +74,10 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
           {hasTotal || hallName ? <p className="mono mb-1 text-[9px] text-muted">{hasTotal ? "全店舗合計" : hallName}</p> : null}
           {pendingStatus && !hasTotal ? <p className="mono text-[11px] leading-relaxed text-ink-soft">{pendingStatus}</p> : <>
           <p className="text-[9px] font-medium tracking-[0.16em] text-muted">サンプル（主ボーナス・AT突入）</p>
-          <p className="mono mt-0.5 flex items-baseline gap-0.5 text-[17px] font-bold leading-none text-ink">
+          <p className="mono mt-0.5 flex flex-wrap items-baseline gap-0.5 text-[17px] font-bold leading-none text-ink">
             {samples}
             <span className="text-[10px] font-normal text-ink-soft">回</span>
+            {games !== undefined ? <span className="ml-1 text-[10px] font-normal text-ink-soft">約{formatGames(games)}G</span> : null}
           </p>
           </>}
           {hasTotal && pendingStatus ? <p className="mono mt-1 text-[10px] leading-relaxed text-ink-soft">{hallName ? `${hallName}：` : ""}{pendingStatus}</p> : null}
@@ -88,4 +90,10 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
       </div>
     </article>
   );
+}
+
+/** 設定狙い表の総回転を「約1,234万G」の形にする。1万G未満はそのまま。 */
+export function formatGames(games: number): string {
+  if (games < 10000) return Math.round(games).toLocaleString("ja-JP");
+  return `${Math.round(games / 10000).toLocaleString("ja-JP")}万`;
 }
