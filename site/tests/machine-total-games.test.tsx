@@ -70,6 +70,9 @@ describe("home card total games", () => {
       match: { type: "none" }, onOpen: vi.fn(), onToggleFavorite: vi.fn() }));
     expect(html).toContain("62,166");
     expect(html).toContain("約<!-- -->2,486万<!-- -->G");
+    expect(html).toContain("サンプル（AT突入回数）");
+    // G数は件数の右に1行で並べる（折り返さない）。
+    expect(html).toMatch(/whitespace-nowrap[^>]*>62,166/);
     const without = renderToString(createElement(MachineCard, { machine: { ...machine, totalGames: undefined }, isFavorite: false,
       match: { type: "none" }, onOpen: vi.fn(), onToggleFavorite: vi.fn() }));
     expect(without).not.toContain("万G");

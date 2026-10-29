@@ -116,7 +116,7 @@ export function ConditionsBar({
   if (range) rows.push({ k: "データ範囲", v: range });
   // 機種全体は主ボーナス・AT突入、各狙い方は条件に該当する機会を数える。
   if (!pendingStatus) {
-    rows.push({ k: "機種全体のサンプル", v: `${machine.meta.samples}回（主ボーナス・AT突入回数）` });
+    rows.push({ k: "機種全体のサンプル", v: `${machine.meta.samples}回（AT突入回数）` });
     if (mode === "ev" && profileSessions != null) rows.push({
       k: "この狙い方のサンプル",
       v: `${profileSessions.toLocaleString("ja-JP")}件（${profileSessionUnit ? `${profileSessionUnit}の` : ""}狙い目があった回数。開始Gごとの件数は表に表示）`

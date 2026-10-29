@@ -144,7 +144,7 @@ describe("multi-hall machine list", () => {
     expect(html).toContain("歌舞伎のお店");
     expect(html).toContain("収集済み 1,200行");
     expect(html).toContain("全店舗合計");
-    expect(html).toContain("サンプル（主ボーナス");
+    expect(html).toContain("サンプル（AT突入回数）");
     expect(only.totalSamples).toBe(0);
   });
   it("keeps mixed-only contributions in totals while omitting their standalone cards and names", () => {

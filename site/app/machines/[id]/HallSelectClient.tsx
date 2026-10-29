@@ -87,7 +87,7 @@ export function HallSelectClient({ machine: initialMachine, hallMachines }: Hall
                 </div>
                 <p className="mono mt-2 text-[10px] leading-relaxed text-muted">{hall.note}</p>
                 {hasData && hallMachine ? (
-                  <p className="mono mt-1 text-[10px] text-muted">{collectionStatus(hallMachine.meta) ?? `サンプル ${hallMachine.meta.samples}回（主ボーナス・AT突入）`}</p>
+                  <p className="mono mt-1 text-[10px] text-muted">{collectionStatus(hallMachine.meta) ?? `サンプル ${hallMachine.meta.samples}回（AT突入回数）`}</p>
                 ) : null}
               </article>
             );
