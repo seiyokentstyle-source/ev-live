@@ -3,7 +3,7 @@
   "hallId": "akihabara",
   "source": "site_seven",
   "storeId": "06007007",
-  "lastUpdated": "2026-10-25",
+  "lastUpdated": "2026-10-26",
   "machines": [
     {
       "id": "m059e2c90",
@@ -331,7 +331,7 @@
         "Lパチスロ　ガールズ＆パンツァー最終章"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-25",
+      "lastUpdated": "2026-10-26",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -339,19 +339,19 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 2692,
-        "events": 2657,
+        "rows": 3000,
+        "events": 2960,
         "units": 5,
-        "days": 7,
+        "days": 8,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-10-25"
+        "lastDate": "2026-10-26"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akihabara",
         "machineName": "Lパチスロ　ガールズ＆パンツァー最終章",
-        "targetDate": "2026-10-25",
-        "inputSha256": "1132b8508959e6347e764de7343deb53ee8a9bf6b4e523c1986000524314c2ad"
+        "targetDate": "2026-10-26",
+        "inputSha256": "7d288339f48a10afc759d0f4a5d11f4c574d017d05eb6c991d9d85f450cbdfda"
       }
     },
     {
