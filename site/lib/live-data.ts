@@ -80,12 +80,14 @@ export function buildLiveMachine(
   return { schema: "evlive-live-machine/v1", revision, machine, savedTargets };
 }
 
-export function liveIndexEntry(hallId: string, payload: LiveSnapshot): LiveIndexEntry {
+export function liveIndexEntry(hallId: string, payload: LiveSnapshot, games?: number): LiveIndexEntry {
+  const summary = machineSummary(payload.machine);
   return {
     hallId,
     id: payload.machine.id,
     revision: payload.revision,
-    summary: machineSummary(payload.machine)
+    // 公開用に作り直した機種には、表示の都合で外した設定狙い表の総回転が付いていない。一覧と同じ値を渡す。
+    summary: summary.games === undefined && games !== undefined ? { ...summary, games } : summary
   };
 }
 
@@ -132,7 +134,8 @@ export async function getLiveIndex(): Promise<LiveIndex> {
       if (display.kind === "collection") return liveIndexEntry(hall.id, buildLiveCollection(display.collection, display.provisionalSetting1, display.counterEstimate, hall.id));
       const machine = display.machine;
       const targets = await publishedTargetSnapshot(machine.id, hall.id, hall.dataSubdir, catalog);
-      return liveIndexEntry(hall.id, buildLiveMachine(machine, hall.id, catalog, targets.refreshed, targets.replaySource));
+      return liveIndexEntry(hall.id, buildLiveMachine(machine, hall.id, catalog, targets.refreshed, targets.replaySource),
+        machineSummary(machine).games);
     })));
   }
   return { schema: "evlive-live-index/v1", machines };

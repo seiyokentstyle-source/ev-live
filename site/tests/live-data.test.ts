@@ -116,6 +116,8 @@ describe("live data publication", () => {
     ].sort());
     expect(entry.summary.meta.samples).toBe(fixture.meta.samples);
     expect(entry.summary).not.toHaveProperty("profiles");
+    // 表示の都合で設定狙い表を外した機種でも、一覧と同じ総回転を索引に載せる。
+    expect(liveIndexEntry("shinjuku", detail, 12345).summary.games).toBe(12345);
   });
 
   it("uses the raw source revision even after public Machine validation strips its envelope", async () => {
