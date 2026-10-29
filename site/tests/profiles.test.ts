@@ -180,3 +180,10 @@ describe("pullback tab label", () => {
     expect(shortAimLabel("引き戻しゾーン（前兆なし16G・前兆あり34G）")).toBe("引き戻し");
   });
 });
+
+describe("ghoul heaven tab label", () => {
+  test("有馬ジャッジ失敗後の表は見出しで区別できる（利用者指定 2026-10-30）", async () => {
+    const { shortAimLabel } = await import("../lib/ev/profiles");
+    expect(shortAimLabel("AT間天井（有馬ジャッジ失敗後・天国確定）")).toBe("AT間（有馬ジャッジ失敗後）");
+  });
+});
