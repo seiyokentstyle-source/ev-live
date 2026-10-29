@@ -366,7 +366,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "Lソードアート・オンライン",
         "targetDate": "2026-10-25",
-        "inputSha256": "a8c08acace55a7cdc68ce3857cc9a0d6e641ee9b9852cb6713f9e936fef8dcd1"
+        "inputSha256": "478325592f15a9188ccc97dcf3b03e312378c48047223e0df7d868886bdc7c4a"
       }
     },
     {
@@ -484,8 +484,8 @@
       "releaseDate": "2026-09-07",
       "lastUpdated": "2026-10-25",
       "status": "pending",
-      "reasonCode": "signal_unverified",
-      "pendingReason": "台データオンライン（エスパス日拓新宿歌舞伎町店）だけにある機種で、履歴は取り込み始めたところです。台データの種別（BB/RB/ART等）と実機のボーナス・AT・CZの対応、連チャンの区切りを実データで確かめるまで、期待値の算出を保留しています。",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
       "forcePending": false,
       "collectionComplete": true,
       "expectedUnits": 3,
@@ -502,7 +502,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "Lモグモグ風林火山 大海戦の巻",
         "targetDate": "2026-10-25",
-        "inputSha256": "4ea73fb93a604ad04cc6929b19d4b127b5b436b232ab8165eebc8a0e16ad9055"
+        "inputSha256": "9cf81b92fe58f69b9e08bd9e66a80e2874d83c2b7219ca633a70759f84d7626b"
       }
     },
     {
@@ -600,7 +600,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "L喰霊-零-Re",
         "targetDate": "2026-10-25",
-        "inputSha256": "70fe6ee364a8429759fe4914141e828bfd4edb6171ea37dac70adbdb2e4da3c5"
+        "inputSha256": "454237def3462a81172c8e1b69aab5cbb583d12f71cb4bc427a93c0f965f255f"
       }
     },
     {
@@ -664,7 +664,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "L彼女、お借りします",
         "targetDate": "2026-10-25",
-        "inputSha256": "88ad6cc7e6ed73844f3496a7f299c0347852f09f47a1943bc0efa4e8352318c5"
+        "inputSha256": "be80c51e8c2d2e2eb9de10cca61db4e2406c42ef6d3a9274959960dcfcba833e"
       }
     },
     {
@@ -762,7 +762,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "L甲鉄城のカバネリ海門決戦",
         "targetDate": "2026-10-25",
-        "inputSha256": "8f5ed5e1818e8ac02115d33ca1ffa58baedc00753ea5bf29e467082cf49cab36"
+        "inputSha256": "37523428e6b2678e86cf71b70573c2d7dcf05cc8a36b2ca07a233ca4650eaeaa"
       }
     },
     {
@@ -891,7 +891,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "L青春ブタ野郎はバニーガール先輩の夢を見ない",
         "targetDate": "2026-10-25",
-        "inputSha256": "406069bf353a52053c525ac03cb5bbc3a56d0eeda03ab209243f1b4721e360e1"
+        "inputSha256": "8bc4fa8e954b513b2e3875ed3d82c398c62a855167924e0b025e4b35cbfd6597"
       }
     },
     {
@@ -1089,7 +1089,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "スマスロ モンスターハンターライズ：サンブレイク",
         "targetDate": "2026-10-25",
-        "inputSha256": "aa3d0c6d60069f931097555f8059dd330ead2eca6161faebb0d7b9dd6c653a79"
+        "inputSha256": "714225fdc93344a80696e870b461ac9f50fc2c1fe4ee516bced7572123c0d4f6"
       }
     },
     {
@@ -1154,7 +1154,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "スマスロ 北斗の拳 転生の章2",
         "targetDate": "2026-10-25",
-        "inputSha256": "de7a65b6068bd5735302ab0d0b7191c2ef4c472bfb1878e9ae437b53f68bb9d6"
+        "inputSha256": "1721727c794893435a792e5b0ce18e5eb19c0facd3803395d30dd5afb2d9ead2"
       }
     },
     {
@@ -1201,8 +1201,8 @@
       "releaseDate": "2025-09-08",
       "lastUpdated": "2026-10-25",
       "status": "pending",
-      "reasonCode": "signal_unverified",
-      "pendingReason": "台データオンライン（エスパス日拓新宿歌舞伎町店）だけにある機種で、履歴は取り込み始めたところです。台データの種別（BB/RB/ART等）と実機のボーナス・AT・CZの対応、連チャンの区切りを実データで確かめるまで、期待値の算出を保留しています。",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
       "forcePending": false,
       "collectionComplete": true,
       "expectedUnits": 3,
@@ -1284,7 +1284,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "スマスロスーパーブラックジャック",
         "targetDate": "2026-10-25",
-        "inputSha256": "209a5ce83c99746e594128da54661acdf0cb634dd34be2873c3e62a196f7b133"
+        "inputSha256": "545855b684c063c0542ef8dd3b3764d2342455594fcaf6c83c4595f48cf37e04"
       }
     },
     {
@@ -1315,7 +1315,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "スマスロパリピ孔明",
         "targetDate": "2026-10-25",
-        "inputSha256": "22c45ec82fccfe0b86848453f3e04c20a8a182d452089e680615a20bc497dc56"
+        "inputSha256": "1ff5bcef46644f2591e386edf5b4465db3c21c941f62030b2ef6e0819c1d3841"
       }
     },
     {
@@ -1351,7 +1351,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "ソードアート・オンラインII",
         "targetDate": "2026-10-25",
-        "inputSha256": "d49570025f6cbba65b7735c7ca5cf2bf7ba74b12b0add28f016933516ec01386"
+        "inputSha256": "cfd3d9c5442e5c5ecc78153aecdf9daf95893128fbe76eccd8acc9b7948c0f56"
       }
     },
     {
@@ -1382,7 +1382,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "ワールドダイスター",
         "targetDate": "2026-10-25",
-        "inputSha256": "bcd792ae20ff313f7bd3367ffbd3dabd1e46c856092b92c1f8dda67e66441adc"
+        "inputSha256": "64cbc34952fa1b8389e882f8655afa0b3556cec700e18f9d5968b904a2e9d65c"
       }
     },
     {
@@ -1447,7 +1447,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "戦国コレクション6",
         "targetDate": "2026-10-25",
-        "inputSha256": "3b22592f4ecf14642feba91e963bab3db7ac81e7e8749d2734f4ec840d96fa69"
+        "inputSha256": "8324d0c0c9e178196bc6b24943891e1983f80a4f73dcb9836a5aa024c9dba6b4"
       }
     },
     {
