@@ -1,7 +1,7 @@
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
-import { machineSummary, settingAimGames } from "../lib/ev/summary";
+import { machineSummary, retainGames, retainSettingAimGames, settingAimGames } from "../lib/ev/summary";
 import { selectMachineListSummaries } from "../lib/machine-list-summary";
 import { formatGames, MachineCard } from "../components/machine-list/MachineCard";
 import { collectedFixture } from "./fixtures/collection-status";
@@ -24,13 +24,37 @@ describe("home card total games", () => {
     expect(machineSummary(base)).not.toHaveProperty("games");
   });
 
+  it("keeps the games after the setting-aim table is removed for display", () => {
+    const base = collectedFixture("same").summary;
+    const original = { ...base, settingAim: aim([[8000, 2000]]) } as never as Record<string, unknown>;
+    const { settingAim: _removed, ...stripped } = original;
+    const first = retainSettingAimGames(stripped, original as never);
+    // さらに加工した後の機種にも引き継がれる。
+    const second = retainSettingAimGames({ ...first }, first as never);
+    expect(machineSummary(first as never).games).toBe(10000);
+    expect(machineSummary(second as never).games).toBe(10000);
+    expect(machineSummary(retainGames({ ...base }, 1234) as never).games).toBe(1234);
+  });
+
+  it("uses the mixed source halls' games when the samples come from the mixed table", () => {
+    const base = collectedFixture("same").summary;
+    const entry = (hallId: string, samples: string, games?: number) =>
+      ({ hallId, summary: { ...base, meta: { samples, source: "fixture" }, ...(games !== undefined ? { games } : {}) } });
+    const [mixed] = selectMachineListSummaries([
+      entry("shinjuku", "100", 2_000_000), entry("mixed-raw", "300", 5_000_000)]);
+    expect(mixed).toMatchObject({ totalSamples: 300, totalGames: 5_000_000 });
+    const [unknown] = selectMachineListSummaries([
+      entry("shinjuku", "100", 2_000_000), entry("mixed-raw", "300")]);
+    expect(unknown.totalGames).toBeUndefined();
+  });
+
   it("adds each physical hall once and ignores mixed tables", () => {
     const base = collectedFixture("same").summary;
     const entry = (hallId: string, samples: string, games?: number) =>
       ({ hallId, summary: { ...base, meta: { samples, source: "fixture" }, ...(games !== undefined ? { games } : {}) } });
     const [selected] = selectMachineListSummaries([
       entry("shinjuku", "100", 2_000_000), entry("kabuki", "50", 1_000_000),
-      entry("kabuki", "50", 1_000_000), entry("mixed-raw", "150", 9_999_999),
+      entry("kabuki", "50", 1_000_000), entry("mixed", "150", 9_999_999),
     ]);
     expect(selected).toMatchObject({ totalSamples: 150, totalGames: 3_000_000 });
     const [none] = selectMachineListSummaries([entry("shinjuku", "100")]);

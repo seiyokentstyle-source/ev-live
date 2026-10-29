@@ -6,7 +6,7 @@ import { validateMachine } from "./ev/validate";
 import { LOW_SETTING_HALL_SUBDIR, RAW_MIXED_HALL_SUBDIR, onlyLowSetting, withoutLowSetting } from "./ev/low-setting";
 import { compareMachines } from "./machine-order";
 import { HALLS, getReadyHalls, getHall, isListedHall } from "./halls";
-import { machineSummary } from "./ev/summary";
+import { machineSummary, retainGames, retainSettingAimGames, settingAimGames } from "./ev/summary";
 import { normalizeMachineMetadata } from "./machine-metadata";
 import type { HeatmapCoverageMachine } from "./heatmap/coverage";
 import { readCollectionCatalog } from "./collection-status-catalog";
@@ -88,6 +88,30 @@ function rawMixedMachine(stored?: Machine): Machine | undefined {
   return withoutLowSetting(stored) ?? undefined;
 }
 
+// 店舗ごとの総回転（数値だけ）。機種JSONは大きいので、読んだら数値だけ残して手放す。
+const sourceGamesCache = new Map<string, number | null>();
+
+async function sourceHallGames(hallId: string, id: string): Promise<number | undefined> {
+  const key = `${hallId}/${id}`;
+  if (!sourceGamesCache.has(key)) {
+    const dataSubdir = getHall(hallId)?.dataSubdir ?? hallId;
+    const machine = /^[a-z0-9_-]{1,40}$/.test(hallId) ? await readMachine(hallDir(dataSubdir), id) : undefined;
+    sourceGamesCache.set(key, (machine && settingAimGames(machine)) ?? null);
+  }
+  return sourceGamesCache.get(key) ?? undefined;
+}
+
+/** 混合のサンプル数と同じ店舗の範囲で、各店舗の設定狙い表の総回転を足す。 */
+async function withMixedSourceGames(machine: Machine): Promise<Machine> {
+  const halls = machine.mixedSources?.halls ?? [];
+  let total: number | undefined;
+  for (const hallId of halls) {
+    const games = await sourceHallGames(hallId, machine.id);
+    if (games !== undefined) total = (total ?? 0) + games;
+  }
+  return total === undefined ? machine : retainGames(machine, total);
+}
+
 /** JSONの置き場所（店舗フォルダ）から店舗IDを引く。推定表の店舗照合に使う。 */
 function hallIdOf(dataSubdir?: string): string | undefined {
   return HALLS.find(hall => hall.dataSubdir === (dataSubdir ?? ""))?.id;
@@ -95,7 +119,7 @@ function hallIdOf(dataSubdir?: string): string | undefined {
 
 export async function getMachines(dataSubdir?: string): Promise<Machine[]> {
   const hallId = hallIdOf(dataSubdir);
-  return (await loadHallMachines(dataSubdir)).map(machine => withoutForeignCounterEstimate(machine, hallId));
+  return (await loadHallMachines(dataSubdir)).map(machine => retainSettingAimGames(withoutForeignCounterEstimate(machine, hallId), machine));
 }
 
 async function loadHallMachines(dataSubdir?: string): Promise<Machine[]> {
@@ -120,14 +144,19 @@ async function loadHallMachines(dataSubdir?: string): Promise<Machine[]> {
     return machines.sort(compareMachines);
   }
   if (dataSubdir === RAW_MIXED_HALL_SUBDIR) {
-    return (await readMachines(hallDir(LOW_SETTING_HALL_SUBDIR)))
+    const machines = (await readMachines(hallDir(LOW_SETTING_HALL_SUBDIR)))
       .map((machine) => rawMixedMachine(machine))
-      .filter((machine): machine is Machine => machine !== undefined)
-      .sort(compareMachines);
+      .filter((machine): machine is Machine => machine !== undefined);
+    const withGames: Machine[] = [];
+    for (const machine of machines) withGames.push(await withMixedSourceGames(machine));
+    return withGames.sort(compareMachines);
   }
   const machines = await readMachines(dir);
   return machines
-    .map(machine => withoutLowSetting(machine, hallIdOf(dataSubdir)))
+    .map(machine => {
+      const next = withoutLowSetting(machine, hallIdOf(dataSubdir));
+      return next && retainSettingAimGames(next, machine);
+    })
     .filter((machine): machine is Machine => machine !== null)
     .sort(compareMachines);
 }
@@ -233,7 +262,7 @@ export async function getHallDisplays(hallId: string): Promise<HallDisplay[]> {
 }
 
 function mergeHallDisplays(machines: Machine[], observations: CollectionStatusEntry[]): HallDisplay[] {
-  const displays = new Map<string, HallDisplay>(machines.map(machine => [machine.id, { kind: "machine", machine: withPendingReference(machine) }]));
+  const displays = new Map<string, HallDisplay>(machines.map(machine => [machine.id, { kind: "machine", machine: retainSettingAimGames(withPendingReference(machine), machine) }]));
   const held = new Set(observations.filter(entry => entry.forcePending).map(entry => machineSelectionKey(entry.summary)));
   for (const { forcePending, ...collection } of observations) {
     if (forcePending || !displays.has(collection.summary.id)) {

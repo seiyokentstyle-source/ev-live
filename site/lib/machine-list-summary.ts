@@ -46,6 +46,7 @@ export function selectMachineListSummaries(entries: Array<{ hallId: string; summ
   const selected = new Map<string, MachineSummary>();
   const countedHalls = new Map<string, Set<string>>();
   const mixedSamples = new Map<string, number>();
+  const mixedGames = new Map<string, number | undefined>();
   const ready = selectMachineHallSummaries(entries.filter(entry => HALLS.some(hall => hall.id === entry.hallId && hall.ready && isListedHall(hall))));
   for (const entry of ready.sort((a, b) => priority(a.hallId) - priority(b.hallId))) {
     if (!entry.summary.available) continue;
@@ -60,6 +61,7 @@ export function selectMachineListSummaries(entries: Array<{ hallId: string; summ
     const hall = HALLS.find(hall => hall.id === entry.hallId)!;
     const sampleCount = sourceSampleCount(entry.summary.meta.samples);
     if (hall.id === RAW_MIXED_HALL_SUBDIR && sampleCount !== undefined) mixedSamples.set(id, sampleCount);
+    if (hall.id === RAW_MIXED_HALL_SUBDIR && sampleCount !== undefined) mixedGames.set(id, entry.summary.games);
     const counted = countedHalls.get(id)!;
     if (virtualHalls.has(hall.id) || virtualHalls.has(hall.dataSubdir) || counted.has(hall.id)) continue;
     counted.add(hall.id);
@@ -67,5 +69,7 @@ export function selectMachineListSummaries(entries: Array<{ hallId: string; summ
     if (entry.summary.games !== undefined) selected.get(id)!.totalGames = (selected.get(id)!.totalGames ?? 0) + entry.summary.games;
   }
   for (const [id, totalSamples] of mixedSamples) selected.get(id)!.totalSamples = totalSamples;
+  // サンプル数を混合から取るときは、総回転も同じ店舗の範囲（混合の元店舗）にそろえる。
+  for (const [id, totalGames] of mixedGames) selected.get(id)!.totalGames = totalGames;
   return [...selected.values()].sort(compareMachines);
 }
