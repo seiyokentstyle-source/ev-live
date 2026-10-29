@@ -147,7 +147,9 @@ export function shortAimLabel(label: string): string {
   const reset = /リセ/.test(label);
   // ヴヴヴ2の区切りはBBとRB（LABEL_REWRITES と同じ言い換え）。
   let base = label.split("（")[0].replace(/天井$/, "").replace("ボーナス間", "ボナ間")
-    .replace("AT・RB間", "BB・RB間");
+    .replace("AT・RB間", "BB・RB間")
+    // 「引き戻しゾーン」は「引き戻し」で伝わる（利用者指定 2026-10-30）。
+    .replace(/^引き戻しゾーン/, "引き戻し");
   if (base === "朝一") base = reset ? "リセット" : "朝一";
   else if (reset && !base.startsWith("リセ") && !base.startsWith("朝一")) base = `リセ${base}`;
   const quals = [...new Set(label.slice(base.length).match(KEPT_AIM_QUALIFIERS) ?? [])];

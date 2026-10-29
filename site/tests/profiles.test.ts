@@ -173,3 +173,10 @@ describe("aim tab order", () => {
     expect(groups.map(g => g.key)).toEqual(["game_ceiling", "cz_ceiling", "pullback", "reset", "cz_reset"]);
   });
 });
+
+describe("pullback tab label", () => {
+  test("引き戻しゾーンのタブは「引き戻し」（利用者指定 2026-10-30）", async () => {
+    const { shortAimLabel } = await import("../lib/ev/profiles");
+    expect(shortAimLabel("引き戻しゾーン（前兆なし16G・前兆あり34G）")).toBe("引き戻し");
+  });
+});
