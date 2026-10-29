@@ -332,6 +332,17 @@ const VVV2_AIMS: Record<string, string> = {
   cz_reset: "リセCZ(0スルー)"
 };
 
+/** 狙い方タブの並び：AT間 → CZ間 → 引き戻し → リセAT間 → リセCZ間（利用者指定 2026-10-30）。
+ *  同じ段の中（駆け抜け後・上位後・設定1想定など）は従来の並びのまま。 */
+export function aimTabRank(key: string): number {
+  if (key.startsWith("cz_reset")) return 4;
+  if (key === "reset" || key.startsWith("reset_")) return 3;
+  if (key.startsWith("pullback")) return 2;
+  if (key.startsWith("cz_")) return 1;
+  if (key.startsWith("game_ceiling") || key.startsWith("bb_ceiling") || key.startsWith("joui_stop")) return 0;
+  return 5;
+}
+
 /** 機種に合わせた狙い方の見出し・並び順。 */
 function machineAimGroups(groups: ProfileGroup[], machineId?: string): ProfileGroup[] {
   if (machineId === "vvv2") {
@@ -382,7 +393,8 @@ export function groupProfiles(profiles: Profile[], machineId?: string): GroupedP
   const aimOrder: Record<AimKind, number> = { cz: 0, bonus: 1, at_non_runthrough: 2, at_runthrough: 3 };
   const groups = order.map((key) => map.get(key) as ProfileGroup)
     .filter(group => !replacedByRunthroughGroups(group, map));
-  groups.sort((a, b) => (a.aimKind ? aimOrder[a.aimKind] : 4) - (b.aimKind ? aimOrder[b.aimKind] : 4));
+  groups.sort((a, b) => (aimTabRank(a.key) - aimTabRank(b.key))
+    || ((a.aimKind ? aimOrder[a.aimKind] : 4) - (b.aimKind ? aimOrder[b.aimKind] : 4)));
   return { groups: machineAimGroups(groups, machineId), rates, defaultRate };
 }
 

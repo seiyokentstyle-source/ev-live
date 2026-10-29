@@ -156,6 +156,20 @@ describe("vvv2 cz aims", () => {
       makeProfile("cz_after1_4652", "CZ間天井（CZ1スルー以降・通常）・46/52"),
       makeProfile("game_ceiling_4652", "AT・RB間天井（通常）・46/52")
     ], "vvv2");
-    expect(groups.map(aimTabLabel)).toEqual(["CZ(0スルー)", "CZ(1スルー以降)", "BB・RB間"]);
+    expect(groups.map(aimTabLabel)).toEqual(["BB・RB間", "CZ(0スルー)", "CZ(1スルー以降)"]);   // AT間が左（2026-10-30）
+  });
+});
+
+describe("aim tab order", () => {
+  test("AT間 → CZ間 → 引き戻し → リセAT間 → リセCZ間（利用者指定 2026-10-30）", async () => {
+    const { groupProfiles } = await import("../lib/ev/profiles");
+    const { groups } = groupProfiles([
+      makeProfile("cz_reset_4652", "CZ間天井（朝一リセット想定）・46/52"),
+      makeProfile("reset_4652", "朝一（リセット想定・実測）・46/52"),
+      makeProfile("pullback_4652", "引き戻しゾーン・46/52"),
+      makeProfile("cz_ceiling_4652", "CZ間天井（通常）・46/52"),
+      makeProfile("game_ceiling_4652", "AT間天井（通常）・46/52")
+    ], "m0000test");
+    expect(groups.map(g => g.key)).toEqual(["game_ceiling", "cz_ceiling", "pullback", "reset", "cz_reset"]);
   });
 });
