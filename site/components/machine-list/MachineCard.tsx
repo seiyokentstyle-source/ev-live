@@ -74,12 +74,14 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
           {hasTotal || hallName ? <p className="mono mb-1 text-[9px] text-muted">{hasTotal ? "全店舗合計" : hallName}</p> : null}
           {pendingStatus && !hasTotal ? <p className="mono text-[11px] leading-relaxed text-ink-soft">{pendingStatus}</p> : <>
           <p className="text-[9px] font-medium tracking-[0.16em] text-muted">サンプル（AT突入回数）</p>
-          {/* 件数とG数は折り返さず1行。画像なしのカードは右上のお気に入りボタン用の余白を取っているが、
-                この行はボタンより下にあるので、その余白まで使う。 */}
-          <p className={`mono mt-0.5 flex items-baseline gap-0.5 whitespace-nowrap text-[17px] font-bold leading-none text-ink ${machine.thumb ? "" : "-mr-[38px]"}`}>
-            {samples}
-            <span className="text-[10px] font-normal text-ink-soft">回</span>
-            {games !== undefined ? <span className="ml-1 text-[10px] font-normal text-ink-soft">約{formatGames(games)}G</span> : null}
+          {/* G数は件数の右に並べ、入りきらない狭い画面だけ下の行へ回す（件数・G数それぞれは途中で折り返さない）。
+                画像なしのカードは右上のお気に入りボタン用の余白を取っているが、この行はボタンより下にあるので、その余白まで使う。 */}
+          <p className={`mono mt-0.5 flex flex-wrap items-baseline gap-x-1 gap-y-1 text-[17px] font-bold leading-none text-ink ${machine.thumb ? "" : "-mr-[38px]"}`}>
+            <span className="flex items-baseline gap-0.5 whitespace-nowrap">
+              {samples}
+              <span className="text-[10px] font-normal text-ink-soft">回</span>
+            </span>
+            {games !== undefined ? <span className="whitespace-nowrap text-[10px] font-normal text-ink-soft">約{formatGames(games)}G</span> : null}
           </p>
           </>}
           {hasTotal && pendingStatus ? <p className="mono mt-1 text-[10px] leading-relaxed text-ink-soft">{hallName ? `${hallName}：` : ""}{pendingStatus}</p> : null}
