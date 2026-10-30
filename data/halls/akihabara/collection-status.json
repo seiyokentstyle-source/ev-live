@@ -425,7 +425,7 @@
         "L 無職転生 ～異世界行ったら本気だす～"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-25",
+      "lastUpdated": "2026-10-26",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -433,19 +433,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 1854,
-        "events": 1826,
+        "rows": 2179,
+        "events": 2147,
         "units": 4,
-        "days": 7,
+        "days": 8,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-10-25"
+        "lastDate": "2026-10-26"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akihabara",
         "machineName": "L 無職転生 ～異世界行ったら本気だす～",
-        "targetDate": "2026-10-25",
-        "inputSha256": "d6989dab341711b937f5b2406ba9008274d2cb2a11efce5c6576de89160b886b"
+        "targetDate": "2026-10-26",
+        "inputSha256": "4341b5ea5778790f400d0a160a39c44954c4eb0358770054c3b06875d5265c08"
       }
     },
     {
