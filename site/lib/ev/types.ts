@@ -445,7 +445,8 @@ export type CounterEstimate = {
 export type ThroughRelease = {
   label: string;
   note: string;
-  rows: Array<{ through: number; label: string; n: number; hits: number; rate: number | null }>;
+  /** payout＝その回数から打った次のATの連チャン合計の平均獲得（2026-10-30〜。旧JSONでは無い）。 */
+  rows: Array<{ through: number; label: string; n: number; hits: number; rate: number | null; payout?: number | null }>;
 };
 
 export type Machine = {

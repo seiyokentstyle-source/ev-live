@@ -5,6 +5,7 @@ import { RowHead, TableNote, TableScroll, Td, Th, stripe } from "@/components/ui
 
 /** スルー回数別の穢れ解放率。件数が少ない行ほど割合が大きく振れるので件数を並べる。 */
 export function ThroughReleaseTable({ data }: { data: ThroughRelease }) {
+  const hasPayout = data.rows.some((row) => row.payout !== undefined);
   return (
     <div className="flex min-h-0 flex-1 flex-col bg-bg">
       <TableNote>{data.note}</TableNote>
@@ -15,6 +16,7 @@ export function ThroughReleaseTable({ data }: { data: ThroughRelease }) {
             <tr>
               <Th corner>スルー回数</Th>
               <Th unit="%" primary>解放率</Th>
+              {hasPayout ? <Th unit="枚">平均獲得</Th> : null}
               <Th unit="件">解放</Th>
               <Th unit="件">件数</Th>
             </tr>
@@ -28,6 +30,11 @@ export function ThroughReleaseTable({ data }: { data: ThroughRelease }) {
                   <Td alt={alt} tone={row.rate === null ? "text-muted" : "text-ink"}>
                     {row.rate === null ? "—" : (row.rate * 100).toFixed(1)}
                   </Td>
+                  {hasPayout ? (
+                    <Td alt={alt} tone={row.payout == null ? "text-muted" : "text-ink"}>
+                      {row.payout == null ? "—" : row.payout.toLocaleString("ja-JP")}
+                    </Td>
+                  ) : null}
                   <Td alt={alt}>{row.hits.toLocaleString("ja-JP")}</Td>
                   <Td alt={alt}>{row.n.toLocaleString("ja-JP")}</Td>
                 </tr>

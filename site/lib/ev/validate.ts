@@ -396,6 +396,9 @@ export function validateMachine(data: unknown): Machine {
         "throughRelease counts must be non-negative integers with hits <= n");
       assert(row.n === 0 ? row.rate === null : typeof row.rate === "number" && Math.abs(row.rate - row.hits / row.n) <= 0.0001,
         "throughRelease rate must match hits / n");
+      assert(row.payout === undefined || (row.n === 0 ? row.payout === null
+        : Number.isSafeInteger(row.payout) && (row.payout as number) >= 0),
+        "throughRelease payout must be a non-negative integer");
     });
   }
   if (machine.harakiri !== undefined) {

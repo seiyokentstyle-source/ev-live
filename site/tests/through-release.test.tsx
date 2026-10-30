@@ -29,12 +29,25 @@ describe("through-count release table", () => {
     for (const text of ["スルー回数", "解放率", "12.0", "14.0", "2回以上", "架空の集計です。"]) expect(html).toContain(text);
   });
 
+  it("shows the average payout column only when rows carry it", () => {
+    const value = release();
+    value.rows[0].payout = 1207;
+    value.rows[1].payout = 598;
+    value.rows[2].payout = null;
+    expect(validateMachine(machine(value)).throughRelease?.rows[0].payout).toBe(1207);
+    const html = renderToStaticMarkup(<ThroughReleaseTable data={value} />);
+    for (const text of ["平均獲得", "1,207", "598"]) expect(html).toContain(text);
+    expect(renderToStaticMarkup(<ThroughReleaseTable data={release()} />)).not.toContain("平均獲得");
+  });
+
   it.each([
     ["rate mismatch", (v: any) => { v.rows[0].rate = 0.5; }],
     ["hits over n", (v: any) => { v.rows[1].hits = 60; }],
     ["gap in rows", (v: any) => { v.rows[1].through = 3; }],
     ["empty rows", (v: any) => { v.rows = []; }],
     ["rate for empty row", (v: any) => { v.rows[2].rate = 0; }],
+    ["negative payout", (v: any) => { v.rows[0].payout = -1; }],
+    ["payout for empty row", (v: any) => { v.rows[2].payout = 0; }],
   ])("rejects %s", (_name, mutate) => {
     const value = release();
     mutate(value);
