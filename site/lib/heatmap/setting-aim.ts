@@ -1,6 +1,6 @@
 import type { Machine, SettingAim, SettingAimUnit } from "../ev/types";
 import { SETTING_AIM_DAY_DIGITS, settingAimDateDigits, validateSettingAimDayDigitNets } from "../ev/setting-aim-day-nets";
-import { HEATMAP_GROUP_KEYS, type HeatmapData, type HeatmapGroupKey, type HeatmapUnit } from "./types";
+import { HEATMAP_GROUP_KEYS, type HeatmapData, type HeatmapGroupKey, type HeatmapHallId, type HeatmapUnit } from "./types";
 import { groupLabel, validateHeatmapData } from "./values";
 
 export type HeatmapSourceMachine = Pick<Machine, "id" | "available" | "settingAim">;
@@ -36,7 +36,7 @@ function compatibleDigitSource(aim: SettingAim, unit: SettingAimUnit, fallback: 
 }
 
 /** Share the published setting table's observations and net values, including historic placements. */
-export function buildHeatmapFromSettingAim(machines: readonly HeatmapSourceMachine[], fallbackMachines: readonly HeatmapSourceMachine[] = []): HeatmapData {
+export function buildHeatmapFromSettingAim(machines: readonly HeatmapSourceMachine[], fallbackMachines: readonly HeatmapSourceMachine[] = [], hallId: HeatmapHallId = "shinjuku"): HeatmapData {
   const groups = new Map<HeatmapGroupKey, Aggregate>(HEATMAP_GROUP_KEYS.map((key) => [key, { firstDate: null, lastDate: null, units: new Map() }]));
   const observations = new Map<string, string>();
   const digitObservations = new Set<string>();
@@ -103,7 +103,7 @@ export function buildHeatmapFromSettingAim(machines: readonly HeatmapSourceMachi
 
   const all = groups.get("all")!;
   return validateHeatmapData({
-    schema: "evlive-floor-heatmap/v1", hallId: "shinjuku", metric: "net", estimated: true,
+    schema: "evlive-floor-heatmap/v1", hallId, metric: "net", estimated: true,
     dataFrom: all.firstDate, dataTo: all.lastDate,
     ...(snapshotFallbackTo === undefined ? {} : { snapshotFallbackTo }),
     groups: HEATMAP_GROUP_KEYS.map((key) => {

@@ -107,6 +107,67 @@ describe("floor heatmap aggregate contract", () => {
 });
 
 describe("floor heatmap presentation", () => {
+  it("starts with both information panels closed above the map", () => {
+    const html = renderToStaticMarkup(<HeatmapClient data={data} floor={floor} />);
+    expect(html).toMatch(/<button[^>]*aria-controls="heatmap-details"[^>]*aria-expanded="false"/);
+    expect(html).toMatch(/<button[^>]*aria-controls="heatmap-help"[^>]*aria-expanded="false"/);
+    expect(html).toMatch(/<section id="heatmap-details"[^>]*hidden=""/);
+    expect(html).toMatch(/<section id="heatmap-help"[^>]*hidden=""/);
+    expect(html.indexOf('id="heatmap-details"')).toBeLessThan(html.indexOf("<main"));
+    expect(html.indexOf('id="heatmap-help"')).toBeLessThan(html.indexOf("<main"));
+    expect(html).toContain('aria-label="台の詳細を閉じる"');
+    expect(html).toContain('aria-label="使い方を閉じる"');
+    expect(html).not.toContain("<footer");
+    expect(html).not.toMatch(/<button[^>]*aria-controls="heatmap-unplaced"/);
+  });
+
+  it.each([
+    ["shinjuku", "新宿"],
+    ["akihabara", "アイランド秋葉原"],
+    ["kabuki", "エスパス歌舞伎町"],
+  ] as const)("labels %s and links all three heatmaps without changing the seat data", (hallId, title) => {
+    const html = renderToStaticMarkup(<HeatmapClient data={data} floor={floor} hallId={hallId} />);
+    expect(html).toContain(`<h1>${title} <span>`);
+    expect(html).toContain(`aria-label="${title}の島図。上下左右にスクロールできます"`);
+    const currentLinks = html.match(/<a\b[^>]*aria-current="page"[^>]*>/g);
+    expect(currentLinks).toHaveLength(1);
+    expect(currentLinks![0]).toContain(`href="/halls/${hallId}/heatmap"`);
+    expect(currentLinks![0]).toContain(`aria-label="${title}"`);
+    for (const id of ["shinjuku", "akihabara", "kabuki"]) expect(html).toContain(`href="/halls/${id}/heatmap"`);
+    expect(html).toContain("1001番台、平均差枚（推定）+2,000枚、対象2日");
+  });
+
+  it("keeps unmapped measured and pending units in a separate list without inventing positions", () => {
+    const withUnplaced: HeatmapData = { ...data, groups: data.groups.map((group) => group.key === "all" ? {
+      ...group,
+      units: [...group.units, { unit: "9999", days: 2, net: 600 }],
+      pendingUnits: [{ unit: "8888", days: 2, firstDate: "2026-09-01", lastDate: "2026-09-02", reasons: ["獲得未集計"] }],
+    } : group) };
+    const html = renderToStaticMarkup(<HeatmapClient data={withUnplaced} floor={floor} />);
+    expect(html).toContain('aria-controls="heatmap-unplaced" aria-expanded="false"');
+    expect(html).toContain("配置未確認 <strong>2台</strong>");
+    expect(html).toMatch(/<section id="heatmap-unplaced"[^>]*hidden=""/);
+    expect(html).toContain("9999番台、配置未確認、平均差枚（推定）+300枚、対象2日");
+    expect(html).toContain("8888番台、配置未確認、履歴あり・差枚未集計、履歴2日");
+    expect(html).toContain("場所は推定せず、この一覧に表示します");
+    expect(html).toContain("差枚集計 7台日 / 島図 4台");
+    const map = html.slice(html.indexOf("<main"));
+    expect(map).not.toContain("9999");
+    expect(map).not.toContain("8888");
+  });
+
+  it("retains floor names, provenance and an unconfirmed layout date in the help panel", () => {
+    const labeled: FloorLayout = { ...floor, asOf: "配置基準日未記載", layoutNote: "配置が変わった台は一覧で確認してください。", labels: [{ text: "BF", x: 5, y: 5 }, { text: "2F", x: 80, y: 5 }] };
+    const html = renderToStaticMarkup(<HeatmapClient data={data} floor={labeled} hallId="kabuki" />);
+    expect(html).toContain('data-label="BF"');
+    expect(html).toContain('data-label="2F"');
+    expect(html).toContain('>BF</span>');
+    expect(html).toContain('>2F</span>');
+    expect(html).toContain("配置基準日未記載。入替前後も同じ台番号で集計。");
+    expect(html).toContain(labeled.layoutNote);
+    expect(html).toContain('href="https://example.test/floor.png" target="_blank" rel="noreferrer">配置図の出典</a>');
+  });
+
   it("renders unit-only tiles including gray missing seats, a single date filter, and accessible details", () => {
     const html = renderToStaticMarkup(<HeatmapClient data={data} floor={floor} />);
     expect(html.match(/<select\b/g)).toHaveLength(1);
@@ -134,6 +195,21 @@ describe("floor heatmap presentation", () => {
     expect(html).toContain("差枚あり 0台 · 未集計 0台 · 履歴なし 4台");
     expect(html).not.toContain("+2,000枚、対象");
     expect(html).toContain("1003番台、平均差枚（推定）データなし");
+  });
+
+  it("does not claim absent history when the added halls have no history coverage feed", () => {
+    const html = renderToStaticMarkup(<HeatmapClient hallId="kabuki" data={{ ...data, hallId: "kabuki" }} floor={floor} />);
+    expect(html).toContain("差枚あり 3台 · 未集計 0台 · 履歴未確認 1台");
+    expect(html).toContain("この条件の差枚集計なし（履歴の有無は未確認）");
+    expect(html).not.toContain("この条件の履歴なし");
+  });
+
+  it("does not call observed unmapped seats missing data", () => {
+    const unmapped = { ...floor, seats: [{ ...floor.seats[0], unit: "9001" }] };
+    const html = renderToStaticMarkup(<HeatmapClient hallId="akihabara" data={{ ...data, hallId: "akihabara" }} floor={unmapped} />);
+    expect(html).toContain("配置図内の対象データはありません。配置未確認の一覧をご覧ください。");
+    expect(html).not.toContain("この日付条件のデータはまだありません。");
+    expect(html).toContain("配置未確認");
   });
 
   it("shows known history without inventing net values or mixing its days into the monetary total", () => {

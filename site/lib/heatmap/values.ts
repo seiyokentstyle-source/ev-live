@@ -1,5 +1,5 @@
 import { validateHeatmapCoverageUnit } from "../ev/heatmap-coverage";
-import { HEATMAP_GROUP_KEYS, type FloorLayout, type HeatmapData, type HeatmapGroup, type HeatmapGroupKey, type HeatmapUnit } from "./types";
+import { HEATMAP_GROUP_KEYS, HEATMAP_HALL_IDS, type FloorLayout, type HeatmapData, type HeatmapGroup, type HeatmapGroupKey, type HeatmapHallId, type HeatmapUnit } from "./types";
 
 export const PENDING_HEAT_COLOR = {
   background: "repeating-linear-gradient(135deg, #716397 0px, #716397 4px, #574b79 4px, #574b79 8px)",
@@ -57,8 +57,8 @@ function dateOrNull(value: unknown): value is string | null {
 }
 
 export function validateHeatmapData(value: unknown): HeatmapData {
-  const fail = (): never => { throw new Error("Invalid Shinjuku heatmap aggregate data"); };
-  if (!record(value) || value.schema !== "evlive-floor-heatmap/v1" || value.hallId !== "shinjuku" || value.metric !== "net" || value.estimated !== true || !dateOrNull(value.dataFrom) || !dateOrNull(value.dataTo) || !Array.isArray(value.groups)) return fail();
+  const fail = (): never => { throw new Error("Invalid heatmap aggregate data"); };
+  if (!record(value) || value.schema !== "evlive-floor-heatmap/v1" || !HEATMAP_HALL_IDS.includes(value.hallId as HeatmapHallId) || value.metric !== "net" || value.estimated !== true || !dateOrNull(value.dataFrom) || !dateOrNull(value.dataTo) || !Array.isArray(value.groups)) return fail();
   if ((value.dataFrom === null) !== (value.dataTo === null) || (value.dataFrom && value.dataTo && value.dataFrom > value.dataTo)) return fail();
   if (value.snapshotFallbackTo !== undefined && (typeof value.snapshotFallbackTo !== "string" || !dateOrNull(value.snapshotFallbackTo) ||
       !value.dataFrom || !value.dataTo || value.snapshotFallbackTo < value.dataFrom || value.snapshotFallbackTo > value.dataTo)) return fail();
