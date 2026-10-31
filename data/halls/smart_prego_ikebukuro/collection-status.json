@@ -1,0 +1,888 @@
+{
+  "schema": "evlive-collection-status/v1",
+  "hallId": "smart_prego_ikebukuro",
+  "source": "daidata",
+  "storeId": "101178",
+  "lastUpdated": "2026-10-30",
+  "machines": [
+    {
+      "id": "me8cb971a",
+      "name": "北斗の拳ＡＤ",
+      "manufacturer": "未確認",
+      "aliases": [
+        "北斗の拳ＡＤ"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 2,
+      "collection": {
+        "rows": 355,
+        "events": 341,
+        "units": 2,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "北斗の拳ＡＤ",
+        "targetDate": "2026-10-30",
+        "inputSha256": "9cdd1af5cdb03eeecebc936a89b7958c086f1026c91809f9a43a46f1d7a1a334"
+      }
+    },
+    {
+      "id": "mfe0f1fb4",
+      "name": "Ｌ　ＭＨＲサンブレ",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ　ＭＨＲサンブレ"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 19,
+      "collection": {
+        "rows": 2640,
+        "events": 2507,
+        "units": 19,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ　ＭＨＲサンブレ",
+        "targetDate": "2026-10-30",
+        "inputSha256": "0309ffa44d8fe2f5aa691e006d63bd7ec78618759307d929e80824bc2fa57aaa"
+      }
+    },
+    {
+      "id": "md20ec02d",
+      "name": "Ｌ　Ｓ・Ａ・ＯⅡ",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ　Ｓ・Ａ・ＯⅡ"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 10,
+      "collection": {
+        "rows": 2139,
+        "events": 2069,
+        "units": 10,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ　Ｓ・Ａ・ＯⅡ",
+        "targetDate": "2026-10-30",
+        "inputSha256": "e9b31cb60cfe658d770177b9ca20286a9ac325527a9a08bf3e8fd6d697979175"
+      }
+    },
+    {
+      "id": "m48ef4a3b",
+      "name": "Ｌとある魔術２ＦＡ",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌとある魔術２ＦＡ"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 4,
+      "collection": {
+        "rows": 691,
+        "events": 663,
+        "units": 4,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌとある魔術２ＦＡ",
+        "targetDate": "2026-10-30",
+        "inputSha256": "eb0dd5081a4e49c211745efc4aa1e5630612466aa97509002814fe11f00eadfe"
+      }
+    },
+    {
+      "id": "m421af8d4",
+      "name": "ＬまほあこＮＰ",
+      "manufacturer": "未確認",
+      "aliases": [
+        "ＬまほあこＮＰ"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 14,
+      "collection": {
+        "rows": 2720,
+        "events": 2622,
+        "units": 14,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "ＬまほあこＮＰ",
+        "targetDate": "2026-10-30",
+        "inputSha256": "2a077050f0d91b9e7eedb48f908988e33c7898381f8883d0cff94849f5571330"
+      }
+    },
+    {
+      "id": "m14d2a3c9",
+      "name": "Ｌカバネリ海門決戦",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌカバネリ海門決戦"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 10,
+      "collection": {
+        "rows": 1296,
+        "events": 1231,
+        "units": 10,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌカバネリ海門決戦",
+        "targetDate": "2026-10-30",
+        "inputSha256": "5a60a71033952bd07116c01c5d6a9e26c39cb268b7f59484c6ace9d2cd141104"
+      }
+    },
+    {
+      "id": "md62d50bb",
+      "name": "Ｌミリオンゴッド",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌミリオンゴッド"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": false,
+      "expectedUnits": 5,
+      "collection": {
+        "rows": 170,
+        "events": 141,
+        "units": 5,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌミリオンゴッド",
+        "targetDate": "2026-10-30",
+        "inputSha256": "6f1b2ee757a59eaacdd8dd311dafc6c8169911dc139e238183c892171264bfe7"
+      }
+    },
+    {
+      "id": "me12cd97e",
+      "name": "Ｌリコリス",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌリコリス"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 4,
+      "collection": {
+        "rows": 922,
+        "events": 895,
+        "units": 4,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌリコリス",
+        "targetDate": "2026-10-30",
+        "inputSha256": "80a593f9611cdb16b9280548cf4361ce75fc72b65730aab62d2a5dec7eaa29ef"
+      }
+    },
+    {
+      "id": "mb30e3e84",
+      "name": "Ｌワールドダイスタ",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌワールドダイスタ"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 729,
+        "events": 708,
+        "units": 3,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌワールドダイスタ",
+        "targetDate": "2026-10-30",
+        "inputSha256": "2902f86c2b0805b51b689998715d051bfea75c4d53bcafe1301be5d8cafbbe34"
+      }
+    },
+    {
+      "id": "m39fd8ebf",
+      "name": "Ｌ少女歌劇",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ少女歌劇"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 2,
+      "collection": {
+        "rows": 327,
+        "events": 315,
+        "units": 2,
+        "days": 6,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ少女歌劇",
+        "targetDate": "2026-10-30",
+        "inputSha256": "a579310dfde65e75bfc19e2271686a9882756c3982d0b7980f1e87b284fd0179"
+      }
+    },
+    {
+      "id": "me3005aec",
+      "name": "Ｌ彼女お借りします",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ彼女お借りします"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 424,
+        "events": 403,
+        "units": 3,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ彼女お借りします",
+        "targetDate": "2026-10-30",
+        "inputSha256": "1c7bc689017f5297a4e3a5fd65f475afe781c2ee008805218e5a958e32de39d2"
+      }
+    },
+    {
+      "id": "ma69b2de4",
+      "name": "Ｌ戦コレ６ＫＳ",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ戦コレ６ＫＳ"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 188,
+        "events": 168,
+        "units": 3,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ戦コレ６ＫＳ",
+        "targetDate": "2026-10-30",
+        "inputSha256": "79097880532089e8f931dd57e4657383403a06e9538eb6a1b5de45396b528d08"
+      }
+    },
+    {
+      "id": "mc77febf9",
+      "name": "Ｌ戦国乙女５Ｌ８",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ戦国乙女５Ｌ８"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 13,
+      "collection": {
+        "rows": 2757,
+        "events": 2667,
+        "units": 13,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ戦国乙女５Ｌ８",
+        "targetDate": "2026-10-30",
+        "inputSha256": "6278529b39c1290e3506203368bae5cd226faf4ee5fb53b1d38d2e71bc4d1b70"
+      }
+    },
+    {
+      "id": "m63de0b52",
+      "name": "Ｌ東京喰種ＦＴ",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ東京喰種ＦＴ"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 4,
+      "collection": {
+        "rows": 505,
+        "events": 477,
+        "units": 4,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ東京喰種ＦＴ",
+        "targetDate": "2026-10-30",
+        "inputSha256": "a6667c7b464f34c1c5c192017c0d1e114d66e3a5606c3b6fd4051eb274aeeec1"
+      }
+    },
+    {
+      "id": "m3d76aa19",
+      "name": "Ｌ海人",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ海人"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 5,
+      "collection": {
+        "rows": 465,
+        "events": 430,
+        "units": 5,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ海人",
+        "targetDate": "2026-10-30",
+        "inputSha256": "9bfbcfe1a694e4b79c6df49c19c2ee97793664487249c9e35216c8e3a8b16674"
+      }
+    },
+    {
+      "id": "md60b993e",
+      "name": "Ｌ見える子ちゃん",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ見える子ちゃん"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": false,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 321,
+        "events": 301,
+        "units": 3,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ見える子ちゃん",
+        "targetDate": "2026-10-30",
+        "inputSha256": "d5363b05f991ea60570078c8dea4f761874bbfd5ed9108a0e17f485a0e8a6e36"
+      }
+    },
+    {
+      "id": "m335893c7",
+      "name": "Ｌ転天の魔法革命",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ転天の魔法革命"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 5,
+      "collection": {
+        "rows": 851,
+        "events": 816,
+        "units": 5,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ転天の魔法革命",
+        "targetDate": "2026-10-30",
+        "inputSha256": "c2dc2da82788270894bceac4efaa3795c14d36bba4354201a65798428d52cda9"
+      }
+    },
+    {
+      "id": "mcee2d01d",
+      "name": "Ｌ邪神ちゃん",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ邪神ちゃん"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 2,
+      "collection": {
+        "rows": 308,
+        "events": 294,
+        "units": 2,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ邪神ちゃん",
+        "targetDate": "2026-10-30",
+        "inputSha256": "d36846e157670eeee0dacb89168bfc05943165b34fb3e222e7df3df363576510"
+      }
+    },
+    {
+      "id": "m7126671e",
+      "name": "Ｌ青春ブタ野郎",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ青春ブタ野郎"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 12,
+      "collection": {
+        "rows": 1744,
+        "events": 1663,
+        "units": 12,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ青春ブタ野郎",
+        "targetDate": "2026-10-30",
+        "inputSha256": "c30be1791abe32f4e85dc849015669d7dce3e56ed28f7be7da43634a7dc92be5"
+      }
+    },
+    {
+      "id": "mb6c53f96",
+      "name": "L 東京喰種",
+      "manufacturer": "スパイキー",
+      "aliases": [
+        "L 東京喰種",
+        "トーキョーグール",
+        "グール"
+      ],
+      "releaseDate": "2025-02-03",
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 8,
+      "collection": {
+        "rows": 951,
+        "events": 895,
+        "units": 8,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "L 東京喰種",
+        "targetDate": "2026-10-30",
+        "inputSha256": "23303b215910905ad4ba4123533c09d741956e144c89ad9865eb128272cb64ec"
+      }
+    },
+    {
+      "id": "mc4d20c35",
+      "name": "Lからくりサーカス2",
+      "manufacturer": "SANKYO",
+      "aliases": [
+        "Lからくりサーカス2",
+        "からくりサーカス"
+      ],
+      "releaseDate": "2023-07-03",
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 2,
+      "collection": {
+        "rows": 276,
+        "events": 262,
+        "units": 2,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Lからくりサーカス2",
+        "targetDate": "2026-10-30",
+        "inputSha256": "792a74f17d9e70d00eb57a13b56f5a94f706437ec4fa12eae6040b7e7f233987"
+      }
+    },
+    {
+      "id": "mbef0d24f",
+      "name": "Lモグモグ風林火山 大海戦の巻",
+      "manufacturer": "ネット",
+      "aliases": [
+        "Lモグモグ風林火山 大海戦の巻",
+        "モグモグ",
+        "モグ大"
+      ],
+      "releaseDate": "2026-09-07",
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 2,
+      "collection": {
+        "rows": 214,
+        "events": 200,
+        "units": 2,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Lモグモグ風林火山 大海戦の巻",
+        "targetDate": "2026-10-30",
+        "inputSha256": "fbfca782f5ba66b5e5858262da8530668965e049197d25175e9bfe9d4a00741f"
+      }
+    },
+    {
+      "id": "m34233650",
+      "name": "L真打吉宗",
+      "manufacturer": "大都技研",
+      "aliases": [
+        "L真打吉宗",
+        "吉宗"
+      ],
+      "releaseDate": "2026-04-06",
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 5,
+      "collection": {
+        "rows": 780,
+        "events": 748,
+        "units": 5,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "L真打吉宗",
+        "targetDate": "2026-10-30",
+        "inputSha256": "467254f409c9100aad2175915c3b5fdc710f7ff75b98a3b4b6e22483bbb09c7e"
+      }
+    },
+    {
+      "id": "m1619902d",
+      "name": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
+      "manufacturer": "ミズホ",
+      "aliases": [
+        "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
+        "マギレコ",
+        "まどマギ外伝"
+      ],
+      "releaseDate": "2025-04-07",
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "collection_incomplete",
+      "pendingReason": "一部の履歴を保存しています。対象日の台データを取り切ったことを確認できないため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": false,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 306,
+        "events": 287,
+        "units": 3,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
+        "targetDate": "2026-10-30",
+        "inputSha256": "5934461b5ab42e66f0c5c96295e0c234b2593654227df7df6f8aeb0f5bab9e4b"
+      }
+    },
+    {
+      "id": "m6a74cdc0",
+      "name": "スマスロ 化物語",
+      "manufacturer": "Sammy",
+      "aliases": [
+        "スマスロ 化物語",
+        "化物語"
+      ],
+      "releaseDate": "2024-01-01",
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "collection_incomplete",
+      "pendingReason": "一部の履歴を保存しています。対象日の台データを取り切ったことを確認できないため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": false,
+      "expectedUnits": 2,
+      "collection": {
+        "rows": 138,
+        "events": 126,
+        "units": 2,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "スマスロ 化物語",
+        "targetDate": "2026-10-30",
+        "inputSha256": "008be3f5767d299973b10230ebb29d71fd6b076a0203581be50ebf67e3a1d2ac"
+      }
+    },
+    {
+      "id": "m46e81450",
+      "name": "スマスロ 攻殻機動隊",
+      "manufacturer": "Sammy",
+      "aliases": [
+        "スマスロ 攻殻機動隊",
+        "攻殻機動隊",
+        "こうかく"
+      ],
+      "releaseDate": "2026-02-02",
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 312,
+        "events": 291,
+        "units": 3,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "スマスロ 攻殻機動隊",
+        "targetDate": "2026-10-30",
+        "inputSha256": "dc27ed094e344194b281bc99e4160c8e7e3de52e79a729390e48fac5e4c6d3c3"
+      }
+    },
+    {
+      "id": "m8a798229",
+      "name": "スマスロ 獣王",
+      "manufacturer": "未登録",
+      "aliases": [
+        "スマスロ 獣王"
+      ],
+      "releaseDate": "2024-01-01",
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 12,
+      "collection": {
+        "rows": 2679,
+        "events": 2595,
+        "units": 12,
+        "days": 7,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "スマスロ 獣王",
+        "targetDate": "2026-10-30",
+        "inputSha256": "4d046cc542afed848fb1db9ddd8e8f37451cf63f639cb8762371ce51d3128c51"
+      }
+    },
+    {
+      "id": "m020bda5f",
+      "name": "スマスロパリピ孔明",
+      "manufacturer": "未登録",
+      "aliases": [
+        "スマスロパリピ孔明"
+      ],
+      "releaseDate": "2024-01-01",
+      "lastUpdated": "2026-10-30",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 5,
+      "collection": {
+        "rows": 345,
+        "events": 317,
+        "units": 5,
+        "days": 6,
+        "firstDate": "2026-10-24",
+        "lastDate": "2026-10-30"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "スマスロパリピ孔明",
+        "targetDate": "2026-10-30",
+        "inputSha256": "c4ef5d17c24a08f2e8d10e6134372a0cbe451e49b860a927a9cd40d88eee767b"
+      }
+    }
+  ]
+}
