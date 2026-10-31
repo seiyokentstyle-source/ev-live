@@ -1,6 +1,6 @@
 import { existsSync, promises as fs } from "node:fs";
 import path from "node:path";
-import { getAvailableMachines, getMachines, getShinjukuHeatmapCoverageSources } from "../machines";
+import { getHallDisplays, getMachines, getShinjukuHeatmapCoverageSources } from "../machines";
 import type { HeatmapData, HeatmapHallId } from "./types";
 import { buildHeatmapFromSettingAim } from "./setting-aim";
 import { settingAimCompatibilityMachines } from "./setting-aim-compat";
@@ -28,17 +28,24 @@ async function getCompatibilityMachines() {
 
 export async function getShinjukuHeatmapData(): Promise<HeatmapData> {
   const [machines, compatibilityMachines, coverageSources, coverageSnapshot] = await Promise.all([
-    getAvailableMachines(), getCompatibilityMachines(), getShinjukuHeatmapCoverageSources(), getHistoryCoverageSnapshot(),
+    publishedHeatmapMachines("shinjuku"), getCompatibilityMachines(), getShinjukuHeatmapCoverageSources(), getHistoryCoverageSnapshot(),
   ]);
   return withHeatmapCoverage(buildHeatmapFromSettingAim(machines, compatibilityMachines), selectHeatmapCoverage(coverageSources, coverageSnapshot));
+}
+
+/** Apply the same holds and identity selection as the public machine pages. */
+async function publishedHeatmapMachines(hallId: HeatmapHallId) {
+  return (await getHallDisplays(hallId)).flatMap((display) => display.kind === "machine" ? [display.machine] : []);
 }
 
 /** Read one store at a time. Unit numbers and compatibility snapshots never cross halls. */
 export async function getHeatmapData(hallId: HeatmapHallId): Promise<HeatmapData> {
   if (hallId === "shinjuku") return getShinjukuHeatmapData();
-  const machines = await getMachines(hallId);
+  const [machines, coverageSources] = await Promise.all([
+    publishedHeatmapMachines(hallId), getMachines(hallId),
+  ]);
   return withHeatmapCoverage(
     buildHeatmapFromSettingAim(machines, [], hallId),
-    selectHeatmapCoverage(machines),
+    selectHeatmapCoverage(coverageSources),
   );
 }
