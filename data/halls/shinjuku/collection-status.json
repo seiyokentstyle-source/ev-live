@@ -3,7 +3,7 @@
   "hallId": "shinjuku",
   "source": "site_seven",
   "storeId": "00001050",
-  "lastUpdated": "2026-10-24",
+  "lastUpdated": "2026-10-27",
   "machines": [
     {
       "id": "m21cfd44f",
@@ -106,7 +106,7 @@
         "L少女☆歌劇 レヴュースタァライト -The SLOT-"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-10-23",
+      "lastUpdated": "2026-10-27",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -114,19 +114,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1451,
-        "events": 1429,
+        "rows": 1720,
+        "events": 1694,
         "units": 2,
-        "days": 22,
+        "days": 26,
         "firstDate": "2026-09-14",
-        "lastDate": "2026-10-23"
+        "lastDate": "2026-10-27"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "shinjuku",
         "machineName": "L少女☆歌劇 レヴュースタァライト -The SLOT-",
-        "targetDate": "2026-10-23",
-        "inputSha256": "665e4ab53cad85dba117c1a1ccf0bae5815b5b344b15d9d8bfe3af9f3d25d2f3"
+        "targetDate": "2026-10-27",
+        "inputSha256": "8da9bc683d0e151c61a1e9028d987602c134873f6feef7a0b7a1a3febb14bd25"
       }
     }
   ]
