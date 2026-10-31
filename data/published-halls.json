@@ -70,5 +70,14 @@
     "ready": true,
     "dataSubdir": "akihabara",
     "visibility": "listed"
+  },
+  {
+    "id": "smart_prego_ikebukuro",
+    "area": "池袋",
+    "name": "スマートプレゴ池袋",
+    "note": "共通の機種仕様・集計条件で算出。未検証・サンプル不足の条件は保留",
+    "ready": true,
+    "dataSubdir": "smart_prego_ikebukuro",
+    "visibility": "listed"
   }
 ]
