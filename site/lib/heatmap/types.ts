@@ -2,6 +2,9 @@ export const HEATMAP_GROUP_KEYS = ["all", "0", "1", "2", "3", "4", "5", "6", "7"
 
 export type HeatmapGroupKey = (typeof HEATMAP_GROUP_KEYS)[number];
 
+export const HEATMAP_HALL_IDS = ["shinjuku", "akihabara", "kabuki"] as const;
+export type HeatmapHallId = (typeof HEATMAP_HALL_IDS)[number];
+
 /** Only aggregate values leave the generator; no individual daily records. */
 export type HeatmapUnit = {
   unit: string;
@@ -31,7 +34,7 @@ export type HeatmapGroup = {
 
 export type HeatmapData = {
   schema: "evlive-floor-heatmap/v1";
-  hallId: "shinjuku";
+  hallId: HeatmapHallId;
   metric: "net";
   estimated: true;
   dataFrom: string | null;
@@ -47,5 +50,7 @@ export type FloorLayout = {
   height: number;
   sourceUrl: string;
   asOf: string;
+  layoutNote?: string;
+  labels?: readonly { text: string; x: number; y: number }[];
   seats: readonly FloorSeat[];
 };

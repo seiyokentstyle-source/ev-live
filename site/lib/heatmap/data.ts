@@ -1,7 +1,7 @@
 import { existsSync, promises as fs } from "node:fs";
 import path from "node:path";
-import { getAvailableMachines, getShinjukuHeatmapCoverageSources } from "../machines";
-import type { HeatmapData } from "./types";
+import { getAvailableMachines, getMachines, getShinjukuHeatmapCoverageSources } from "../machines";
+import type { HeatmapData, HeatmapHallId } from "./types";
 import { buildHeatmapFromSettingAim } from "./setting-aim";
 import { settingAimCompatibilityMachines } from "./setting-aim-compat";
 import { selectHeatmapCoverage, withHeatmapCoverage } from "./coverage";
@@ -31,4 +31,14 @@ export async function getShinjukuHeatmapData(): Promise<HeatmapData> {
     getAvailableMachines(), getCompatibilityMachines(), getShinjukuHeatmapCoverageSources(), getHistoryCoverageSnapshot(),
   ]);
   return withHeatmapCoverage(buildHeatmapFromSettingAim(machines, compatibilityMachines), selectHeatmapCoverage(coverageSources, coverageSnapshot));
+}
+
+/** Read one store at a time. Unit numbers and compatibility snapshots never cross halls. */
+export async function getHeatmapData(hallId: HeatmapHallId): Promise<HeatmapData> {
+  if (hallId === "shinjuku") return getShinjukuHeatmapData();
+  const machines = await getMachines(hallId);
+  return withHeatmapCoverage(
+    buildHeatmapFromSettingAim(machines, [], hallId),
+    selectHeatmapCoverage(machines),
+  );
 }
