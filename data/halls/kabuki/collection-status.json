@@ -3,7 +3,7 @@
   "hallId": "kabuki",
   "source": "daidata",
   "storeId": "100949",
-  "lastUpdated": "2026-10-30",
+  "lastUpdated": "2026-10-31",
   "machines": [
     {
       "id": "mbf0ab5b1",
@@ -15,7 +15,7 @@
         "ULTRAMAN最終決戦"
       ],
       "releaseDate": "2026-07-06",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -23,19 +23,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 968,
-        "events": 931,
+        "rows": 1007,
+        "events": 969,
         "units": 1,
-        "days": 37,
+        "days": 38,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L ULTRAMAN最終決戦",
-        "targetDate": "2026-10-30",
-        "inputSha256": "02714ae5f85673520f802eebd1cf0e59757ad22b61ac2f970518fb132187fc61"
+        "targetDate": "2026-10-31",
+        "inputSha256": "470fa41b2ea9cdc46c68cd561b4c170d86ec8b8cfb826d4540baf3be2781d530"
       }
     },
     {
@@ -48,7 +48,7 @@
         "グール"
       ],
       "releaseDate": "2025-02-03",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -56,19 +56,19 @@
       "collectionComplete": true,
       "expectedUnits": 44,
       "collection": {
-        "rows": 79579,
-        "events": 77863,
+        "rows": 81888,
+        "events": 80128,
         "units": 44,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L 東京喰種",
-        "targetDate": "2026-10-30",
-        "inputSha256": "09550e9c68935187cc920b3acacda8964db5dd2ff1565bde635002679c7ddd94"
+        "targetDate": "2026-10-31",
+        "inputSha256": "910c503683f14333ef0224b6f964b0c2240dd5c704c4b86947b0f2fefc3ffeab"
       }
     },
     {
@@ -112,7 +112,7 @@
         "とらぶる"
       ],
       "releaseDate": "2025-05-19",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -120,19 +120,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1618,
-        "events": 1579,
+        "rows": 1659,
+        "events": 1619,
         "units": 1,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "LToLOVEるダークネス TRANCE ver.8.7",
-        "targetDate": "2026-10-30",
-        "inputSha256": "1364254d855118b279ad01eeaf64ae6b92d7f5adf3fd9f58d4d5736aac6a1906"
+        "targetDate": "2026-10-31",
+        "inputSha256": "9779661a49e1b2141c767099ace84716c5f6718d81c631301c5ad89a0358b3c3"
       }
     },
     {
@@ -144,7 +144,7 @@
         "からくりサーカス"
       ],
       "releaseDate": "2023-07-03",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -152,19 +152,19 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 8421,
-        "events": 8148,
+        "rows": 8684,
+        "events": 8404,
         "units": 7,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lからくりサーカス2",
-        "targetDate": "2026-10-30",
-        "inputSha256": "7c52b3af73067d3fdb85865bf88a4e3233789c834b1e0e2f3fe6720eaa6540bd"
+        "targetDate": "2026-10-31",
+        "inputSha256": "edbbb0644af75f74a48ba099c09399ea3f056169e33c9cdf690ee3ecb2a512aa"
       }
     },
     {
@@ -177,7 +177,7 @@
         "とある禁書2"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -185,19 +185,19 @@
       "collectionComplete": true,
       "expectedUnits": 14,
       "collection": {
-        "rows": 19951,
-        "events": 19400,
+        "rows": 20425,
+        "events": 19860,
         "units": 15,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lとある魔術の禁書目録2",
-        "targetDate": "2026-10-30",
-        "inputSha256": "038c9cb701fd7343ae747088ab793044ad0fc1f197e1b292fcafe9f8e4e3fe78"
+        "targetDate": "2026-10-31",
+        "inputSha256": "b79672444ccd26c3858cb6865dbd943e72faa3f248a66e4adf0e81abe3125b10"
       }
     },
     {
@@ -211,7 +211,7 @@
         "異世界放浪メシ"
       ],
       "releaseDate": "2026-08-03",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -219,19 +219,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 5388,
-        "events": 5271,
+        "rows": 5485,
+        "events": 5365,
         "units": 3,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lとんでもスキルで異世界放浪メシ",
-        "targetDate": "2026-10-30",
-        "inputSha256": "fc94834f67e2ca7c856dd90a33bd30b36cb0644f52a236c8be8f650ecee924ac"
+        "targetDate": "2026-10-31",
+        "inputSha256": "9a63b94ec0c18b930ec9cfa61294614fe59e10cb3050197dc88380790bea2731"
       }
     },
     {
@@ -244,7 +244,7 @@
         "やじきた道中記"
       ],
       "releaseDate": "2026-08-03",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -252,19 +252,19 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 2973,
-        "events": 2778,
+        "rows": 3069,
+        "events": 2869,
         "units": 5,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lやじきた道中記参る！",
-        "targetDate": "2026-10-30",
-        "inputSha256": "6ca47872a1f6503e08bcce9bda11f989458aed7a2196f055b2d5d4e4d8701366"
+        "targetDate": "2026-10-31",
+        "inputSha256": "5db548346106c94c8f73730f0b88668950188dd3e023514e87331f177565feaf"
       }
     },
     {
@@ -279,7 +279,7 @@
         "monkey"
       ],
       "releaseDate": "2023-08-07",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -287,19 +287,19 @@
       "collectionComplete": true,
       "expectedUnits": 19,
       "collection": {
-        "rows": 35589,
-        "events": 34848,
+        "rows": 36557,
+        "events": 35797,
         "units": 19,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lスマスロ モンキーターンV",
-        "targetDate": "2026-10-30",
-        "inputSha256": "2e89a8d955fa4260ee16122ec734f47745ffda038bf6fb2f9ae786e658beae7c"
+        "targetDate": "2026-10-31",
+        "inputSha256": "0f8690336830ff6fcd46e2f7f627594611056a975492fa136fc949177109b81e"
       }
     },
     {
@@ -312,7 +312,7 @@
         "ゴッドイーターリザレクション"
       ],
       "releaseDate": "2024-07-22",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -320,19 +320,19 @@
       "collectionComplete": true,
       "expectedUnits": 12,
       "collection": {
-        "rows": 15835,
-        "events": 15367,
+        "rows": 16348,
+        "events": 15868,
         "units": 12,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lスマスロ　ゴッドイーター　リザレクション",
-        "targetDate": "2026-10-30",
-        "inputSha256": "37387a0eefb85595e602230e631c8fe9c293f203f47b9fb38749408d3b0c8530"
+        "targetDate": "2026-10-31",
+        "inputSha256": "5a48ffedeea5eb6858a5d54d5c47d47ba95cf6c0a1cc32ddb41a4e5439b961c2"
       }
     },
     {
@@ -344,7 +344,7 @@
         "かぐや"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -352,19 +352,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 4684,
-        "events": 4542,
+        "rows": 4883,
+        "events": 4737,
         "units": 8,
-        "days": 37,
+        "days": 38,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lスマスロかぐや様は告らせたい",
-        "targetDate": "2026-10-30",
-        "inputSha256": "a4de0b44eb882d7b9a7e18fd2d33164b81902d27aa2ba16976d32bf6f7c734cc"
+        "targetDate": "2026-10-31",
+        "inputSha256": "041cae42354a195e4e1ae4c181ff20de51eb1e6e354a932e91ce09ef454cef2b"
       }
     },
     {
@@ -379,7 +379,7 @@
         "hokuto"
       ],
       "releaseDate": "2023-04-03",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -387,19 +387,19 @@
       "collectionComplete": true,
       "expectedUnits": 8,
       "collection": {
-        "rows": 14786,
-        "events": 14474,
+        "rows": 15274,
+        "events": 14954,
         "units": 8,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lスマスロ北斗の拳",
-        "targetDate": "2026-10-30",
-        "inputSha256": "850103603088508a50b31e29a1208fd27b29bc8eda2bf8b134c864a551f8cd77"
+        "targetDate": "2026-10-31",
+        "inputSha256": "6c227067a8d8a320741e6564733835c62e1675598452e35f4d1d041134855c86"
       }
     },
     {
@@ -411,7 +411,7 @@
         "ゾンサガ"
       ],
       "releaseDate": "2024-07-22",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "signal_unverified",
       "pendingReason": "履歴は保存済みです。通常時とST中の信号・ゲーム数、獲得枚数の対応を確認中のため、期待値は算出保留です。",
@@ -419,19 +419,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1447,
-        "events": 1408,
+        "rows": 1497,
+        "events": 1457,
         "units": 1,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lスロット　ゾンビランドサガ",
-        "targetDate": "2026-10-30",
-        "inputSha256": "83ac21c284afec52be8746236e60af4ded5029cffd15d669cc0ba75bf2e40900"
+        "targetDate": "2026-10-31",
+        "inputSha256": "bb3b9e4d48146e9325202ff8d1a5eb0218f6af1b7d7c41fdfe0ae6f24de6deb6"
       }
     },
     {
@@ -445,7 +445,7 @@
         "スーパーリオエース2"
       ],
       "releaseDate": "2026-05-11",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -453,19 +453,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1101,
-        "events": 1069,
+        "rows": 1127,
+        "events": 1094,
         "units": 2,
-        "days": 32,
+        "days": 33,
         "firstDate": "2026-09-25",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lスーパーリオエース2",
-        "targetDate": "2026-10-30",
-        "inputSha256": "364c1ea3e6cc4cf29fe9603eee1480bf0b8c52c654d7694cfdae62c4dcc541f4"
+        "targetDate": "2026-10-31",
+        "inputSha256": "0636013b871e79fadbd38fcc9bc32739cb7290c30e334317650615dbce33b089"
       }
     },
     {
@@ -479,7 +479,7 @@
         "ソードアートオンライン"
       ],
       "releaseDate": "2023-05-15",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -487,19 +487,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 4608,
-        "events": 4489,
+        "rows": 4652,
+        "events": 4530,
         "units": 7,
-        "days": 36,
+        "days": 37,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lソードアート・オンライン",
-        "targetDate": "2026-10-30",
-        "inputSha256": "7ea0a6ba77d933c3d2b96510f334ecfce407d9bc75fdc7debadcba916dec4974"
+        "targetDate": "2026-10-31",
+        "inputSha256": "1740837a44ba5f64fae6eed5055a4920f0b2e608d535531adfe4cb2807068668"
       }
     },
     {
@@ -542,7 +542,7 @@
         "Lバンドリ！"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -550,19 +550,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 928,
-        "events": 889,
+        "rows": 941,
+        "events": 901,
         "units": 1,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lバンドリ！",
-        "targetDate": "2026-10-30",
-        "inputSha256": "7dd6138ea422cf13d4234685f93740db617c911f82373c4249668cbd48f1c8ed"
+        "targetDate": "2026-10-31",
+        "inputSha256": "f98425270d3cdabfcea3dc35603bbcf267386f213e4f4df22848cfabadba6ea8"
       }
     },
     {
@@ -612,7 +612,7 @@
         "ヴァルヴレイヴ2"
       ],
       "releaseDate": "2025-09-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -620,19 +620,19 @@
       "collectionComplete": true,
       "expectedUnits": 22,
       "collection": {
-        "rows": 49951,
-        "events": 49062,
+        "rows": 51051,
+        "events": 50140,
         "units": 25,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lパチスロ 革命機ヴァルヴレイヴ2（Lヴヴヴ2）",
-        "targetDate": "2026-10-30",
-        "inputSha256": "4f97a6c282cd01d7fb3be6b2ecf0dab473f940f574b35eafd4860d58c1dbe2d6"
+        "targetDate": "2026-10-31",
+        "inputSha256": "8342859a425e85583bb79334008a900703fb10cdf37a817e26fea5c919b603ef"
       }
     },
     {
@@ -644,7 +644,7 @@
         "うみねこ2"
       ],
       "releaseDate": "2026-02-02",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -652,19 +652,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1637,
-        "events": 1561,
+        "rows": 1672,
+        "events": 1594,
         "units": 4,
-        "days": 38,
+        "days": 39,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lパチスロうみねこのなく頃に2",
-        "targetDate": "2026-10-30",
-        "inputSha256": "b0f6853ddeaac222d12521582765e821188821e8dcde4d133fd88a92b5931d3d"
+        "targetDate": "2026-10-31",
+        "inputSha256": "98fd9b337a3a892ee00992ceb0702e70efffc2f566a735928d047da0aef1c8fb"
       }
     },
     {
@@ -709,7 +709,7 @@
         "ガルパン最終章"
       ],
       "releaseDate": "2024-02-05",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -717,19 +717,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 3624,
-        "events": 3531,
+        "rows": 3722,
+        "events": 3626,
         "units": 7,
-        "days": 33,
+        "days": 34,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lパチスロガールズ＆パンツァー 最終章",
-        "targetDate": "2026-10-30",
-        "inputSha256": "243bfae0c4caf48bf061ea9ea8a418dffe7f8df0f5524adfcfd9e664ef8f127f"
+        "targetDate": "2026-10-31",
+        "inputSha256": "ea19cd8b504cc2ea00c411c644188f10f31d95dd412f3588e6526c0d681368b5"
       }
     },
     {
@@ -776,7 +776,7 @@
         "ゴッド"
       ],
       "releaseDate": "2026-04-20",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -784,19 +784,19 @@
       "collectionComplete": true,
       "expectedUnits": 30,
       "collection": {
-        "rows": 21284,
-        "events": 20115,
+        "rows": 21958,
+        "events": 20759,
         "units": 30,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lミリオンゴッド－神々の軌跡－",
-        "targetDate": "2026-10-30",
-        "inputSha256": "71e3d2564b3e158505c4e25618cb9238df397f1178c4dbfff1e2d1f743f28cf3"
+        "targetDate": "2026-10-31",
+        "inputSha256": "12d894d2398832bf2718ace4cef88e9301b71cb864294dcd87a209507edcf4ad"
       }
     },
     {
@@ -809,7 +809,7 @@
         "モグ大"
       ],
       "releaseDate": "2026-09-07",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -817,19 +817,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 2985,
-        "events": 2870,
+        "rows": 3012,
+        "events": 2894,
         "units": 3,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lモグモグ風林火山 大海戦の巻",
-        "targetDate": "2026-10-30",
-        "inputSha256": "d45c1eaedbeb1fcff43120fd0e524e4789988c5b556124050b36525d2b39d6dc"
+        "targetDate": "2026-10-31",
+        "inputSha256": "3f085a6b24d4c421be5f82dd62482df9105b4ffa0a6a310bfb6ec6f12e84318f"
       }
     },
     {
@@ -842,7 +842,7 @@
         "リコリス"
       ],
       "releaseDate": "2026-09-07",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "signal_unverified",
       "pendingReason": "RB＝ラッシュ初当り、ART＝CZまたはラッシュ中ボーナスという資料を反映しています。取得履歴には液晶の現在Gと実獲得枚数がないため、ARTの内訳と通常時Gを確定できず、期待値は算出保留です。",
@@ -850,19 +850,19 @@
       "collectionComplete": true,
       "expectedUnits": 27,
       "collection": {
-        "rows": 65265,
-        "events": 64212,
+        "rows": 66989,
+        "events": 65909,
         "units": 27,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lリコリス・リコイル",
-        "targetDate": "2026-10-30",
-        "inputSha256": "5b60e40362fb032861cf2658879a8d6e4fc42e752ad496519152c0d3cf0f31ee"
+        "targetDate": "2026-10-31",
+        "inputSha256": "eaa3efaa6119c11830686e99854aa5d93e122c186c15bf2efba9520302af34e8"
       }
     },
     {
@@ -907,7 +907,7 @@
         "がれいぜろ"
       ],
       "releaseDate": "2026-08-17",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -915,19 +915,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 3352,
-        "events": 3238,
+        "rows": 3406,
+        "events": 3289,
         "units": 3,
-        "days": 38,
+        "days": 39,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L喰霊-零-Re",
-        "targetDate": "2026-10-30",
-        "inputSha256": "09a9761fb0a96dbb88738146c8f1a4ca22d5c4461105dc74565521a8a8e55b83"
+        "targetDate": "2026-10-31",
+        "inputSha256": "db3b4f40e833a4caa33d3fee678f424a17435ced2ca6efe0c57931618ef3cba6"
       }
     },
     {
@@ -971,7 +971,7 @@
         "L少女☆歌劇 レヴュースタァライト -The SLOT-"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -979,19 +979,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1350,
-        "events": 1311,
+        "rows": 1387,
+        "events": 1347,
         "units": 1,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L少女☆歌劇 レヴュースタァライト -The SLOT-",
-        "targetDate": "2026-10-30",
-        "inputSha256": "02e12f05d40444cba7e13c4ca6ace56ca99f1d8a79c261d0e7cac9b75cf143a9"
+        "targetDate": "2026-10-31",
+        "inputSha256": "b7bc67ceba3b59370b3c32292ab2c0617c8965bc943fb215bd855ad375097bc7"
       }
     },
     {
@@ -1004,7 +1004,7 @@
         "彼女お借りします"
       ],
       "releaseDate": "2026-09-07",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1012,19 +1012,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 6039,
-        "events": 5895,
+        "rows": 6226,
+        "events": 6078,
         "units": 8,
-        "days": 36,
+        "days": 37,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L彼女、お借りします",
-        "targetDate": "2026-10-30",
-        "inputSha256": "3b90c207016bd790fd7d04b4435e995fde5af8a1e70585ded287c1c04c159afa"
+        "targetDate": "2026-10-31",
+        "inputSha256": "d1b458199d585b5a97282602fcbf69b868add3c238ef84796a1c48acea86a9d8"
       }
     },
     {
@@ -1037,7 +1037,7 @@
         "忍魂3"
       ],
       "releaseDate": "2024-03-18",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1045,19 +1045,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 493,
-        "events": 454,
+        "rows": 499,
+        "events": 459,
         "units": 1,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L忍魂参 奥義皆伝ノ章",
-        "targetDate": "2026-10-30",
-        "inputSha256": "b32419087b586f7019e6b78cbf9b8bf730c82b75b0290b5328a78476371ed711"
+        "targetDate": "2026-10-31",
+        "inputSha256": "36b3dcebd38f42a080c2a1774626fcc9cb5db83c3ec86fa6bb7f4eb9412cccd8"
       }
     },
     {
@@ -1069,7 +1069,7 @@
         "乙女5"
       ],
       "releaseDate": "2026-06-08",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1077,19 +1077,19 @@
       "collectionComplete": true,
       "expectedUnits": 16,
       "collection": {
-        "rows": 32535,
-        "events": 31913,
+        "rows": 33422,
+        "events": 32784,
         "units": 17,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L戦国乙女5 業火を穿つ宿焔の双刃",
-        "targetDate": "2026-10-30",
-        "inputSha256": "2ff7667c14510b6a10d56814b3181b48e2acc05e98e11bbc26c4623b67d0bbf7"
+        "targetDate": "2026-10-31",
+        "inputSha256": "dbd94ee557ade4e5d94a9bcae2344883db2b98677946e175174c9227d74c09e2"
       }
     },
     {
@@ -1135,7 +1135,7 @@
         "海門決戦"
       ],
       "releaseDate": "2026-03-02",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1143,19 +1143,19 @@
       "collectionComplete": true,
       "expectedUnits": 31,
       "collection": {
-        "rows": 67678,
-        "events": 66469,
+        "rows": 69876,
+        "events": 68636,
         "units": 31,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L甲鉄城のカバネリ海門決戦",
-        "targetDate": "2026-10-30",
-        "inputSha256": "d07ba6bd7a0d433fd7a829e65d6e2641580a6ba24bb8c978baffc2bb8c05028d"
+        "targetDate": "2026-10-31",
+        "inputSha256": "34c0f073213e99341ff2dfc4e09112f87cb1a39e9484a10c6adeb61a47d62cde"
       }
     },
     {
@@ -1167,7 +1167,7 @@
         "防振り"
       ],
       "releaseDate": "2024-06-03",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1175,19 +1175,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 2923,
-        "events": 2820,
+        "rows": 2983,
+        "events": 2877,
         "units": 6,
-        "days": 35,
+        "days": 36,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L痛いのは嫌なので防御力に極振りしたいと思います。",
-        "targetDate": "2026-10-30",
-        "inputSha256": "3fe712a3c560c1aeb55760e62b810387c584b419d2319813e1267d20c956fff8"
+        "targetDate": "2026-10-31",
+        "inputSha256": "40ed0a416d014e973549df411488714a46dd9d2ba2aab36db72e58353ce4df9c"
       }
     },
     {
@@ -1199,7 +1199,7 @@
         "吉宗"
       ],
       "releaseDate": "2026-04-06",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1207,19 +1207,19 @@
       "collectionComplete": true,
       "expectedUnits": 12,
       "collection": {
-        "rows": 23801,
-        "events": 23307,
+        "rows": 24512,
+        "events": 24006,
         "units": 14,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L真打吉宗",
-        "targetDate": "2026-10-30",
-        "inputSha256": "57c28f5fa9122e8d8dd3054cf80e49a132fefd7fd97116671a6d779a4ecbb75d"
+        "targetDate": "2026-10-31",
+        "inputSha256": "d8d85d37481e369e33fd8ac46331d8afc5968ef1956769be0779019b7b9d0903"
       }
     },
     {
@@ -1232,7 +1232,7 @@
         "海皇覚醒"
       ],
       "releaseDate": "2024-06-03",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1240,19 +1240,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1578,
-        "events": 1539,
+        "rows": 1624,
+        "events": 1584,
         "units": 1,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L聖闘士星矢 海皇覚醒 CUSTOM EDITION",
-        "targetDate": "2026-10-30",
-        "inputSha256": "cdb8ef5ad9aa7bd119c796a19daaf484206daddea4206e73a2dbd3b7368ac200"
+        "targetDate": "2026-10-31",
+        "inputSha256": "098a28a0edb0b945e5b1227a08d004b3616fc1775bd5e47ec674a4a58e05505e"
       }
     },
     {
@@ -1264,7 +1264,7 @@
         "きょこすい"
       ],
       "releaseDate": "2026-04-06",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1272,19 +1272,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1439,
-        "events": 1390,
+        "rows": 1491,
+        "events": 1441,
         "units": 3,
-        "days": 38,
+        "days": 39,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L虚構推理",
-        "targetDate": "2026-10-30",
-        "inputSha256": "9b24e7fed7c18ee6e8a919e8b924d81c399cf6eae95585f3e5fc1530dbab87a8"
+        "targetDate": "2026-10-31",
+        "inputSha256": "7fe359d344c384c2f878c1c828918d9807d29171cab2d7216432b77c978c4a48"
       }
     },
     {
@@ -1297,7 +1297,7 @@
         "あおぶた"
       ],
       "releaseDate": "2026-09-07",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1305,19 +1305,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 15911,
-        "events": 15677,
+        "rows": 16359,
+        "events": 16119,
         "units": 6,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L青春ブタ野郎はバニーガール先輩の夢を見ない",
-        "targetDate": "2026-10-30",
-        "inputSha256": "20e4c8d4d98c83b737f23a260339f987a17c80fec4835f259b9d292454d419d7"
+        "targetDate": "2026-10-31",
+        "inputSha256": "ace6ba88ff72900465ee6a8818d6d445fe4a4816d9cfcb8edf1436b78e7d6cf7"
       }
     },
     {
@@ -1331,7 +1331,7 @@
         "魔法少女にあこがれて"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -1339,19 +1339,19 @@
       "collectionComplete": true,
       "expectedUnits": 8,
       "collection": {
-        "rows": 4670,
-        "events": 4574,
+        "rows": 5134,
+        "events": 5030,
         "units": 8,
-        "days": 12,
+        "days": 13,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L魔法少女にあこがれて",
-        "targetDate": "2026-10-30",
-        "inputSha256": "69a87936637ac153e9bbacf0e9b20ef2f6dbec487e9847f170eac1ddfc609fb5"
+        "targetDate": "2026-10-31",
+        "inputSha256": "7867228ddf28d9cf7e82c1d2c714a9e051627bf5e98cc19ad8b147e3bc0152c4"
       }
     },
     {
@@ -1364,7 +1364,7 @@
         "ハイビリ"
       ],
       "releaseDate": "2025-07-07",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1372,19 +1372,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 2468,
-        "events": 2390,
+        "rows": 2499,
+        "events": 2419,
         "units": 2,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Sハイビリターン-30",
-        "targetDate": "2026-10-30",
-        "inputSha256": "d628d1735973c1bf0f97d19732773ce7240fa69bba08aac4a375f76ffb6049c2"
+        "targetDate": "2026-10-31",
+        "inputSha256": "6a1d3b401d870d491759666a0c28445de492a96fa4908025a7086771135308f7"
       }
     },
     {
@@ -1396,7 +1396,7 @@
         "このすば"
       ],
       "releaseDate": "2022-04-04",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1404,19 +1404,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 8609,
-        "events": 8492,
+        "rows": 8790,
+        "events": 8670,
         "units": 3,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "この素晴らしい世界に祝福を！",
-        "targetDate": "2026-10-30",
-        "inputSha256": "6ff50798610b24b0af0019daa70dbe40a33ff2496bf9a4f60c7048068718a616"
+        "targetDate": "2026-10-31",
+        "inputSha256": "29e677bbc0269ea47a579c936c6a0b05536539d8a86acca93cb710bb7b100903"
       }
     },
     {
@@ -1461,7 +1461,7 @@
         "シャーマン"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1469,19 +1469,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1572,
-        "events": 1496,
+        "rows": 1614,
+        "events": 1536,
         "units": 2,
-        "days": 38,
+        "days": 39,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロ シャーマンキング",
-        "targetDate": "2026-10-30",
-        "inputSha256": "25523615c7ffa683068442601f347357370301790d5ee9e2ff64855f2dc86d5c"
+        "targetDate": "2026-10-31",
+        "inputSha256": "f89d990e83ce5ca3a64dd8fb138ad352c981fb015adff217223d8339fe11f2d4"
       }
     },
     {
@@ -1495,7 +1495,7 @@
         "絆2天膳"
       ],
       "releaseDate": "2023-12-18",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1503,19 +1503,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 13399,
-        "events": 13202,
+        "rows": 13778,
+        "events": 13575,
         "units": 9,
-        "days": 35,
+        "days": 36,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロ バジリスク絆2 天膳 BLACK EDITION",
-        "targetDate": "2026-10-30",
-        "inputSha256": "3efee834d1a8bac1dc9e155d028914d8a12f2ac4791a4d7db7f05a3cbc9f02c1"
+        "targetDate": "2026-10-31",
+        "inputSha256": "2fb701c5b72aa53af1c3f075ba2d3c127bf2c648fe79dc7ead8ec79da7ab1a5c"
       }
     },
     {
@@ -1528,7 +1528,7 @@
         "まどマギ外伝"
       ],
       "releaseDate": "2025-04-07",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1536,19 +1536,19 @@
       "collectionComplete": true,
       "expectedUnits": 13,
       "collection": {
-        "rows": 15009,
-        "events": 14503,
+        "rows": 15360,
+        "events": 14841,
         "units": 13,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
-        "targetDate": "2026-10-30",
-        "inputSha256": "c32c34f6bf813750cb8e6670ae2b3ebbc48e836164ab3d26d8dd9e2d48e548f4"
+        "targetDate": "2026-10-31",
+        "inputSha256": "6035c5d032150bfae6eedc82a087bbb30386f5fc043fd3cc502b896e5b1a3892"
       }
     },
     {
@@ -1561,7 +1561,7 @@
         "モンハンライズ"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1569,19 +1569,19 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 14622,
-        "events": 14320,
+        "rows": 15361,
+        "events": 15052,
         "units": 17,
-        "days": 38,
+        "days": 39,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロ モンスターハンターライズ",
-        "targetDate": "2026-10-30",
-        "inputSha256": "25614970502ace910bffaa7b058f697814e655aa1b998a366dde5127b7e548a4"
+        "targetDate": "2026-10-31",
+        "inputSha256": "84b83fe3a83f74f94030ed7042e84db73821511c93f091e2f87381fec7ea5b91"
       }
     },
     {
@@ -1594,7 +1594,7 @@
         "モンハンライズ"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1602,19 +1602,19 @@
       "collectionComplete": true,
       "expectedUnits": 15,
       "collection": {
-        "rows": 14819,
-        "events": 14429,
+        "rows": 15277,
+        "events": 14872,
         "units": 15,
-        "days": 26,
+        "days": 27,
         "firstDate": "2026-10-05",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロ モンスターハンターライズ：サンブレイク",
-        "targetDate": "2026-10-30",
-        "inputSha256": "48697bcee56f3399f85aaeb8ac60528e33b4eb10f16379b9c182c6544eef0855"
+        "targetDate": "2026-10-31",
+        "inputSha256": "825285b507437ebf34b4b6b35591a7c61f0613e88efb9d93423c7fa49bac73d4"
       }
     },
     {
@@ -1626,7 +1626,7 @@
         "化物語"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1634,19 +1634,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1420,
-        "events": 1381,
+        "rows": 1485,
+        "events": 1445,
         "units": 1,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロ 化物語",
-        "targetDate": "2026-10-30",
-        "inputSha256": "6a0755622ecdd7e115d3235898e358fcc6df4885624bdfcde0e699f644dce348"
+        "targetDate": "2026-10-31",
+        "inputSha256": "1681b9ebccd437ac9875fe5cd0b390845efb2bb2596c72157d22f53059f9fff0"
       }
     },
     {
@@ -1659,7 +1659,7 @@
         "転生の章2"
       ],
       "releaseDate": "2026-01-05",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1667,19 +1667,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 4553,
-        "events": 4440,
+        "rows": 4635,
+        "events": 4519,
         "units": 6,
-        "days": 38,
+        "days": 39,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロ 北斗の拳 転生の章2",
-        "targetDate": "2026-10-30",
-        "inputSha256": "f49f1dfb9e1da06244b9f70d3a29770f488c5fe832571bb07956b031aeba804a"
+        "targetDate": "2026-10-31",
+        "inputSha256": "f02920a507952c59ded8ad580bc35b266ab20c0f049e4f6f54c08eabd0d2c536"
       }
     },
     {
@@ -1692,7 +1692,7 @@
         "こうかく"
       ],
       "releaseDate": "2026-02-02",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1700,19 +1700,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 4636,
-        "events": 4460,
+        "rows": 4741,
+        "events": 4561,
         "units": 10,
-        "days": 38,
+        "days": 39,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロ 攻殻機動隊",
-        "targetDate": "2026-10-30",
-        "inputSha256": "50ad362ba4318925cd09303f76bbdebb794cf7351899aea24f0acc9d21e38e59"
+        "targetDate": "2026-10-31",
+        "inputSha256": "90199c1b61e74e71a326bbb4412005c895cf0e8814b04d55a6188e3b068f07a7"
       }
     },
     {
@@ -1724,7 +1724,7 @@
         "東リベ"
       ],
       "releaseDate": "2025-09-08",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1732,19 +1732,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1779,
-        "events": 1701,
+        "rows": 1864,
+        "events": 1784,
         "units": 2,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロ 東京リベンジャーズ",
-        "targetDate": "2026-10-30",
-        "inputSha256": "14e021aaf2f627483f6ae0bb8dfe7c0512839f14cc4c8b84b3746de791b922bf"
+        "targetDate": "2026-10-31",
+        "inputSha256": "f12162ee2fe6c3e43244dbd5769936d74f75cd851949bfee954d31ec7f53ae79"
       }
     },
     {
@@ -1755,7 +1755,7 @@
         "スマスロ 獣王"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1763,19 +1763,19 @@
       "collectionComplete": true,
       "expectedUnits": 13,
       "collection": {
-        "rows": 22309,
-        "events": 21971,
+        "rows": 23159,
+        "events": 22808,
         "units": 13,
-        "days": 26,
+        "days": 27,
         "firstDate": "2026-10-05",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロ 獣王",
-        "targetDate": "2026-10-30",
-        "inputSha256": "6fef9d0f1d6c5be38ada504bf7025e82c5cc5124c4db6ebc269d2a6ff7de227e"
+        "targetDate": "2026-10-31",
+        "inputSha256": "2766829f49caec2c187755c081963c007d39a1e2e7b6017fb76be96d4c38f154"
       }
     },
     {
@@ -1789,7 +1789,7 @@
         "スーパーブラックジャック"
       ],
       "releaseDate": "2025-02-03",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1797,19 +1797,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1123,
-        "events": 1088,
+        "rows": 1130,
+        "events": 1094,
         "units": 1,
-        "days": 35,
+        "days": 36,
         "firstDate": "2026-09-25",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロスーパーブラックジャック",
-        "targetDate": "2026-10-30",
-        "inputSha256": "58e0d0d16c6d2f3a21a2353ac9eb4f9ad0cd6aeef6483585f6b859fac37ebc3d"
+        "targetDate": "2026-10-31",
+        "inputSha256": "26dcda7787c407b996ac72c45d5ab31ffc15812109d63245497ce546d266a3d3"
       }
     },
     {
@@ -1820,7 +1820,7 @@
         "スマスロパリピ孔明"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1828,19 +1828,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1972,
-        "events": 1920,
+        "rows": 2043,
+        "events": 1989,
         "units": 2,
-        "days": 26,
+        "days": 27,
         "firstDate": "2026-10-05",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロパリピ孔明",
-        "targetDate": "2026-10-30",
-        "inputSha256": "3be3c0843788b16c06b0313216a9363802f82f8aa798b8466f0d48d717540b84"
+        "targetDate": "2026-10-31",
+        "inputSha256": "dda91ea551eb7245c4cb2921904f32ffb3ead17c7bfd97289d0f33a71bb40b84"
       }
     },
     {
@@ -1853,7 +1853,7 @@
         "イニD"
       ],
       "releaseDate": "2024-10-07",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1861,19 +1861,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1552,
-        "events": 1513,
+        "rows": 1568,
+        "events": 1528,
         "units": 1,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "スマスロ頭文字D 2nd",
-        "targetDate": "2026-10-30",
-        "inputSha256": "014cfdc29c0e3931f08e50c166be7c06cb8a47c60e3d12146b1e3fd17f7557a9"
+        "targetDate": "2026-10-31",
+        "inputSha256": "46ae12bf1ee0c7b8a3b233e8e57d2915eda1bc6b417e9d80af01063e216adde7"
       }
     },
     {
@@ -1889,7 +1889,7 @@
         "ソードアート・オンラインⅡ"
       ],
       "releaseDate": "2026-06-08",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -1897,19 +1897,19 @@
       "collectionComplete": true,
       "expectedUnits": 20,
       "collection": {
-        "rows": 47856,
-        "events": 47076,
+        "rows": 49375,
+        "events": 48575,
         "units": 20,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "ソードアート・オンラインII",
-        "targetDate": "2026-10-30",
-        "inputSha256": "073b1c1afaea3afa5ae3a1010e1a75b43a7d172f61db4840bbbdf92b5919998b"
+        "targetDate": "2026-10-31",
+        "inputSha256": "34e9fd71494023353bb55b68306ca18454adc3c03671ee7d1024f86267d626f7"
       }
     },
     {
@@ -1920,7 +1920,7 @@
         "ワールドダイスター"
       ],
       "releaseDate": "2026-08-03",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "signal_unverified",
       "pendingReason": "履歴は収集済みです。獲得枚数と通常時・ST中のゲーム数を履歴から分離できないため、期待値の算出を保留しています。",
@@ -1928,19 +1928,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 4191,
-        "events": 4071,
+        "rows": 4268,
+        "events": 4146,
         "units": 6,
-        "days": 36,
+        "days": 37,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "ワールドダイスター",
-        "targetDate": "2026-10-30",
-        "inputSha256": "14ac9e2fd3e8f19b89183723b944e2297814881fe07fafd2a8e634fb3b85b9b4"
+        "targetDate": "2026-10-31",
+        "inputSha256": "d551460b49c651725a749c9734da7156ca4a0b0331538c13ce766f0aa3bdc1d7"
       }
     },
     {
@@ -1953,7 +1953,7 @@
         "戦コレ6"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1961,19 +1961,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 2677,
-        "events": 2560,
+        "rows": 2732,
+        "events": 2612,
         "units": 3,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "戦国コレクション6",
-        "targetDate": "2026-10-30",
-        "inputSha256": "5e4902a858e02605e0b533adb9e4d32e7bcbb593ace7bfe643afd3ba30cabb52"
+        "targetDate": "2026-10-31",
+        "inputSha256": "725539399b6273d6b6ef97a635545ca2f626384846c745adaaecab43e5fbb686"
       }
     },
     {
@@ -1986,7 +1986,7 @@
         "沖ドキブラック"
       ],
       "releaseDate": "2024-07-01",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1994,19 +1994,19 @@
       "collectionComplete": true,
       "expectedUnits": 12,
       "collection": {
-        "rows": 13875,
-        "events": 13414,
+        "rows": 14141,
+        "events": 13668,
         "units": 12,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "沖ドキ！BLACK",
-        "targetDate": "2026-10-30",
-        "inputSha256": "5835704626b0335461c393d494d8d6870ac6bb370b77be725bb5fd1835ecee2b"
+        "targetDate": "2026-10-31",
+        "inputSha256": "fb689903926ff71e99ee81a12dbea63746720ce499d3c276aeda6b7951cdcccc"
       }
     },
     {
@@ -2017,7 +2017,7 @@
         "邪神ちゃんドロップキック"
       ],
       "releaseDate": "2026-08-03",
-      "lastUpdated": "2026-10-30",
+      "lastUpdated": "2026-10-31",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -2025,19 +2025,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 2916,
-        "events": 2801,
+        "rows": 3008,
+        "events": 2890,
         "units": 3,
-        "days": 39,
+        "days": 40,
         "firstDate": "2026-09-21",
-        "lastDate": "2026-10-30"
+        "lastDate": "2026-10-31"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "邪神ちゃんドロップキック",
-        "targetDate": "2026-10-30",
-        "inputSha256": "c27264dbcba7ee9a15b5e54d5277d2e782e1c2408909184253b6fe56b1cc1085"
+        "targetDate": "2026-10-31",
+        "inputSha256": "a13a0a8d46318e969426f663722ca37e52ee4768d41fa957e71f2956bc08a1d5"
       }
     }
   ]
