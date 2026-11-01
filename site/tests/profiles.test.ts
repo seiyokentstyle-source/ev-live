@@ -185,5 +185,7 @@ describe("ghoul heaven tab label", () => {
   test("有馬ジャッジ失敗後の表は見出しで区別できる（利用者指定 2026-10-30）", async () => {
     const { shortAimLabel } = await import("../lib/ev/profiles");
     expect(shortAimLabel("AT間天井（有馬ジャッジ失敗後・天国確定）")).toBe("AT間（有馬ジャッジ失敗後）");
+    // 天国を見てやめる表でも「150Gやめ」は付けない（利用者指定 2026-11-02）。
+    expect(shortAimLabel("AT間天井（有馬ジャッジ失敗後・推定・150Gまで見てやめ）")).toBe("AT間（有馬ジャッジ失敗後）");
   });
 });

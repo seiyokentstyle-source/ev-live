@@ -155,7 +155,8 @@ export function shortAimLabel(label: string): string {
   else if (reset && !base.startsWith("リセ") && !base.startsWith("朝一")) base = `リセ${base}`;
   const quals = [...new Set(label.slice(base.length).match(KEPT_AIM_QUALIFIERS) ?? [])];
   const stop = label.match(/(\d+)Gまで見てやめ/);
-  if (stop) quals.push(`${stop[1]}Gやめ`);
+  // 有馬ジャッジ失敗後は天国を見てやめる表しか無いので「150Gやめ」は付けない（利用者指定 2026-11-02）。
+  if (stop && !quals.includes("有馬ジャッジ失敗後")) quals.push(`${stop[1]}Gやめ`);
   if (s1) quals.push("設定1");
   return quals.length ? `${base}（${quals.join("・")}）` : base;
 }
