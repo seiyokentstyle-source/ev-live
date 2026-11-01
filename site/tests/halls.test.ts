@@ -5,9 +5,16 @@ describe("hall visibility and order", () => {
   it("retains mixed-only metadata but excludes it from public selectors and ready routes", () => {
     expect(getHall("akiba_espace")).toMatchObject({ ready: true, dataSubdir: "akiba_espace", visibility: "mixed-only" });
     expect(HALLS.some(hall => hall.id === "akiba_espace")).toBe(true);
-    expect(getVisibleHalls().map(hall => hall.id)).toEqual(["mixed", "mixed-raw", "shinjuku", "kabuki", "akihabara"]);
+    // 本番の登録（data/published-halls.json）の増減に固定せず、登録から期待値を作る（2026-11-01）。
+    const listed = HALLS.filter(hall => hall.visibility !== "mixed-only").map(hall => hall.id);
+    const visible = getVisibleHalls().map(hall => hall.id);
+    expect(visible.slice(0, 2)).toEqual(["mixed", "mixed-raw"]);
+    expect([...visible].sort()).toEqual([...listed].sort());
+    expect(visible).not.toContain("akiba_espace");
+    for (const id of ["shinjuku", "kabuki", "akihabara"]) expect(visible).toContain(id);
     // 萌えスロのお店（akihabara）は 2026-10-20 に集計済みとして登録された。
-    expect(getReadyHalls().map(hall => hall.id)).toEqual(["mixed", "mixed-raw", "shinjuku", "kabuki", "akihabara"]);
+    expect(getReadyHalls().map(hall => hall.id)).toEqual(
+      visible.filter(id => getHall(id)?.ready));
     expect(isListedHall(undefined)).toBe(false);
     expect(isListedHall(getHall("shinjuku"))).toBe(true);
   });
@@ -23,6 +30,8 @@ describe("hall visibility and order", () => {
       "mixed", "mixed-raw", "shin2", "shin1", "ike2", "ike1", "akiba1", "akiba2", "other",
     ]);
     expect(input).toEqual(before);
-    expect(getVisibleHalls().some(hall => hall.area === "池袋")).toBe(false);
+    // 本番の登録に無い店を作らない：表示される池袋の店は、登録にある池袋の店だけ。
+    expect(getVisibleHalls().filter(hall => hall.area === "池袋").map(hall => hall.id)).toEqual(
+      HALLS.filter(hall => hall.area === "池袋" && hall.visibility !== "mixed-only").map(hall => hall.id));
   });
 });
