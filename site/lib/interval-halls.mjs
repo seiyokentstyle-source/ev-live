@@ -7,7 +7,7 @@ export const INTERVAL_HALLS = Object.freeze([
   Object.freeze({ id: 'mixed', dataSubdir: 'mixed', name: '店舗混合（補正なし）', evotHallId: 'mixed-raw' }),
   Object.freeze({ id: 'akihabara', dataSubdir: 'akihabara', name: '萌えスロのお店', evotHallId: 'akihabara' }),
   // 2026-11-01 公開登録（data/published-halls.json）に合わせて追加。探索データが届くまでは空の一覧になる。
-  Object.freeze({ id: 'smart_prego_ikebukuro', dataSubdir: 'smart_prego_ikebukuro', name: 'スマートプレゴ池袋', evotHallId: 'smart_prego_ikebukuro' }),
+  Object.freeze({ id: 'smart_prego_ikebukuro', dataSubdir: 'smart_prego_ikebukuro', name: '池袋のお店', evotHallId: 'smart_prego_ikebukuro' }),
 ]);
 
 export const intervalHall = id => INTERVAL_HALLS.find(hall => hall.id === id);
