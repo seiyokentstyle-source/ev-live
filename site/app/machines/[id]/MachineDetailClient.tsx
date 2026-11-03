@@ -96,7 +96,8 @@ export function LiveMachineClient({ initial, hall }: { initial: LiveSnapshot; ha
 function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: MachineDetailClientProps) {
   const pendingStatus = collectionStatus(machine.meta);
   const assumedPayout = assumedPayoutNotice(machine, hall.id);
-  const grouped = useMemo(() => groupProfiles(machine.profiles, machine.id), [machine.profiles, machine.id]);
+  const grouped = useMemo(() => groupProfiles(machine.profiles, machine.id,
+    { ceiling: machine.evCalc?.ceiling ?? null, model: machine.evCalc?.model }), [machine.profiles, machine.id, machine.evCalc]);
   const hasRatePairs = grouped.rates.length >= 2;
   const settingAim = machine.settingAim;
   const hasSettingAim = Boolean(settingAim && settingAim.units.length > 0);

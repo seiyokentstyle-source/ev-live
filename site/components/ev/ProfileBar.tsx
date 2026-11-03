@@ -7,6 +7,8 @@ export type ProfileTab = {
   key: string;
   label: string;
   ceiling: string;
+  /** 2行目。無ければ天井表記から取る。 */
+  hint?: string;
 };
 
 type ProfileBarProps = {
@@ -19,7 +21,7 @@ export function ProfileBar({ tabs, activeKey, onChange }: ProfileBarProps) {
   return (
     <ControlBar label="狙い方" scroll collapsible>
       <SegmentedControl
-        segments={tabs.map((tab) => ({ value: tab.key, label: tab.label, hint: ceilingHint(tab.ceiling) || undefined }))}
+        segments={tabs.map((tab) => ({ value: tab.key, label: tab.label, hint: (tab.hint ?? ceilingHint(tab.ceiling)) || undefined }))}
         value={activeKey}
         onChange={onChange}
       />

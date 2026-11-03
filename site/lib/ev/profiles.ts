@@ -21,6 +21,8 @@ export type ProfileGroup = {
   /** Base label with the rate token removed (the tab text). */
   label: string;
   ceiling: string;
+  /** 狙い方カードの2行目（天井）。groupProfiles に機種の通常天井を渡したときだけ入る。 */
+  hint?: string;
   /** Profile keyed by rate value ("4652" / "5050"), or SINGLE for unsuffixed. */
   variants: Record<string, Profile>;
   /** Profiles in the order they appeared, for fallback resolution. */
@@ -173,12 +175,61 @@ export function aimTabLabel(group: ProfileGroup): string {
 /** 狙い方タブの2行目は天井のG数だけにする（利用者指定 2026-10-22）。
  *  やめ方・補正・「天国に入るまで打つ」などの説明は出さない。固定天井が無い表は「天井なし」、
  *  天井の数字が無い表（解放まで・やめ方だけ等）は2行目を出さない。 */
+// ★括弧の中の数字（「駆け抜け後（短縮天井596G）」「朝一実測（999G）」）も天井として拾う
+//   （2026-11-03 利用者指定「天井ゲーム数書いてないやつは書いて」）。
+const CEILING_TOKEN = /\d+(?:〜\d+)?(?:G|pt|あべし|周期|まいる)(?:\+α)?/;
 export function ceilingHint(ceiling: string): string {
-  const head = ceiling.split("／")[0];
-  if (/天井なし|最長|実測/.test(head)) return "天井なし";
+  const head = (ceiling ?? "").split("／")[0];
+  if (/天井なし|非搭載/.test(head)) return "天井なし";
+  const shortened = head.match(new RegExp(`短縮天井(${CEILING_TOKEN.source})`));
+  if (shortened) return shortened[1];
   const main = head.split("（")[0];
-  const token = main.match(/\d+(?:〜\d+)?(?:G|pt|あべし|周期)(?:\+α)?/);
-  return token ? token[0] : "";
+  const token = main.match(CEILING_TOKEN);
+  if (token) return token[0];
+  // 「液晶カウンタ500（実G目安約370〜400G）」は液晶の値で書く（実G目安は算出条件に出る）。
+  const counter = main.match(/液晶カウンタ(\d+)/);
+  if (counter) return `液晶${counter[1]}`;
+  const inner = head.match(CEILING_TOKEN);
+  if (inner) return inner[0];
+  if (/最長|実測/.test(head)) return "天井なし";
+  return "";
+}
+
+// 天井表記に数字が無い表の2行目（2026-11-03 利用者指定）。リセット仕様の文だけの表や、
+// 駆け抜け後以外の表は、機種の通常天井と同じ。リセット時に振り分けや別単位になる機種だけ書く。
+const AIM_HINT_OVERRIDES: Record<string, Record<string, string>> = {
+  // 防振り：リセット時 450G（70%）/650G（30%）の振分。天井は650G。
+  m97840f85: { reset: "650G" },
+  // 虚構推理：リセット時 300G/700G の振分。天井は700G。
+  m987b4879: { reset: "700G" },
+  // 転生の章2：リセット時は最大1280あべし。
+  ma37953e2: { reset: "1280あべし" },
+  // ストリートファイター6：リセット時は液晶最大900G+α。
+  m44d8abe0: { reset: "液晶900G+α" },
+  // 鉄拳6：ボーナス3スルー後の4回目でAT。
+  maba0ba88: { game_ceiling: "4回目" },
+  // リコリス：公表 AT間850G+α、設定変更・駆け抜け後は600Gへ短縮。
+  lycoris: { reset: "600G", after_kake: "600G", after_other: "850G+α" }
+};
+
+function isMainOrResetKey(key: string): boolean {
+  if (key === "game_ceiling_arima") return false;
+  return key === "reset" || key.startsWith("reset_") || key.startsWith("game_ceiling") || key.startsWith("bb_ceiling");
+}
+
+/** 狙い方カードの2行目。天井表記から取れなければ機種の通常天井で補う。 */
+export function aimCeilingHint(group: ProfileGroup, machineId?: string, machineCeiling?: number | null,
+  mainHint?: string): string {
+  // 生の「リセット仕様：…」は振分やCZ側の数字が混ざるので使わない。
+  const hint = ceilingHint(group.ceiling);
+  if (hint) return hint;
+  const override = machineId ? AIM_HINT_OVERRIDES[machineId]?.[group.key] : undefined;
+  if (override) return override;
+  if (!isMainOrResetKey(group.key)) return "";
+  // 主表（AT間・ボナ間）のカードと同じ表記にそろえる。主表が無い機種だけ evCalc の天井。
+  if (mainHint) return mainHint;
+  if (machineCeiling == null) return "";
+  return machineCeiling > 0 ? `${machineCeiling}G` : "天井なし";
 }
 
 // 絞り込み軸の見出しも同じ扱い。軸のラベルはデータ側（evFilters.axes）が配るので、
@@ -369,7 +420,23 @@ function machineAimGroups(groups: ProfileGroup[], machineId?: string): ProfileGr
     .sort((a, b) => (KABANERI_ST_AIMS[a.key]?.order ?? 4) - (KABANERI_ST_AIMS[b.key]?.order ?? 4));
 }
 
-export function groupProfiles(profiles: Profile[], machineId?: string): GroupedProfiles {
+/** リセット（朝一）の主表は「リセAT間」「朝一ボナ間」のように、どこまで打つ表かを名前に出す
+ *  （2026-11-03 利用者指定「リセットだけじゃATまで打つのかCZまでなのか分かりづらい」）。
+ *  主表の名前（AT間・ボナ間・GG/AT間など）を借りる。CZまでの表は従来どおり「リセCZ間」。 */
+// リコリスは期待値算出がカウンター側で evCalc を持たないが、主表はAT間。
+function resetAimLabel(group: ProfileGroup, map: Map<string, ProfileGroup>, model?: string, machineId?: string): string {
+  if (!(group.key === "reset" || group.key.startsWith("reset_"))) return group.label;
+  const main = map.get("game_ceiling") ?? map.get("bb_ceiling");
+  const mainRaw = main?.order[0]?.label.replace(SAMPLE_SUFFIX_RE, "").replace(RATE_LABEL_RE, "").trim();
+  const base = mainRaw ? shortAimLabel(mainRaw).split("（")[0]
+    : model === "at" || machineId === "lycoris" ? "AT間" : model === "hit" ? "ボナ間" : "";
+  const current = aimTabLabel(group);
+  if (!base) return current;
+  return current.replace(/^(リセット|朝一)/, (head) => `${head === "朝一" ? "朝一" : "リセ"}${base}`);
+}
+
+export function groupProfiles(profiles: Profile[], machineId?: string,
+  machine?: { ceiling?: number | null; model?: string }): GroupedProfiles {
   const order: string[] = [];
   const map = new Map<string, ProfileGroup>();
   const rateSet = new Set<string>();
@@ -399,7 +466,13 @@ export function groupProfiles(profiles: Profile[], machineId?: string): GroupedP
     .filter(group => !replacedByRunthroughGroups(group, map));
   groups.sort((a, b) => (aimTabRank(a.key) - aimTabRank(b.key))
     || ((a.aimKind ? aimOrder[a.aimKind] : 4) - (b.aimKind ? aimOrder[b.aimKind] : 4)));
-  return { groups: machineAimGroups(groups, machineId), rates, defaultRate };
+  const named = machineAimGroups(groups, machineId).map(group => ({ ...group, label: resetAimLabel(group, map, machine?.model, machineId) }));
+  if (machine) {
+    const main = map.get("game_ceiling") ?? map.get("bb_ceiling");
+    const mainHint = main ? ceilingHint(main.ceiling) : "";
+    for (const group of named) group.hint = aimCeilingHint(group, machineId, machine.ceiling, mainHint);
+  }
+  return { groups: named, rates, defaultRate };
 }
 
 export function resolveProfile(group: ProfileGroup, rate: string | null): Profile {
