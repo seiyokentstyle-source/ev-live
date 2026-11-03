@@ -3,7 +3,7 @@
   "hallId": "smart_prego_ikebukuro",
   "source": "daidata",
   "storeId": "101178",
-  "lastUpdated": "2026-11-01",
+  "lastUpdated": "2026-11-02",
   "machines": [
     {
       "id": "me8cb971a",
@@ -471,6 +471,37 @@
       }
     },
     {
+      "id": "m08b226ee",
+      "name": "Ｌ牙狼闇を照らす者",
+      "manufacturer": "未確認",
+      "aliases": [
+        "Ｌ牙狼闇を照らす者"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 5,
+      "collection": {
+        "rows": 200,
+        "events": 195,
+        "units": 5,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Ｌ牙狼闇を照らす者",
+        "targetDate": "2026-11-02",
+        "inputSha256": "f0bf07b0c196c3e56f1828491c2cbd32a5318b30bd6c09f2b02574b55dcc609b"
+      }
+    },
+    {
       "id": "md60b993e",
       "name": "Ｌ見える子ちゃん",
       "manufacturer": "未確認",
@@ -595,6 +626,71 @@
       }
     },
     {
+      "id": "mb75c677e",
+      "name": "ＬＳＡＯガンゲイル",
+      "manufacturer": "未確認",
+      "aliases": [
+        "ＬＳＡＯガンゲイル"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 12,
+      "collection": {
+        "rows": 1034,
+        "events": 1022,
+        "units": 12,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "ＬＳＡＯガンゲイル",
+        "targetDate": "2026-11-02",
+        "inputSha256": "aa962b08f5b1e5b4122a7f730c06f75343270b466195d0cb823d0820b1dd7630"
+      }
+    },
+    {
+      "id": "m9abf0c4d",
+      "name": "L Vivy",
+      "manufacturer": "大都技研",
+      "aliases": [
+        "L Vivy",
+        "Vivy",
+        "ヴィヴィ",
+        "スロット Vivy -Fluorite Eye’s Song-"
+      ],
+      "releaseDate": "2026-11-02",
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "payout_unavailable",
+      "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 4,
+      "collection": {
+        "rows": 237,
+        "events": 233,
+        "units": 4,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "L Vivy",
+        "targetDate": "2026-11-02",
+        "inputSha256": "92d2db4b7b9deca07e5812adbd8a494fbc1af7d815b46ac748a646cae735bc62"
+      }
+    },
+    {
       "id": "mb6c53f96",
       "name": "L 東京喰種",
       "manufacturer": "スパイキー",
@@ -689,7 +785,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lモグモグ風林火山 大海戦の巻",
         "targetDate": "2026-11-01",
-        "inputSha256": "08d658981ec33423dadf49f37a1178733a628c5a2f6f0c41750f6778463c2cd8"
+        "inputSha256": "76d32332aeb22d384c36e25e7a1615717a3f85ccd9838ecce41469e90b4a73b0"
       }
     },
     {
@@ -722,6 +818,107 @@
         "machineName": "L真打吉宗",
         "targetDate": "2026-11-01",
         "inputSha256": "de153e78493c7abc89b36380071338659f7076885f997cf59d94e40a5e6e4941"
+      }
+    },
+    {
+      "id": "me537b923",
+      "name": "L聖闘士星矢 黄金十二宮",
+      "manufacturer": "サンスリー",
+      "aliases": [
+        "L聖闘士星矢 黄金十二宮",
+        "星矢 黄金十二宮",
+        "黄金十二宮",
+        "星矢黄金"
+      ],
+      "releaseDate": "2026-11-02",
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 7,
+      "collection": {
+        "rows": 564,
+        "events": 557,
+        "units": 7,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "L聖闘士星矢 黄金十二宮",
+        "targetDate": "2026-11-02",
+        "inputSha256": "0c84984223933cd0adbe8c237b6f01d016f4e9b2cb59ad48e9dcff367ff94890"
+      }
+    },
+    {
+      "id": "mde595a3a",
+      "name": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
+      "manufacturer": "ビスティ",
+      "aliases": [
+        "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
+        "ゴジラ対エヴァンゲリオン2",
+        "ゴジエヴァ2",
+        "Lパチスロ ゴジラ対エヴァンゲリオン 2"
+      ],
+      "releaseDate": "2026-11-02",
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 12,
+      "collection": {
+        "rows": 1352,
+        "events": 1340,
+        "units": 12,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
+        "targetDate": "2026-11-02",
+        "inputSha256": "39941616fa88bcd42966c852333cb955dcf5d378151c4e85465c2c3f56264169"
+      }
+    },
+    {
+      "id": "md7623dc5",
+      "name": "Lﾗｸﾞﾅﾄﾞｰﾙ",
+      "manufacturer": "ミズホ",
+      "aliases": [
+        "Lﾗｸﾞﾅﾄﾞｰﾙ",
+        "ラグナドール",
+        "スマスロ ラグナドール"
+      ],
+      "releaseDate": "2026-11-02",
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 6,
+      "collection": {
+        "rows": 235,
+        "events": 229,
+        "units": 6,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "smart_prego_ikebukuro",
+        "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
+        "targetDate": "2026-11-02",
+        "inputSha256": "c20a6de81b1a99c1452045ebb4f97c33f608ba2a9f6fb994d3089c2c9fb08b61"
       }
     },
     {
@@ -850,7 +1047,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "スマスロ 獣王",
         "targetDate": "2026-11-01",
-        "inputSha256": "833e12e0adeccb9f3005b1089647fdf08f39063508fe50b46c7650319ebef932"
+        "inputSha256": "4d42d77f45b181d25ed37b08eb96c2bc4250dddf31c15c2dddad940c39ab686e"
       }
     },
     {
