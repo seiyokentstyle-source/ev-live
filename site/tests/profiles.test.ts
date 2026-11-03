@@ -218,6 +218,36 @@ describe("ghoul heaven tab label", () => {
     const { shortAimLabel } = await import("../lib/ev/profiles");
     expect(shortAimLabel("AT間天井（有馬ジャッジ失敗後・天国確定）")).toBe("AT間（有馬ジャッジ失敗後）");
     // 天国を見てやめる表でも「150Gやめ」は付けない（利用者指定 2026-11-02）。
-    expect(shortAimLabel("AT間天井（有馬ジャッジ失敗後・推定・150Gまで見てやめ）")).toBe("AT間（有馬ジャッジ失敗後）");
+    // 150Gまでの表なので「AT間」も名乗らない。打つ範囲は2行目（2026-11-03）。
+    expect(shortAimLabel("AT間天井（有馬ジャッジ失敗後・推定・150Gまで見てやめ）")).toBe("有馬ジャッジ失敗後");
+  });
+
+  test("有馬ジャッジ失敗後のカードは150Gまで、CZ間はCZ天井（2026-11-03）", async () => {
+    const { groupProfiles, aimTabLabel } = await import("../lib/ev/profiles");
+    const { groups } = groupProfiles([
+      makeProfile("game_ceiling_4652", "AT間天井（通常）・46/52", "1200G／AT当選でやめ"),
+      makeProfile("game_ceiling_arima_4652", "AT間天井（有馬ジャッジ失敗後・推定・150Gまで見てやめ）・46/52",
+        "有馬ジャッジ失敗後（天国確定・推定）／150Gまで見て、当たらなければやめ"),
+      makeProfile("cz_ceiling_arima_4652", "CZ間天井（回数不問・有馬ジャッジ失敗後・推定）・46/52", "CZ間 600G+α")
+    ], "mb6c53f96", { ceiling: 1200, model: "at" });
+    const cards = Object.fromEntries(groups.map(group => [group.key, [aimTabLabel(group), group.hint]]));
+    expect(cards.game_ceiling_arima).toEqual(["有馬ジャッジ失敗後", "150Gまで"]);
+    expect(cards.cz_ceiling_arima).toEqual(["CZ間（有馬ジャッジ失敗後）", "600G+α"]);
+  });
+});
+
+describe("card ceiling matches the table range", () => {
+  test("ポイント天井・次CZまで・超高確移行は天井のG数として書かない（2026-11-03）", async () => {
+    const { groupProfiles } = await import("../lib/ev/profiles");
+    const hint = (machineId: string, key: string, ceiling: string) =>
+      groupProfiles([makeProfile(`${key}_4652`, `${key}・46/52`, ceiling)], machineId, { ceiling: 999 }).groups[0].hint;
+    // 青ブタ：560Gは1000ptの目安。表は600G超まで続く。
+    expect(hint("m3eec65cf", "cz_ceiling", "CZ間 560G+α（1000pt）")).toBe("1000pt");
+    // SAO：999G到達後の次CZでボーナス。
+    expect(hint("m49d497e0", "game_ceiling", "999G到達後の次CZでボーナス／AT当選でやめ")).toBe("999G+α");
+    // ガルパン：300Gは超高確への移行。
+    expect(hint("me5b967bb", "cz_ceiling", "CZ間 300Gで超高確へ移行。CZ当選の保証上限ではない")).toBe("天井なし");
+    // 他機種には漏れない。
+    expect(hint("other", "cz_ceiling", "CZ間 560G+α（1000pt）")).toBe("560G+α");
   });
 });

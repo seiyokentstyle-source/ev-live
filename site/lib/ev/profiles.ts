@@ -158,7 +158,9 @@ export function shortAimLabel(label: string): string {
   const quals = [...new Set(label.slice(base.length).match(KEPT_AIM_QUALIFIERS) ?? [])];
   const stop = label.match(/(\d+)Gまで見てやめ/);
   // 有馬ジャッジ失敗後は天国を見てやめる表しか無いので「150Gやめ」は付けない（利用者指定 2026-11-02）。
-  if (stop && !quals.includes("有馬ジャッジ失敗後")) quals.push(`${stop[1]}Gやめ`);
+  // AT間の表ではない（天国の150Gまで）ので「AT間」も名乗らない。打つ範囲は2行目に出す（2026-11-03）。
+  if (stop && quals.includes("有馬ジャッジ失敗後")) return s1 ? "有馬ジャッジ失敗後（設定1）" : "有馬ジャッジ失敗後";
+  if (stop) quals.push(`${stop[1]}Gやめ`);
   if (s1) quals.push("設定1");
   return quals.length ? `${base}（${quals.join("・")}）` : base;
 }
@@ -192,11 +194,14 @@ export function ceilingHint(ceiling: string): string {
   const inner = head.match(CEILING_TOKEN);
   if (inner) return inner[0];
   if (/最長|実測/.test(head)) return "天井なし";
+  // 天井ではなく決まったGで見切る表（有馬ジャッジ失敗後の天国確認など）は、打つ範囲を書く。
+  const stop = head.match(/(\d+)Gまで見て/) ?? (ceiling ?? "").match(/(\d+)Gまで見て/);
+  if (stop) return `${stop[1]}Gまで`;
   return "";
 }
 
-// 天井表記に数字が無い表の2行目（2026-11-03 利用者指定）。リセット仕様の文だけの表や、
-// 駆け抜け後以外の表は、機種の通常天井と同じ。リセット時に振り分けや別単位になる機種だけ書く。
+// 機種ごとの2行目（2026-11-03 利用者指定）。天井表記から読むと表の範囲と食い違う表と、
+// リセット時に振り分けや別単位になる表だけ書く。ここに無い数字なしの主表系は主表の天井。
 const AIM_HINT_OVERRIDES: Record<string, Record<string, string>> = {
   // 防振り：リセット時 450G（70%）/650G（30%）の振分。天井は650G。
   m97840f85: { reset: "650G" },
@@ -208,8 +213,15 @@ const AIM_HINT_OVERRIDES: Record<string, Record<string, string>> = {
   m44d8abe0: { reset: "液晶900G+α" },
   // 鉄拳6：ボーナス3スルー後の4回目でAT。
   maba0ba88: { game_ceiling: "4回目" },
-  // リコリス：公表 AT間850G+α、設定変更・駆け抜け後は600Gへ短縮。
-  lycoris: { reset: "600G", after_kake: "600G", after_other: "850G+α" }
+  // リコリス：公表 AT間850G+α、設定変更・駆け抜け後は600Gへ短縮。どちらも液晶の通常時G基準で、
+  //   表の横軸（カウンター）は天井を超えて続く。
+  lycoris: { reset: "液晶600G", after_kake: "液晶600G", after_other: "液晶850G+α" },
+  // 青ブタ：CZ間は1000ptの天井。560G+αは目安のG数で、表は600G超まで続く。
+  m3eec65cf: { cz_ceiling: "1000pt", cz_s1: "1000pt", cz_reset: "1000pt" },
+  // SAO：999G到達後の次CZでボーナス。999Gでは終わらない。
+  m49d497e0: { game_ceiling: "999G+α", game_ceiling_s1: "999G+α" },
+  // ガルパン：CZ間の300Gは超高確への移行で、CZの天井ではない。
+  me5b967bb: { cz_ceiling: "天井なし", cz_s1: "天井なし", cz_reset: "天井なし" }
 };
 
 function isMainOrResetKey(key: string): boolean {
@@ -220,11 +232,11 @@ function isMainOrResetKey(key: string): boolean {
 /** 狙い方カードの2行目。天井表記から取れなければ機種の通常天井で補う。 */
 export function aimCeilingHint(group: ProfileGroup, machineId?: string, machineCeiling?: number | null,
   mainHint?: string): string {
+  const override = machineId ? AIM_HINT_OVERRIDES[machineId]?.[group.key] : undefined;
+  if (override) return override;
   // 生の「リセット仕様：…」は振分やCZ側の数字が混ざるので使わない。
   const hint = ceilingHint(group.ceiling);
   if (hint) return hint;
-  const override = machineId ? AIM_HINT_OVERRIDES[machineId]?.[group.key] : undefined;
-  if (override) return override;
   if (!isMainOrResetKey(group.key)) return "";
   // 主表（AT間・ボナ間）のカードと同じ表記にそろえる。主表が無い機種だけ evCalc の天井。
   if (mainHint) return mainHint;
@@ -469,7 +481,7 @@ export function groupProfiles(profiles: Profile[], machineId?: string,
   const named = machineAimGroups(groups, machineId).map(group => ({ ...group, label: resetAimLabel(group, map, machine?.model, machineId) }));
   if (machine) {
     const main = map.get("game_ceiling") ?? map.get("bb_ceiling");
-    const mainHint = main ? ceilingHint(main.ceiling) : "";
+    const mainHint = main ? aimCeilingHint(main, machineId, machine.ceiling) : "";
     for (const group of named) group.hint = aimCeilingHint(group, machineId, machine.ceiling, mainHint);
   }
   return { groups: named, rates, defaultRate };
