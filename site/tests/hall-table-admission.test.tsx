@@ -108,6 +108,13 @@ describe("per-hall numerical table admission", () => {
     expect(html).not.toContain("期待値算出保留");
   });
 
+  it.each(["kabuki", "smart_prego_ikebukuro"])("shows the Vivy assumed-payout table only in its registered %s hall", hall => {
+    const input = assumedPayoutFixture("m9abf0c4d", hall);
+    expect(assumedPayoutNotice(input, hall)).toContain("AT当選G");
+    expect(assumedPayoutNotice(input, "shinjuku")).toBeUndefined();
+    expect(assumedPayoutNotice({ ...input, name: "L Vivy 2" }, hall)).toBeUndefined();
+  });
+
   it.each(physicalHalls)("retains explicit forcePending in %s without borrowing another hall", async hall => {
     const input = assumedPayoutFixture("m407111cd", hall);
     if (hall === "kabuki") input.calcSpec = { items: [] };

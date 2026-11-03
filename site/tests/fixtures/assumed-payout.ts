@@ -5,7 +5,7 @@ import type { Machine } from "../../lib/ev/types";
 /** Synthetic distinct hall/profile amounts; no store's observed rows are copied. */
 export function assumedPayoutFixture(id = "m407111cd", hall = "shinjuku", value = 100): Machine {
   const base = structuredClone(fixture);
-  const name = id === "mfb4da289" ? "ソードアート・オンラインII" : "L魔法少女にあこがれて";
+  const name = id === "mfb4da289" ? "ソードアート・オンラインII" : id === "m9abf0c4d" ? "L Vivy" : "L魔法少女にあこがれて";
   const profiles = ["game_ceiling_4652", "reset_4652", "game_ceiling_5050", "reset_5050"].map((key, index) => {
     const { ev: _samples, ...profile } = structuredClone(base.profiles[0]);
     return { ...profile, key, label: `${key.startsWith("reset") ? "朝一（リセット想定・実測）" : "天井（通常・実測）"}・${key.endsWith("4652") ? "46/52" : "50/50"}`,

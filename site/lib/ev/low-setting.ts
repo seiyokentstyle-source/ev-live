@@ -42,6 +42,8 @@ function hasNoMeasuredPayout(machine: Machine): boolean {
 const ASSUMED_PAYOUT_MODELS = [
   { id: "m407111cd", name: "L魔法少女にあこがれて", event: "AT当選G", halls: ["shinjuku", "akihabara"] },
   { id: "mfb4da289", name: "ソードアート・オンラインII", event: "CZ当選G", halls: ["shinjuku", "akihabara", "kabuki"] },
+  // 2026-11-02 新台。台データの獲得数が差枚グラフと合わないので、獲得は設定1機械割からの想定値（2026-11-04）。
+  { id: "m9abf0c4d", name: "L Vivy", event: "AT当選G", halls: ["kabuki", "smart_prego_ikebukuro"] },
 ] as const;
 const ASSUMED_PAYOUT_PROFILE_KEYS = new Set([
   "game_ceiling_4652", "game_ceiling_5050", "reset_4652", "reset_5050",
