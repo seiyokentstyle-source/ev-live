@@ -3,11 +3,11 @@ import type { Profile } from "../lib/ev/types";
 import { groupProfiles, visibleCalcSpecItems } from "../lib/ev/profiles";
 
 // Synthetic fixtures so the test does not depend on nightly-scraped numbers.
-function makeProfile(key: string, label: string): Profile {
+function makeProfile(key: string, label: string, ceiling = "1000G"): Profile {
   return {
     key,
     label,
-    ceiling: "1000G",
+    ceiling,
     gRange: { start: 0, end: 1000, step: 100 },
     activeAxes: ["rate"],
     baseAnchors: [{ g: 0, ev: 0, rtp: 100 }],
@@ -115,6 +115,38 @@ describe("aim tab ceiling hint", () => {
     expect(ceilingHint("ボーナス間 950pt+α")).toBe("950pt+α");
     expect(ceilingHint("解放AT終了まで／通常AT・ボーナス経由AT当選後も続行")).toBe("");
     expect(ceilingHint("AT当選でやめ")).toBe("");
+    // 2026-11-03：括弧の中の天井・天井非搭載・液晶カウンタも書く
+    expect(ceilingHint("AT間・駆け抜け後（短縮天井596G）／AT当選でやめ")).toBe("596G");
+    expect(ceilingHint("朝一実測（999G）")).toBe("999G");
+    expect(ceilingHint("天井非搭載のBT機")).toBe("天井なし");
+    expect(ceilingHint("CZ間 999まいる")).toBe("999まいる");
+    expect(ceilingHint("CZ間 液晶カウンタ500（実G目安約370〜400G）")).toBe("液晶500");
+  });
+
+  test("fills cards whose ceiling text has no games from the main table", async () => {
+    const { groupProfiles } = await import("../lib/ev/profiles");
+    const { aimTabs } = await import("../lib/ev/aim-selection");
+    const { groups } = groupProfiles([
+      makeProfile("game_ceiling_4652", "AT間（下位AT後）・46/52", "AT間 1200G"),
+      makeProfile("game_ceiling_after_nonrunthrough_4652", "AT間・駆け抜け後以外・46/52", "AT間・駆け抜け後以外／AT当選でやめ"),
+      makeProfile("reset_4652", "朝一（リセット想定・実測）・46/52", "リセット仕様：CZ間200G+α。AT間1200G側の固定短縮はなし"),
+      makeProfile("cz_reset_4652", "CZ間（リセット時 200G+α）（回数不問・朝一リセット想定）・46/52", "CZ間 200G+α")
+    ], "test", { ceiling: 1200, model: "at" });
+    const tabs = Object.fromEntries(aimTabs(groups, []).map(tab => [tab.key, [tab.label, tab.hint]]));
+    // リセットの主表はATまで打つ表だと名前で分かるようにし、CZの数字を拾わない。
+    expect(tabs.reset).toEqual(["リセAT間", "1200G"]);
+    expect(tabs.cz_reset).toEqual(["リセCZ間", "200G+α"]);
+    expect(tabs.game_ceiling_after_nonrunthrough[1]).toBe("1200G");
+  });
+
+  test("names morning tables without reset by the main table", async () => {
+    const { groupProfiles } = await import("../lib/ev/profiles");
+    const { groups } = groupProfiles([
+      makeProfile("game_ceiling_4652", "ボーナス間天井・46/52", "ボーナス間 999G"),
+      makeProfile("reset_4652", "朝一（実測）・46/52", "朝一実測（999G）")
+    ], "test", { ceiling: 999, model: "hit" });
+    const reset = groups.find(group => group.key === "reset")!;
+    expect([reset.label, reset.hint]).toEqual(["朝一ボナ間", "999G"]);
   });
 });
 

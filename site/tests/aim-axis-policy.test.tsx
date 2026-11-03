@@ -232,7 +232,8 @@ describe("short-ceiling runthrough aim replacement", () => {
       ["game_ceiling_after_nonrunthrough", "駆け抜け以外後"],
       ["game_ceiling_after_runthrough", "駆け抜け後"],
       ["game_ceiling_after_nonrunthrough_joui", "上位後"],
-      ["reset", "リセット"]
+      // 2026-11-03：リセットはどこまで打つ表かを主表の名前で出す（この表の主表名はキーのまま）。
+      ["reset", "リセgame_ceiling"]
     ]);
     for (const group of result.groups) {
       for (const rate of ["4652", "5050"]) {
@@ -245,7 +246,7 @@ describe("short-ceiling runthrough aim replacement", () => {
     const markup = renderToStaticMarkup(createElement(ProfileBar, {
       tabs, activeKey: tabs[0].key, onChange: () => undefined
     }));
-    for (const label of ["駆け抜け以外後", "駆け抜け後", "上位後", "リセット"]) expect(markup).toContain(label);
+    for (const label of ["駆け抜け以外後", "駆け抜け後", "上位後", "リセgame_ceiling"]) expect(markup).toContain(label);
     expect(markup).not.toContain("cz_ceiling");
   });
 
