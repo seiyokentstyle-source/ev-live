@@ -3,8 +3,73 @@
   "hallId": "espace_shibuya_shinkan",
   "source": "daidata",
   "storeId": "100860",
-  "lastUpdated": "2026-11-01",
+  "lastUpdated": "2026-11-02",
   "machines": [
+    {
+      "id": "mf3ce4a7e",
+      "name": "L牙狼 闇を照らす者",
+      "manufacturer": "未確認",
+      "aliases": [
+        "L牙狼 闇を照らす者"
+      ],
+      "releaseDate": null,
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "spec_unverified",
+      "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 1,
+      "collection": {
+        "rows": 35,
+        "events": 34,
+        "units": 1,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "espace_shibuya_shinkan",
+        "machineName": "L牙狼 闇を照らす者",
+        "targetDate": "2026-11-02",
+        "inputSha256": "ba23d7906208961c3737c770798df2591694186f6b1a37351e2ed703afc8183a"
+      }
+    },
+    {
+      "id": "m9abf0c4d",
+      "name": "L Vivy",
+      "manufacturer": "大都技研",
+      "aliases": [
+        "L Vivy",
+        "Vivy",
+        "ヴィヴィ",
+        "スロット Vivy -Fluorite Eye’s Song-"
+      ],
+      "releaseDate": "2026-11-02",
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "payout_unavailable",
+      "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 142,
+        "events": 139,
+        "units": 3,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "espace_shibuya_shinkan",
+        "machineName": "L Vivy",
+        "targetDate": "2026-11-02",
+        "inputSha256": "f43b34f6161272fe7cfd1b70abf8b39e4a561aeff0d486c9882a888ebbdde8b1"
+      }
+    },
     {
       "id": "mb6c53f96",
       "name": "L 東京喰種",
@@ -68,7 +133,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "LToLOVEるダークネス TRANCE ver.8.7",
         "targetDate": "2026-11-01",
-        "inputSha256": "d3b7fac58d13ac4455bf86ba3a0686c28f207618978770d8240700df3d918bcb"
+        "inputSha256": "b36781211b853cf447b85f9515f131dab3747e7c38fb7abc0818617a7d4789fa"
       }
     },
     {
@@ -100,7 +165,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lからくりサーカス2",
         "targetDate": "2026-11-01",
-        "inputSha256": "31670efb2a650f94265ac14197526d21f0bd689a808f9410aa6fd5cb6ea3ffbb"
+        "inputSha256": "2f54288232299ad65ba9afb726d7ee677568c3ee6b46572a3bfdb49d2daf5899"
       }
     },
     {
@@ -133,7 +198,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lとある魔術の禁書目録2",
         "targetDate": "2026-11-01",
-        "inputSha256": "9e59c33c20cf970a0da901db0eff9867c572c998ae096200b997ae0a90f70683"
+        "inputSha256": "93a7931196badf45d5dcca53bdf31a2eaa990341ba65d3e07b5256e0a65df0b0"
       }
     },
     {
@@ -167,7 +232,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lとんでもスキルで異世界放浪メシ",
         "targetDate": "2026-11-01",
-        "inputSha256": "3e5dca4d7c9fbbd3e9f52b3dabaf8836c1895adb900c5e501723a0348e6bd083"
+        "inputSha256": "6780ea80f441476581c5fe619b674de9b9bee9489bfe810978c6b3a3eae0cc7f"
       }
     },
     {
@@ -202,7 +267,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lスマスロ モンキーターンV",
         "targetDate": "2026-11-01",
-        "inputSha256": "b638c17c000da17799426cba0ec6108e381d4ea68323dae625595da432c13503"
+        "inputSha256": "ef497e67442e6e8c559f774f477f564a396d2be7a428437a94a77857d534ba50"
       }
     },
     {
@@ -234,7 +299,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lスマスロかぐや様は告らせたい",
         "targetDate": "2026-11-01",
-        "inputSha256": "45e256566eec48734c24bd00b67a76a5176b4d807773902b7242fec9ac2cb89f"
+        "inputSha256": "fb74f8e4ce17467f55186f8d6e59fb899f62f1e1e65977b0febb0b0d45129e0c"
       }
     },
     {
@@ -269,7 +334,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lスマスロ北斗の拳",
         "targetDate": "2026-11-01",
-        "inputSha256": "0456860be8f1190ec990306b0328d3dd3ac399fd2eb254516b6ae6ba6a560b4c"
+        "inputSha256": "c867cd4aae29954f4bd0bcc0c02e3dd241e957f272b4b331fe5b800a46e043fb"
       }
     },
     {
@@ -303,7 +368,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lソードアート・オンライン",
         "targetDate": "2026-11-01",
-        "inputSha256": "76370820ff9bbaba952e7739afe167f500ad873efa82b4db42667f108ddbf4fd"
+        "inputSha256": "cfb39adf77fe821e94e17069a23183d16f38431fec22d62906606cecc8da14b6"
       }
     },
     {
@@ -340,7 +405,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lパチスロ 革命機ヴァルヴレイヴ2（Lヴヴヴ2）",
         "targetDate": "2026-11-01",
-        "inputSha256": "bad572bfe7f4a777c047d4fcaad34db45eb831d6cdc48b8bf3d3d810fa8866c0"
+        "inputSha256": "27ede1d9fb025722172505424a716631cdaf9d83f46942bf371047aa6ca78769"
       }
     },
     {
@@ -374,7 +439,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lミリオンゴッド－神々の軌跡－",
         "targetDate": "2026-11-01",
-        "inputSha256": "c8719d81cb50fcca3bc9ff76fb45c7bf34e8c0ff5c988ca447e84740397975e4"
+        "inputSha256": "431b61e29676882c4d31567b18d29a3da36018b5616d2738046052970a23cb84"
       }
     },
     {
@@ -407,7 +472,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lモグモグ風林火山 大海戦の巻",
         "targetDate": "2026-11-01",
-        "inputSha256": "6b519dc901c60f432f7fc1b5f81713793d75191913eddc5dfa68cfc8539d465f"
+        "inputSha256": "0ea65e53dcf47d8751c5e7f1d13c98c3c2f5143df3791502d1c0f985e6a1baa6"
       }
     },
     {
@@ -440,7 +505,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lリコリス・リコイル",
         "targetDate": "2026-11-01",
-        "inputSha256": "0b5bbfdd894630347de57c678182e96b7b95a973fd499ca0d857f4a879a247e0"
+        "inputSha256": "d809bd0cb63aa194b6db01cd7cd8fd7e2fb6945ce39f5aae4ebc03aa0f87de10"
       }
     },
     {
@@ -472,7 +537,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L南国育ちSPECIAL",
         "targetDate": "2026-11-01",
-        "inputSha256": "dffbc67408b7252c688bf81170c2b6536eca62476fa0c70e76d9cf151b00982c"
+        "inputSha256": "8ea7921a3c8f144e33148b8e09ba323ab0201828b687f6a37c0760143679b0a7"
       }
     },
     {
@@ -505,7 +570,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L喰霊-零-Re",
         "targetDate": "2026-11-01",
-        "inputSha256": "abd5581fcf02354f909eea53cad28dc0823126044ae1bc1db8b721c050055275"
+        "inputSha256": "b81301becc7761500df0f44d15cf83b1d152bffaf502ac9178a5e1746d56e721"
       }
     },
     {
@@ -538,7 +603,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L彼女、お借りします",
         "targetDate": "2026-11-01",
-        "inputSha256": "cb317c557821f4e7f9280c1d1695b7003ea35a7120e1360e6ef74ee8ba7d621d"
+        "inputSha256": "f74245102e82bd5b3927a5147f9e8e7cd40e905c74fb9d9b40389ff27b4761b7"
       }
     },
     {
@@ -570,7 +635,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L戦国乙女5 業火を穿つ宿焔の双刃",
         "targetDate": "2026-11-01",
-        "inputSha256": "b70293f3064ab60d86804d8f7bef30fbc4fe771f8cb92011c45878ac75406e48"
+        "inputSha256": "01ff6e8c728673743c6f821dab5bda3fba4cd9a2186de4fb81d40c19b982b6cf"
       }
     },
     {
@@ -636,7 +701,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L甲鉄城のカバネリ海門決戦",
         "targetDate": "2026-11-01",
-        "inputSha256": "4effe0e104f0b345584a7dc66f89aad77c391231b622712ad5e9ad3e62346bd2"
+        "inputSha256": "a012379381f12b9062909b7e0780c883d2cb3fd82fdf9866199e5995b57abeeb"
       }
     },
     {
@@ -668,7 +733,41 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L真打吉宗",
         "targetDate": "2026-11-01",
-        "inputSha256": "d5d6ad46e353c7691cce340d581895f8f02f0f0d68f3b8085970303a8ac77555"
+        "inputSha256": "fccaf7afaf501de9bb126e88d07745c9646cff9892d36470b1d5456c4891e0bc"
+      }
+    },
+    {
+      "id": "me537b923",
+      "name": "L聖闘士星矢 黄金十二宮",
+      "manufacturer": "サンスリー",
+      "aliases": [
+        "L聖闘士星矢 黄金十二宮",
+        "星矢 黄金十二宮",
+        "黄金十二宮",
+        "星矢黄金"
+      ],
+      "releaseDate": "2026-11-02",
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 6,
+      "collection": {
+        "rows": 507,
+        "events": 501,
+        "units": 6,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "espace_shibuya_shinkan",
+        "machineName": "L聖闘士星矢 黄金十二宮",
+        "targetDate": "2026-11-02",
+        "inputSha256": "c182dbb2b2660bc3decec51f99aad2a743333bcb2751fe29f35a24ad2ad1c1e2"
       }
     },
     {
@@ -701,7 +800,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L青春ブタ野郎はバニーガール先輩の夢を見ない",
         "targetDate": "2026-11-01",
-        "inputSha256": "49128f9e49f545ace12f17d1c057e7adbe82e1835ea099d69a55670bc40744f4"
+        "inputSha256": "3572aefd058b45b5c821d355357af8c70e1e3545468488aed8ed1f3be436ae6d"
       }
     },
     {
@@ -735,7 +834,109 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L魔法少女にあこがれて",
         "targetDate": "2026-11-01",
-        "inputSha256": "d811f71196dee0d01589675d81709c3ebd071665d03578d6ef6b6f8f85c1d86d"
+        "inputSha256": "d7b4cd215b5388795df80a6a6aa3dc7817c7f986ce869b53209375cd56af9077"
+      }
+    },
+    {
+      "id": "m9393502a",
+      "name": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
+      "manufacturer": "オッケー.",
+      "aliases": [
+        "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
+        "ガンゲイル・オンライン",
+        "ガンゲイル",
+        "GGO",
+        "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
+      ],
+      "releaseDate": "2026-11-02",
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 8,
+      "collection": {
+        "rows": 870,
+        "events": 862,
+        "units": 8,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "espace_shibuya_shinkan",
+        "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
+        "targetDate": "2026-11-02",
+        "inputSha256": "af46bd934eeaa6c090435e968ca4460fe1112582f435ba3d31e2bbb9db0bb94c"
+      }
+    },
+    {
+      "id": "mde595a3a",
+      "name": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
+      "manufacturer": "ビスティ",
+      "aliases": [
+        "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
+        "ゴジラ対エヴァンゲリオン2",
+        "ゴジエヴァ2",
+        "Lパチスロ ゴジラ対エヴァンゲリオン 2"
+      ],
+      "releaseDate": "2026-11-02",
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 7,
+      "collection": {
+        "rows": 845,
+        "events": 838,
+        "units": 7,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "espace_shibuya_shinkan",
+        "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
+        "targetDate": "2026-11-02",
+        "inputSha256": "99bca031f23186a728ef68db022484bcd40908396ce1d7542a8361b98988a382"
+      }
+    },
+    {
+      "id": "md7623dc5",
+      "name": "Lﾗｸﾞﾅﾄﾞｰﾙ",
+      "manufacturer": "ミズホ",
+      "aliases": [
+        "Lﾗｸﾞﾅﾄﾞｰﾙ",
+        "ラグナドール",
+        "スマスロ ラグナドール"
+      ],
+      "releaseDate": "2026-11-02",
+      "lastUpdated": "2026-11-02",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 155,
+        "events": 152,
+        "units": 3,
+        "days": 1,
+        "firstDate": "2026-11-02",
+        "lastDate": "2026-11-02"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "espace_shibuya_shinkan",
+        "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
+        "targetDate": "2026-11-02",
+        "inputSha256": "835cf5b4647b6b7d08cc0d4d09c734e2ad92e23a0fd716a60f581a498d28899b"
       }
     },
     {
@@ -769,7 +970,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "スマスロ バジリスク絆2 天膳 BLACK EDITION",
         "targetDate": "2026-11-01",
-        "inputSha256": "5b70fd319485cb30d508b1852fcb004b95c69288a48febd449202434ea87e7cf"
+        "inputSha256": "1cde88d485c90c98c5a33aa622fac5b82f8c5d6c16b1ffb436bbeef26b6abc1a"
       }
     },
     {
@@ -802,7 +1003,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
         "targetDate": "2026-11-01",
-        "inputSha256": "1f5d1a1b183e090faaa0f419897946dc3cf0a44d0a6243581a7dfbaac936be46"
+        "inputSha256": "b6b5d912b7930bbfb3788908c95a49c64d584c45e065bddd037920d794a9d603"
       }
     },
     {
@@ -835,7 +1036,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "スマスロ モンスターハンターライズ",
         "targetDate": "2026-11-01",
-        "inputSha256": "629b1ebc5eee8eeeba960dbcdb3187df7896905a0be91d1516b70a55b328de18"
+        "inputSha256": "da56801dcd9690f9f8d0f69bfc8714052ccbd0e94e8251970041a16cd18e4289"
       }
     },
     {
@@ -868,7 +1069,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "スマスロ モンスターハンターライズ：サンブレイク",
         "targetDate": "2026-11-01",
-        "inputSha256": "b76117defa0ff8df73b15651da4fbd5a5e5de30ac7f12c53120df83bf2d3bc88"
+        "inputSha256": "0404d6091f4dd8667e7a40c53482e740519f6cd09b925acb651a446c67b3a28a"
       }
     },
     {
@@ -901,7 +1102,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "スマスロ 北斗の拳 転生の章2",
         "targetDate": "2026-11-01",
-        "inputSha256": "98350376e70cddd06436fc97e3439491786baf8bde15438656a70ee62cd71b35"
+        "inputSha256": "b35e3faeac388654bc264ffb13c4ee17db3e4768617b1b3be0ea486b49c145cf"
       }
     },
     {
@@ -934,7 +1135,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "スマスロ 攻殻機動隊",
         "targetDate": "2026-11-01",
-        "inputSha256": "018a90c2a98d0f0f6bc09d914b62224c7e4dddeb637c17bf593b111e1315ca9d"
+        "inputSha256": "95d74d280b1fc09509e0719afc254275db0386d35b8cd75b8ffa8acbe5365fbb"
       }
     },
     {
@@ -997,7 +1198,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "スマスロ 獣王",
         "targetDate": "2026-11-01",
-        "inputSha256": "d9ceb122ae74669841572e8613704fd80f8910b1cd73a3c59ea9ee553a3d2f98"
+        "inputSha256": "c2ba0c53ad0c545717e0294539cb14c6621518743fcc2dd95d841ff53b3d8d15"
       }
     },
     {
@@ -1028,7 +1229,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "スマスロパリピ孔明",
         "targetDate": "2026-11-01",
-        "inputSha256": "3caf47704e67bb9c7473fa5bc66aeff22bc142b7c0c346fad6ee44b22a16e72b"
+        "inputSha256": "e46641b37ca647bc12b851b53958b844999e51487454c28a3cb7c76f13df1a4d"
       }
     },
     {
@@ -1064,7 +1265,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "ソードアート・オンラインII",
         "targetDate": "2026-11-01",
-        "inputSha256": "f5877355f851ff9ed9a36f05ffd6791c4d4dc134ef9472deb74480b1f4b92f10"
+        "inputSha256": "b1c5db21d2fe87f3d66d7d9bc7edf7f45cb0eba222dbb59c11febc6c3e00f99f"
       }
     },
     {
@@ -1095,7 +1296,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "ワールドダイスター",
         "targetDate": "2026-11-01",
-        "inputSha256": "8e1a365f0d2ee66c66e20e818ca5507380351b1d916e4743c2b452e20e5a5004"
+        "inputSha256": "e9233c34ff29f9c833db714bdc1519f4d4704b92304f4e9bd1d56cb570c9f8b4"
       }
     },
     {
@@ -1128,7 +1329,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "戦国コレクション6",
         "targetDate": "2026-11-01",
-        "inputSha256": "078118843cbcb711b2dc79414bd2fe518bd28a9000ad2a16301a137cfa94f470"
+        "inputSha256": "f45b1d4b6afc51da4a16a437c56c3e05444b069262c694f18eba4290cf72bbb8"
       }
     },
     {
@@ -1159,7 +1360,7 @@
         "hallId": "espace_shibuya_shinkan",
         "machineName": "邪神ちゃんドロップキック",
         "targetDate": "2026-11-01",
-        "inputSha256": "a7f5d1cb2bc3981820ff93e04cde31dee2e5c6ae12487598d2e2927292f783d9"
+        "inputSha256": "81543798eb197e76a83c5b5a0a963275fb9bec6a6e70b78bfec34e33e90ea1d1"
       }
     }
   ]
