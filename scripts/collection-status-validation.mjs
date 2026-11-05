@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { isDate } from "./data-date-compatibility.mjs";
 
 export const COLLECTION_STATUS_PATH = /^data\/halls\/([a-z0-9][a-z0-9_-]{0,31})\/collection-status\.json$/;
@@ -90,6 +91,27 @@ export function parseCollectionStatus(raw, label, file = label) {
   return data;
 }
 
+/** collection_identity.metadata が登録前の表記に付ける自動ID。 */
+export function automaticId(label) {
+  return "m" + createHash("md5").update(label, "utf8").digest("hex").slice(0, 8);
+}
+
+/** 登録前の自動IDの観測を、登録済みの共通の機種IDへ移したときの移し先（利用者指定 2026-11-05）。
+ * 元が登録前（メーカー未確認・導入日なし・表記そのものの自動ID）で、移し先が登録済みの機種として
+ * 元の表記をそのまま別名に持ち、1つに決まるときだけ。件数・期間・別名の引き継ぎは呼び出し側で確かめる。
+ * 777site-scraper の collection_status._common_successor と同じ判定。 */
+function commonSuccessor(entry, machines) {
+  const label = entry.sourceIntegrity.machineName;
+  if (entry.manufacturer !== "未確認" || entry.releaseDate !== null || entry.name !== label
+      || entry.id !== automaticId(label)) return undefined;
+  const matches = machines.filter(candidate => candidate.aliases.includes(label));
+  if (matches.length !== 1) return undefined;
+  const [next] = matches;
+  const registered = !(next.manufacturer === "未確認" && next.releaseDate === null);
+  if (!registered || next.id === entry.id || next.sourceIntegrity.machineName === label) return undefined;
+  return next;
+}
+
 /** Eligibility changes never erase the independent observation catalog. */
 export function collectionStatusLosses(before, after, label) {
   const losses = [];
@@ -99,13 +121,14 @@ export function collectionStatusLosses(before, after, label) {
   if (after.lastUpdated < before.lastUpdated) losses.push(`${label}: 収集状況の末日が巻き戻っています`);
   const current = new Map(after.machines.map(entry => [entry.id, entry]));
   for (const entry of before.machines) {
-    const next = current.get(entry.id);
     const name = `${label}:${entry.id}`;
+    let next = current.get(entry.id);
+    const migrated = !next && (next = commonSuccessor(entry, after.machines)) !== undefined;
     if (!next) { losses.push(`${name}: 収集済み機種が消えています`); continue; }
     // The raw-name ID survives formal registration. Only an explicitly unknown
     // identity can be completed; original names remain exact aliases below.
     const unverified = entry.manufacturer === "未確認" && entry.releaseDate === null;
-    if (unverified && after.machines.some(candidate => candidate.id !== entry.id
+    if (unverified && !migrated && after.machines.some(candidate => candidate.id !== entry.id
         && (candidate.aliases.includes(entry.name) || candidate.aliases.includes(entry.sourceIntegrity.machineName)))) {
       losses.push(`${name}: 正式登録で機種IDが変更または重複しています`);
     }

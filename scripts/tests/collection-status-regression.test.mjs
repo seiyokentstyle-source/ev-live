@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { test } from "node:test";
 import { checkDataRegression } from "../check-data-regression.mjs";
-import { parseCollectionStatus, collectionMachineIdentityLosses } from "../collection-status-validation.mjs";
+import { parseCollectionStatus, collectionMachineIdentityLosses, automaticId } from "../collection-status-validation.mjs";
 
 const FILE = "data/halls/kabuki/collection-status.json";
 function entry(id = "fixture") {
@@ -109,6 +109,38 @@ test("formal registration can complete unknown metadata under the original ID wi
   sequel.aliases = ["Fixture II"];
   distinct.machines.push(sequel);
   r.write(distinct); assert.equal(r.check(), 0);
+});
+
+test("an unregistered automatic ID can move to one registered common machine that keeps its exact label", t => {
+  // 2026-11-05 利用者指定：池袋の表記をほかの店と同じ機種へ結び付けた。登録前の自動IDから共通の機種IDへ移す。
+  const label = "Ｌ池袋の表記";
+  const initial = catalog();
+  Object.assign(initial.machines[0], { id: automaticId(label), name: label, manufacturer: "未確認",
+    releaseDate: null, aliases: [label] });
+  initial.machines[0].sourceIntegrity.machineName = label;
+  assert.equal(automaticId("北斗の拳ＡＤ"), "me8cb971a");
+  const r = repository(t, initial);
+  const moved = structuredClone(initial);
+  Object.assign(moved.machines[0], { id: "common", name: "Common machine", manufacturer: "Verified maker",
+    releaseDate: "2026-09-01", aliases: ["Common machine", label] });
+  moved.machines[0].sourceIntegrity.machineName = "Common machine";
+  moved.machines[0].collection.rows = 150;
+  r.write(moved); assert.equal(r.check(), 0);
+
+  const lostLabel = structuredClone(moved); lostLabel.machines[0].aliases = ["Common machine"];
+  r.write(lostLabel); assert.equal(r.check(), 1);
+  assert.match(r.messages.join("\n"), /収集済み機種が消えています/);
+  const lostRows = structuredClone(moved); lostRows.machines[0].collection.rows = 99;
+  r.write(lostRows); assert.equal(r.check(), 1);
+  const unregistered = structuredClone(moved);
+  Object.assign(unregistered.machines[0], { manufacturer: "未確認", releaseDate: null });
+  r.write(unregistered); assert.equal(r.check(), 1);
+  const twins = structuredClone(moved);
+  const twin = structuredClone(moved.machines[0]);
+  Object.assign(twin, { id: "twin", name: "Twin", aliases: ["Twin", label] });
+  twin.sourceIntegrity.machineName = "Twin";
+  twins.machines.push(twin);
+  r.write(twins); assert.equal(r.check(), 1);
 });
 
 test("formal machine metadata cannot be silently rewritten through the unknown-machine admission rule", t => {
