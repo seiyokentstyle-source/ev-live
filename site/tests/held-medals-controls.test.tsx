@@ -5,7 +5,7 @@ import { RateSelector } from "../components/ev/RateSelector";
 import { ConditionsBar } from "../components/ev/ConditionsBar";
 import type { Machine } from "../lib/ev/types";
 
-const rates = [{ value: "4652", label: "46/52" }, { value: "5050", label: "50/50（等価）" }];
+const rates = [{ value: "4652", label: "46/52" }, { value: "5050", label: "50/50" }];
 const noChange = () => {};
 
 function findInput(node: ReactNode): ReactElement | undefined {
@@ -24,7 +24,7 @@ describe("held-medal rate controls", () => {
       heldMedals={500} onHeldMedalsChange={noChange} />);
     expect(html.indexOf('aria-label="持ちメダル（枚）"')).toBeGreaterThan(-1);
     expect(html.indexOf('aria-label="持ちメダル（枚）"')).toBeLessThan(html.indexOf("46/52"));
-    expect(html.indexOf("46/52")).toBeLessThan(html.indexOf("50/50（等価）"));
+    expect(html.indexOf("46/52")).toBeLessThan(html.indexOf("50/50"));
     expect(html).toContain('inputMode="numeric"');
     expect(html).toContain('value="500"');
   });

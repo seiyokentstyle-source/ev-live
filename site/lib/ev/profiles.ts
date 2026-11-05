@@ -36,7 +36,7 @@ export type GroupedProfiles = {
 
 const RATE_META: Record<string, { label: string; order: number }> = {
   "4652": { label: "46/52", order: 0 },
-  "5050": { label: "50/50（等価）", order: 1 }
+  "5050": { label: "50/50", order: 1 }
 };
 
 const RATE_KEY_RE = /_(4652|5050)$/;
