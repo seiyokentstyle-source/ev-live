@@ -3,7 +3,7 @@
   "hallId": "espace_shibuya_shinkan",
   "source": "daidata",
   "storeId": "100860",
-  "lastUpdated": "2026-11-05",
+  "lastUpdated": "2026-11-06",
   "machines": [
     {
       "id": "m9abf0c4d",
@@ -16,7 +16,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-05",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -24,19 +24,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 506,
-        "events": 494,
+        "rows": 603,
+        "events": 588,
         "units": 3,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-05"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-05",
-        "inputSha256": "6ead57acf0bb029d070f4d4e8b61a1a7393222cc6cd54a24dab48934d17e2c29"
+        "targetDate": "2026-11-06",
+        "inputSha256": "a723fd6b885c4190858dd2ad06992fd69ac695784c42aa021d16d83f14aef29a"
       }
     },
     {
@@ -46,7 +46,8 @@
       "aliases": [
         "L 東京喰種",
         "トーキョーグール",
-        "グール"
+        "グール",
+        "L東京喰種"
       ],
       "releaseDate": "2025-02-03",
       "lastUpdated": "2026-11-05",
@@ -79,7 +80,8 @@
       "aliases": [
         "LToLOVEるダークネス TRANCE ver.8.7",
         "ToLOVEる8.7",
-        "とらぶる"
+        "とらぶる",
+        "L ToLOVEるﾀﾞｰｸﾈｽver.8.7"
       ],
       "releaseDate": "2025-05-19",
       "lastUpdated": "2026-11-05",
@@ -111,7 +113,8 @@
       "manufacturer": "SANKYO",
       "aliases": [
         "Lからくりサーカス2",
-        "からくりサーカス"
+        "からくりサーカス",
+        "Lからくりｻｰｶｽ2"
       ],
       "releaseDate": "2023-07-03",
       "lastUpdated": "2026-11-05",
@@ -178,7 +181,8 @@
         "Lとんでもスキルで異世界放浪メシ",
         "とんスキ",
         "とんすき",
-        "異世界放浪メシ"
+        "異世界放浪メシ",
+        "Lとんでもｽｷﾙ"
       ],
       "releaseDate": "2026-08-03",
       "lastUpdated": "2026-11-05",
@@ -213,7 +217,8 @@
         "モンキー",
         "モンキーターン5",
         "モンキーターンV",
-        "monkey"
+        "monkey",
+        "LﾓﾝｷｰﾀｰﾝV"
       ],
       "releaseDate": "2023-08-07",
       "lastUpdated": "2026-11-05",
@@ -245,7 +250,8 @@
       "manufacturer": "SANKYO",
       "aliases": [
         "Lスマスロかぐや様は告らせたい",
-        "かぐや"
+        "かぐや",
+        "Lかぐや様は告らせたい"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -280,7 +286,8 @@
         "北斗",
         "北斗の拳",
         "スマスロ北斗",
-        "hokuto"
+        "hokuto",
+        "Lｽﾏｽﾛ北斗"
       ],
       "releaseDate": "2023-04-03",
       "lastUpdated": "2026-11-05",
@@ -314,7 +321,8 @@
         "Lソードアート・オンライン",
         "SAO",
         "SAO初代",
-        "ソードアートオンライン"
+        "ソードアートオンライン",
+        "Lｿｰﾄﾞｱｰﾄ･ｵﾝﾗｲﾝ"
       ],
       "releaseDate": "2023-05-15",
       "lastUpdated": "2026-11-05",
@@ -351,7 +359,8 @@
         "ヴヴヴ2",
         "革命機",
         "valvrave2",
-        "ヴァルヴレイヴ2"
+        "ヴァルヴレイヴ2",
+        "L革命機ｳﾞｧﾙｳﾞﾚｲｳﾞ2"
       ],
       "releaseDate": "2025-09-01",
       "lastUpdated": "2026-11-05",
@@ -385,7 +394,8 @@
         "Lミリオンゴッド－神々の軌跡－",
         "GOD軌跡",
         "神々の軌跡",
-        "ゴッド"
+        "ゴッド",
+        "Lﾐﾘｵﾝｺﾞｯﾄﾞ神々の軌跡"
       ],
       "releaseDate": "2026-04-20",
       "lastUpdated": "2026-11-05",
@@ -418,7 +428,8 @@
       "aliases": [
         "Lモグモグ風林火山 大海戦の巻",
         "モグモグ",
-        "モグ大"
+        "モグ大",
+        "Lﾓｸﾞﾓｸﾞ風林火山"
       ],
       "releaseDate": "2026-09-07",
       "lastUpdated": "2026-11-05",
@@ -451,7 +462,8 @@
       "aliases": [
         "Lリコリス・リコイル",
         "リコリコ",
-        "リコリス"
+        "リコリス",
+        "Lﾘｺﾘｽ･ﾘｺｲﾙ"
       ],
       "releaseDate": "2026-09-07",
       "lastUpdated": "2026-11-05",
@@ -581,7 +593,8 @@
       "manufacturer": "平和",
       "aliases": [
         "L戦国乙女5 業火を穿つ宿焔の双刃",
-        "乙女5"
+        "乙女5",
+        "L戦国乙女5"
       ],
       "releaseDate": "2026-06-08",
       "lastUpdated": "2026-11-05",
@@ -614,7 +627,8 @@
       "aliases": [
         "L戦国乙女４　戦乱に閃く炯眼の軍師",
         "乙女4",
-        "戦国乙女4"
+        "戦国乙女4",
+        "L戦国乙女4"
       ],
       "releaseDate": "2023-09-04",
       "lastUpdated": "2026-10-13",
@@ -651,7 +665,7 @@
         "スマスロ牙狼"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-02",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -659,19 +673,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 35,
-        "events": 34,
+        "rows": 82,
+        "events": 80,
         "units": 1,
-        "days": 1,
+        "days": 2,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-02"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L牙狼 闇を照らす者",
-        "targetDate": "2026-11-02",
-        "inputSha256": "ba23d7906208961c3737c770798df2591694186f6b1a37351e2ed703afc8183a"
+        "targetDate": "2026-11-06",
+        "inputSha256": "92a12181cea2969e044e8de65303bf4b30708f134de17b9b3b61dfdb02eb55c2"
       }
     },
     {
@@ -681,7 +695,8 @@
       "aliases": [
         "L甲鉄城のカバネリ海門決戦",
         "カバネリ2",
-        "海門決戦"
+        "海門決戦",
+        "L甲鉄城のｶﾊﾞﾈﾘ海門決戦"
       ],
       "releaseDate": "2026-03-02",
       "lastUpdated": "2026-11-05",
@@ -750,7 +765,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-05",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -758,19 +773,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 2003,
-        "events": 1979,
+        "rows": 2564,
+        "events": 2534,
         "units": 6,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-05"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-05",
-        "inputSha256": "bd654b57adc067a40a2600ddd87e3ced5cd0ab4d8e5487ba192b1eef0ef26668"
+        "targetDate": "2026-11-06",
+        "inputSha256": "7f9c80b303665f76d32a28c9420715e651feff99f6868105ebf2279f85c8e0d5"
       }
     },
     {
@@ -780,7 +795,8 @@
       "aliases": [
         "L青春ブタ野郎はバニーガール先輩の夢を見ない",
         "青ブタ",
-        "あおぶた"
+        "あおぶた",
+        "L青春ﾌﾞﾀ野郎はﾊﾞﾆｰｶﾞｰﾙ"
       ],
       "releaseDate": "2026-09-07",
       "lastUpdated": "2026-11-05",
@@ -852,7 +868,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-05",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -860,19 +876,19 @@
       "collectionComplete": true,
       "expectedUnits": 8,
       "collection": {
-        "rows": 3212,
-        "events": 3180,
+        "rows": 3987,
+        "events": 3947,
         "units": 8,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-05"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-05",
-        "inputSha256": "5e032db63988eb882e0dfc6cb6f0856670f62cc87b11dd4aa3c78edcc23124aa"
+        "targetDate": "2026-11-06",
+        "inputSha256": "056619f3ebe379d53df41dd472466cdbb7c5666b41762b56526c4210b9d144c1"
       }
     },
     {
@@ -886,7 +902,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-05",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -894,19 +910,19 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 3239,
-        "events": 3211,
+        "rows": 4014,
+        "events": 3979,
         "units": 7,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-05"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-05",
-        "inputSha256": "74e395a81710950e0f474f471db9a487e54864262a6d9d858ace60e9bc6fc943"
+        "targetDate": "2026-11-06",
+        "inputSha256": "39c72cbd41cd22a0852d656f0cc70b42ecd5ef4e80d287eb4259815ff4bd9208"
       }
     },
     {
@@ -919,7 +935,7 @@
         "スマスロ ラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-05",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -927,19 +943,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 587,
-        "events": 575,
+        "rows": 692,
+        "events": 677,
         "units": 3,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-05"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-05",
-        "inputSha256": "3945aca5825da7e3642eb025f33b3d24c3cc19cc6afff0ddef16e62f08bf7231"
+        "targetDate": "2026-11-06",
+        "inputSha256": "dfc0fe031bf58ee1e3df63bd8a4b1982a95a44cada8cf2eacd267d0c431d15d8"
       }
     },
     {
@@ -950,7 +966,8 @@
         "スマスロ バジリスク絆2 天膳 BLACK EDITION",
         "天膳",
         "天膳BLACK",
-        "絆2天膳"
+        "絆2天膳",
+        "Lﾊﾞｼﾞﾘｽｸ絆2天膳BLACK"
       ],
       "releaseDate": "2023-12-18",
       "lastUpdated": "2026-11-05",
@@ -983,7 +1000,8 @@
       "aliases": [
         "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
         "マギレコ",
-        "まどマギ外伝"
+        "まどマギ外伝",
+        "Lﾏｷﾞｱﾚｺｰﾄﾞ"
       ],
       "releaseDate": "2025-04-07",
       "lastUpdated": "2026-11-05",
@@ -1016,7 +1034,8 @@
       "aliases": [
         "スマスロ モンスターハンターライズ",
         "モンハン",
-        "モンハンライズ"
+        "モンハンライズ",
+        "Lﾓﾝｽﾀｰﾊﾝﾀｰﾗｲｽﾞ"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1049,7 +1068,8 @@
       "aliases": [
         "スマスロ モンスターハンターライズ：サンブレイク",
         "モンハン",
-        "モンハンライズ"
+        "モンハンライズ",
+        "Lﾓﾝｽﾀｰﾊﾝﾀｰﾗｲｽﾞ：ｻﾝﾌﾞﾚｲｸ"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1082,7 +1102,8 @@
       "aliases": [
         "スマスロ 北斗の拳 転生の章2",
         "北斗転生2",
-        "転生の章2"
+        "転生の章2",
+        "L北斗 転生の章2"
       ],
       "releaseDate": "2026-01-05",
       "lastUpdated": "2026-11-05",
@@ -1115,7 +1136,8 @@
       "aliases": [
         "スマスロ 攻殻機動隊",
         "攻殻機動隊",
-        "こうかく"
+        "こうかく",
+        "L攻殻機動隊"
       ],
       "releaseDate": "2026-02-02",
       "lastUpdated": "2026-11-05",
@@ -1147,7 +1169,8 @@
       "manufacturer": "Sammy",
       "aliases": [
         "スマスロ 東京リベンジャーズ",
-        "東リベ"
+        "東リベ",
+        "L東京ﾘﾍﾞﾝｼﾞｬｰｽﾞ"
       ],
       "releaseDate": "2025-09-08",
       "lastUpdated": "2026-11-01",
@@ -1178,7 +1201,8 @@
       "name": "スマスロ 獣王",
       "manufacturer": "未登録",
       "aliases": [
-        "スマスロ 獣王"
+        "スマスロ 獣王",
+        "L獣王"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1209,7 +1233,8 @@
       "name": "スマスロパリピ孔明",
       "manufacturer": "未登録",
       "aliases": [
-        "スマスロパリピ孔明"
+        "スマスロパリピ孔明",
+        "Lﾊﾟﾘﾋﾟ孔明"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1245,7 +1270,8 @@
         "SAOⅡ",
         "SAOII",
         "ソードアートオンライン2",
-        "ソードアート・オンラインⅡ"
+        "ソードアート・オンラインⅡ",
+        "Lｿｰﾄﾞｱｰﾄ･ｵﾝﾗｲﾝII"
       ],
       "releaseDate": "2026-06-08",
       "lastUpdated": "2026-11-05",
@@ -1276,7 +1302,8 @@
       "name": "ワールドダイスター",
       "manufacturer": "パオン・ディーピー",
       "aliases": [
-        "ワールドダイスター"
+        "ワールドダイスター",
+        "Lﾜｰﾙﾄﾞﾀﾞｲｽﾀｰ"
       ],
       "releaseDate": "2026-08-03",
       "lastUpdated": "2026-11-01",
@@ -1309,7 +1336,8 @@
       "aliases": [
         "戦国コレクション6",
         "戦コレ",
-        "戦コレ6"
+        "戦コレ6",
+        "L戦国ｺﾚｸｼｮﾝ6"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1340,7 +1368,8 @@
       "name": "邪神ちゃんドロップキック",
       "manufacturer": "三洋物産",
       "aliases": [
-        "邪神ちゃんドロップキック"
+        "邪神ちゃんドロップキック",
+        "L邪神ちゃんﾄﾞﾛｯﾌﾟｷｯｸ"
       ],
       "releaseDate": "2026-08-03",
       "lastUpdated": "2026-11-05",
