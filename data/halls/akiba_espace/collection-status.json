@@ -3,7 +3,7 @@
   "hallId": "akiba_espace",
   "source": "daidata",
   "storeId": "100928",
-  "lastUpdated": "2026-11-05",
+  "lastUpdated": "2026-11-06",
   "machines": [
     {
       "id": "mbcb5735b",
@@ -33,7 +33,7 @@
         "hallId": "akiba_espace",
         "machineName": "L HEY!ｴﾘｰﾄｻﾗﾘｰﾏﾝ鏡",
         "targetDate": "2026-11-05",
-        "inputSha256": "f0338d8fdc7e6c9119e8b23471df5bc674f289b3fdbd999dc119689af9e4317a"
+        "inputSha256": "31b502b0195afed03f6c8757ecceb3643d43d37d62e79cb9336b6c35242e4b1d"
       }
     },
     {
@@ -47,7 +47,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-05",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -55,19 +55,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 798,
-        "events": 782,
+        "rows": 980,
+        "events": 960,
         "units": 4,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-05"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akiba_espace",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-05",
-        "inputSha256": "a27cc5ad9645625f8933133026e40fba32f0e0520c6d13b68147e2d31a303ef7"
+        "targetDate": "2026-11-06",
+        "inputSha256": "dc231526ce79b96d157f1f9146b62f369707979eb7e367602b21380c3523278e"
       }
     },
     {
@@ -77,7 +77,8 @@
       "aliases": [
         "L 東京喰種",
         "トーキョーグール",
-        "グール"
+        "グール",
+        "L東京喰種"
       ],
       "releaseDate": "2025-02-03",
       "lastUpdated": "2026-11-05",
@@ -100,7 +101,7 @@
         "hallId": "akiba_espace",
         "machineName": "L 東京喰種",
         "targetDate": "2026-11-05",
-        "inputSha256": "a6642892aa3adba9b69867943acf54884d529182ec70259bb3425ee096c7d833"
+        "inputSha256": "ce3bb09b0678ff4b08eaabd6d666a7782071f7aa0fbf817e30f44988a86c1760"
       }
     },
     {
@@ -110,7 +111,8 @@
       "aliases": [
         "LToLOVEるダークネス TRANCE ver.8.7",
         "ToLOVEる8.7",
-        "とらぶる"
+        "とらぶる",
+        "L ToLOVEるﾀﾞｰｸﾈｽver.8.7"
       ],
       "releaseDate": "2025-05-19",
       "lastUpdated": "2026-11-05",
@@ -133,7 +135,7 @@
         "hallId": "akiba_espace",
         "machineName": "LToLOVEるダークネス TRANCE ver.8.7",
         "targetDate": "2026-11-05",
-        "inputSha256": "60b638914c5fb8d8a819f9f10f29790e348be807aff683f6344579bfc4c5ec39"
+        "inputSha256": "56c3c2b5dc45b74f43d8f6b627863f4938154b30935f826fcdd2ef519a12ac12"
       }
     },
     {
@@ -166,7 +168,7 @@
         "hallId": "akiba_espace",
         "machineName": "Lとある魔術の禁書目録2",
         "targetDate": "2026-11-05",
-        "inputSha256": "e3ccb30ffbb15a2d98d431cc6bce4b85adce7bdcb5e778004585329222d3091d"
+        "inputSha256": "34c8e83333cc9fd379273552739fa8fe1f32b1f0eea5586444d1190bfbec6243"
       }
     },
     {
@@ -177,7 +179,8 @@
         "Lとんでもスキルで異世界放浪メシ",
         "とんスキ",
         "とんすき",
-        "異世界放浪メシ"
+        "異世界放浪メシ",
+        "Lとんでもｽｷﾙ"
       ],
       "releaseDate": "2026-08-03",
       "lastUpdated": "2026-11-01",
@@ -212,7 +215,8 @@
         "モンキー",
         "モンキーターン5",
         "モンキーターンV",
-        "monkey"
+        "monkey",
+        "LﾓﾝｷｰﾀｰﾝV"
       ],
       "releaseDate": "2023-08-07",
       "lastUpdated": "2026-11-05",
@@ -235,7 +239,7 @@
         "hallId": "akiba_espace",
         "machineName": "Lスマスロ モンキーターンV",
         "targetDate": "2026-11-05",
-        "inputSha256": "f1e36ba665df71a80cdf22527d066df7bca8f9ed49ac999027a12e671f05ba90"
+        "inputSha256": "fabb9b51814d00c38de009ab5cc40ef5361a4aaef916d84cca1461710e253b11"
       }
     },
     {
@@ -244,7 +248,8 @@
       "manufacturer": "SANKYO",
       "aliases": [
         "Lスマスロかぐや様は告らせたい",
-        "かぐや"
+        "かぐや",
+        "Lかぐや様は告らせたい"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -267,7 +272,7 @@
         "hallId": "akiba_espace",
         "machineName": "Lスマスロかぐや様は告らせたい",
         "targetDate": "2026-11-05",
-        "inputSha256": "a765c88c57480ee1b0e368458e93d3ef136fbb18e8d4df424e11d4fa747941a1"
+        "inputSha256": "bd9a8492d6bb2274ae3018c7d40d2884b07a0bc476e3d2c877d7431ebca36d54"
       }
     },
     {
@@ -276,7 +281,8 @@
       "manufacturer": "大都技研",
       "aliases": [
         "Lスロット　ゾンビランドサガ",
-        "ゾンサガ"
+        "ゾンサガ",
+        "Lｿﾞﾝﾋﾞﾗﾝﾄﾞｻｶﾞ"
       ],
       "releaseDate": "2024-07-22",
       "lastUpdated": "2026-11-05",
@@ -299,7 +305,7 @@
         "hallId": "akiba_espace",
         "machineName": "Lスロット　ゾンビランドサガ",
         "targetDate": "2026-11-05",
-        "inputSha256": "8c052357992b4f8953193643f5bc0c4fb50a8af2f190693436a7020802b864da"
+        "inputSha256": "3be1a02e5090772d58969051d50a2f3be17152b19e3e38d515fc42a908163fa9"
       }
     },
     {
@@ -310,7 +316,8 @@
         "Lソードアート・オンライン",
         "SAO",
         "SAO初代",
-        "ソードアートオンライン"
+        "ソードアートオンライン",
+        "Lｿｰﾄﾞｱｰﾄ･ｵﾝﾗｲﾝ"
       ],
       "releaseDate": "2023-05-15",
       "lastUpdated": "2026-11-05",
@@ -333,7 +340,7 @@
         "hallId": "akiba_espace",
         "machineName": "Lソードアート・オンライン",
         "targetDate": "2026-11-05",
-        "inputSha256": "2f6bb27b2939b1979c5e4ba9ea8866a405f8e69e9348ffdb35c32280e223d812"
+        "inputSha256": "5eaab47ea45d822adf55ae68e05a60c57deb7780a5bfbf980f1ac458c866acbb"
       }
     },
     {
@@ -342,7 +349,8 @@
       "manufacturer": "平和",
       "aliases": [
         "Lタクトオーパス デスティニー",
-        "タクオペ"
+        "タクオペ",
+        "Lﾀｸﾄｵｰﾊﾟｽ ﾃﾞｽﾃｨﾆｰ"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -365,7 +373,7 @@
         "hallId": "akiba_espace",
         "machineName": "Lタクトオーパス デスティニー",
         "targetDate": "2026-11-05",
-        "inputSha256": "56152a1793db1bcbef7a137e1fca1f489984498bba895dad7cd5f65553417f50"
+        "inputSha256": "818391a17f0a66163904ed143f2af6223acaf7b77e13b37c6b1378991d1004a5"
       }
     },
     {
@@ -373,7 +381,8 @@
       "name": "Lバンドリ！",
       "manufacturer": "未登録",
       "aliases": [
-        "Lバンドリ！"
+        "Lバンドリ！",
+        "Lﾊﾞﾝﾄﾞﾘ!"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-01",
@@ -410,7 +419,8 @@
         "ヴヴヴ2",
         "革命機",
         "valvrave2",
-        "ヴァルヴレイヴ2"
+        "ヴァルヴレイヴ2",
+        "L革命機ｳﾞｧﾙｳﾞﾚｲｳﾞ2"
       ],
       "releaseDate": "2025-09-01",
       "lastUpdated": "2026-11-05",
@@ -433,7 +443,7 @@
         "hallId": "akiba_espace",
         "machineName": "Lパチスロ 革命機ヴァルヴレイヴ2（Lヴヴヴ2）",
         "targetDate": "2026-11-05",
-        "inputSha256": "c4fbeabd32c4c068e94f81a4ad1793f1c62991ab8e6877da4e704572731125e5"
+        "inputSha256": "790a78dd36cc9a238cd2ae6acc69aa89928f0569c409abd6925d0852f6e34def"
       }
     },
     {
@@ -442,7 +452,8 @@
       "manufacturer": "オーイズミ",
       "aliases": [
         "Lパチスロうみねこのなく頃に2",
-        "うみねこ2"
+        "うみねこ2",
+        "Lうみねこのなく頃に2"
       ],
       "releaseDate": "2026-02-02",
       "lastUpdated": "2026-11-05",
@@ -465,7 +476,7 @@
         "hallId": "akiba_espace",
         "machineName": "Lパチスロうみねこのなく頃に2",
         "targetDate": "2026-11-05",
-        "inputSha256": "0fa3d2831e64c964baea6730656d0fc445c540de16b0cd5e31e823603005b976"
+        "inputSha256": "51806cacb978e02b795e583e320bd02799cb378c8439a24cbbc7ab396ce653ab"
       }
     },
     {
@@ -475,7 +486,8 @@
       "aliases": [
         "Lパチスロガールズ＆パンツァー 最終章",
         "ガルパン",
-        "ガルパン最終章"
+        "ガルパン最終章",
+        "Lｶﾞｰﾙｽﾞ&ﾊﾟﾝﾂｧｰ最終"
       ],
       "releaseDate": "2024-02-05",
       "lastUpdated": "2026-11-05",
@@ -498,7 +510,7 @@
         "hallId": "akiba_espace",
         "machineName": "Lパチスロガールズ＆パンツァー 最終章",
         "targetDate": "2026-11-05",
-        "inputSha256": "ad79ebff7cd9de37d7b2fbc71766fb132b8b780c7ed6645f9cfafd0308cbf8c0"
+        "inputSha256": "0ea5f58ffd6e188ea0f179130647f4608a532eda4bf428271f7dab07e98081d1"
       }
     },
     {
@@ -508,7 +520,8 @@
       "aliases": [
         "Lパチスロ革命機ヴァルヴレイヴ",
         "ヴヴヴ",
-        "ヴァルヴレイヴ初代"
+        "ヴァルヴレイヴ初代",
+        "L革命機ｳﾞｧﾙｳﾞﾚｲｳﾞ"
       ],
       "releaseDate": "2022-11-21",
       "lastUpdated": "2026-11-05",
@@ -531,7 +544,7 @@
         "hallId": "akiba_espace",
         "machineName": "Lパチスロ革命機ヴァルヴレイヴ",
         "targetDate": "2026-11-05",
-        "inputSha256": "975889e57097b230695989bcdd0de0b740eb760d24f26f9835eccc01db2539ee"
+        "inputSha256": "0ca6a8fb055769cd79d453c279f388a308e391508d6e769528f63823d7df60c0"
       }
     },
     {
@@ -542,7 +555,8 @@
         "Lミリオンゴッド－神々の軌跡－",
         "GOD軌跡",
         "神々の軌跡",
-        "ゴッド"
+        "ゴッド",
+        "Lﾐﾘｵﾝｺﾞｯﾄﾞ神々の軌跡"
       ],
       "releaseDate": "2026-04-20",
       "lastUpdated": "2026-11-05",
@@ -565,7 +579,7 @@
         "hallId": "akiba_espace",
         "machineName": "Lミリオンゴッド－神々の軌跡－",
         "targetDate": "2026-11-05",
-        "inputSha256": "a5cac0e62f25771ba7215bb1723db5401bf757355b298cec83b771009f5519a0"
+        "inputSha256": "0480177e56e52ed3a8d4bc83106ba02f70af2a05fa8e4a150f8ab239c58f92ae"
       }
     },
     {
@@ -575,7 +589,8 @@
       "aliases": [
         "Lリコリス・リコイル",
         "リコリコ",
-        "リコリス"
+        "リコリス",
+        "Lﾘｺﾘｽ･ﾘｺｲﾙ"
       ],
       "releaseDate": "2026-09-07",
       "lastUpdated": "2026-11-05",
@@ -631,7 +646,7 @@
         "hallId": "akiba_espace",
         "machineName": "L喰霊-零-Re",
         "targetDate": "2026-11-05",
-        "inputSha256": "fb4cafc4a4bd1ec310e004d69bcb7e3154d983c9ae8308a4df3f6be66fc3da4f"
+        "inputSha256": "2c905d2929d70dad8a8127ec0b8d19cf63b04e53a4f900cd59bf136921107a6c"
       }
     },
     {
@@ -639,7 +654,8 @@
       "name": "L少女☆歌劇 レヴュースタァライト -The SLOT-",
       "manufacturer": "未登録",
       "aliases": [
-        "L少女☆歌劇 レヴュースタァライト -The SLOT-"
+        "L少女☆歌劇 レヴュースタァライト -The SLOT-",
+        "L少女☆歌劇ﾚｳﾞｭｰｽﾀｧﾗｲﾄ"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -662,7 +678,7 @@
         "hallId": "akiba_espace",
         "machineName": "L少女☆歌劇 レヴュースタァライト -The SLOT-",
         "targetDate": "2026-11-05",
-        "inputSha256": "5a3a9e4751d455c43eda11e5fd146cdb97c5a4fe5fb8c574d1331056dd49f947"
+        "inputSha256": "732488283ef433d9dd66d1643147438a9a9da9ecd7fadb82172bb10702429e85"
       }
     },
     {
@@ -704,7 +720,8 @@
       "manufacturer": "平和",
       "aliases": [
         "L戦国乙女5 業火を穿つ宿焔の双刃",
-        "乙女5"
+        "乙女5",
+        "L戦国乙女5"
       ],
       "releaseDate": "2026-06-08",
       "lastUpdated": "2026-11-05",
@@ -737,7 +754,8 @@
       "aliases": [
         "L戦国乙女４　戦乱に閃く炯眼の軍師",
         "乙女4",
-        "戦国乙女4"
+        "戦国乙女4",
+        "L戦国乙女4"
       ],
       "releaseDate": "2023-09-04",
       "lastUpdated": "2026-11-05",
@@ -760,7 +778,7 @@
         "hallId": "akiba_espace",
         "machineName": "L戦国乙女４　戦乱に閃く炯眼の軍師",
         "targetDate": "2026-11-05",
-        "inputSha256": "49b9d9a86f72e17feb58a002f3cae2c50f737d109dafd09ebe5cb0db9653dbf3"
+        "inputSha256": "30afa152119c05d475129c760d6bd77b063f24b0d9fc36e6992449aef4e8a4f6"
       }
     },
     {
@@ -774,7 +792,7 @@
         "スマスロ牙狼"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-02",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -782,19 +800,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 32,
-        "events": 31,
+        "rows": 78,
+        "events": 76,
         "units": 1,
-        "days": 1,
+        "days": 2,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-02"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akiba_espace",
         "machineName": "L牙狼 闇を照らす者",
-        "targetDate": "2026-11-02",
-        "inputSha256": "310c0e327bc1b8717396d936b5c33a015fd580c795655b808300d964b17ad19f"
+        "targetDate": "2026-11-06",
+        "inputSha256": "b6fb545a131be6cafd9cf2760d669acc69bb00732bd092e994b4c2a3032c0a16"
       }
     },
     {
@@ -804,7 +822,8 @@
       "aliases": [
         "L甲鉄城のカバネリ海門決戦",
         "カバネリ2",
-        "海門決戦"
+        "海門決戦",
+        "L甲鉄城のｶﾊﾞﾈﾘ海門決戦"
       ],
       "releaseDate": "2026-03-02",
       "lastUpdated": "2026-11-05",
@@ -827,7 +846,7 @@
         "hallId": "akiba_espace",
         "machineName": "L甲鉄城のカバネリ海門決戦",
         "targetDate": "2026-11-05",
-        "inputSha256": "de3ca3a7575194eb82e97a90e72158d1315bdd569c8894c2af4a825eb13a53e3"
+        "inputSha256": "c9dff8381497aa20e06e6bc9b8345e93621d4f5abea8d7ff216409255fc6edd9"
       }
     },
     {
@@ -836,7 +855,8 @@
       "manufacturer": "Sammy",
       "aliases": [
         "L痛いのは嫌なので防御力に極振りしたいと思います。",
-        "防振り"
+        "防振り",
+        "L防振り"
       ],
       "releaseDate": "2024-06-03",
       "lastUpdated": "2026-11-05",
@@ -859,7 +879,7 @@
         "hallId": "akiba_espace",
         "machineName": "L痛いのは嫌なので防御力に極振りしたいと思います。",
         "targetDate": "2026-11-05",
-        "inputSha256": "add0fe2e6b22b30c818c6cd9b7ca6e2cfa7a2ac61d48bc2623394179a6413a21"
+        "inputSha256": "33da3990da26ed59ae983f51ff20ae0868fd60aa3e36c69f500d7070f917cf63"
       }
     },
     {
@@ -891,7 +911,7 @@
         "hallId": "akiba_espace",
         "machineName": "L真打吉宗",
         "targetDate": "2026-11-05",
-        "inputSha256": "ed926d22b1dfe95e2d69b8646896331539da0c449b6df4b1bf30388a9d25d006"
+        "inputSha256": "47894ebb3eee253368d3b72a4a88b28e0c242d201bd8a78175958d005e4f12c3"
       }
     },
     {
@@ -905,7 +925,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-05",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -913,19 +933,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1040,
-        "events": 1028,
+        "rows": 1253,
+        "events": 1238,
         "units": 3,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-05"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akiba_espace",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-05",
-        "inputSha256": "e7b518c54ef7f5a1871e84576f81e9378e0b5bbb698ffa0a47f5128c0c85f071"
+        "targetDate": "2026-11-06",
+        "inputSha256": "1e1fd3b0e470286e13ae7a473f3ac115c669656e35b9775754337cd0106b6324"
       }
     },
     {
@@ -957,7 +977,7 @@
         "hallId": "akiba_espace",
         "machineName": "L虚構推理",
         "targetDate": "2026-11-05",
-        "inputSha256": "4fe26fa7a1f67696f33a7e0e5f1c3deea6fafc13fa7c5ffb2186c08c7e67a9ae"
+        "inputSha256": "863993ec8cbe6ddd7679d53cb3e6a22733bbfb1c98c36e36c2c99bed33a18a28"
       }
     },
     {
@@ -989,7 +1009,7 @@
         "hallId": "akiba_espace",
         "machineName": "L見える子ちゃん",
         "targetDate": "2026-11-05",
-        "inputSha256": "69d72378a6d30e705d3d799a5ef74d81b3b194ec92d891828504517a2e27b3f1"
+        "inputSha256": "d5e07616123cdb9ee3c3ad5c0653ed4aacf2b1ec6519bc485b65e58dca427540"
       }
     },
     {
@@ -999,7 +1019,8 @@
       "aliases": [
         "L青春ブタ野郎はバニーガール先輩の夢を見ない",
         "青ブタ",
-        "あおぶた"
+        "あおぶた",
+        "L青春ﾌﾞﾀ野郎はﾊﾞﾆｰｶﾞｰﾙ"
       ],
       "releaseDate": "2026-09-07",
       "lastUpdated": "2026-11-05",
@@ -1022,7 +1043,7 @@
         "hallId": "akiba_espace",
         "machineName": "L青春ブタ野郎はバニーガール先輩の夢を見ない",
         "targetDate": "2026-11-05",
-        "inputSha256": "4e80eaf7898299740706d8eb10e30b64fa51125589b6078a824b3b766080dbaf"
+        "inputSha256": "a03a9e2e58422ea5aebe16900a5b23dc70d2deb9b4f952cf5570185d6ceeb886"
       }
     },
     {
@@ -1056,7 +1077,7 @@
         "hallId": "akiba_espace",
         "machineName": "L魔法少女にあこがれて",
         "targetDate": "2026-11-05",
-        "inputSha256": "39b027335344fc3bf29dbc2fd6c181b1f442b52e261c24c7166aaad58e129605"
+        "inputSha256": "d5b402820a6c6a6bcdcce5346fa0c07a2596b29a19e97dee9457d21e0d02ce49"
       }
     },
     {
@@ -1071,7 +1092,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-05",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1079,19 +1100,19 @@
       "collectionComplete": true,
       "expectedUnits": 10,
       "collection": {
-        "rows": 3872,
-        "events": 3832,
+        "rows": 4874,
+        "events": 4824,
         "units": 10,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-05"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akiba_espace",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-05",
-        "inputSha256": "cb6ae364008a05202a11576e8b5be16eaeadb39aa4ec608dd47caa1d97e175cc"
+        "targetDate": "2026-11-06",
+        "inputSha256": "94eddc27a361db5a0eb21080b820d0b27e3280e28dcfdedee95ed43bc337e849"
       }
     },
     {
@@ -1105,7 +1126,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-05",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1113,19 +1134,19 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 3100,
-        "events": 3072,
+        "rows": 3847,
+        "events": 3812,
         "units": 7,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-05"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akiba_espace",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-05",
-        "inputSha256": "80300f489325357eea5c89efb7309e74df64d9fbe59456fef2e6ed41216e2f77"
+        "targetDate": "2026-11-06",
+        "inputSha256": "ac97cde26dac8f3cd45651de3b92463d6bf5f4e4b3fd4d9e906b845d72614760"
       }
     },
     {
@@ -1138,7 +1159,7 @@
         "スマスロ ラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-05",
+      "lastUpdated": "2026-11-06",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1146,19 +1167,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 1113,
-        "events": 1089,
+        "rows": 1347,
+        "events": 1317,
         "units": 6,
-        "days": 4,
+        "days": 5,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-05"
+        "lastDate": "2026-11-06"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "akiba_espace",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-05",
-        "inputSha256": "ee61540d07b7f72c8bd09b1d742d6122ff0a9fb042cccf81219852a6b757db54"
+        "targetDate": "2026-11-06",
+        "inputSha256": "ef65ff964f8636e5a0206516072820130900f46c2941aa316f3ea5be40d47f3d"
       }
     },
     {
@@ -1167,7 +1188,8 @@
       "manufacturer": "Sammy",
       "aliases": [
         "この素晴らしい世界に祝福を！",
-        "このすば"
+        "このすば",
+        "この素晴らしい世界に祝福"
       ],
       "releaseDate": "2022-04-04",
       "lastUpdated": "2026-11-05",
@@ -1190,7 +1212,7 @@
         "hallId": "akiba_espace",
         "machineName": "この素晴らしい世界に祝福を！",
         "targetDate": "2026-11-05",
-        "inputSha256": "3c99c38726cf5befcc985cbef6959f632e10f186e9e73ab40a942afa63f37a18"
+        "inputSha256": "0f17868af636625a46203a1a71723cdcc65d8915d784bc778dae3d312abb3a23"
       }
     },
     {
@@ -1200,7 +1222,8 @@
       "aliases": [
         "ストリートファイター6",
         "スト6",
-        "SF6"
+        "SF6",
+        "Lｽﾄﾘｰﾄﾌｧｲﾀｰ6"
       ],
       "releaseDate": "2026-08-03",
       "lastUpdated": "2026-10-14",
@@ -1232,7 +1255,8 @@
       "manufacturer": "エレコ",
       "aliases": [
         "スマスロ シャーマンキング",
-        "シャーマン"
+        "シャーマン",
+        "Lｼｬｰﾏﾝｷﾝｸﾞ"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1255,7 +1279,7 @@
         "hallId": "akiba_espace",
         "machineName": "スマスロ シャーマンキング",
         "targetDate": "2026-11-05",
-        "inputSha256": "0d95389c82e8a77ee14a2cb42f5a502923535f85296c186ed1320092f4a8fe26"
+        "inputSha256": "0379f65a1c622cb4271d2f9949b90227cfc4db26e19e6db524835b9ff0a88b3b"
       }
     },
     {
@@ -1266,7 +1290,8 @@
         "スマスロ バジリスク絆2 天膳 BLACK EDITION",
         "天膳",
         "天膳BLACK",
-        "絆2天膳"
+        "絆2天膳",
+        "Lﾊﾞｼﾞﾘｽｸ絆2天膳BLACK"
       ],
       "releaseDate": "2023-12-18",
       "lastUpdated": "2026-11-01",
@@ -1299,7 +1324,8 @@
       "aliases": [
         "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
         "マギレコ",
-        "まどマギ外伝"
+        "まどマギ外伝",
+        "Lﾏｷﾞｱﾚｺｰﾄﾞ"
       ],
       "releaseDate": "2025-04-07",
       "lastUpdated": "2026-11-05",
@@ -1322,7 +1348,7 @@
         "hallId": "akiba_espace",
         "machineName": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
         "targetDate": "2026-11-05",
-        "inputSha256": "8d39ad4d2217836c1b2411538dacf1031ae1b01adac9df281ca289f6489f15ce"
+        "inputSha256": "2d80203941cd3b9df58a09b350493b5ac2ddcc29b376c9c83fe56b12df3ab99a"
       }
     },
     {
@@ -1332,7 +1358,8 @@
       "aliases": [
         "スマスロ モンスターハンターライズ",
         "モンハン",
-        "モンハンライズ"
+        "モンハンライズ",
+        "Lﾓﾝｽﾀｰﾊﾝﾀｰﾗｲｽﾞ"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1355,7 +1382,7 @@
         "hallId": "akiba_espace",
         "machineName": "スマスロ モンスターハンターライズ",
         "targetDate": "2026-11-05",
-        "inputSha256": "6b36b66f1acf2e69c5b653a57728588bf2a6f1a18b336fa1011ebadde623030c"
+        "inputSha256": "c0d3568c6a83fb321219af097b4f8ec9c84926a183157a60210b8ac67f197e4a"
       }
     },
     {
@@ -1365,7 +1392,8 @@
       "aliases": [
         "スマスロ モンスターハンターライズ：サンブレイク",
         "モンハン",
-        "モンハンライズ"
+        "モンハンライズ",
+        "Lﾓﾝｽﾀｰﾊﾝﾀｰﾗｲｽﾞ：ｻﾝﾌﾞﾚｲｸ"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1388,7 +1416,7 @@
         "hallId": "akiba_espace",
         "machineName": "スマスロ モンスターハンターライズ：サンブレイク",
         "targetDate": "2026-11-05",
-        "inputSha256": "6db3f0bafe0b314febc776a6493f52ae1135453190cf8d682d43152660b8a5b6"
+        "inputSha256": "9369e80964982769b19148d8a7ceb1d99af492a480beb282b1e461e17ee90873"
       }
     },
     {
@@ -1397,7 +1425,8 @@
       "manufacturer": "Sammy",
       "aliases": [
         "スマスロ 化物語",
-        "化物語"
+        "化物語",
+        "L化物語"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1420,7 +1449,7 @@
         "hallId": "akiba_espace",
         "machineName": "スマスロ 化物語",
         "targetDate": "2026-11-05",
-        "inputSha256": "1fe276a17af13b806f158a08248b1add485b104c88e0f3fec5b38b23a83a5e91"
+        "inputSha256": "5e081e65f1d69b65fecd3806ff57e61d604b19d68e68c979313e76db31065bd3"
       }
     },
     {
@@ -1430,7 +1459,8 @@
       "aliases": [
         "スマスロ 攻殻機動隊",
         "攻殻機動隊",
-        "こうかく"
+        "こうかく",
+        "L攻殻機動隊"
       ],
       "releaseDate": "2026-02-02",
       "lastUpdated": "2026-11-05",
@@ -1453,7 +1483,7 @@
         "hallId": "akiba_espace",
         "machineName": "スマスロ 攻殻機動隊",
         "targetDate": "2026-11-05",
-        "inputSha256": "fdd55138421d03cae645f2d99bc847487db2e0730a4b92a266737fbdbda5b89b"
+        "inputSha256": "55da9599b8133563763c8c44656e2438edb8d5550cd8ade3b29983cf76007e66"
       }
     },
     {
@@ -1461,7 +1491,8 @@
       "name": "スマスロ 獣王",
       "manufacturer": "未登録",
       "aliases": [
-        "スマスロ 獣王"
+        "スマスロ 獣王",
+        "L獣王"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1484,7 +1515,7 @@
         "hallId": "akiba_espace",
         "machineName": "スマスロ 獣王",
         "targetDate": "2026-11-05",
-        "inputSha256": "ff063e5a68c30b154a3a3f7c9e3f270835e7cb5158f6f8799a36f5d849d26dec"
+        "inputSha256": "0a2d745947369d1161b8b0656171b1b6cb44c0b35652ccb5614d9d4c5a91dd17"
       }
     },
     {
@@ -1492,7 +1523,8 @@
       "name": "スマスロパリピ孔明",
       "manufacturer": "未登録",
       "aliases": [
-        "スマスロパリピ孔明"
+        "スマスロパリピ孔明",
+        "Lﾊﾟﾘﾋﾟ孔明"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-01",
@@ -1525,7 +1557,8 @@
       "aliases": [
         "スマスロ頭文字D 2nd",
         "頭文字D",
-        "イニD"
+        "イニD",
+        "L頭文字D 2nd"
       ],
       "releaseDate": "2024-10-07",
       "lastUpdated": "2026-11-05",
@@ -1548,7 +1581,7 @@
         "hallId": "akiba_espace",
         "machineName": "スマスロ頭文字D 2nd",
         "targetDate": "2026-11-05",
-        "inputSha256": "0a202a099aab6ccac4d48c89147c8d1ea8f68e5f9ba4d39766f02c6b57239c32"
+        "inputSha256": "7c6710bfdac3944e3e6d4069f7fdc88874e66e1a77ce0ed6fceb3dcaca67e7e2"
       }
     },
     {
@@ -1561,7 +1594,8 @@
         "SAOⅡ",
         "SAOII",
         "ソードアートオンライン2",
-        "ソードアート・オンラインⅡ"
+        "ソードアート・オンラインⅡ",
+        "Lｿｰﾄﾞｱｰﾄ･ｵﾝﾗｲﾝII"
       ],
       "releaseDate": "2026-06-08",
       "lastUpdated": "2026-11-05",
@@ -1584,7 +1618,7 @@
         "hallId": "akiba_espace",
         "machineName": "ソードアート・オンラインII",
         "targetDate": "2026-11-05",
-        "inputSha256": "a2c43b3a953a7bbf2e7be1c0bbc07b4993755f1eeff6253ec69e816aee271458"
+        "inputSha256": "75fabd302ab8d38b82e9a421aa389b4bd5ee3f2b1dc652e34fab770e77d35ab0"
       }
     },
     {
@@ -1592,7 +1626,8 @@
       "name": "ワールドダイスター",
       "manufacturer": "パオン・ディーピー",
       "aliases": [
-        "ワールドダイスター"
+        "ワールドダイスター",
+        "Lﾜｰﾙﾄﾞﾀﾞｲｽﾀｰ"
       ],
       "releaseDate": "2026-08-03",
       "lastUpdated": "2026-11-05",
@@ -1615,7 +1650,7 @@
         "hallId": "akiba_espace",
         "machineName": "ワールドダイスター",
         "targetDate": "2026-11-05",
-        "inputSha256": "b5b6954037a30c058029154bb2bfed4de6863e449fe2efa2cb1ce96db4135e9e"
+        "inputSha256": "999351042a4d113137f905fa0a0a804dc24197b57a7adb4c51001d1f92a58f4f"
       }
     },
     {
@@ -1624,7 +1659,8 @@
       "manufacturer": "北電子",
       "aliases": [
         "回胴式遊技機グランベルム",
-        "グランベルム"
+        "グランベルム",
+        "回胴式遊技機ｸﾞﾗﾝﾍﾞﾙﾑ"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1647,7 +1683,7 @@
         "hallId": "akiba_espace",
         "machineName": "回胴式遊技機グランベルム",
         "targetDate": "2026-11-05",
-        "inputSha256": "e82b1506df4c17100c57ebfc1357bc343e16a028a51f1e9f03832c7818b420a9"
+        "inputSha256": "9fca38a83b7791e68310a7fb4b1cbdb494bb2c1f3e8daef1c2550ff879f4d0e4"
       }
     },
     {
@@ -1657,7 +1693,8 @@
       "aliases": [
         "戦国コレクション6",
         "戦コレ",
-        "戦コレ6"
+        "戦コレ6",
+        "L戦国ｺﾚｸｼｮﾝ6"
       ],
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-05",
@@ -1680,7 +1717,7 @@
         "hallId": "akiba_espace",
         "machineName": "戦国コレクション6",
         "targetDate": "2026-11-05",
-        "inputSha256": "bbc81c2b6502a91ca4fd837bf5aa054cad967a433f12b246739387775f7c9386"
+        "inputSha256": "78469d1ebd25182070e255cb4f323f6c6774d4a234413ccf8afc658601f6ff79"
       }
     },
     {
@@ -1688,7 +1725,8 @@
       "name": "邪神ちゃんドロップキック",
       "manufacturer": "三洋物産",
       "aliases": [
-        "邪神ちゃんドロップキック"
+        "邪神ちゃんドロップキック",
+        "L邪神ちゃんﾄﾞﾛｯﾌﾟｷｯｸ"
       ],
       "releaseDate": "2026-08-03",
       "lastUpdated": "2026-11-05",
@@ -1711,7 +1749,7 @@
         "hallId": "akiba_espace",
         "machineName": "邪神ちゃんドロップキック",
         "targetDate": "2026-11-05",
-        "inputSha256": "b16fb4fd6abc65fa53af92836215933a97ea44a81e4456154c1602d3211f0bae"
+        "inputSha256": "741b9b4cd39e9a04d2e24717fcce35f258888975145699fe18cfb981255f1556"
       }
     }
   ]
