@@ -79,6 +79,13 @@ describe("Lycoris supplied-reference calibration contract", () => {
     expect(validateMachine(machine()).setting1Correction?.method).toBe("official-calibration");
   });
 
+  it("allows source-shaped calibrated values to opt into the profile specification contract", () => {
+    const input = machine();
+    input.setting1Correction!.profileSpecVersion = 1;
+    expect(() => validateMachine(input)).not.toThrow();
+    expect(onlyLowSetting(input)!.profiles).toEqual(input.setting1Correction!.profiles);
+  });
+
   const mutations: Array<[string, (value: Setting1Correction) => void]> = [
     ["wrong source hall", value => { value.sourceHallId = "shinjuku"; }],
     ["wrong whole-machine target", value => { value.targetRtp = .98; }],

@@ -10,6 +10,7 @@ import { assertSingleAttachment, validateMachineCounterEstimate } from "./counte
 import { validateOfficialCalibration } from "./official-calibration";
 import { validateSharedLedger } from "./shared-ledger";
 import { validateMachineKatanaEstimate } from "./katana-estimate";
+import { validateSetting1ProfileSpecs } from "./setting1-profile-spec";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -290,6 +291,8 @@ export function validateMachine(data: unknown): Machine {
     const correction = machine.setting1Correction;
     assert(isRecord(correction), "setting1Correction must be an object");
     assert(correction.schemaVersion === 1, "unsupported setting1Correction schema");
+    assert(correction.profileSpecVersion === undefined || correction.profileSpecVersion === 1,
+      "unsupported setting1Correction profile specification version");
     assert(correction.sourceHallId === "shinjuku" || correction.sourceHallId === "mixed",
       "setting1Correction source must be shinjuku or mixed");
     assert(Number.isFinite(correction.targetRtp) && correction.targetRtp > 0 && correction.targetRtp < 1,
@@ -302,11 +305,15 @@ export function validateMachine(data: unknown): Machine {
       "assumed payout must not be corrected twice");
     assert(Array.isArray(correction.profiles) && correction.profiles.length > 0,
       "setting1Correction profiles are required");
-    const sourceKeys = machine.profiles.filter((profile) => !profile.label.includes("設定1想定")).map((profile) => profile.key);
+    const sourceProfiles = machine.profiles.filter((profile) => !profile.label.includes("設定1想定"));
+    const sourceKeys = sourceProfiles.map((profile) => profile.key);
     assert(JSON.stringify(correction.profiles.map((profile) => profile.key)) === JSON.stringify(sourceKeys),
       "setting1Correction must preserve the source profile order and keys");
     // Reuse the public profile contract, without recursively validating the bundle.
     validateMachine({ ...machine, profiles: correction.profiles, setting1Correction: undefined });
+    // Old published bundles predate the shared-spec contract. Keep their
+    // existing validation until their producer regenerates an opted-in bundle.
+    if (correction.profileSpecVersion === 1) validateSetting1ProfileSpecs(sourceProfiles, correction.profiles);
     if (correction.method === "official-calibration") validateOfficialCalibration(machine.id, correction);
     if (correction.method === "shared-ledger") validateSharedLedger(machine.id, correction);
     for (const profile of correction.profiles) {

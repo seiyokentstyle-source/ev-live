@@ -365,6 +365,8 @@ export type CalcSpec = {
 /** 新宿と同じ狙い方・母数で、生成側が獲得を設定1相当に補正した表。 */
 export type Setting1Correction = {
   schemaVersion: 1;
+  /** 新しい生成物だけ、参照表と同じ狙い方・範囲・宣言された絞り込み仕様を検証する。 */
+  profileSpecVersion?: 1;
   sourceHallId: "shinjuku" | "mixed";
   targetRtp: number;
   payoutScale: number;
