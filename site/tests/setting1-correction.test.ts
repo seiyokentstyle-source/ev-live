@@ -224,3 +224,99 @@ describe("setting-1 correction validation", () => {
     expect(() => validateMachine(input)).toThrow();
   });
 });
+
+describe("opted-in setting-1 profile specification parity", () => {
+  function optedIn(): Machine {
+    const input = correctionMachine();
+    input.setting1Correction!.profileSpecVersion = 1;
+    for (const profile of [...input.profiles, ...input.setting1Correction!.profiles]) {
+      profile.evFilters!.selectionPolicy = { schema: "evlive-axis-policy/v1", startG: 1,
+        thresholdPoints: 1, direction: "absolute", interactions: true, initial: "all",
+        noData: "not_evaluable", diagnostics: { observedDifference: 1.3 } };
+    }
+    return input;
+  }
+
+  it("accepts new source-shaped corrections and preserves every corrected value", () => {
+    const input = optedIn();
+    const before = structuredClone(input);
+    freezeDeep(input);
+    expect(validateMachine(input).setting1Correction).toEqual(before.setting1Correction);
+    expect(input).toEqual(before);
+  });
+
+  it.each([0, 2, "1", null, {}, []])("rejects unsupported specification version %j", version => {
+    const input = optedIn();
+    (input.setting1Correction as unknown as Record<string, unknown>).profileSpecVersion = version;
+    expect(() => validateMachine(input)).toThrow(/profile specification version/);
+  });
+
+  it.each([
+    ["aim", (profile: Profile) => { profile.aimKind = "cz"; }],
+    ["label", (profile: Profile) => { profile.label += "別の狙い方"; }],
+    ["stopping condition", (profile: Profile) => { profile.ceiling += "／次のATまで続行"; }],
+    ["starting game", (profile: Profile) => { profile.gRange.start -= 1; }],
+    ["ending game", (profile: Profile) => { profile.gRange.end += 10; }],
+    ["step", (profile: Profile) => { profile.gRange.step = 20; }],
+    ["active selectors", (profile: Profile) => { profile.activeAxes = []; }],
+    ["sample unit", (profile: Profile) => { profile.sessionUnit = "別区間"; }],
+    ["sample definition", (profile: Profile) => { profile.sampleNote = "別の当たりで区切る"; }],
+    ["filter name", (profile: Profile) => { profile.evFilters!.axes![0].label = "別の回数"; }],
+    ["filter default", (profile: Profile) => { profile.evFilters!.axes![0].allLabel = "0回のみ"; }],
+    ["filter options", (profile: Profile) => { profile.evFilters!.axes![0].options.push({ value: "2", label: "2回" }); }],
+    ["legacy filter options", (profile: Profile) => { profile.evFilters!.cz = ["0", "1"]; }],
+    ["filter policy", (profile: Profile) => { profile.evFilters!.selectionPolicy!.thresholdPoints = 2; }],
+  ] as const)("rejects a new correction that changes the source %s", (_name, change) => {
+    const input = optedIn();
+    change(input.setting1Correction!.profiles[0]);
+    expect(() => validateMachine(input)).toThrow(/must preserve the source specification/);
+  });
+
+  it("keeps old published bundles readable until their producer opts in", () => {
+    const legacy = correctionMachine();
+    legacy.setting1Correction!.profiles[0].ceiling = "旧生成物の別表記";
+    legacy.setting1Correction!.profiles[0].evFilters!.axes![0].allLabel = "旧既定条件";
+    expect(() => validateMachine(legacy)).not.toThrow();
+    legacy.setting1Correction!.profileSpecVersion = 1;
+    expect(() => validateMachine(legacy)).toThrow(/must preserve the source specification/);
+  });
+
+  it("allows corrected cash, time, derived zones and policy diagnostics to differ", () => {
+    const input = optedIn();
+    const corrected = input.setting1Correction!.profiles[0];
+    corrected.zones = [{ g: corrected.gRange.start, label: "補正後のゾーン" }];
+    corrected.baseAnchors[0].playG = 321;
+    corrected.evFilters!.tables.c1.baseAnchors[0].playG = 123;
+    corrected.evFilters!.selectionPolicy!.diagnostics = { observedDifference: 0.7 };
+    expect(() => validateMachine(input)).not.toThrow();
+    expect(onlyLowSetting(input)!.profiles[0]).toEqual(corrected);
+  });
+
+  it("compares JSON objects independently of insertion order", () => {
+    const input = optedIn();
+    const corrected = input.setting1Correction!.profiles[0];
+    const { start, end, step } = corrected.gRange;
+    corrected.gRange = { step, end, start };
+    const policy = corrected.evFilters!.selectionPolicy!;
+    corrected.evFilters!.selectionPolicy = Object.fromEntries(Object.entries(policy).reverse());
+    expect(() => validateMachine(input)).not.toThrow();
+  });
+
+  it("keeps heaven-band cash aggregations independent from shared filter declarations", () => {
+    const input = optedIn();
+    const source = input.profiles[0];
+    const corrected = input.setting1Correction!.profiles[0];
+    source.key = corrected.key = "heaven_4652";
+    const aggregate = {
+      schema: "evlive-filter-aggregates/v2" as const, axisKeys: [],
+      costPerGame: 30.6, exchange: 20, medalsPerGame: 1.53, junzou: 2.6, bet: 3,
+      investmentMinimum: "total" as const, roundingEpsilon: 1e-8,
+      rows: [[0, 2, 100, 1000]],
+    };
+    source.evFilters!.tableAggregations = { c1: structuredClone(aggregate) };
+    corrected.evFilters!.tableAggregations = { c1: { ...aggregate, rows: [[0, 2, 100, 900]] } };
+    corrected.evFilters!.tables.c1.totalPayout = 900;
+    expect(() => validateMachine(input)).not.toThrow();
+    expect(onlyLowSetting(input)!.profiles[0].evFilters!.tableAggregations!.c1.rows).toEqual([[0, 2, 100, 900]]);
+  });
+});

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { validateSharedLedger, type ReferenceComparison } from "../lib/ev/shared-ledger";
 import type { Profile, Setting1Correction } from "../lib/ev/types";
+import { validateSetting1ProfileSpecs } from "../lib/ev/setting1-profile-spec";
 
 const points = [
   ["reset_0_600", 100, "gte", "reset_5050", 0, 104.2],
@@ -40,6 +41,17 @@ function fixture(): Setting1Correction {
 describe("shared Lycoris accounting and honest reference comparison", () => {
   it("allows real differences from the supplied reference without claiming a match", () => {
     expect(() => validateSharedLedger("lycoris", fixture())).not.toThrow();
+  });
+  it("preserves a shared-ledger correction's legal cash and elapsed-time differences", () => {
+    const corrected = fixture();
+    corrected.profileSpecVersion = 1;
+    const source = structuredClone(corrected.profiles);
+    for (const profile of source) {
+      profile.baseAnchors = profile.baseAnchors.map(anchor => ({ ...anchor, ev: -100, rtp: 96, playG: 300 }));
+      profile.evFilters!.aggregation!.rows = [[profile.gRange.start, 2, 100, 900, 300]];
+    }
+    expect(() => validateSetting1ProfileSpecs(source, corrected.profiles)).not.toThrow();
+    expect(() => validateSharedLedger("lycoris", corrected)).not.toThrow();
   });
   it("rejects a whole-machine equation that does not reconcile", () => {
     const input = fixture();

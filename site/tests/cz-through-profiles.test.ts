@@ -51,6 +51,14 @@ function decoded(profile: Profile): DecodedFilterAggregation {
 }
 
 describe('VVV2 normal CZ cohort publication', () => {
+  it.each([false, true])('preserves the opted-in source specification through the CZ split (gzip=%s)', compressed => {
+    const machine = makeMachine(compressed);
+    machine.setting1Correction!.profileSpecVersion = 1;
+    const result = splitCzThroughProfiles(machine);
+    expect(result.setting1Correction!.profileSpecVersion).toBe(1);
+    expect(validateMachine(result)).toEqual(result);
+  });
+
   it('preserves v2 investment distributions when splitting the CZ cohorts', () => {
     const machine = makeMachine(false);
     for (const profile of [...machine.profiles, ...machine.setting1Correction!.profiles]) {
