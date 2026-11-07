@@ -3,7 +3,7 @@
   "hallId": "ueno_shinkan",
   "source": "daidata",
   "storeId": "100196",
-  "lastUpdated": "2026-11-06",
+  "lastUpdated": "2026-11-07",
   "machines": [
     {
       "id": "mbcb5735b",
@@ -78,7 +78,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-06",
+      "lastUpdated": "2026-11-07",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -86,19 +86,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 503,
-        "events": 488,
+        "rows": 627,
+        "events": 609,
         "units": 3,
-        "days": 5,
+        "days": 6,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-06"
+        "lastDate": "2026-11-07"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_shinkan",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-06",
-        "inputSha256": "a7ba856d6cfa0439a8a55e50d96ce8a624487c993e02e3b559c10218b9d81bfc"
+        "targetDate": "2026-11-07",
+        "inputSha256": "433cae335d28a4caace338d0353b14f3cd3f76303a3033012bccfa8d6d8aa21c"
       }
     },
     {
@@ -269,7 +269,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "Lスマスロ モンキーターンV",
         "targetDate": "2026-11-05",
-        "inputSha256": "b98288026887a57ec2fd3938692bef825a9e25fc90a221c534201016d856f317"
+        "inputSha256": "ee65e7c3e70ee9851ea88219f219cf956b95b19a27661ec57a28f9e3e2baf73f"
       }
     },
     {
@@ -646,7 +646,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "L喰霊-零-Re",
         "targetDate": "2026-11-05",
-        "inputSha256": "4cb6c6a8dbc64353884ca8123b0d7fe9914a51f9de1e62feb15cc211ebdc7831"
+        "inputSha256": "5b836bf1b526479fcbd01116492b7e899ac24be4ff11cdb75cf5cb6fe4f5207b"
       }
     },
     {
@@ -792,7 +792,7 @@
         "スマスロ牙狼"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-06",
+      "lastUpdated": "2026-11-07",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -800,19 +800,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 156,
-        "events": 151,
+        "rows": 213,
+        "events": 207,
         "units": 1,
-        "days": 5,
+        "days": 6,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-06"
+        "lastDate": "2026-11-07"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_shinkan",
         "machineName": "L牙狼 闇を照らす者",
-        "targetDate": "2026-11-06",
-        "inputSha256": "81b87d77373adaed5b7065e575a34884a941b79c05bf111e625fa95848e1045b"
+        "targetDate": "2026-11-07",
+        "inputSha256": "e17213c5496061b9da4f8a99ca1bb5aba0c3a827cd7998ecc5efb277fd77db59"
       }
     },
     {
@@ -943,7 +943,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "L虚構推理",
         "targetDate": "2026-11-05",
-        "inputSha256": "478c9203a39adced20b2c136d13769c60f6fdb3d0b5a42a71880a352abf44208"
+        "inputSha256": "9679cfe53a1e4efae12d83a7c0c6444eb5bf73ed1b34587a304bd93ae38ced25"
       }
     },
     {
@@ -1025,7 +1025,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-06",
+      "lastUpdated": "2026-11-07",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1033,19 +1033,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 2556,
-        "events": 2526,
+        "rows": 3123,
+        "events": 3087,
         "units": 6,
-        "days": 5,
+        "days": 6,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-06"
+        "lastDate": "2026-11-07"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_shinkan",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-06",
-        "inputSha256": "ad856b41d04db4a0361df0684aaac7830d50aa9010366f3f99d210273d4e5500"
+        "targetDate": "2026-11-07",
+        "inputSha256": "0dfb99d4ffed11d3293e0bafa6b2a391f9f43ab28c4f2f2bcce13540b1d129ad"
       }
     },
     {
@@ -1078,7 +1078,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "この素晴らしい世界に祝福を！",
         "targetDate": "2026-11-05",
-        "inputSha256": "bad2d6547710bf4ea07a2251a78426d9aed13a9d838e06b3af1d381aee4b55fd"
+        "inputSha256": "de35271112d890f70d95c2481a743895a0aa75a6da0f64986b62a3dce2beef2a"
       }
     },
     {
@@ -1281,7 +1281,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "スマスロ 北斗の拳 転生の章2",
         "targetDate": "2026-11-05",
-        "inputSha256": "907717dadd04f517b38f8b44446a5c17a721c69999c848de0d32c10eacea427d"
+        "inputSha256": "c6f1799a2c87ba6c7ce9cf53c0e46dfbf737106a3bad1a3caa15419be3375742"
       }
     },
     {
@@ -1414,7 +1414,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "スマスロスーパーブラックジャック",
         "targetDate": "2026-11-05",
-        "inputSha256": "e1a4dc7c7e8b6c7b68555471f50f96452ef30ba0ef65202347c8901c477d271e"
+        "inputSha256": "c3f8569ed5e05de4627eb834fe7f11d459c403171c00eeb75928062f77b25e22"
       }
     },
     {
@@ -1483,7 +1483,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "ソードアート・オンラインII",
         "targetDate": "2026-11-05",
-        "inputSha256": "5b8b3487642f3dd3a94abe5f1e772b271c3b591ee78518826ae715418321d699"
+        "inputSha256": "4752590cfb1c8cc09f8443ab21eeac6682bcf77e268574011954760848d08d8f"
       }
     },
     {
@@ -1548,7 +1548,7 @@
         "hallId": "ueno_shinkan",
         "machineName": "回胴式遊技機グランベルム",
         "targetDate": "2026-11-05",
-        "inputSha256": "83f71c40f53d41077d6fc767c8bee0afdf43453d690fd624df23c6f528efbbb1"
+        "inputSha256": "0b2aa317239a16f50885e68ef55045efc7c24eafced26532f5d9cdb4bab4653f"
       }
     },
     {
