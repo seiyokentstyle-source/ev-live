@@ -70,6 +70,21 @@ jobs:
         run: node --test ../scripts/tests/*.test.mjs
       - name: Test site
         run: npm test
+      - name: Let static page workers keep the heap limit
+        # Next.js（16.2）は静的ページ生成ワーカーの起動時に NODE_OPTIONS の --max-old-space-size を
+        # 外す（isolatedMemory: true）。そのためワーカーは既定の約4GBのままで、2026-11-07 に
+        # 機種の集計が増えた時点でヒープ不足になった。ここだけ外さないようにし、下の6GBをワーカーにも効かせる。
+        # 置き換え先がちょうど1か所でなければ（Next.jsの更新で形が変わったら）止める。
+        run: |
+          node -e "
+          const fs = require('fs');
+          const p = require.resolve('next/dist/build/index.js');
+          const s = fs.readFileSync(p, 'utf8');
+          const n = s.split('isolatedMemory: true,').length - 1;
+          if (n !== 1) { console.error('isolatedMemory の箇所が ' + n + ' 件'); process.exit(1); }
+          fs.writeFileSync(p, s.replace('isolatedMemory: true,', 'isolatedMemory: false,'));
+          console.log('static workers keep NODE_OPTIONS heap limit');
+          "
       - name: Build (static export under basePath /ev-live)
         run: npm run build
         env:
