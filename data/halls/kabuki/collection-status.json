@@ -3,7 +3,7 @@
   "hallId": "kabuki",
   "source": "daidata",
   "storeId": "100949",
-  "lastUpdated": "2026-11-07",
+  "lastUpdated": "2026-11-08",
   "machines": [
     {
       "id": "mbf0ab5b1",
@@ -35,7 +35,7 @@
         "hallId": "kabuki",
         "machineName": "L ULTRAMAN最終決戦",
         "targetDate": "2026-11-07",
-        "inputSha256": "501649bfea1d6e5e84d40edae365078c8f0d9ac41d098259dd36a0a99c09f9a3"
+        "inputSha256": "9c557e6fdd48d32413b6926fc38b1c0bf2fb3aa32bc821b2b289463f0790b955"
       }
     },
     {
@@ -49,7 +49,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-08",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -57,19 +57,19 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 1143,
-        "events": 1113,
+        "rows": 1331,
+        "events": 1296,
         "units": 5,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-08"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-07",
-        "inputSha256": "8341bfe1dc105ddf30dd261eb6fb781c808283faa033f2c61fe36fce8b4f8602"
+        "targetDate": "2026-11-08",
+        "inputSha256": "f87e14691add6d7ebf2c6e4a0dae1595f622508c6256b7241b9726217a3c5818"
       }
     },
     {
@@ -103,7 +103,7 @@
         "hallId": "kabuki",
         "machineName": "L 東京喰種",
         "targetDate": "2026-11-07",
-        "inputSha256": "98a1544318db765c3ee0fc8fbd81b7ae75a387404643407443211895fb8ed957"
+        "inputSha256": "62cb05fbdf6c7e037972bf33ccd0f7503bc8e75e8a81669a7c7f6364404b8544"
       }
     },
     {
@@ -919,7 +919,7 @@
         "hallId": "kabuki",
         "machineName": "Lリコリス・リコイル",
         "targetDate": "2026-11-07",
-        "inputSha256": "3bbc4b6b9b29efabd667363bd95209838e11e8c585f24080e27af851c51dfb6d"
+        "inputSha256": "cd5ca1ba6fbd621af6c910feb052a30cb2e22c4f854db10189a2605f7067b3aa"
       }
     },
     {
@@ -1117,7 +1117,7 @@
         "hallId": "kabuki",
         "machineName": "L忍魂参 奥義皆伝ノ章",
         "targetDate": "2026-11-07",
-        "inputSha256": "f2d38889cfa32bc7693daf6e5898a21ee23c17086aa64e958a61b0fc145954f5"
+        "inputSha256": "e80a1f1d2c5c35b44ae23810dd23b789815190532eb530580effd0e79bc6f252"
       }
     },
     {
@@ -1331,7 +1331,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-08",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1339,19 +1339,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 1754,
-        "events": 1730,
+        "rows": 2044,
+        "events": 2016,
         "units": 4,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-08"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-07",
-        "inputSha256": "b7e9396c0fa0ba432b77665066bafb90833d0c5b6794ff88354ae43df89011e9"
+        "targetDate": "2026-11-08",
+        "inputSha256": "43e55ee33d9ad00d25ab2ff0a809bdae96f75ceebe2ab8e9b66a7835640945c2"
       }
     },
     {
@@ -1466,7 +1466,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-08",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1474,19 +1474,19 @@
       "collectionComplete": true,
       "expectedUnits": 8,
       "collection": {
-        "rows": 4937,
-        "events": 4889,
+        "rows": 5824,
+        "events": 5768,
         "units": 8,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-08"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-07",
-        "inputSha256": "bbd3b950b746f7a02addc16cc994b75327920469e4c571c3822af19f500c55d3"
+        "targetDate": "2026-11-08",
+        "inputSha256": "068502bf947ae7e31cd2cdb600b8c68787414d24982775c6f1d211b5b2992b57"
       }
     },
     {
@@ -1500,7 +1500,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-08",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1508,19 +1508,19 @@
       "collectionComplete": true,
       "expectedUnits": 11,
       "collection": {
-        "rows": 6869,
-        "events": 6803,
+        "rows": 7872,
+        "events": 7795,
         "units": 11,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-08"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-07",
-        "inputSha256": "5ad93e200b989b2e85a02008b52862a47393e3fa8626035124738df96e6a0c82"
+        "targetDate": "2026-11-08",
+        "inputSha256": "90762ac94db5dd912595229530114557324d814a50e6275e217f7cd1d7d3fa0e"
       }
     },
     {
@@ -1533,7 +1533,7 @@
         "スマスロ ラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-08",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1541,19 +1541,19 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 1610,
-        "events": 1568,
+        "rows": 1903,
+        "events": 1854,
         "units": 7,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-08"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "kabuki",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-07",
-        "inputSha256": "4f1575fdd0a564afd41c63a52297811dc62b26926410335b1a444a13bf03b37a"
+        "targetDate": "2026-11-08",
+        "inputSha256": "f87ba27370be2fa4ac0bdc5a3f4cacde92d97d868fc2c34e7fd6cd1debfc9810"
       }
     },
     {
@@ -2127,7 +2127,7 @@
         "hallId": "kabuki",
         "machineName": "ソードアート・オンラインII",
         "targetDate": "2026-11-07",
-        "inputSha256": "9881d2aee243e63c2835f1359adecbed15d68db76ca7a50151d6e8383eb322b5"
+        "inputSha256": "321540ce75c057bf630c013d63a9223025783cbfe7515ca268b53477d9610b7b"
       }
     },
     {
@@ -2259,7 +2259,7 @@
         "hallId": "kabuki",
         "machineName": "邪神ちゃんドロップキック",
         "targetDate": "2026-11-07",
-        "inputSha256": "b8d69634d99148876555bdea42a7b5b203cef3439cfea9550177975cbba19895"
+        "inputSha256": "922ac4a7c80b32481703833201455d60a0c0b0b7d1f0326e97890921f9acd594"
       }
     }
   ]
