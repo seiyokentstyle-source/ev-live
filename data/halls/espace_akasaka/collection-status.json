@@ -3,7 +3,7 @@
   "hallId": "espace_akasaka",
   "source": "daidata",
   "storeId": "100952",
-  "lastUpdated": "2026-11-07",
+  "lastUpdated": "2026-11-08",
   "machines": [
     {
       "id": "m3e019184",
@@ -233,7 +233,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-08",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -241,19 +241,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 533,
-        "events": 521,
+        "rows": 613,
+        "events": 599,
         "units": 2,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-08"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_akasaka",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-07",
-        "inputSha256": "ae8d6b444aac8577e3d543bcf0b6d947fa58b67104992b908fddcc275d7c8614"
+        "targetDate": "2026-11-08",
+        "inputSha256": "f698b07b64ecee6ea803c4a090f991207d8329f64f4898ad8f63c74fb0c0d90e"
       }
     },
     {
@@ -981,7 +981,7 @@
         "スマスロ牙狼"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-08",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -989,19 +989,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 249,
-        "events": 243,
+        "rows": 292,
+        "events": 285,
         "units": 1,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-08"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_akasaka",
         "machineName": "L牙狼 闇を照らす者",
-        "targetDate": "2026-11-07",
-        "inputSha256": "d3cf19171515d854af77ab0c59ac68ee9a46e51b0ec7cb79669401bdcc98383f"
+        "targetDate": "2026-11-08",
+        "inputSha256": "ab9c0cd8752b5d3932837a5dd60e3e8b651d614b9361bdebd757e4237ff22c44"
       }
     },
     {
@@ -1114,7 +1114,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-08",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1122,19 +1122,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 934,
-        "events": 922,
+        "rows": 1079,
+        "events": 1065,
         "units": 2,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-08"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_akasaka",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-07",
-        "inputSha256": "70e2e2ea145169e0192ed1d1c25eaacf36e193671e768aa5a82aa1c17905ced4"
+        "targetDate": "2026-11-08",
+        "inputSha256": "17a807c925b6686deb6fbb341a05663ace868b3c37aa211aa43cffea253a6db7"
       }
     },
     {
@@ -1217,7 +1217,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-08",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1225,19 +1225,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1117,
-        "events": 1105,
+        "rows": 1303,
+        "events": 1289,
         "units": 2,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-08"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_akasaka",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-07",
-        "inputSha256": "feb3a7e129b66aacb72616ac3f21e2a5dbda2c594fa84685cbb74446ba16bfae"
+        "targetDate": "2026-11-08",
+        "inputSha256": "d89bd996acbdfdd27ea7056199a36ff762b7026cadde1de5ba33a273399739d4"
       }
     },
     {
@@ -1251,7 +1251,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-08",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1259,19 +1259,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 2585,
-        "events": 2561,
+        "rows": 3010,
+        "events": 2982,
         "units": 4,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-08"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_akasaka",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-07",
-        "inputSha256": "cba3172cfe20ad2bf15149f8686c9996e2381d479163a2f671b2b5c404bf29ee"
+        "targetDate": "2026-11-08",
+        "inputSha256": "86027a1d6d0a4b6d9464542573096a34f66739aea58e1f8ea0061ceb0d2935c7"
       }
     },
     {
@@ -1284,7 +1284,7 @@
         "スマスロ ラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-08",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1292,19 +1292,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 433,
-        "events": 421,
+        "rows": 493,
+        "events": 479,
         "units": 2,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-08"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_akasaka",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-07",
-        "inputSha256": "b8be2565dfa0252942f96e9dd9384f8460f78d19ce7f060d019aa54cf7ab781e"
+        "targetDate": "2026-11-08",
+        "inputSha256": "445a32484dacf6cda85e8f4a9a3c55309905a5c30740495f916c54248b180a91"
       }
     },
     {
