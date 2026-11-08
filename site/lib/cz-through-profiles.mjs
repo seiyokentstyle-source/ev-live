@@ -4,6 +4,8 @@ import { validateAggregateMatchModes, validateAggregateRows } from './ev/filter-
 import { validateNormalCostSchedule } from './ev/normal-cost-core.mjs';
 
 const TARGET = /^cz_ceiling_(4652|5050)$/;
+/** 分割のために行そのものを読む必要がある表。ほかの表は rowsAsset の参照のままでよい。 */
+export const CZ_THROUGH_SOURCE_PROFILES = TARGET;
 const RATE_LABEL = { '4652': '46/52', '5050': '50/50' };
 const fail = message => { throw new Error(`Invalid CZ cohort aggregation: ${message}`); };
 

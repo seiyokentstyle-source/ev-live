@@ -4,6 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { inlineSourceAggregations, sourceAggregatesDir } from "../lib/source-aggregations.mjs";
+import { externalizeMachineAggregations } from "../lib/filter-aggregate-assets.mjs";
 import { exportFilterAggregates } from "../scripts/export-filter-aggregates.mjs";
 
 const rows = [[1, 0, 2, 100, 300], [10, 1, 1, 50, 120]];
@@ -31,6 +32,22 @@ describe("source aggregate files written beside machine JSON", () => {
     expect(restored.profiles[0].evFilters.aggregation).toEqual({ ...aggregation, rows });
     const inline = machineWith({ ...aggregation, rows });
     expect(inlineSourceAggregations(inline, dir)).toEqual(inline);
+  });
+
+  it("keeps only the site's own reference for profiles whose rows are not needed at build time", () => {
+    const { machines, assets } = workspace();
+    // The scraper writes Python floats such as 100.0; the site's bytes are JSON.stringify's.
+    const body = '{"rows":[[1,0,2,100.0,300.0],[10,1,1,50.0,120.0]]}';
+    const sha256 = createHash("sha256").update(body, "utf8").digest("hex");
+    writeFileSync(path.join(assets, `${sha256}.json`), body, "utf8");
+    const dir = sourceAggregatesDir(machines);
+    const source = machineWith({ ...aggregation, rowsAsset: { sha256, rowCount: 2 } });
+    const full = externalizeMachineAggregations(inlineSourceAggregations(source, dir));
+    const lazy = inlineSourceAggregations(source, dir, { profileKeys: /^cz_ceiling_(4652|5050)$/ });
+    expect(JSON.stringify(lazy)).toBe(JSON.stringify(full));
+    expect(lazy.profiles[0].evFilters.aggregation.rowsAsset.sha256).not.toBe(sha256);
+    const wanted = inlineSourceAggregations(source, dir, { profileKeys: /^game_ceiling_4652$/ });
+    expect(wanted.profiles[0].evFilters.aggregation).toEqual({ ...aggregation, rows });
   });
 
   it("rejects a missing, altered or miscounted file", () => {

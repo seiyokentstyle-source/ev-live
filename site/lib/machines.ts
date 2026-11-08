@@ -13,6 +13,7 @@ import { readCollectionCatalog } from "./collection-status-catalog";
 import type { CollectedMachine, CollectionStatusEntry } from "./collection-status-contract";
 import { selectMachineListSummaries } from "./machine-list-summary";
 import { inlineSourceAggregations, sourceAggregatesDir } from "./source-aggregations.mjs";
+import { CZ_THROUGH_SOURCE_PROFILES } from "./cz-through-profiles.mjs";
 import { getRegisteredProvisionalSetting1 } from "./ev/provisional-setting1";
 import { machineSelectionKey, machineRouteIds, matchesMachineRoute, preferredMachineIdentity } from "./machine-identity";
 
@@ -42,6 +43,15 @@ async function readMachines(dir: string): Promise<Machine[]> {
   return readMachinesUncached(dir);
 }
 
+// 2026-11-08：絞り込みの表の行は public/filter-aggregates から画面が必要なときに読む。
+// ページ生成で全表の行を展開すると店舗混合で約1.3GBになり、組み立てがヒープ不足で落ちたため、
+// CZスルー分割に使う表（行から分割表を作る）だけを展開し、ほかは rowsAsset の参照のまま渡す。
+// 参照の sha256 は書き出し側（export-filter-aggregates）が出すファイルと同じ中身のハッシュ。
+function readSourceMachine(raw: string) {
+  return inlineSourceAggregations(JSON.parse(raw), sourceAggregatesDir(machinesDir),
+    { profileKeys: CZ_THROUGH_SOURCE_PROFILES });
+}
+
 async function readMachinesUncached(dir: string): Promise<Machine[]> {
   // 未集計の店舗はフォルダ自体が無い。空一覧を返して「準備中」として扱う。
   if (!existsSync(dir)) return [];
@@ -51,7 +61,7 @@ async function readMachinesUncached(dir: string): Promise<Machine[]> {
     jsonFiles.map(async (fileName) => {
       const raw = await fs.readFile(path.join(dir, fileName), "utf8");
       return normalizeMachineMetadata(validateMachine(
-        inlineSourceAggregations(JSON.parse(raw), sourceAggregatesDir(machinesDir))));
+        readSourceMachine(raw)));
     })
   );
 }
@@ -65,7 +75,7 @@ async function readMachine(dir: string, id: string): Promise<Machine | undefined
     throw error;
   }
   const machine = normalizeMachineMetadata(validateMachine(
-    inlineSourceAggregations(JSON.parse(raw), sourceAggregatesDir(machinesDir))));
+    readSourceMachine(raw)));
   return machine.id === id ? machine : undefined;
 }
 

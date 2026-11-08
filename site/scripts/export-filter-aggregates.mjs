@@ -5,6 +5,26 @@ import { externalizeMachineAggregations } from '../lib/filter-aggregate-assets.m
 import { splitCzThroughProfiles } from '../lib/cz-through-profiles.mjs';
 import { inlineSourceAggregations, sourceAggregatesDir } from '../lib/source-aggregations.mjs';
 import { hallPublicationPolicy } from './hall-publication-policy.mjs';
+import { validateAggregateRows } from '../lib/ev/filter-aggregation-validation-core.mjs';
+
+// 2026-11-08：ページ生成は行を展開しなくなったので（lib/machines.ts）、平文の行の検査は
+// 1機種ずつ全行を読むここで行う。以前ページ生成の validateMachine がしていたのと同じ検査。
+function validateInlineRows(machine, label) {
+  for (const profile of [...machine.profiles, ...(machine.setting1Correction?.profiles ?? [])]) {
+    const filters = profile?.evFilters;
+    if (!filters) continue;
+    const check = (data, axes) => {
+      if (data?.rows === undefined) return;
+      try {
+        validateAggregateRows(data.rows, axes ?? [], undefined, data.axisMatchModes, data.schema, data.totalPlayGames);
+      } catch (error) {
+        throw new Error(`${label} profile ${profile.key}: ${error.message}`);
+      }
+    };
+    if (filters.aggregation) check(filters.aggregation, filters.axes);
+    for (const data of Object.values(filters.tableAggregations ?? {})) check(data, []);
+  }
+}
 
 export async function exportFilterAggregates(sourceDir, outputDir, halls) {
   const source = path.resolve(sourceDir), output = path.resolve(outputDir);
@@ -30,6 +50,7 @@ export async function exportFilterAggregates(sourceDir, outputDir, halls) {
       let machine = inlineSourceAggregations(JSON.parse(await fs.readFile(filename, 'utf8')),
         sourceAggregatesDir(source));
       if (!Array.isArray(machine.profiles)) continue;
+      validateInlineRows(machine, path.relative(source, filename));
       if (directory === source && !policy.isListedSubdir('')) {
         // The root store also supplies legacy corrected-mixed fallbacks. Keep
         // those profiles without emitting the hidden store's measured tables.
