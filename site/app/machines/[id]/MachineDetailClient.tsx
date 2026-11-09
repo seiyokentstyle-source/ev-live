@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
@@ -19,13 +19,13 @@ import { EvFilter } from "@/components/ev/EvFilter";
 import { FooterBar } from "@/components/ev/FooterBar";
 import { ProfileBar } from "@/components/ev/ProfileBar";
 import { RateSelector } from "@/components/ev/RateSelector";
-import { ModeSelector, type AimMode } from "@/components/ev/ModeSelector";
+import { ModeSelector, aimModeLabel, type AimMode } from "@/components/ev/ModeSelector";
 import { SettingAimTable } from "@/components/ev/SettingAimTable";
 import { AtPayoutTable } from "@/components/ev/AtPayoutTable";
 import { KatanaEstimateTable } from "@/components/ev/KatanaEstimateTable";
 import { ThroughReleaseTable } from "@/components/ev/ThroughReleaseTable";
 import { HarakiriTable } from "@/components/ev/HarakiriTable";
-import { ControlBar, SegmentedControl, SEGMENT_ON, SEGMENT_OFF } from "@/components/ui/Controls";
+import { ControlBar, SegmentedControl } from "@/components/ui/Controls";
 import { EmptyState } from "@/components/ui/DataTable";
 import { useTableControls } from "@/components/ui/useTableControls";
 import { SavedTargets } from "@/components/ev/SavedTargets";
@@ -116,7 +116,8 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
       ...(hasAtPayout ? (["payout"] as const) : []),
       ...(hasKatanaEstimate ? (["katana"] as const) : []),
       ...(hasThroughRelease ? (["release"] as const) : []),
-      ...(hasHarakiri ? (["harakiri"] as const) : [])
+      ...(hasHarakiri ? (["harakiri"] as const) : []),
+      "conditions"
     ],
     [hasSettingAim, hasAtPayout, hasKatanaEstimate, hasThroughRelease, hasHarakiri]
   );
@@ -126,8 +127,14 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
   useEffect(() => {
     if (!availableModes.includes(mode)) setMode("ev");
   }, [availableModes, mode]);
-  const [conditionsOpen, setConditionsOpen] = useState(false);
-  const conditionsPanelId = useId();
+  // 算出条件のページは、その前に見ていた目的（表）の条件を出す。条件の無い目的からは期待値稼働の条件。
+  const [conditionsFor, setConditionsFor] = useState<AimMode>("ev");
+  const selectMode = (value: AimMode) => {
+    if (value === "conditions" && mode !== "conditions") {
+      setConditionsFor(mode === "targets" || mode === "katana" ? "ev" : mode);
+    }
+    setMode(value);
+  };
   const [targetId, setTargetId] = useState('');
   const [aimTargetId, setAimTargetId] = useState<string | null>(null);
   const aimTarget = savedTargets.find(target => target.id === aimTargetId);
@@ -431,38 +438,36 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
         <TheoreticalTable data={machine.theoretical} gamesPerHour={machine.economics.gamesPerHour} bet={machine.evCalc?.bet || 3} />
       ) : (
         <>
-      <ModeSelector value={mode} onChange={value => { setMode(value); setConditionsOpen(false); }} modes={availableModes}
-        action={mode !== 'targets' && mode !== 'katana' && !(mode === 'ev' && aimTarget) ? (
-          <button type="button" onClick={() => setConditionsOpen(value => !value)}
-            aria-expanded={conditionsOpen} aria-controls={conditionsPanelId}
-            className={`min-h-[34px] shrink-0 rounded-md px-2.5 py-1 text-xs font-bold ${conditionsOpen ? SEGMENT_ON : SEGMENT_OFF}`}>
-            算出条件 {conditionsOpen ? "▲" : "▼"}
-          </button>
-        ) : null} />
+      <ModeSelector value={mode} onChange={selectMode} modes={availableModes} />
 
-      {mode !== 'targets' && mode !== 'katana' && !(mode === 'ev' && aimTarget) ? <ConditionsBar
-        id={conditionsPanelId}
-        detailsOnly
-        expanded={conditionsOpen}
-        machine={machine}
-        profile={displayProfile}
-        mode={mode}
-        rateLabel={grouped.rates.find((r) => r.value === activeRate)?.label ?? activeRate}
-        czLabel={(() => {
-          const axis = evAxes.find((a) => a.key === "c");
-          if (!axis) return null;
-          const v = evSel.c ?? null;
-          return v === null ? axis.allLabel : axis.options.find((opt) => opt.value === v)?.label ?? v;
-        })()}
-        czTerm={czTerm}
-        ceilingText={profileCeilingText(profile, machine.id, group.key)}
-        profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
-        profileSessionUnit={displayProfile.sessionUnit}
-        profileSampleNote={displayProfile.sampleNote}
-        heldMedals={heldMedals}
-      /> : null}
-
-      {mode === 'targets' ? (
+      {mode === 'conditions' ? (
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <p className="mono border-b border-line bg-panel px-3 py-2 text-[10px] text-muted">
+            「{aimModeLabel(conditionsFor)}」の表の算出条件
+          </p>
+          <ConditionsBar
+            asPage
+            detailsOnly
+            expanded
+            machine={machine}
+            profile={displayProfile}
+            mode={conditionsFor}
+            rateLabel={grouped.rates.find((r) => r.value === activeRate)?.label ?? activeRate}
+            czLabel={(() => {
+              const axis = evAxes.find((a) => a.key === "c");
+              if (!axis) return null;
+              const v = evSel.c ?? null;
+              return v === null ? axis.allLabel : axis.options.find((opt) => opt.value === v)?.label ?? v;
+            })()}
+            czTerm={czTerm}
+            ceilingText={profileCeilingText(profile, machine.id, group.key)}
+            profileSessions={evFiltered ? evFilterStats.hits : displayProfile.sessions ?? null}
+            profileSessionUnit={displayProfile.sessionUnit}
+            profileSampleNote={displayProfile.sampleNote}
+            heldMedals={heldMedals}
+          />
+        </div>
+      ) : mode === 'targets' ? (
         <SavedTargets machine={machine} targets={savedTargets} selectedId={targetId} onSelect={setTargetId} />
       ) : mode === "setting" && settingAim ? (
         <SettingAimTable aim={settingAim} />

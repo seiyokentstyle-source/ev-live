@@ -30,6 +30,8 @@ type ConditionsBarProps = {
   detailsOnly?: boolean;
   expanded?: boolean;
   id?: string;
+  /** 目的の「算出条件」ページとして出す。表のスクロールで畳まれる操作行にしない。 */
+  asPage?: boolean;
 };
 
 type Row = { k: string; v: string };
@@ -54,7 +56,8 @@ export function ConditionsBar({
   profile,
   detailsOnly = false,
   expanded,
-  id
+  id,
+  asPage = false
 }: ConditionsBarProps) {
   const [open, setOpen] = useState(false);
   const isOpen = expanded ?? open;
@@ -133,7 +136,7 @@ export function ConditionsBar({
   const summary = rows.slice(0, 3).map((r) => r.v.split("（")[0]).join(" / ");
 
   return (
-    <div id={id} className="collapsible-bar shrink-0 border-b border-line bg-panel">
+    <div id={id} className={`${asPage ? "" : "collapsible-bar "}shrink-0 border-b border-line bg-panel`}>
       {/* 折りたたみ（grid-template-rows）のため、中身は1枚のdivにまとめる。 */}
       <div>
       {!detailsOnly ? <button
