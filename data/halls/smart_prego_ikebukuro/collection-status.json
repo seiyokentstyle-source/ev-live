@@ -3,7 +3,7 @@
   "hallId": "smart_prego_ikebukuro",
   "source": "daidata",
   "storeId": "101178",
-  "lastUpdated": "2026-11-07",
+  "lastUpdated": "2026-11-09",
   "machines": [
     {
       "id": "m9abf0c4d",
@@ -17,7 +17,7 @@
         "Ｌ　Ｖｉｖｙ"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-09",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -25,19 +25,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 958,
-        "events": 934,
+        "rows": 1192,
+        "events": 1160,
         "units": 4,
-        "days": 6,
+        "days": 8,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-09"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-07",
-        "inputSha256": "4a41bddc532b3c867a0a210eb93a19deaaf9c7ba1497d7c86540853b7637b0ba"
+        "targetDate": "2026-11-09",
+        "inputSha256": "4ffdb6eca4fd6922ed37e4fcd318bf1ac782c3ac3ba21caf6454afe065e9aac0"
       }
     },
     {
@@ -139,7 +139,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lとある魔術の禁書目録2",
         "targetDate": "2026-11-05",
-        "inputSha256": "f7b6fef4acb235895151c4df5196cd7a4fb6f1f8a5549fddd10374fa03dc59e1"
+        "inputSha256": "3a3f2779a3fe1a5bfef63b8d5c5ae80608100e8f73b414876a1dcab68d22c585"
       }
     },
     {
@@ -174,7 +174,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lウミンチュ",
         "targetDate": "2026-11-05",
-        "inputSha256": "cf63ead8b6e68845db1ea12ee418f8cf5ed7efc3cd02da7165683c4387d83537"
+        "inputSha256": "519c996e35335154d4b1631dd7d9b5ca8da71882d2e49773e7e111f6db332a96"
       }
     },
     {
@@ -210,7 +210,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lスマスロ北斗の拳",
         "targetDate": "2026-11-05",
-        "inputSha256": "2bb7a9b4027df1a0f98e35308fbf29830617cd49027c900cee0a4c8193f80a2a"
+        "inputSha256": "dec93c7cfa04f2d71eff465eff487494242eafadbb763708e5e00c92276fde91"
       }
     },
     {
@@ -245,7 +245,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lミリオンゴッド－神々の軌跡－",
         "targetDate": "2026-11-05",
-        "inputSha256": "e457750c2eb6c605b920f2b0a29c66102de868f86c13f57ab7de2bb93cc3e4c9"
+        "inputSha256": "0cf0058c5888857b5558f6a9b82ce063bfcbbdb815c08861306fc71643e7ed77"
       }
     },
     {
@@ -279,7 +279,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lモグモグ風林火山 大海戦の巻",
         "targetDate": "2026-11-05",
-        "inputSha256": "359dca1ba2fce06cdbedb6873812cec98c5b50b3ac3e996f2c9d5360900f2bfd"
+        "inputSha256": "59043e3eaa0a144387ed2ec61bd25b06b3687ccb554694440cee4269b6502855"
       }
     },
     {
@@ -313,7 +313,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lリコリス・リコイル",
         "targetDate": "2026-11-05",
-        "inputSha256": "9f6c937f5da41ef03aae2628514646163e7ade5d92c03cd02468ab298b7fb52c"
+        "inputSha256": "1de9c4b9e56d96a7e4a564d895ff1baa603cb359fef14263f985fe661028ffbd"
       }
     },
     {
@@ -379,7 +379,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L彼女、お借りします",
         "targetDate": "2026-11-05",
-        "inputSha256": "78d639f918febfc4ac8ca7bdd5572cc7ecc882c86f5aff288a5a7a7d08166e0b"
+        "inputSha256": "466a0172a27c566946da6692a2321e6c8ed7bee48869bf655ed72bebab28c486"
       }
     },
     {
@@ -412,7 +412,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L戦国乙女5 業火を穿つ宿焔の双刃",
         "targetDate": "2026-11-05",
-        "inputSha256": "b27bfde9350337a3c7250ca2c33018aa3e3002033b5bf6af661ae7c1865c3177"
+        "inputSha256": "da6f3a47d482942cb76b4f923d4a6e0b2ffed0099b625bebf8d88f12fea835fa"
       }
     },
     {
@@ -427,7 +427,7 @@
         "Ｌ牙狼闇を照らす者"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-09",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -435,19 +435,19 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 877,
-        "events": 847,
+        "rows": 1213,
+        "events": 1173,
         "units": 5,
-        "days": 6,
+        "days": 8,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-09"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L牙狼 闇を照らす者",
-        "targetDate": "2026-11-07",
-        "inputSha256": "fee4fd0cbaa93c9196885a43a89bb9a3afcde8d85ce9b945ab6bc9e4cb9a61fd"
+        "targetDate": "2026-11-09",
+        "inputSha256": "daee472fdfa49aa5cf9129cdc3f82321cd9685da82c71c06cf1be55297139ca9"
       }
     },
     {
@@ -481,7 +481,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L甲鉄城のカバネリ海門決戦",
         "targetDate": "2026-11-05",
-        "inputSha256": "3fe90dfabc2ddcb27ebb67f55220b17e8814f72feba19dc0d9c296f6fb19b029"
+        "inputSha256": "ec92a6e877c82c8ae355405e1592a1a91f2133d3acfade1406cdfc7e95e9c26d"
       }
     },
     {
@@ -514,7 +514,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L真打吉宗",
         "targetDate": "2026-11-05",
-        "inputSha256": "149f7edf0645aef42a51cf21f1107e71b72ba837d759c13f825b261f43ee8306"
+        "inputSha256": "4df96c10c7c469657d18a315d379454bb9664d6528669051a7de872bab6f2cce"
       }
     },
     {
@@ -529,7 +529,7 @@
         "Ｌ星矢　黄金十二宮"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-09",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -537,19 +537,19 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 2876,
-        "events": 2834,
+        "rows": 3754,
+        "events": 3698,
         "units": 7,
-        "days": 6,
+        "days": 8,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-09"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-07",
-        "inputSha256": "91962474bc23a19a7ce61e23fc494e91a8e5a880daf91c19ba6a29692ca4c3b0"
+        "targetDate": "2026-11-09",
+        "inputSha256": "bf7a63521350f911941666af894756058c0d98ce4b690c2ff82232cf9b5c586f"
       }
     },
     {
@@ -582,7 +582,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L見える子ちゃん",
         "targetDate": "2026-11-05",
-        "inputSha256": "074ed1d7f0f4a7a99ad49bd9b4b2ba107d3cbd7e79f831ff2917835e3a1fbe53"
+        "inputSha256": "1786288f0d4ed5ffb583f128a2e294dacc13128b58a7f02bb40a0a5b47b7c5b3"
       }
     },
     {
@@ -614,7 +614,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L転生王女と天才令嬢の魔法革命",
         "targetDate": "2026-11-05",
-        "inputSha256": "ae767c9b1caa1d7f9f47dc28324274f32a641c5250e7f74988e6dd29ac903388"
+        "inputSha256": "3b4735a918e0044d1e79a875cbdc5a4d0d78d071561d21881385852e3dabcffc"
       }
     },
     {
@@ -648,7 +648,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L青春ブタ野郎はバニーガール先輩の夢を見ない",
         "targetDate": "2026-11-05",
-        "inputSha256": "adae131e875efa1d011bcbae826afcd5b7bdca992b3890061be8bafe18167699"
+        "inputSha256": "0ca65dcb2d9021e249f4e034662a9a6cc7e6e45a92b647ed5609622b98e2ebc3"
       }
     },
     {
@@ -683,7 +683,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L魔法少女にあこがれて",
         "targetDate": "2026-11-05",
-        "inputSha256": "f0b44089d33e5ff61d6cc278762944bf969e1dfae196f0ef614228ea6b22a956"
+        "inputSha256": "f4938cb043cee3fef0db0c8d8a25b774efa1ce1c079b9a8addd001118453bfbf"
       }
     },
     {
@@ -699,7 +699,7 @@
         "ＬＳＡＯガンゲイル"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-09",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -707,19 +707,19 @@
       "collectionComplete": true,
       "expectedUnits": 12,
       "collection": {
-        "rows": 5177,
-        "events": 5105,
+        "rows": 6496,
+        "events": 6400,
         "units": 12,
-        "days": 6,
+        "days": 8,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-09"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-07",
-        "inputSha256": "5a9b1022652b99e5b9141a7041b9ebc7c0e5c60aad6845a8bfb0c6d19e23f764"
+        "targetDate": "2026-11-09",
+        "inputSha256": "174c9b6fa26b9ff29d37dbaa74a991aea9639adf03d7273d74b347296f8abc6f"
       }
     },
     {
@@ -734,7 +734,7 @@
         "Ｌゴジラ対エヴァ２"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-09",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -742,19 +742,19 @@
       "collectionComplete": true,
       "expectedUnits": 12,
       "collection": {
-        "rows": 6758,
-        "events": 6686,
+        "rows": 8650,
+        "events": 8555,
         "units": 12,
-        "days": 6,
+        "days": 8,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-09"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-07",
-        "inputSha256": "4f17420788c2617c9029eb672cb9015119ab393c447ae753d9e9269a9415ce5a"
+        "targetDate": "2026-11-09",
+        "inputSha256": "2a8fa2573922535d95876f755cbd72a5f478d4708f3b6305b05d452b184f8ee6"
       }
     },
     {
@@ -768,7 +768,7 @@
         "Ｌラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-07",
+      "lastUpdated": "2026-11-09",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -776,19 +776,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 964,
-        "events": 928,
+        "rows": 1220,
+        "events": 1172,
         "units": 6,
-        "days": 6,
+        "days": 8,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-07"
+        "lastDate": "2026-11-09"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-07",
-        "inputSha256": "bd2086064aeff1facd45572891612b0b9e1742feae4d35567d37bf03d69f2fd8"
+        "targetDate": "2026-11-09",
+        "inputSha256": "6ff4e711f12738caf9fa6ee67fb9fa1663d5b0a3d30c51ced91cee9c1132a5d6"
       }
     },
     {
@@ -822,7 +822,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
         "targetDate": "2026-11-05",
-        "inputSha256": "3a82bf937f999d7c763b9395a67416412f40aadc5e86aa7ebd7e4bb96ef058ea"
+        "inputSha256": "d96e3e77d9c6905702120017517995e010835eefacc0f3dbba901b304e6c8311"
       }
     },
     {
@@ -856,7 +856,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "スマスロ モンスターハンターライズ：サンブレイク",
         "targetDate": "2026-11-05",
-        "inputSha256": "cd64cf192e6f19938edec689d709d2910ddecfab844ae02ddfc6757ce7a915d7"
+        "inputSha256": "d816dd9afa857dcb954f227f4746052c6ed1d02841ad67bbd78dba2251a60853"
       }
     },
     {
@@ -923,7 +923,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "スマスロ 攻殻機動隊",
         "targetDate": "2026-11-05",
-        "inputSha256": "bb9ac2314b854ca9a97f8d1ca9fec745632ea62d3f425cfbc6b307f7365045a9"
+        "inputSha256": "46b582c787aeee04558866078bc1528f15c40b05541b6abd0036c7286f8ba613"
       }
     },
     {
@@ -955,7 +955,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "スマスロ 獣王",
         "targetDate": "2026-11-05",
-        "inputSha256": "b45a97860ce04958b764c81664128f08a6d213334a2025e379ef8d72d4240ae6"
+        "inputSha256": "8211791df1236b3867cac7dc25eec3d0af0dc0de0f906abfd586bd1b01efa0d8"
       }
     },
     {
@@ -987,7 +987,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "スマスロパリピ孔明",
         "targetDate": "2026-11-05",
-        "inputSha256": "dd68cbb8d39b1f02e79be1718af537d405f94f40ce1826c271c460b1abefb1c0"
+        "inputSha256": "bf6212d37e77f44f17aef0ce04fed32bbe4420d9bfc69548d1fa084ea378c83e"
       }
     },
     {
@@ -1056,7 +1056,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "ワールドダイスター",
         "targetDate": "2026-11-05",
-        "inputSha256": "4dd3713eaab8106a1283885aece198a54fac2b20b54b1f421fa7a76f1c0f473f"
+        "inputSha256": "1933817853b4aaa5459b37f45af469f7f87b5e33dc6835621c97f719fb7109fb"
       }
     },
     {
@@ -1090,7 +1090,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "戦国コレクション6",
         "targetDate": "2026-11-05",
-        "inputSha256": "ca1d204ee68768a4c64b2a52ad98eedd57424a790faa1363a9449dd64f25733d"
+        "inputSha256": "0592615cdb94bd757def57290db309fbd38865012781178de84a8b5fcbecf829"
       }
     },
     {
@@ -1122,7 +1122,7 @@
         "hallId": "smart_prego_ikebukuro",
         "machineName": "邪神ちゃんドロップキック",
         "targetDate": "2026-11-05",
-        "inputSha256": "1c981c3ab6f1d61707d862d3645d99c939394dfcf069b5ec6cf55fae5ce42777"
+        "inputSha256": "adf8bdcbe786216146b3562bf3018f2466880c90e78650a99a95431c167a5c76"
       }
     }
   ]
