@@ -3,7 +3,7 @@
   "hallId": "smart_prego_ikebukuro",
   "source": "daidata",
   "storeId": "101178",
-  "lastUpdated": "2026-11-09",
+  "lastUpdated": "2026-11-10",
   "machines": [
     {
       "id": "m9abf0c4d",
@@ -17,7 +17,7 @@
         "Ｌ　Ｖｉｖｙ"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-09",
+      "lastUpdated": "2026-11-10",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -25,19 +25,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 1192,
-        "events": 1160,
+        "rows": 1252,
+        "events": 1216,
         "units": 4,
-        "days": 8,
+        "days": 9,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-09"
+        "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-09",
-        "inputSha256": "4ffdb6eca4fd6922ed37e4fcd318bf1ac782c3ac3ba21caf6454afe065e9aac0"
+        "targetDate": "2026-11-10",
+        "inputSha256": "3685487cef7a2215323aa4729d9217abfeeb96f3e5b5753123880a47c23de801"
       }
     },
     {
@@ -427,7 +427,7 @@
         "Ｌ牙狼闇を照らす者"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-09",
+      "lastUpdated": "2026-11-10",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -435,19 +435,19 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 1213,
-        "events": 1173,
+        "rows": 1318,
+        "events": 1273,
         "units": 5,
-        "days": 8,
+        "days": 9,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-09"
+        "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L牙狼 闇を照らす者",
-        "targetDate": "2026-11-09",
-        "inputSha256": "daee472fdfa49aa5cf9129cdc3f82321cd9685da82c71c06cf1be55297139ca9"
+        "targetDate": "2026-11-10",
+        "inputSha256": "b132e9d62c1beab8e06998c6e2052f4ff88a67d3a674c8c2efddde93d9d9900c"
       }
     },
     {
@@ -529,7 +529,7 @@
         "Ｌ星矢　黄金十二宮"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-09",
+      "lastUpdated": "2026-11-10",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -537,19 +537,19 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 3754,
-        "events": 3698,
+        "rows": 4056,
+        "events": 3993,
         "units": 7,
-        "days": 8,
+        "days": 9,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-09"
+        "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-09",
-        "inputSha256": "bf7a63521350f911941666af894756058c0d98ce4b690c2ff82232cf9b5c586f"
+        "targetDate": "2026-11-10",
+        "inputSha256": "fd1090890899840ef66ba91fc0146057cbd75edc9a5c400ff8a308b4ab853d5d"
       }
     },
     {
@@ -699,7 +699,7 @@
         "ＬＳＡＯガンゲイル"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-09",
+      "lastUpdated": "2026-11-10",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -707,19 +707,19 @@
       "collectionComplete": true,
       "expectedUnits": 12,
       "collection": {
-        "rows": 6496,
-        "events": 6400,
+        "rows": 6948,
+        "events": 6840,
         "units": 12,
-        "days": 8,
+        "days": 9,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-09"
+        "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-09",
-        "inputSha256": "174c9b6fa26b9ff29d37dbaa74a991aea9639adf03d7273d74b347296f8abc6f"
+        "targetDate": "2026-11-10",
+        "inputSha256": "e83b95ff3ab00ac4876c6160aa001640654776c3c5139a241a180768ab53aa10"
       }
     },
     {
@@ -734,7 +734,7 @@
         "Ｌゴジラ対エヴァ２"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-09",
+      "lastUpdated": "2026-11-10",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -742,19 +742,19 @@
       "collectionComplete": true,
       "expectedUnits": 12,
       "collection": {
-        "rows": 8650,
-        "events": 8555,
+        "rows": 9313,
+        "events": 9206,
         "units": 12,
-        "days": 8,
+        "days": 9,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-09"
+        "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-09",
-        "inputSha256": "2a8fa2573922535d95876f755cbd72a5f478d4708f3b6305b05d452b184f8ee6"
+        "targetDate": "2026-11-10",
+        "inputSha256": "3aa3fad58af9cb414a0d65e9640e763cc43653ac7108c5fd4328af5634f906ff"
       }
     },
     {
@@ -768,7 +768,7 @@
         "Ｌラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-09",
+      "lastUpdated": "2026-11-10",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -776,19 +776,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 1220,
-        "events": 1172,
+        "rows": 1360,
+        "events": 1306,
         "units": 6,
-        "days": 8,
+        "days": 9,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-09"
+        "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "smart_prego_ikebukuro",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-09",
-        "inputSha256": "6ff4e711f12738caf9fa6ee67fb9fa1663d5b0a3d30c51ced91cee9c1132a5d6"
+        "targetDate": "2026-11-10",
+        "inputSha256": "81d82ff3f870c17c00fd704405d1eacda918c459e15616e8299e01613cfe9ef4"
       }
     },
     {
