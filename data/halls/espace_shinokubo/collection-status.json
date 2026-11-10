@@ -3,7 +3,7 @@
   "hallId": "espace_shinokubo",
   "source": "daidata",
   "storeId": "100951",
-  "lastUpdated": "2026-11-09",
+  "lastUpdated": "2026-11-10",
   "machines": [
     {
       "id": "m3e019184",
@@ -326,7 +326,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-09",
+      "lastUpdated": "2026-11-10",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -334,19 +334,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 563,
-        "events": 547,
+        "rows": 598,
+        "events": 580,
         "units": 2,
-        "days": 8,
+        "days": 9,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-09"
+        "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shinokubo",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-09",
-        "inputSha256": "dde31a930f3d1495d1ca30b4f96aa88c5b98eb092b67a1396cb0edaab2a84cc0"
+        "targetDate": "2026-11-10",
+        "inputSha256": "3491979f28c85fef72acc9aa77b617c601328fa1f989cdfc7e69e61924a964f3"
       }
     },
     {
@@ -973,7 +973,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-09",
+      "lastUpdated": "2026-11-10",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -981,19 +981,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1088,
-        "events": 1072,
+        "rows": 1227,
+        "events": 1209,
         "units": 2,
-        "days": 8,
+        "days": 9,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-09"
+        "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shinokubo",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-09",
-        "inputSha256": "bf1c400906a17ad4277a50f37cac8f9a4d8deea6b262dc7843aaa45bdab63db3"
+        "targetDate": "2026-11-10",
+        "inputSha256": "0fd910f153d75ad8a13d4f7451d6410459585ce1fef9991e47b85e3e8184690e"
       }
     },
     {
@@ -1108,7 +1108,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-09",
+      "lastUpdated": "2026-11-10",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1116,19 +1116,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1471,
-        "events": 1455,
+        "rows": 1573,
+        "events": 1555,
         "units": 2,
-        "days": 8,
+        "days": 9,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-09"
+        "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shinokubo",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-09",
-        "inputSha256": "a412073dbb04b8b7c8e1c2211e2a0cc6fdd01b517dc83397ddc955d72aea29ce"
+        "targetDate": "2026-11-10",
+        "inputSha256": "90738c54c737f590507986a512a79839234d27b40f8cb27591361dab34eb4040"
       }
     },
     {
@@ -1142,7 +1142,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-09",
+      "lastUpdated": "2026-11-10",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1150,19 +1150,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 2300,
-        "events": 2276,
+        "rows": 2680,
+        "events": 2653,
         "units": 3,
-        "days": 8,
+        "days": 9,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-09"
+        "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shinokubo",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-09",
-        "inputSha256": "55c7301a8d488b0e6b2af73b5c069b7b43b642de55eedbc9d6fe7a3ae0125f71"
+        "targetDate": "2026-11-10",
+        "inputSha256": "b8ec00ae2c8432e1d4c699e4f3bd4895469b981a9be5a7983fbea309543473f9"
       }
     },
     {
