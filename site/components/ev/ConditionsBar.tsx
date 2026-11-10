@@ -149,7 +149,16 @@ export function ConditionsBar({
         <span className="mono flex-1 truncate text-[10px] text-ink-soft">{summary}</span>
         <span className="mono shrink-0 text-[10px] text-muted">{isOpen ? "閉じる ▲" : "詳細 ▼"}</span>
       </button> : null}
-      {isOpen ? (
+      {isOpen && asPage ? (
+        // 2026-11-10 利用者指定：算出条件のページは箇条書きにする。
+        <ul className="list-disc space-y-1.5 py-3 pl-7 pr-3 text-xs leading-relaxed marker:text-muted">
+          {rows.map((r) => (
+            <li key={r.k} className="break-words text-ink-soft">
+              <span className="font-bold text-ink">{r.k}</span>：{r.v}
+            </li>
+          ))}
+        </ul>
+      ) : isOpen ? (
         <dl className="mono grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 border-t border-line-soft px-3 py-2 text-[10px]">
           {rows.map((r) => (
             <div key={r.k} className="contents">

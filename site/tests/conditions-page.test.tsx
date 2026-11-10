@@ -31,5 +31,10 @@ describe("算出条件は目的の1ページ", () => {
     expect(page).not.toContain("collapsible-bar");
     expect(bar).toContain("collapsible-bar");
     expect(page).toContain("時給換算");
+    // 箇条書き（2026-11-10 利用者指定）。開閉の行は従来どおり項目と値の2列。
+    expect(page).toContain("<ul");
+    expect(page).toContain("<li");
+    expect(page).not.toContain("<dl");
+    expect(bar).toContain("<dl");
   });
 });
