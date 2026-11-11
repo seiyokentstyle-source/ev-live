@@ -225,6 +225,14 @@ const MANUFACTURER_REWRITES: Array<[string, string]> = [
   ["化物語", "Sammy"],
   ["グランベルム", "北電子"],
   ["戦国コレクション", "コナミアミューズメント"],
+  // 2026-11-11 追加（出典：パチ7・P-town・1geki の機種ページ）。
+  ["獣王", "Sammy"],
+  ["魔法少女にあこがれて", "ニューギン"],
+  ["転生王女と天才令嬢", "オリンピアエステート"],
+  ["バンドリ", "オリンピアエステート"],
+  ["パリピ孔明", "山佐ネクスト"],
+  ["勇気の歌", "SANKYO"],
+  ["Re:ゼロから始める異世界生活 Season2", "大都技研"],
   ["吉宗", "大都技研"]
 ];
 
@@ -234,6 +242,11 @@ const MANUFACTURER_REWRITES: Array<[string, string]> = [
 const MANUFACTURER_ALIASES: Record<string, string> = {
   サミー: "Sammy"
 };
+
+/** 画面に出す機種名。半角カナ（台データの表記）だけを全角に直す。IDや検索・照合に使う名前は変えない。 */
+export function displayMachineName(name: string): string {
+  return name.replace(/[｡-ﾟ]+/g, part => part.normalize("NFKC"));
+}
 
 /** メーカー名。「未登録」なら機種名から補い、表記ゆれは1つに寄せて返す。 */
 export function rewriteManufacturer(name: string, manufacturer: string): string {

@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Axis, AxisValue, Conditions, Machine, PivotConfig, FilterAxis } from "@/lib/ev/types";
 import type { Hall } from "@/lib/halls";
 import { computeAnchors, defaultConditions, generateRows } from "@/lib/ev/calc";
-import { applyHeldMedalTableEV, compatibleFilterSelection, declaredFilterAxes, filterSelectionKey, groupProfiles, profileCeilingText, resolveProfile, selectedFilterAggregation, selectedFilterTable } from "@/lib/ev/profiles";
+import { displayMachineName, applyHeldMedalTableEV, compatibleFilterSelection, declaredFilterAxes, filterSelectionKey, groupProfiles, profileCeilingText, resolveProfile, selectedFilterAggregation, selectedFilterTable } from "@/lib/ev/profiles";
 import { aimTabs, savedTargetAimKey, savedTargetIdFromAim } from "@/lib/ev/aim-selection";
 import { useFilterAggregation } from "@/lib/ev/use-filter-aggregation";
 import { AxisPicker } from "@/components/ev/AxisPicker";
@@ -381,7 +381,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
         <Link href={`/machines/${machine.id}`} className="mono text-[11px] text-ink-soft">
           ← 店舗
         </Link>
-        <h1 className="truncate px-2 text-center text-sm font-bold">{machine.name}</h1>
+        <h1 className="truncate px-2 text-center text-sm font-bold">{displayMachineName(machine.name)}</h1>
         {/* 右端はメーカーではなく店舗名。どの店のデータを見ているかが常に見えるようにする。 */}
         <span className="mono truncate text-right text-[10px] text-muted">{hall.name}</span>
       </header>

@@ -7,7 +7,7 @@ import type { MachineHallSummary } from "@/lib/machines";
 import { DEFAULT_HALL_ID, getVisibleHalls } from "@/lib/halls";
 import { useLiveIndex } from "@/lib/use-live-data";
 import { TableFoot } from "@/components/ui/DataTable";
-import { rewriteManufacturer } from "@/lib/ev/profiles";
+import { displayMachineName, rewriteManufacturer } from "@/lib/ev/profiles";
 import { collectionPending, collectionStatus } from "@/lib/ev/collection-status";
 import { simpleEvSet } from "@/lib/ev/simple-ev-tables";
 import { findMachineHallSummary } from "@/lib/machine-list-summary";
@@ -40,7 +40,7 @@ export function HallSelectClient({ machine: initialMachine, hallMachines }: Hall
         <Link href="/machines" className="mono text-[11px] text-ink-soft">
           ← 一覧
         </Link>
-        <h1 className="truncate px-2 text-center text-sm font-bold">{machine.name}</h1>
+        <h1 className="truncate px-2 text-center text-sm font-bold">{displayMachineName(machine.name)}</h1>
         <span className="mono truncate text-right text-[10px] text-muted">{rewriteManufacturer(machine.name, machine.manufacturer)}</span>
       </header>
 

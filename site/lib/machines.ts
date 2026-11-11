@@ -271,7 +271,25 @@ export async function getHallDisplays(hallId: string): Promise<HallDisplay[]> {
   return mergeHallDisplays(machines, observations);
 }
 
+/**
+ * 2026-11-11：期待値を保留している機種のJSONは、公開が保留になると更新されず、「収集済み◯行」と
+ * 保存期間が古いまま残る（収集状況の一覧は毎回新しくなる）。同じ機種（IDと名前が同じ）の収集状況が
+ * 新しいときだけ、件数・保存期間・最終更新日をそちらに合わせる。数値の表がある機種と、表・仕様・
+ * 設定狙いなどほかの中身には触れない。
+ */
+export function withCurrentCollection(machine: Machine, observations: CollectionStatusEntry[]): Machine {
+  const saved = machine.meta.collection;
+  if (!saved || machine.meta.samples !== "0" || machine.counterEstimate
+    || !machine.profiles.every(profile => profile.dataPending === true && profile.baseAnchors.length === 0)) return machine;
+  const current = observations.find(entry => entry.summary.id === machine.id && entry.summary.name === machine.name)?.summary;
+  const next = current?.meta.collection;
+  if (!current || !next || next.lastDate <= saved.lastDate || next.firstDate > saved.firstDate
+    || next.rows < saved.rows || current.lastUpdated < machine.lastUpdated) return machine;
+  return { ...machine, lastUpdated: current.lastUpdated, meta: { ...machine.meta, collection: { ...next } } };
+}
+
 function mergeHallDisplays(machines: Machine[], observations: CollectionStatusEntry[]): HallDisplay[] {
+  machines = machines.map(machine => withCurrentCollection(machine, observations));
   const displays = new Map<string, HallDisplay>(machines.map(machine => [machine.id, { kind: "machine", machine: retainSettingAimGames(withPendingReference(machine), machine) }]));
   const held = new Set(observations.filter(entry => entry.forcePending).map(entry => machineSelectionKey(entry.summary)));
   for (const { forcePending, ...collection } of observations) {

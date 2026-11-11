@@ -10,6 +10,9 @@ const GROUPS: readonly (readonly Identity[])[] = [
     { id: "m04a5dfa2", name: "Lモンスターハンターライズ：サンブレイク" }],
   [{ id: "m50246ef0", name: "スマスロ 東京リベンジャーズ" },
     { id: "m39a9f4f4", name: "スマスロ 東京リベンジャーズ(リベスロ)" }],
+  // 2026-11-11：サイトセブン（萌えスロ）の表記。空白と副題の有無だけが違う同じ機種。
+  [{ id: "m1b2c9466", name: "LToLOVEるダークネス TRANCE ver.8.7" }, { id: "m25a41de5", name: "L Ｔｏ　ＬＯＶＥるダークネス" }],
+  [{ id: "me5b967bb", name: "Lパチスロガールズ＆パンツァー 最終章" }, { id: "mb4736276", name: "Lパチスロ　ガールズ＆パンツァー最終章" }],
 ];
 
 function knownGroup(machine: Identity) {

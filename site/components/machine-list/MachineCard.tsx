@@ -4,6 +4,7 @@ import type { MachineSummary } from "@/lib/ev/types";
 import { collectionStatus } from "@/lib/ev/collection-status";
 import { FavoriteButton } from "./FavoriteButton";
 import { getHall } from "@/lib/halls";
+import { displayMachineName } from "@/lib/ev/profiles";
 
 export type MachineSearchMatch = {
   type: "name" | "alias" | "none";
@@ -28,7 +29,7 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
     <article
       role="button"
       tabIndex={0}
-      aria-label={machine.name}
+      aria-label={displayMachineName(machine.name)}
       onClick={onOpen}
       onKeyDown={(event) => {
         // 子のお気に入りボタンの Enter / Space はボタン自身に処理させる。
@@ -65,7 +66,7 @@ export function MachineCard({ machine, isFavorite, match, onOpen, onToggleFavori
             match.type === "name" ? "text-ice" : "text-ink"
           }`}
         >
-          {machine.name}
+          {displayMachineName(machine.name)}
         </h2>
 
         {/* 2. サンプル件数。EVOT の信頼性はここに出るので、

@@ -6,7 +6,7 @@ import { ProvisionalSetting1Table } from "@/components/ev/ProvisionalSetting1Tab
 import { CounterEstimateTable } from "@/components/ev/CounterEstimateTable";
 import type { Hall } from "@/lib/halls";
 import { EmptyState, TableFoot } from "@/components/ui/DataTable";
-import { rewriteManufacturer } from "@/lib/ev/profiles";
+import { displayMachineName, rewriteManufacturer } from "@/lib/ev/profiles";
 import type { CollectedMachine } from "@/lib/collection-status-contract";
 import { collectionStatus } from "@/lib/ev/collection-status";
 
@@ -28,7 +28,7 @@ export function HallPendingClient({ machine, hall, collection, provisionalSettin
         <Link href={`/machines/${machine.id}`} className="mono text-[11px] text-ink-soft">
           ← 店舗
         </Link>
-        <h1 className="truncate px-2 text-center text-sm font-bold">{machine.name}</h1>
+        <h1 className="truncate px-2 text-center text-sm font-bold">{displayMachineName(machine.name)}</h1>
         <span className="mono truncate text-right text-[10px] text-muted">{rewriteManufacturer(machine.name, machine.manufacturer)}</span>
       </header>
 

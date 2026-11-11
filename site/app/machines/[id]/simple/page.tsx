@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getMachineHallSummaries, getMachineIds } from "@/lib/machines";
 import { simpleEvSet } from "@/lib/ev/simple-ev-tables";
 import { SimpleEvPageClient } from "./SimpleEvPageClient";
+import { displayMachineName } from "@/lib/ev/profiles";
 
 type SimpleEvPageProps = {
   params: Promise<{ id: string }>;
@@ -18,5 +19,5 @@ export default async function SimpleEvPage({ params }: SimpleEvPageProps) {
   const set = simpleEvSet(id);
   const machine = (await getMachineHallSummaries(id))[0]?.summary;
   if (!set || !machine) notFound();
-  return <SimpleEvPageClient machineId={id} machineName={machine.name} set={set} />;
+  return <SimpleEvPageClient machineId={id} machineName={displayMachineName(machine.name)} set={set} />;
 }
