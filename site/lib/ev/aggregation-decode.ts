@@ -1,6 +1,7 @@
 import type { DecodedFilterAggregation, FilterAggregation, FilterAggregationRowPayload, FilterAxis } from "./types";
 import { validateAggregateRows } from "./filter-aggregation-validation";
-import { aggregationAssetPath, validateAggregationAssetPayload } from "./aggregation-asset";
+import { aggregationAssetPath, packedAggregationAssetPayload, validateAggregationAssetPayload } from "./aggregation-asset";
+import { unpackRows } from "./rows-pack-core.mjs";
 import { validateNormalCostSchedule } from "./normal-cost-core.mjs";
 
 // One active profile and one recently used profile. Never expand a whole machine.
@@ -31,7 +32,16 @@ export function decodeFilterAggregation(data: FilterAggregation, axes: FilterAxi
   previous?.controller.abort();
   const controller = new AbortController();
   const promise = (async () => {
-    let payload: FilterAggregationRowPayload;
+    const gunzipText = async (encoded: string): Promise<string> => {
+      if (typeof DecompressionStream === "undefined") throw new Error("Gzip decompression is unavailable");
+      const binary = atob(encoded);
+      const bytes = new Uint8Array(binary.length);
+      for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+      const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"), { signal: controller.signal });
+      return new Response(stream).text();
+    };
+    let payload: FilterAggregationRowPayload | undefined;
+    let rows: number[][] | undefined;
     if (data.rowsAsset) {
       // Revalidate so a temporary deployment 404 cannot remain cached on retry.
       const response = await fetch(aggregationAssetPath(data.rowsAsset), { signal: controller.signal, cache: "no-cache" });
@@ -39,24 +49,28 @@ export function decodeFilterAggregation(data: FilterAggregation, axes: FilterAxi
       const bytes = await response.arrayBuffer();
       const hash = await crypto.subtle.digest("SHA-256", bytes);
       const actual = [...new Uint8Array(hash)].map(value => value.toString(16).padStart(2, "0")).join("");
-      if (actual !== data.rowsAsset.sha256) throw new Error("Aggregation asset checksum mismatch");
       if (controller.signal.aborted) throw new DOMException("Aggregation load aborted", "AbortError");
-      payload = validateAggregationAssetPayload(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)), data.rowsAsset.rowCount);
+      if (actual === data.rowsAsset.sha256) {
+        payload = validateAggregationAssetPayload(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)), data.rowsAsset.rowCount);
+      } else {
+        // 2026-11-11：配信用に畳んだ中身は、ファイル名（畳む前の中身のハッシュ）と一致しない。
+        // 畳んだ形（rowsPacked）のときだけ受け取り、行数と全行の検査は下でこれまでどおり行う。
+        let value: unknown;
+        try { value = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); } catch { value = undefined; }
+        const packed = packedAggregationAssetPayload(value, data.rowsAsset.rowCount);
+        if (!packed) throw new Error("Aggregation asset checksum mismatch");
+        rows = validateAggregateRows(unpackRows(JSON.parse(await gunzipText(packed.rowsPacked)), packed.rowCount),
+          axes, packed.rowCount, data.axisMatchModes, data.schema, data.totalPlayGames);
+      }
     } else {
       payload = { rowsGzip: data.rowsGzip, rowCount: data.rowCount };
     }
-    let rows: number[][];
-    if (payload.rows !== undefined) {
-      rows = validateAggregateRows(payload.rows, axes, data.rowsAsset?.rowCount, data.axisMatchModes, data.schema, data.totalPlayGames);
-    } else {
-      if (typeof DecompressionStream === "undefined") throw new Error("Gzip decompression is unavailable");
-      const binary = atob(payload.rowsGzip);
-      const bytes = new Uint8Array(binary.length);
-      for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
-      const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"), { signal: controller.signal });
-      const text = await new Response(stream).text();
-      rows = validateAggregateRows(JSON.parse(text), axes, payload.rowCount, data.axisMatchModes, data.schema, data.totalPlayGames);
+    if (rows === undefined && payload) {
+      rows = payload.rows !== undefined
+        ? validateAggregateRows(payload.rows, axes, data.rowsAsset?.rowCount, data.axisMatchModes, data.schema, data.totalPlayGames)
+        : validateAggregateRows(JSON.parse(await gunzipText(payload.rowsGzip)), axes, payload.rowCount, data.axisMatchModes, data.schema, data.totalPlayGames);
     }
+    if (rows === undefined) throw new Error("Aggregation rows are unavailable");
     const { rowsAsset: _asset, rowsGzip: _encoded, rowCount: _count, ...parameters } = data;
     return { ...parameters, rows };
   })();

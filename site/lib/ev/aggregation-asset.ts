@@ -1,4 +1,4 @@
-import type { FilterAggregationRowPayload, FilterAggregationRowsAsset } from "./types";
+import type { FilterAggregationPackedPayload, FilterAggregationRowPayload, FilterAggregationRowsAsset } from "./types";
 
 const fail = (detail: string): never => { throw new Error(`Invalid machine data: aggregation asset ${detail}`); };
 const record = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value);
@@ -13,6 +13,19 @@ export function validateAggregationRowsAsset(value: unknown): FilterAggregationR
 export function aggregationAssetPath(asset: FilterAggregationRowsAsset, basePath = process.env.NEXT_PUBLIC_BASE_PATH || ""): string {
   validateAggregationRowsAsset(asset);
   return `${basePath}/filter-aggregates/${asset.sha256}.json`;
+}
+
+const BASE64 = /^[A-Za-z0-9+/]+={0,2}$/;
+
+/** 配信用に畳んだ中身（rowsPacked）かどうか。畳んだ中身はファイル名のハッシュと一致しない。 */
+export function packedAggregationAssetPayload(value: unknown, expectedRows: number): FilterAggregationPackedPayload | undefined {
+  if (!record(value) || value.rowsPacked === undefined) return undefined;
+  if (Object.keys(value).some(key => key !== "rowsPacked" && key !== "rowCount") ||
+    typeof value.rowsPacked !== "string" || !value.rowsPacked.length || value.rowsPacked.length % 4 !== 0 ||
+    !BASE64.test(value.rowsPacked) || !Number.isSafeInteger(value.rowCount) || value.rowCount !== expectedRows) {
+    fail("row count or packed envelope is invalid");
+  }
+  return value as FilterAggregationPackedPayload;
 }
 
 /** An asset contains only the old inline row payload, never calculation metadata. */

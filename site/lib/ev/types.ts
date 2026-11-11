@@ -145,6 +145,8 @@ export type FilterAggregationRowsAsset = { sha256: string; rowCount: number };
 export type FilterAggregationRowPayload =
   | { rows: number[][]; rowsGzip?: never; rowCount?: never }
   | { rows?: never; rowsGzip: string; rowCount: number };
+/** 配信用に畳んだ行（lib/ev/rows-pack-core.mjs）。ファイル名は畳む前の中身のハッシュ。 */
+export type FilterAggregationPackedPayload = { rowsPacked: string; rowCount: number };
 export type FilterAggregation = FilterAggregationParameters & (
   | (FilterAggregationRowPayload & { rowsAsset?: never })
   | { rowsAsset: FilterAggregationRowsAsset; rows?: never; rowsGzip?: never; rowCount?: never }

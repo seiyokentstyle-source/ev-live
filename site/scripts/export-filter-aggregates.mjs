@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { externalizeMachineAggregations } from '../lib/filter-aggregate-assets.mjs';
+import { packAggregateAssetBody } from '../lib/packed-aggregate-assets.mjs';
 import { splitCzThroughProfiles } from '../lib/cz-through-profiles.mjs';
 import { inlineSourceAggregations, sourceAggregatesDir } from '../lib/source-aggregations.mjs';
 import { hallPublicationPolicy } from './hall-publication-policy.mjs';
@@ -66,8 +67,10 @@ export async function exportFilterAggregates(sourceDir, outputDir, halls) {
         throw new Error(`Source aggregates must contain their row payload: ${entry.name}`);
       }
       const assets = new Map();
-      externalizeMachineAggregations(splitCzThroughProfiles(machine), (hash, body) => {
-        if (!emitted.has(hash)) assets.set(hash, body);
+      // 2026-11-11：ファイル名は元の中身のハッシュのまま、中身だけ畳んで小さくする
+      // （配信物がGitHub Pagesの上限1GBを超えたため）。畳めない表は元の中身のまま。
+      externalizeMachineAggregations(splitCzThroughProfiles(machine), (hash, body, layout) => {
+        if (!emitted.has(hash) && !assets.has(hash)) assets.set(hash, packAggregateAssetBody(body, layout));
       });
       for (const [hash, body] of assets) {
         await fs.writeFile(path.join(output, `${hash}.json`), body, 'utf8');
