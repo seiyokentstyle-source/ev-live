@@ -3,7 +3,7 @@
   "hallId": "seibu_shinjuku",
   "source": "daidata",
   "storeId": "100950",
-  "lastUpdated": "2026-11-10",
+  "lastUpdated": "2026-11-11",
   "machines": [
     {
       "id": "m6945ca87",
@@ -47,7 +47,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -55,19 +55,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 535,
-        "events": 517,
+        "rows": 631,
+        "events": 611,
         "units": 2,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-10",
-        "inputSha256": "84499308dbfdaa60d5b98adf2059cef97c79a71de40a2a75a45b109154a3a91a"
+        "targetDate": "2026-11-11",
+        "inputSha256": "fba862fda1193357b2d5583b4d9c4852e13b6667819a57fbf381ca9b69eaf203"
       }
     },
     {
@@ -101,7 +101,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "L 東京喰種",
         "targetDate": "2026-11-10",
-        "inputSha256": "8116ca21832eb58d9f23780c7158b2343a20e6a12a38f9418bbfc7092568f24a"
+        "inputSha256": "ed76d46dacd8ad8704f2de6e89d4682de4c86d849db5fb742ebd2f586d5b0cd1"
       }
     },
     {
@@ -135,7 +135,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "LToLOVEるダークネス TRANCE ver.8.7",
         "targetDate": "2026-11-10",
-        "inputSha256": "14241da8f194a02e83a3c1cd3e9b7f17b41bf6a4c51afca727f698c1d09c55b0"
+        "inputSha256": "1c4f1c7d325b5881eadf0fb7056cdd96dcef83b72b0cf686a62af22ad85b75ea"
       }
     },
     {
@@ -168,7 +168,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lからくりサーカス2",
         "targetDate": "2026-11-10",
-        "inputSha256": "f5e098319ccf6c06b0a9c8c502acd5d8e5b47f603e8b36910d202b3fb120da17"
+        "inputSha256": "c034af484a9347f2de1d34a5ff8381602244ab2e74e20359476fe11c4020a270"
       }
     },
     {
@@ -201,7 +201,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lとある魔術の禁書目録2",
         "targetDate": "2026-11-10",
-        "inputSha256": "62fdc9b107088c8d247d7aa6a590c5a5c096e52f6e21e2885f3f3eb883c53cc2"
+        "inputSha256": "1c139562d47391f9c1ed55f310ed46b497d775f57b87f77893b22905ea48c285"
       }
     },
     {
@@ -236,7 +236,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lとんでもスキルで異世界放浪メシ",
         "targetDate": "2026-11-10",
-        "inputSha256": "70e40ce4b44ff62cf9ccc66f4cdbdc2925618c5b306b14640431a71c38f5a7d4"
+        "inputSha256": "9481b4b8476119ac62b92795fab5cdf0d0f36c02d5c4ee7ac0d12406ebf191a5"
       }
     },
     {
@@ -306,7 +306,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lスマスロ モンキーターンV",
         "targetDate": "2026-11-10",
-        "inputSha256": "77d47cd5c4b26a9a0184d1f735ca5fc042f3e735ab742616907b36e4fc3cfcfa"
+        "inputSha256": "f7486048bd197ab076bc9ae831dde84a0e5b6b7599916705731135a88f260147"
       }
     },
     {
@@ -340,7 +340,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lスマスロ　ゴッドイーター　リザレクション",
         "targetDate": "2026-11-10",
-        "inputSha256": "3f80dbb5ce8ed0ba3d204d765f0fd6677157cbd186de619b216b1250fc1af25d"
+        "inputSha256": "71ae49e87ce1a46617b8c45cb4a64c2e2934ba98e6cab9c1badffe949a3a7af2"
       }
     },
     {
@@ -355,8 +355,8 @@
       "releaseDate": "2024-01-01",
       "lastUpdated": "2026-11-10",
       "status": "pending",
-      "reasonCode": "sample_insufficient",
-      "pendingReason": "前回の集計では有効サンプルが28件で、新規掲載基準の30件に届いていないため、期待値は算出保留です。",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
       "forcePending": false,
       "collectionComplete": true,
       "expectedUnits": 3,
@@ -373,7 +373,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lスマスロかぐや様は告らせたい",
         "targetDate": "2026-11-10",
-        "inputSha256": "10b51c3cc7b9ebbfa58d4f6e52c7c098397069c425d8d31fb1645d9d3fcfb9fe"
+        "inputSha256": "ec557159a988dfab64da5a3ee518f0a760f3499d787e743e2ccb22a0cc6fc094"
       }
     },
     {
@@ -409,7 +409,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lスマスロ北斗の拳",
         "targetDate": "2026-11-10",
-        "inputSha256": "5c4d657da833518d7e1f938f24e7dc96846b671283b1538f89b2c56b95a00b36"
+        "inputSha256": "05d057aad96d40e6861184400635bf060f3784351e32e2b6f9d787d5a26764d6"
       }
     },
     {
@@ -444,7 +444,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lソードアート・オンライン",
         "targetDate": "2026-11-08",
-        "inputSha256": "d682d0f1b6aaf1ed5a7a5e81d5d6c0d2e3bd240f4948211de39e5661fcc607fc"
+        "inputSha256": "308e7c1af2b32db4533808aa3aee2d5b35d3c1efa95c0dca2a58c9fcd94a9413"
       }
     },
     {
@@ -482,7 +482,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lパチスロ 革命機ヴァルヴレイヴ2（Lヴヴヴ2）",
         "targetDate": "2026-11-10",
-        "inputSha256": "91208676a3009f693835d710139e883a459d3726c273f8f4bd56f8a2d7cb5ed4"
+        "inputSha256": "eda176de9f745dd32f1cd2ab1081c553e20f6fe165d32aedbab82492c01c78bf"
       }
     },
     {
@@ -515,7 +515,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lパチスロうみねこのなく頃に2",
         "targetDate": "2026-11-10",
-        "inputSha256": "b702aa05c93f04e889bcf198c47119c7e861caeef6e5f7e34002905281690e09"
+        "inputSha256": "702b1d79bfa4ef46fbbd4a9fb154c7b150b5d7675986b74a828634ab83af6716"
       }
     },
     {
@@ -549,7 +549,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lパチスロガールズ＆パンツァー 最終章",
         "targetDate": "2026-11-10",
-        "inputSha256": "3016670711aa701733facad47ebe632a5e0473171b55ed9b26ca97622caa1ef8"
+        "inputSha256": "6a5542aa910c0107afed7394b678985822ae0602b12c02413d4cf12a762fc34c"
       }
     },
     {
@@ -584,7 +584,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lミリオンゴッド－神々の軌跡－",
         "targetDate": "2026-11-10",
-        "inputSha256": "615d65d9e73fafc5754c1377b6218f212491ab707d0ce5922d9a7cbcd4139a10"
+        "inputSha256": "2f389fe3d4d2ff4a5d7abf9dde953a4222f5ec36b56ff1e9862fe10dfc2c92a4"
       }
     },
     {
@@ -618,7 +618,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "Lリコリス・リコイル",
         "targetDate": "2026-11-10",
-        "inputSha256": "a9369264d287108906984696384654af8d79fad08f3d599783a594e61015b7c2"
+        "inputSha256": "58cec3f689019b3bf5e8b00ebf9a14e80e9d5530789d534e535e82ca01405358"
       }
     },
     {
@@ -651,7 +651,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "L喰霊-零-Re",
         "targetDate": "2026-11-10",
-        "inputSha256": "fa9b6bb15319427621d734e7c6d2575269defb48288531c452e6321d87a87c4f"
+        "inputSha256": "70229ccb053025c92e7b4693d035dcd686bbe1de84868e9eb02fea52b22e1e84"
       }
     },
     {
@@ -684,7 +684,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "L彼女、お借りします",
         "targetDate": "2026-11-10",
-        "inputSha256": "471ddc74cfe66f16f76522013ec7e9d4bd421a3c900423bf74c67c631c24b62e"
+        "inputSha256": "62e509d9e4da06a5699cc7af8f07687d4650936a3d535eaefc0daf7c874cd687"
       }
     },
     {
@@ -717,7 +717,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "L戦国乙女5 業火を穿つ宿焔の双刃",
         "targetDate": "2026-11-10",
-        "inputSha256": "fae017e6ab48c153998d657e95d5e74935b860a83da441d9e7ce65b4b8e3010b"
+        "inputSha256": "9e4d924d44776e1259726a8b5e2e0e59b8aef6692cba8a9dbead8d5e4c14f703"
       }
     },
     {
@@ -731,7 +731,7 @@
         "スマスロ牙狼"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -739,19 +739,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 166,
-        "events": 160,
+        "rows": 195,
+        "events": 188,
         "units": 1,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "L牙狼 闇を照らす者",
-        "targetDate": "2026-11-10",
-        "inputSha256": "37489b6573a835aef0a75c8fb6bf0eb69a6ac5eace04694a3b4da71b09606c26"
+        "targetDate": "2026-11-11",
+        "inputSha256": "3ddae519107181b555eca656f8a84a81a09d7bc5ce9824e5f4b6aa76cccb90d1"
       }
     },
     {
@@ -785,7 +785,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "L甲鉄城のカバネリ海門決戦",
         "targetDate": "2026-11-10",
-        "inputSha256": "ec0215b7d19d96cb09c078d4046798626bb6d5593325450fbfe3464599c87651"
+        "inputSha256": "362e3b24461e5298cfbdd62f79d6a98d48b913726baef67d51e76593c1eb8434"
       }
     },
     {
@@ -817,7 +817,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "L真打吉宗",
         "targetDate": "2026-11-10",
-        "inputSha256": "b3363cc76318d8bab37b43d41331c7250b43440f2ca4216fe4d1c51f8fd82295"
+        "inputSha256": "94150d3a752c58f66f42515521ba4bbefd1ef1d37d44c843e5cb1839423676e0"
       }
     },
     {
@@ -831,7 +831,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -839,19 +839,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1352,
-        "events": 1334,
+        "rows": 1453,
+        "events": 1433,
         "units": 2,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-10",
-        "inputSha256": "f9b3547dc256113266be1a6d18a8eeeffc88f7369ce5d13014cb1337250931ce"
+        "targetDate": "2026-11-11",
+        "inputSha256": "ed3da9dc86dd1daf34bdefa8090bd11afabf4256cd0bad2a08aaef03bacc7893"
       }
     },
     {
@@ -885,7 +885,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "L青春ブタ野郎はバニーガール先輩の夢を見ない",
         "targetDate": "2026-11-10",
-        "inputSha256": "49ed8140b512f17af85612e3a476402660eed4bf0f02b721b62b690a3d303627"
+        "inputSha256": "147bfb541715f02d612d350c90a066ca68a266f7801b7c0fc783b790dbabc074"
       }
     },
     {
@@ -919,7 +919,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "L魔法少女にあこがれて",
         "targetDate": "2026-11-10",
-        "inputSha256": "c6f87369b04c8d8397027e6c4c0593df20d8ef902b6d425dadb80558e0204fc1"
+        "inputSha256": "576cfa46c0d634a6b1d31779a6067a3f08857c7da9c50245c28dc994226c089a"
       }
     },
     {
@@ -934,7 +934,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -942,19 +942,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1480,
-        "events": 1462,
+        "rows": 1632,
+        "events": 1612,
         "units": 2,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-10",
-        "inputSha256": "67220b0d1d5b33f0fcd0210146a1f09d3ef62b515aa12a5bf0d6bd08babe9884"
+        "targetDate": "2026-11-11",
+        "inputSha256": "600e0650004305635343ebe82aa2af032621d23903a26e01d0579f99da7e4244"
       }
     },
     {
@@ -968,7 +968,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -976,19 +976,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 2834,
-        "events": 2798,
+        "rows": 3384,
+        "events": 3344,
         "units": 4,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-10",
-        "inputSha256": "27df429dc32d7dbbe810a3e7112bd531822d708bad5c2772a8fa9bd49e0d69e4"
+        "targetDate": "2026-11-11",
+        "inputSha256": "bb8e6373e7aa4687fcdb35a3853e5599d84ccb5596267bb5cd12e55693e7ee41"
       }
     },
     {
@@ -1001,7 +1001,7 @@
         "スマスロ ラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1009,19 +1009,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 554,
-        "events": 536,
+        "rows": 628,
+        "events": 608,
         "units": 2,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-10",
-        "inputSha256": "6b90d94b6acad03f85625cc31f02a533c44d55dd224b33ee68b49513949d1624"
+        "targetDate": "2026-11-11",
+        "inputSha256": "b7d36a512480989f103936d3419e9188a2ac7fd0fd9d8c0c8b48df9a9b1caa0d"
       }
     },
     {
@@ -1054,7 +1054,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "この素晴らしい世界に祝福を！",
         "targetDate": "2026-11-10",
-        "inputSha256": "ffb0795c83a622816b19bf61764afc03bb6daf0a7e72539a6383402fe62ddc62"
+        "inputSha256": "cb5eb884fbd5e1d2303801043af054e46fe36663e4af5671ebdd96f8441f4209"
       }
     },
     {
@@ -1122,7 +1122,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "スマスロ バジリスク絆2 天膳 BLACK EDITION",
         "targetDate": "2026-11-10",
-        "inputSha256": "b91698b38e34fb206736a4cbcd137a6ef404d2f2d693b1b9e75e44c77702bc92"
+        "inputSha256": "48da7090552f71ce7482b954617eaa72a9ad8f78c3cfefb994a7f1bd3e651940"
       }
     },
     {
@@ -1156,7 +1156,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
         "targetDate": "2026-11-10",
-        "inputSha256": "f9fa7c0018b90e549ec1c06270f4f531ca20dabc7625f19e6aa89e2f8082cf4b"
+        "inputSha256": "a053473ae82b2cde9fd487463e1a68ea98efede503e1a600853df0982fb78ece"
       }
     },
     {
@@ -1190,7 +1190,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "スマスロ モンスターハンターライズ",
         "targetDate": "2026-11-10",
-        "inputSha256": "741829f818c34c6b8e0add2f556c5807dec10aa85c412b02e4f11f5b4dc3d960"
+        "inputSha256": "678b38727c46db946b42e0c79e43afa712a369eab379b6dda888e6ae460fc426"
       }
     },
     {
@@ -1224,7 +1224,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "スマスロ モンスターハンターライズ：サンブレイク",
         "targetDate": "2026-11-10",
-        "inputSha256": "461ae0139a33a36712d6d16036abc7bbe9a25eff3b0556d566ee6eff5fb1c92b"
+        "inputSha256": "4f4871f97d9e31a4079082ff49469aaf4fb63d806ce28cd398ea02428e68bf54"
       }
     },
     {
@@ -1257,7 +1257,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "スマスロ 化物語",
         "targetDate": "2026-11-10",
-        "inputSha256": "0b465b81fc782de5027e31223f02f188318f000a40dd01ff086d2a7728206149"
+        "inputSha256": "9b89160cce91bd41e1758aa2e1fc04fd8ea167173d1595842a0a2d7b178d819d"
       }
     },
     {
@@ -1291,7 +1291,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "スマスロ 北斗の拳 転生の章2",
         "targetDate": "2026-11-10",
-        "inputSha256": "a5f8a7ae68332a097af693e5a28d3072d5fe9c2c81520734c5b16c78886ee33c"
+        "inputSha256": "2d3d37a0a34acfd740c0a65d4da3a009c93bc9704dfa629b2ff94cddfaf1a353"
       }
     },
     {
@@ -1325,7 +1325,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "スマスロ 攻殻機動隊",
         "targetDate": "2026-11-10",
-        "inputSha256": "b4cfa1b351fd5a07090cba8adf9dff2e7d222b035f2caff899887d686b777e6d"
+        "inputSha256": "0432e6d9a09256df06bbded55ae80bc44c42b1a4e60fd4eb708739e51b412305"
       }
     },
     {
@@ -1357,7 +1357,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "スマスロ 獣王",
         "targetDate": "2026-11-10",
-        "inputSha256": "c51346fe74210ba301d5ba704fa7c1ecd3d06e3b75adf36f7cfb39cb8edbf740"
+        "inputSha256": "f9ca52e49d08042f045143b6abd7ee6d31bfbeb7b221947e20bcb881c5da2091"
       }
     },
     {
@@ -1389,7 +1389,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "スマスロパリピ孔明",
         "targetDate": "2026-11-10",
-        "inputSha256": "668d79a07ad280628d5c0aaab05d57a28f66332159a47ddff591dac1d8de99d1"
+        "inputSha256": "c8b9a2861eaba064c4380b10595c2dfa63ed3c1bc941eacda4edf86277ec1b58"
       }
     },
     {
@@ -1460,7 +1460,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "ソードアート・オンラインII",
         "targetDate": "2026-11-10",
-        "inputSha256": "594e82501c7fa0ee4ebb6732864879081fc901c8c21d89b81347797fe6c0a733"
+        "inputSha256": "d9fb8144479661dcdf27aae87cf3498e10c76ca8d7c1e24ab2ad76553261ab6e"
       }
     },
     {
@@ -1492,7 +1492,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "ワールドダイスター",
         "targetDate": "2026-11-10",
-        "inputSha256": "c8f0984f0709b733c71a06b76458e86483793b86fa29c31ad4b847107f535321"
+        "inputSha256": "b1eba372b622f8932e12e2790f0995e97da7a05e596e0468428b08423c847bd5"
       }
     },
     {
@@ -1526,7 +1526,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "戦国コレクション6",
         "targetDate": "2026-11-10",
-        "inputSha256": "ace4e5a27c551e0b17a004d2ca80b0d7f8177629c24b261ab8bed8d9e3bd221a"
+        "inputSha256": "3ce6408aa4a210cceb431d43179ebb1d7dd79723be123cf793e00946a94d44e2"
       }
     },
     {
@@ -1560,7 +1560,7 @@
         "hallId": "seibu_shinjuku",
         "machineName": "沖ドキ！BLACK",
         "targetDate": "2026-11-10",
-        "inputSha256": "9ddab7cdec89f0929f3c1a0ae48c2bac688c91fe5c8dc2dbbaa808804f456029"
+        "inputSha256": "66b2e10306d0dc5a743e788fc9200180e29b1b863294c90954c9a745c1e94e43"
       }
     }
   ]
