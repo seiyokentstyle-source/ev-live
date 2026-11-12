@@ -3,7 +3,7 @@
   "hallId": "ueno_honkan",
   "source": "daidata",
   "storeId": "100947",
-  "lastUpdated": "2026-11-10",
+  "lastUpdated": "2026-11-11",
   "machines": [
     {
       "id": "m6945ca87",
@@ -47,7 +47,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -55,19 +55,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 780,
-        "events": 753,
+        "rows": 894,
+        "events": 864,
         "units": 3,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-10",
-        "inputSha256": "6ebaeba12124f4489f62611c823eaa34da5ca87489e1688dc697df1b461ad30b"
+        "targetDate": "2026-11-11",
+        "inputSha256": "5caa83cc0258ae5fecc191c95df235f2f8c649fdaf82cbb3bb40dfe15361509b"
       }
     },
     {
@@ -101,7 +101,7 @@
         "hallId": "ueno_honkan",
         "machineName": "L 東京喰種",
         "targetDate": "2026-11-10",
-        "inputSha256": "d3e3cd97ab4faeabc5bae87b1777fe77072a3ba7100decad998f1072c834aeee"
+        "inputSha256": "23355e0df79230230b5588fb05fa92ccd10e13d87e3c6600d2e11fd2f324aa0b"
       }
     },
     {
@@ -135,7 +135,7 @@
         "hallId": "ueno_honkan",
         "machineName": "LToLOVEるダークネス TRANCE ver.8.7",
         "targetDate": "2026-11-10",
-        "inputSha256": "706899a5a7c6d178aa835bc5699b084f0abb54af990bebf739db80519b726806"
+        "inputSha256": "5a2cfca219ea0a507e308c680721e60b2ad58d128fa48881529d96047c5ed487"
       }
     },
     {
@@ -201,7 +201,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lとある魔術の禁書目録2",
         "targetDate": "2026-11-10",
-        "inputSha256": "4b6a733e60b79b662e3cb80e61aeb298cbff70c900a71a5981f1a30da1d30eb8"
+        "inputSha256": "a6e3259cca1c9e2a02c125118601bb5cf6e760e0eb0f8ef1d19f3c5100e120f1"
       }
     },
     {
@@ -236,7 +236,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lとんでもスキルで異世界放浪メシ",
         "targetDate": "2026-11-10",
-        "inputSha256": "2a1a8ccce94ba10a5ccaf675f32ba9116003a33fa84f282b3b08337035490024"
+        "inputSha256": "35b4273e2cabeb6a3cb3b8d23eb41211bbd0f6053c19e6ab10041bf5b6e1f8f8"
       }
     },
     {
@@ -270,7 +270,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lやじきた道中記参る！",
         "targetDate": "2026-11-10",
-        "inputSha256": "932d3e99284a34cd23186aa87af614d97ef651053993878a592c47f002dd3a6a"
+        "inputSha256": "0fac5ad1ae3d767f97236985fe10852951f692a4a3ed079f4272f94c24089633"
       }
     },
     {
@@ -306,7 +306,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lスマスロ モンキーターンV",
         "targetDate": "2026-11-10",
-        "inputSha256": "7a0431a8003a647398680f300e2a672bb42142f4a92f14250b0a6e7a529691fe"
+        "inputSha256": "4ef0aa20a144e85d173ff92e9d4a54e6f336224a8e764b56088768da79e608d2"
       }
     },
     {
@@ -340,7 +340,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lスマスロ　ゴッドイーター　リザレクション",
         "targetDate": "2026-11-10",
-        "inputSha256": "0916ccd1857575d53a7c42cc415597c907cfe4d9a5739693e0d48bcc9634a5f7"
+        "inputSha256": "87934247f79f8ab8f115440eeebce5625061ed2bdbf46f97e63532e15bf1416e"
       }
     },
     {
@@ -376,7 +376,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lスマスロ北斗の拳",
         "targetDate": "2026-11-10",
-        "inputSha256": "de7e025b1514879ef745ee1862e6c8696b09536843348b21b1ffa02c7c9c079e"
+        "inputSha256": "cb4d23a386999a11f4456a5eb4b14e8405daeddff5a69151922a25904ff4b65f"
       }
     },
     {
@@ -443,7 +443,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lチバリヨ２",
         "targetDate": "2026-11-10",
-        "inputSha256": "8f1aa7cc55a0552ac6988c25b4d1190c3a5da89e15c5e9bdbb34e9ad888e2445"
+        "inputSha256": "598eddbc737e1ef8856d51343e3e6ccadee1ad089e7aa9ca34b4a8752042e636"
       }
     },
     {
@@ -481,7 +481,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lパチスロ 革命機ヴァルヴレイヴ2（Lヴヴヴ2）",
         "targetDate": "2026-11-10",
-        "inputSha256": "624314ec9a346ecc85915cb8cc2b46d19473a73b524773ec412ae76358c9c216"
+        "inputSha256": "a6c08d30d56ca82b4ab01bd3b7ab1e3674d829c79b1c8ecfdb26bc92035bd866"
       }
     },
     {
@@ -514,7 +514,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lパチスロうみねこのなく頃に2",
         "targetDate": "2026-11-10",
-        "inputSha256": "2a89047775393acf6b06d6b11523bc2b77101f1ef2269f789dba4ec078b82fa6"
+        "inputSha256": "1d4b417060b719e29e4f5f478569c795b14efe3a99bf7d20742f42e3b96d8198"
       }
     },
     {
@@ -548,7 +548,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lパチスロ革命機ヴァルヴレイヴ",
         "targetDate": "2026-11-10",
-        "inputSha256": "45bd6539bc90ef9d3083526f65f889cfd8805406af0bd62bc82b0dab73dee032"
+        "inputSha256": "19a29fe8d91954b2c7ea226393a8ff275a50d33c59ee869abccfe77c04ca44aa"
       }
     },
     {
@@ -583,7 +583,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lミリオンゴッド－神々の軌跡－",
         "targetDate": "2026-11-10",
-        "inputSha256": "105603458adde5e76f6bdbca7356714e8990b470067ca26d4befe865796e250e"
+        "inputSha256": "85c326f96bcaa289fe3735620a0ca08a98bad98542781008eb456689eca83526"
       }
     },
     {
@@ -617,7 +617,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lモグモグ風林火山 大海戦の巻",
         "targetDate": "2026-11-10",
-        "inputSha256": "e4065869121c607f36034bc6ec4a3fc7aa58111fdb8509db0c59ab2355b5173b"
+        "inputSha256": "63e09455c0ac481be9cb80d2052c11b1d69694ce07a7031a0cb3029494368cf0"
       }
     },
     {
@@ -651,7 +651,7 @@
         "hallId": "ueno_honkan",
         "machineName": "Lリコリス・リコイル",
         "targetDate": "2026-11-10",
-        "inputSha256": "5835784268a685c2834da2d67b60018e43521f6c22df6fb0a77cebca8f6f150e"
+        "inputSha256": "8dbadc8ad2cc433db81b44fbd74f7b3af3ad46170dc52155fb0a42ae7f034a16"
       }
     },
     {
@@ -716,7 +716,7 @@
         "hallId": "ueno_honkan",
         "machineName": "L喰霊-零-Re",
         "targetDate": "2026-11-10",
-        "inputSha256": "441ea8b2d343aac5a27b5e9c5f8815b37690e579e0b41efa8bebe19d06fdc187"
+        "inputSha256": "42b31cf8c5a0237edb43e37463e2cf5ce6866c55ec8f71546f42828282cde8c6"
       }
     },
     {
@@ -749,7 +749,7 @@
         "hallId": "ueno_honkan",
         "machineName": "L彼女、お借りします",
         "targetDate": "2026-11-10",
-        "inputSha256": "18251018a950a0d165f015daf11cc10ca31a7afc90a846d9abde7bed7e2b6f4d"
+        "inputSha256": "f82ef2bf5fff361bd68d59b7741503814ca08db0a2b98b7b8fe9a2d1198ef0bc"
       }
     },
     {
@@ -782,7 +782,7 @@
         "hallId": "ueno_honkan",
         "machineName": "L戦国乙女5 業火を穿つ宿焔の双刃",
         "targetDate": "2026-11-10",
-        "inputSha256": "38704303836a321a6b9af39a1f325f02980c0b6f1c6bae553ebfc073affeec7e"
+        "inputSha256": "bb053b9e0bdf12884ed007d9dab1bb98141c094dde8c9cdce6ecbcf9a6e2339c"
       }
     },
     {
@@ -816,7 +816,7 @@
         "hallId": "ueno_honkan",
         "machineName": "L甲鉄城のカバネリ海門決戦",
         "targetDate": "2026-11-10",
-        "inputSha256": "14622bdda97c3202f3641cb86d4542b1b3fe6f61b6d0ab3b07790fc189405dfc"
+        "inputSha256": "3e6e33eec6beedea5b268a659cfb7808e92ea5998271f702ef81fb2b7121d9eb"
       }
     },
     {
@@ -849,7 +849,7 @@
         "hallId": "ueno_honkan",
         "machineName": "L痛いのは嫌なので防御力に極振りしたいと思います。",
         "targetDate": "2026-11-10",
-        "inputSha256": "3170b67065d22c2a6b63031a2e13e3265b1524e9f445ea7532c6009329305dde"
+        "inputSha256": "db80fa31da278128bfae59dad9d14a9e9b6f547e6e0f7d6b356547b67699e49a"
       }
     },
     {
@@ -881,7 +881,7 @@
         "hallId": "ueno_honkan",
         "machineName": "L真打吉宗",
         "targetDate": "2026-11-10",
-        "inputSha256": "0d7ef413097d7dcd5932929fcf6e2f3f844d6af68370a022c1efc5722856728a"
+        "inputSha256": "6cd98ed9442812bbfb2f745cd28522caed519fbee6f7f4a4c1b0f81e5be115e9"
       }
     },
     {
@@ -929,7 +929,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -937,19 +937,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1748,
-        "events": 1721,
+        "rows": 1901,
+        "events": 1871,
         "units": 3,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-10",
-        "inputSha256": "b46e753db347fe33d808c37262226db99ec445306820969dfb8e4ca9e9880af4"
+        "targetDate": "2026-11-11",
+        "inputSha256": "0880b427cdcd793ce08d7da53b0d7fea6795b52bea45b2e529f2ce720f4c9257"
       }
     },
     {
@@ -981,7 +981,7 @@
         "hallId": "ueno_honkan",
         "machineName": "L虚構推理",
         "targetDate": "2026-11-10",
-        "inputSha256": "bfda9d888f60ea6896a48893b48f7c792c91a7bf2f3242e3165e898ebd8b70e3"
+        "inputSha256": "6edf956e75bb449b798059e0c7474ce05ee3743c2b4cfd3309e7a57b7c78efcf"
       }
     },
     {
@@ -1015,7 +1015,7 @@
         "hallId": "ueno_honkan",
         "machineName": "L青春ブタ野郎はバニーガール先輩の夢を見ない",
         "targetDate": "2026-11-10",
-        "inputSha256": "72ab9d4f7ec1d45a9417e2a1eb603a6eb822ecb62a9527fc8f2688335b8ceaca"
+        "inputSha256": "008ed371489bb186dc1f103d120d6db4362802cbdd08e994f92664df075a6d66"
       }
     },
     {
@@ -1049,7 +1049,7 @@
         "hallId": "ueno_honkan",
         "machineName": "L魔法少女にあこがれて",
         "targetDate": "2026-11-10",
-        "inputSha256": "82062a236328e3be2b3fbecf938ee5d2039f4feaa4f31eed4c762ec28264b939"
+        "inputSha256": "0e58c1a46085edbaff3bdb48ab5dc1a29aed65fcd0cc1c3f837dfa8344acdb32"
       }
     },
     {
@@ -1064,7 +1064,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1072,19 +1072,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 2570,
-        "events": 2534,
+        "rows": 2763,
+        "events": 2723,
         "units": 4,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-10",
-        "inputSha256": "6d4f5c96dcd3ca66a62372416a0ceee3ff1c9c81f1b4f6a226fecb9667bb19a0"
+        "targetDate": "2026-11-11",
+        "inputSha256": "153fade76e093f94a9dec694e9a57f9403f0f126b10becf9ae4dc9942f50bda2"
       }
     },
     {
@@ -1098,7 +1098,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1106,19 +1106,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 5052,
-        "events": 4998,
+        "rows": 5587,
+        "events": 5527,
         "units": 6,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-10",
-        "inputSha256": "3bd07100395256fd087f75aadb8d01c626bdb4b316dbc5b2f61a50c8771d4072"
+        "targetDate": "2026-11-11",
+        "inputSha256": "dc18bb1c1e013fc27466c68e3033b161b2fe7954f798b857400b4df557bff9fc"
       }
     },
     {
@@ -1131,7 +1131,7 @@
         "スマスロ ラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1139,19 +1139,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 712,
-        "events": 685,
+        "rows": 789,
+        "events": 759,
         "units": 3,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-10",
-        "inputSha256": "47d35f75d3a72de08de49153add098f2c09701be87baefcb22c339ea75c4bc18"
+        "targetDate": "2026-11-11",
+        "inputSha256": "c395095e6578b6bfda54dfc9062cf90e65e02b656324353aba6625ec79063fc0"
       }
     },
     {
@@ -1184,7 +1184,7 @@
         "hallId": "ueno_honkan",
         "machineName": "この素晴らしい世界に祝福を！",
         "targetDate": "2026-11-10",
-        "inputSha256": "ec493392fda11975dd75945b7792f56bf14394f0e0693d8d94958af46d1cfba7"
+        "inputSha256": "a9bdf1a1838275a9560cd865ec9ec11ef3f989b486b7fd9a4a811daa23d7c09a"
       }
     },
     {
@@ -1217,7 +1217,7 @@
         "hallId": "ueno_honkan",
         "machineName": "スマスロ シャーマンキング",
         "targetDate": "2026-11-10",
-        "inputSha256": "e5d7eb1f328266c916e5e33424c7cbdddeff30f1be11e43fcadb8b0070bf739a"
+        "inputSha256": "f650b75f6041235c04333792ac118d32201d5050ccbe975848834b37eb78baae"
       }
     },
     {
@@ -1252,7 +1252,7 @@
         "hallId": "ueno_honkan",
         "machineName": "スマスロ バジリスク絆2 天膳 BLACK EDITION",
         "targetDate": "2026-11-10",
-        "inputSha256": "50293ec3f61475862d72325f04d12f5a929bc2368e595a08f37059336cbb6549"
+        "inputSha256": "b83af96cd7d81798cfc528e4ecec02187901f99400759e2fa0e34fd63fb7cfdf"
       }
     },
     {
@@ -1286,7 +1286,7 @@
         "hallId": "ueno_honkan",
         "machineName": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
         "targetDate": "2026-11-10",
-        "inputSha256": "294227f7d60e4e22a3b68a2530ae5e9ca81c2d4b90328e21c5b6c9adf97b7707"
+        "inputSha256": "38b646dafe11226d5c14724a35039ad456c51008f1667ab2c433c7c3c0419137"
       }
     },
     {
@@ -1320,7 +1320,7 @@
         "hallId": "ueno_honkan",
         "machineName": "スマスロ モンスターハンターライズ",
         "targetDate": "2026-11-10",
-        "inputSha256": "23ba950a533a0836ff709afbdee464bb006685bfaa4ac22405b68d53ae704cb8"
+        "inputSha256": "819d514096d71c5c291cea7759924f3441cf321cde32084eb46643310303838f"
       }
     },
     {
@@ -1354,7 +1354,7 @@
         "hallId": "ueno_honkan",
         "machineName": "スマスロ モンスターハンターライズ：サンブレイク",
         "targetDate": "2026-11-10",
-        "inputSha256": "0c039b5eca967de543e8b31ed2f97f723905fd584ab6fd8d8503e6189d364051"
+        "inputSha256": "01356d226327d7d9e38b9303701421a7cb4b202ab26ceb5116f09a9fd771e908"
       }
     },
     {
@@ -1387,7 +1387,7 @@
         "hallId": "ueno_honkan",
         "machineName": "スマスロ 化物語",
         "targetDate": "2026-11-10",
-        "inputSha256": "94f20d0d4f6c5f6a3ec227382bbc08c66a60896cb812ae319231fb75a342acb9"
+        "inputSha256": "516481951946e3abfbd22b45b35c04d1b40b6458afe8a3206c3e7815c614d92f"
       }
     },
     {
@@ -1421,7 +1421,7 @@
         "hallId": "ueno_honkan",
         "machineName": "スマスロ 北斗の拳 転生の章2",
         "targetDate": "2026-11-10",
-        "inputSha256": "46052d2f80762215de34fb957b497b3c39f63ce592b6a3c0bc910174ae416181"
+        "inputSha256": "362da15b960b78b0f865ef0886cc495adc73073d7350895561e3bc85a09cc603"
       }
     },
     {
@@ -1455,7 +1455,7 @@
         "hallId": "ueno_honkan",
         "machineName": "スマスロ 攻殻機動隊",
         "targetDate": "2026-11-10",
-        "inputSha256": "315efbbac51a0b5f59d40af169fb04e426079a56097aea28407c3557c70d5046"
+        "inputSha256": "5fe4aa73cb1c29cb3906cf536b963995d049053574d0f5f2b00b6856c7ebd654"
       }
     },
     {
@@ -1520,7 +1520,7 @@
         "hallId": "ueno_honkan",
         "machineName": "スマスロ 獣王",
         "targetDate": "2026-11-10",
-        "inputSha256": "3ed6a7f84896a25b2af937924eaed373cd611ac044a3e3da3f535fc427551edf"
+        "inputSha256": "77393068e8a64fb5ca3a4222566a42e8f8e3a1cc4b496ddb4bbe10c0a81242b1"
       }
     },
     {
@@ -1554,7 +1554,7 @@
         "hallId": "ueno_honkan",
         "machineName": "スマスロスーパーブラックジャック",
         "targetDate": "2026-11-10",
-        "inputSha256": "bbaeab7927955ad5ae31a008fed9688d99567c76f8135723381b540a312581d9"
+        "inputSha256": "8168e72fa43be92bef02347fe7b3a0709bde95249104b56ac20a4db264ff741e"
       }
     },
     {
@@ -1586,7 +1586,7 @@
         "hallId": "ueno_honkan",
         "machineName": "スマスロパリピ孔明",
         "targetDate": "2026-11-10",
-        "inputSha256": "6ab912c55bdfa4bb1cf29dd635b7e979fb2028a1b9ffcb4b75fe5c1fe8652619"
+        "inputSha256": "bacd5242df576efe2098e511b5bc6e69490691905f4edac33be9bbf8c73a2908"
       }
     },
     {
@@ -1623,7 +1623,7 @@
         "hallId": "ueno_honkan",
         "machineName": "ソードアート・オンラインII",
         "targetDate": "2026-11-10",
-        "inputSha256": "ebc38ed9b5c06014287179dac6ba9accea7679e7067c1b56c23c389d661a79b0"
+        "inputSha256": "8d448ce9b1c98dd428364b9c93395ece88ff1ba7fa2117e0c1e66c46a9ccd51d"
       }
     },
     {
@@ -1655,7 +1655,7 @@
         "hallId": "ueno_honkan",
         "machineName": "ワールドダイスター",
         "targetDate": "2026-11-10",
-        "inputSha256": "366173f10ffcd17485fb9a40ed76f4023931bcb291f930012612f42a3df60de0"
+        "inputSha256": "fbceaa41aa6bef1044e2b5a56516bcabb907db8b6163da9edee283f0904c4a6e"
       }
     },
     {
@@ -1689,7 +1689,7 @@
         "hallId": "ueno_honkan",
         "machineName": "戦国コレクション6",
         "targetDate": "2026-11-10",
-        "inputSha256": "655a126aebe9b83490ab4c9c63e27022a584cd90d92c9439cb8b03b148767c74"
+        "inputSha256": "6f2b69cb971a0766cdb806f34ec28ad38f38227228740b24e9bf84de07b00f19"
       }
     },
     {
@@ -1723,7 +1723,7 @@
         "hallId": "ueno_honkan",
         "machineName": "沖ドキ！BLACK",
         "targetDate": "2026-11-10",
-        "inputSha256": "1eea2384b9dbeaaa254d00d2886aee94b5eab06267f09122b1902a8adfa0457b"
+        "inputSha256": "fae6c95bafa01f6e43bbf9c3112a66d7ca54de34c8d52417d2ccea761a629aed"
       }
     },
     {
@@ -1755,7 +1755,7 @@
         "hallId": "ueno_honkan",
         "machineName": "邪神ちゃんドロップキック",
         "targetDate": "2026-11-10",
-        "inputSha256": "0183c5a2adc83bb84cdbc40530f7199a4268a63718e032f8b18e2264e785f8b8"
+        "inputSha256": "c5337338645e14725996a57939b6ba35032d7dd5ea96386b5f7343dcae3d6ce8"
       }
     }
   ]
