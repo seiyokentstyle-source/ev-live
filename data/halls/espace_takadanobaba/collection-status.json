@@ -3,7 +3,7 @@
   "hallId": "espace_takadanobaba",
   "source": "daidata",
   "storeId": "100915",
-  "lastUpdated": "2026-11-11",
+  "lastUpdated": "2026-11-12",
   "machines": [
     {
       "id": "m3e019184",
@@ -202,7 +202,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -210,19 +210,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 803,
-        "events": 783,
+        "rows": 892,
+        "events": 870,
         "units": 2,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_takadanobaba",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-11",
-        "inputSha256": "418fdf8b7880e595f983926f06130e7a91051bc262c2f0bded33ec8c16de3938"
+        "targetDate": "2026-11-12",
+        "inputSha256": "d0ad64d09f22f7f426f592913f7437247eb6e1594624f05f76ac3e50d2ca5c39"
       }
     },
     {
@@ -949,7 +949,7 @@
         "スマスロ牙狼"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -957,19 +957,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 290,
-        "events": 280,
+        "rows": 329,
+        "events": 318,
         "units": 1,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_takadanobaba",
         "machineName": "L牙狼 闇を照らす者",
-        "targetDate": "2026-11-11",
-        "inputSha256": "d315f68dbce80471870fe04ee0e86c832b438529c1d455ab10df9c5da487cdb8"
+        "targetDate": "2026-11-12",
+        "inputSha256": "84fa83ae51b59200d7bcfee55cad7f0102413df3e5155fa4c782a3db5918b6e4"
       }
     },
     {
@@ -1049,7 +1049,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1057,19 +1057,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 2457,
-        "events": 2427,
+        "rows": 2746,
+        "events": 2713,
         "units": 3,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_takadanobaba",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-11",
-        "inputSha256": "ab958d3e4c49b84c2bd6f43857f3f9a6d4336a73fbbc829a627f25327b11bbdc"
+        "targetDate": "2026-11-12",
+        "inputSha256": "983d6fbeccd6ba4f50e9aa0f60beb54fcc768533472b79433615990700f5b87a"
       }
     },
     {
@@ -1152,7 +1152,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1160,19 +1160,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1468,
-        "events": 1448,
+        "rows": 1682,
+        "events": 1660,
         "units": 2,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_takadanobaba",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-11",
-        "inputSha256": "b53e93bd5cd021fb2ec1b40d37e64b7fd5cdded9e31f50b638efd10d9cf8c3d3"
+        "targetDate": "2026-11-12",
+        "inputSha256": "9d737a46bd9f5859d7da9e1a6750dc60ac16a973d461c3e4166ed690b775fce1"
       }
     },
     {
@@ -1186,7 +1186,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1194,19 +1194,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 6139,
-        "events": 6079,
+        "rows": 6854,
+        "events": 6788,
         "units": 6,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_takadanobaba",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-11",
-        "inputSha256": "d01b69ccc8736e1a2f9a93cb4d67f24a2a20bea080ba4e24da685ef4eaee694d"
+        "targetDate": "2026-11-12",
+        "inputSha256": "792e9d4f1d666d9d12941192d2defff367d49f4db02dca1fd4be7de8f23e1de9"
       }
     },
     {
@@ -1219,7 +1219,7 @@
         "スマスロ ラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1227,19 +1227,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 844,
-        "events": 824,
+        "rows": 909,
+        "events": 887,
         "units": 2,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_takadanobaba",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-11",
-        "inputSha256": "451a3da4c5d415f6863a301fec37755ab4d3fb0d357bb1e7d77326f4a7c061cc"
+        "targetDate": "2026-11-12",
+        "inputSha256": "ecf0274a6580d4eec44d24b13e083fc84d77317f4acef3d8ff3b6227ad320ed0"
       }
     },
     {
