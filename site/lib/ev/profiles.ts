@@ -233,6 +233,30 @@ const MANUFACTURER_REWRITES: Array<[string, string]> = [
   ["パリピ孔明", "山佐ネクスト"],
   ["勇気の歌", "SANKYO"],
   ["Re:ゼロから始める異世界生活 Season2", "大都技研"],
+  // 2026-11-12 追加（出典：パチ7・P-town・1geki・nana-press の機種ページ）。
+  // 収集だけ済んで期待値を出していない機種は、データのメーカーが「未確認」で届く。
+  ["サラリーマン鏡", "大都技研"],
+  ["無職転生", "ニューギン"],
+  ["LOVEるダークネス", "オリンピアエステート"],
+  ["いざ!番長", "大都技研"],
+  ["パンツァー", "平和"],
+  ["七つの魔剣", "コナミアミューズメント"],
+  ["レヴュースタァライト", "オーイズミ"],
+  ["沖ドキ!DUO アンコール", "メーシー"],
+  ["沖ドキ!GOLD-30", "ミズホ"],
+  ["沖ドキ!ゴージャス-30", "エレコ"],
+  ["沖ドキ!ゴージャス", "ミズホ"],
+  ["鉄拳6", "山佐ネクスト"],
+  ["麻雀格闘倶楽部", "コナミアミューズメント"],
+  ["アニマルスロットドッチ", "北電子"],
+  ["ゴジラ対エヴァンゲリオン", "ビスティ"],
+  ["ダークハイビ", "パイオニア"],
+  ["ビッグドリーム", "Sammy"],
+  ["ローティス", "北電子"],
+  ["バーサスリヴァイズ", "エレコ"],
+  ["ミリオンライブ", "ビスティ"],
+  ["エウレカセブン", "Sammy"],
+  ["カバネリ", "Sammy"],
   ["吉宗", "大都技研"]
 ];
 
@@ -248,11 +272,13 @@ export function displayMachineName(name: string): string {
   return name.replace(/[｡-ﾟ]+/g, part => part.normalize("NFKC"));
 }
 
-/** メーカー名。「未登録」なら機種名から補い、表記ゆれは1つに寄せて返す。 */
+/** メーカー名。「未登録」「未確認」なら機種名から補い、表記ゆれは1つに寄せて返す。 */
 export function rewriteManufacturer(name: string, manufacturer: string): string {
   let out = manufacturer;
-  if (out === "未登録") {
-    const hit = MANUFACTURER_REWRITES.find(([key]) => name.includes(key));
+  if (out === "未登録" || out === "未確認") {
+    // 台データの半角カナ・萌えスロの全角英字の機種名でも当たるよう、そろえた表記でも照らす。
+    const plain = name.normalize("NFKC");
+    const hit = MANUFACTURER_REWRITES.find(([key]) => name.includes(key) || plain.includes(key));
     if (hit) out = hit[1];
   }
   return MANUFACTURER_ALIASES[out] ?? out;

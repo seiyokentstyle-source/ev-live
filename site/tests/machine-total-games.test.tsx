@@ -48,15 +48,19 @@ describe("home card total games", () => {
     expect(unknown.totalGames).toBeUndefined();
   });
 
-  it("adds each physical hall once and ignores mixed tables", () => {
+  it("adds each physical hall once, and follows the mixed table when one is published", () => {
     const base = collectedFixture("same").summary;
     const entry = (hallId: string, samples: string, games?: number) =>
       ({ hallId, summary: { ...base, meta: { samples, source: "fixture" }, ...(games !== undefined ? { games } : {}) } });
-    const [selected] = selectMachineListSummaries([
-      entry("shinjuku", "100", 2_000_000), entry("kabuki", "50", 1_000_000),
-      entry("kabuki", "50", 1_000_000), entry("mixed", "150", 9_999_999),
-    ]);
+    const halls = [entry("shinjuku", "100", 2_000_000), entry("kabuki", "50", 1_000_000), entry("kabuki", "50", 1_000_000)];
+    const [selected] = selectMachineListSummaries(halls);
     expect(selected).toMatchObject({ totalSamples: 150, totalGames: 3_000_000 });
+    // 補正なしの混合が無い機種は、設定1補正の混合の表と同じ回数にする（利用者指定 2026-11-12）。
+    const [low] = selectMachineListSummaries([...halls, entry("mixed", "370", 9_999_999)]);
+    expect(low).toMatchObject({ totalSamples: 370, totalGames: 9_999_999 });
+    // 補正なしの混合があれば、これまでどおりそちらに合わせる。
+    const [raw] = selectMachineListSummaries([...halls, entry("mixed", "370", 9_999_999), entry("mixed-raw", "360", 8_888_888)]);
+    expect(raw).toMatchObject({ totalSamples: 360, totalGames: 8_888_888 });
     const [none] = selectMachineListSummaries([entry("shinjuku", "100")]);
     expect(none.totalGames).toBeUndefined();
   });
