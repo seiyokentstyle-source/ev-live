@@ -9,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default async function ShinjukuHeatmapPage() {
-  return <HeatmapClient data={await getShinjukuHeatmapData()} floor={SHINJUKU_FLOOR} />;
+  return <HeatmapClient data={await getShinjukuHeatmapData()} floor={{ ...SHINJUKU_FLOOR, sourceUrl: "" }} />;
 }

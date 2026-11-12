@@ -18,7 +18,8 @@ describe("刀ポイント参考試算の表示", () => {
     }
     expect(html).toContain("合成テスト版");
     expect(html).toContain("未観測獲得の件数と金額影響は未確定");
-    expect(html).toContain('href="https://example.com/synthetic-katana-source"');
+    // 利用者指定（2026-11-13）：出典のリンクは出さない。
+    expect(html).not.toContain("https://example.com/synthetic-katana-source");
   });
 
   it("高確切替は対応する公開行を選び、フロントで値を作り直さない", () => {

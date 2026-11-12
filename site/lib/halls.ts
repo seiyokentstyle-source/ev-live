@@ -1,6 +1,7 @@
 // 集計元の店舗情報は全て保持し、画面・公開ルートは可視店舗だけを選ぶ。
 // mixed-only の店舗もデータ上の区分と店舗混合への寄与を失わない。
 import publishedHalls from "../../data/published-halls.json";
+import { hideSourceNamesInText } from "./machine-metadata";
 
 export type Hall = {
   /** URL に出る識別子（/machines/<機種id>/<ここ>）. */
@@ -41,7 +42,7 @@ const DEFAULT_HALLS: Hall[] = [
     id: "kabuki",
     area: "新宿",
     name: "歌舞伎のお店",
-    note: "Daidataの保存済み履歴をゴジラのお店と共通の機種仕様・計算条件で集計。算出保留の機種は保留表示",
+    note: "保存済み履歴をゴジラのお店と共通の機種仕様・計算条件で集計。算出保留の機種は保留表示",
     ready: true,
     dataSubdir: "kabuki"
   },
@@ -75,7 +76,8 @@ const registeredHalls: Hall[] = publishedHalls.map(hall => {
   if (hall.visibility !== undefined && hall.visibility !== "listed" && hall.visibility !== "mixed-only") {
     throw new Error(`Invalid hall visibility: ${hall.id}`);
   }
-  return { ...hall, visibility: hall.visibility as Hall["visibility"] };
+  // 補足文に取得元サイトの名前を出さない（利用者指定 2026-11-13）。
+  return { ...hall, note: hideSourceNamesInText(hall.note), visibility: hall.visibility as Hall["visibility"] };
 });
 const publishedById = new Map<string, Hall>(registeredHalls.map((hall) => [hall.id, hall]));
 export const HALLS: Hall[] = [

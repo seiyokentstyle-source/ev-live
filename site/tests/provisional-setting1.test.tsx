@@ -78,7 +78,8 @@ describe("public-spec provisional reference", () => {
     const html = renderToStaticMarkup(<ProvisionalSetting1Table data={reference} />);
     for (const text of [reference.label, reference.note, "46/52", "50/50", "外部カウンター値とは対応未確認", "天井直前の参考EVは特に上振れ", ...reference.assumptions]) expect(html).toContain(text);
     for (const source of reference.sources) {
-      expect(html).toContain(source.label);
+      // 利用者指定（2026-11-13）：出典は出さない。
+      expect(html).not.toContain(source.label);
       expect(html).not.toContain(source.url);
     }
     expect(html).not.toMatch(/<a\b/);

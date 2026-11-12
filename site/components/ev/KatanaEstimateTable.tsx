@@ -80,9 +80,7 @@ export function KatanaEstimateTable({ data, highState, onHighStateChange }: {
           </table>
         </TableScroll>
       </>}
-      <TableFoot left={`対象 ${number(data.sample.count)}件`} right={
-        <a href={data.calibration.source.url} target="_blank" rel="noreferrer" className="underline underline-offset-2">校正元の条件</a>
-      } />
+      <TableFoot left={`対象 ${number(data.sample.count)}件`} right={null} />
     </div>
   );
 }

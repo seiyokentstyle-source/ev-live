@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import fixture from '../app/preview/ev-table/machine.json';
 import { hideSourceNamesInText, normalizeMachineMetadata } from '../lib/machine-metadata';
 import { validateMachine } from '../lib/ev/validate';
+import { HALLS } from '../lib/halls';
 
 // 利用者指定（2026-11-13）：算出条件には店の名前と取得元サイトの名前を書かない。
 const FORBIDDEN = /歌舞伎|東宝|アイランド|萌えスロ|エスパス|池袋|プレゴ|上野|西武|渋谷|秋葉原|サイトセブン|台データ|Daidata|Site ?Seven|新宿/;
@@ -51,5 +52,33 @@ describe('算出条件に店名・取得元サイト名を出さない', () => {
     expect(shown.calcSpec?.items[1].v).toBe('3枚掛け');
     expect(shown.profiles[0].pendingReason).not.toMatch(FORBIDDEN);
     expect(shown.profiles.slice(1)).toEqual(withNames.profiles.slice(1));
+  });
+});
+
+// 利用者指定（2026-11-13）：出典もいらない／算出条件以外も店名をそのまま出さない。
+describe('出典と、算出条件以外の店名・取得元名を出さない', () => {
+  it('公表値の出典名を落とす', () => {
+    expect(hideSourceNamesInText('機械割97.6%／設定1機械割97.6%（公表値: slobase / chonborista）。'))
+      .toBe('機械割97.6%／設定1機械割97.6%（公表値）。');
+  });
+
+  it('仕様出典の項目をページのデータから外し、集計元の一覧も伏せる', () => {
+    const base = validateMachine(structuredClone(fixture));
+    const machine = normalizeMachineMetadata({
+      ...base,
+      meta: { ...base.meta, source: '実戦データ自動収集（店舗混合（新宿 ゴジラのお店 / 池袋 スマートプレゴ池袋））' },
+      calcSpec: { title: '算出条件', items: [
+        { k: '天井', v: '999G' },
+        { k: '仕様出典', v: 'https://example.invalid/a / https://example.invalid/b' },
+      ] },
+    });
+    expect(machine.calcSpec?.items).toEqual([{ k: '天井', v: '999G' }]);
+    expect(machine.meta.source).toBe('実戦データ自動収集（店舗混合（新宿 ゴジラのお店 / 池袋 池袋のお店））');
+    expect(JSON.stringify(machine)).not.toContain('example.invalid');
+  });
+
+  it('保留理由と店舗の補足から取得元名が消える', () => {
+    expect(hideSourceNamesInText('対象日の台データを取り切ったことを確認できないため、期待値は算出保留です。')).not.toMatch(/台データ/);
+    expect(JSON.stringify(HALLS)).not.toMatch(/Daidata|台データ|サイトセブン|エスパス|アイランド|東宝|プレゴ/);
   });
 });

@@ -28,7 +28,6 @@ export function SimpleEvTable({ set }: SimpleEvTableProps) {
   const last = rows.at(-1)?.g ?? 0;
   const step = rows.length > 1 ? rows[1].g - rows[0].g : 10;
   const conditions = [
-    { k: "出典", v: "持ち込みの簡易期待値表（店舗共通・転記のまま）" },
     ...set.notes.map((note, index) => ({ k: index === 0 ? "算出条件" : "注意", v: note.replace(/^※/, "") })),
     { k: "サンプル", v: "元の表に件数が無いため「—」" }
   ];

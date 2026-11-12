@@ -123,8 +123,8 @@ describe("floor heatmap presentation", () => {
 
   it.each([
     ["shinjuku", "新宿"],
-    ["akihabara", "アイランド秋葉原"],
-    ["kabuki", "エスパス歌舞伎町"],
+    ["akihabara", "秋葉原"],
+    ["kabuki", "歌舞伎"],
   ] as const)("labels %s and links all three heatmaps without changing the seat data", (hallId, title) => {
     const html = renderToStaticMarkup(<HeatmapClient data={data} floor={floor} hallId={hallId} />);
     expect(html).toContain(`<h1>${title} <span>`);
@@ -165,7 +165,9 @@ describe("floor heatmap presentation", () => {
     expect(html).toContain('>2F</span>');
     expect(html).toContain("配置基準日未記載。入替前後も同じ台番号で集計。");
     expect(html).toContain(labeled.layoutNote);
-    expect(html).toContain('href="https://example.test/floor.png" target="_blank" rel="noreferrer">配置図の出典</a>');
+    // 利用者指定（2026-11-13）：出典のリンクは出さない。
+    expect(html).not.toContain("example.test/floor.png");
+    expect(html).not.toContain("出典");
   });
 
   it("renders unit-only tiles including gray missing seats, a single date filter, and accessible details", () => {

@@ -69,8 +69,8 @@ describe("compact heatmap controls", () => {
 
   it("keeps store navigation explicit and zoom controls operable", () => {
     render(<HeatmapClient hallId="kabuki" data={data} floor={floor} />);
-    expect(screen.getByRole("link", { name: "エスパス歌舞伎町" }).getAttribute("aria-current")).toBe("page");
-    expect(screen.getByRole("link", { name: "アイランド秋葉原" }).getAttribute("href")).toBe("/halls/akihabara/heatmap");
+    expect(screen.getByRole("link", { name: "歌舞伎" }).getAttribute("aria-current")).toBe("page");
+    expect(screen.getByRole("link", { name: "秋葉原" }).getAttribute("href")).toBe("/halls/akihabara/heatmap");
     fireEvent.click(screen.getByRole("button", { name: "島図を拡大" }));
     expect(screen.getByLabelText("表示倍率").textContent).toBe("125%");
     fireEvent.click(screen.getByRole("button", { name: "戻す" }));

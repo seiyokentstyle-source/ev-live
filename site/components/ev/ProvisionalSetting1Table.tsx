@@ -19,7 +19,7 @@ export function ProvisionalSetting1Table({ data }: { data: ProvisionalSetting1 }
         <p className="mt-1 text-[11px] font-bold text-ink-soft">G軸はモデル上の通常時Gです。店舗の外部カウンター値とは対応未確認です。</p>
         <p className="mt-1 text-[11px] font-bold text-ink-soft">天井の「+α」等を省略しているため、天井直前の参考EVは特に上振れする可能性があります。狙い始めの推奨値ではありません。</p>
         <details className="mono mt-2 text-[10px] leading-relaxed text-ink-soft">
-          <summary className="cursor-pointer">計算の仮定・公表入力・出典を確認</summary>
+          <summary className="cursor-pointer">計算の仮定・公表入力を確認</summary>
           <ul className="mt-2 list-disc space-y-1 pl-4">
             {data.assumptions.map((assumption, index) => <li key={index}>{assumption}</li>)}
           </ul>
@@ -32,10 +32,6 @@ export function ProvisionalSetting1Table({ data }: { data: ProvisionalSetting1 }
             <dt>逆算した仮定純獲得</dt><dd>{data.modelInputs.assumedFixedPayout.toLocaleString("ja-JP", { maximumFractionDigits: 1 })}枚（実測値ではありません）</dd>
           </dl>
           <p className="mt-2">収支換算率＝100＋丸め前の参考EV円÷（20円×3枚×想定消化G）×100。46/52は交換差を含み、公表機械割とは異なる換算値です。</p>
-          <ul className="mt-2 space-y-1">
-            {/* Keep provenance URLs in the data for validation, not in the public UI. */}
-            {data.sources.map((source, index) => <li key={index}>{source.label}</li>)}
-          </ul>
         </details>
       </div>
       <RateSelector rates={data.rates.map(item => ({ value: item.key, label: item.label }))} value={rate.key} onChange={setSelected} />

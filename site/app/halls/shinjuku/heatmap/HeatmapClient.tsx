@@ -11,8 +11,8 @@ const MIN_ZOOM = 0.05;
 const MAX_ZOOM = 3;
 const HALLS = {
   shinjuku: { title: "新宿", shortName: "新宿", subtitle: "ゴジラのお店" },
-  akihabara: { title: "アイランド秋葉原", shortName: "アイランド", subtitle: "アイランド秋葉原" },
-  kabuki: { title: "エスパス歌舞伎町", shortName: "歌舞伎町", subtitle: "エスパス歌舞伎町" },
+  akihabara: { title: "秋葉原", shortName: "秋葉原", subtitle: "萌えスロのお店" },
+  kabuki: { title: "歌舞伎", shortName: "歌舞伎", subtitle: "歌舞伎のお店" },
 } as const;
 type HeatmapHallId = keyof typeof HALLS;
 
@@ -171,7 +171,6 @@ export function HeatmapClient({ data, floor, hallId = "shinjuku" }: { data: Heat
         <p>特定日は日付の数字で抽出（例：1のつく日＝1・10〜19・21・31日）。</p>
         <p>{/^\d{4}-\d{2}-\d{2}$/.test(floor.asOf) ? `${floor.asOf.replaceAll("-", "/")}時点の配置。` : `${floor.asOf}。`}入替前後も同じ台番号で集計。</p>
         {floor.layoutNote && <p>{floor.layoutNote}</p>}
-        <p><a href={floor.sourceUrl} target="_blank" rel="noreferrer">配置図の出典</a></p>
       </section>
 
       <section id="heatmap-unplaced" className={styles.infoPanel} hidden={openPanel !== "unplaced"} aria-label="配置未確認の台" onKeyDown={(event) => { if (event.key === "Escape") closePanel(); }}>

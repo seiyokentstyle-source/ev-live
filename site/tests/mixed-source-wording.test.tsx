@@ -91,7 +91,7 @@ describe('mixed-source display wording', () => {
     const html = renderToStaticMarkup(<MachineDetailClient machine={machine} hall={getHall('mixed')!} />);
     expect(html).toContain('当選G・条件別母数は収集対象店舗の実測');
     expect(html).not.toContain('当選G・条件別母数は新宿の実測');
-    expect(machine.calcSpec!.items.find(item => item.k === '設定1（公表）')!.v).toBe(published);
+    expect(machine.calcSpec!.items.find(item => item.k === '設定1（公表）')!.v).toBe(hideSourceNamesInText(published));
     // The unrelated item intentionally retains its original text.
     expect(machine.calcSpec!.items.find(item => item.k === '別の注記')!.v).toBe(hideSourceNamesInText(legacy));
   });

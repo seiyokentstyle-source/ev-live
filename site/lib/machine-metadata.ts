@@ -128,26 +128,39 @@ const SOURCE_NAME_REWRITES: ReadonlyArray<readonly [string, string]> = [
   ["（スマートプレゴはBB）", "（一部の店舗はBB）"],
   ["混ざる店（西武新宿）は", "混ざる店は"],
   ["台データの差枚から見積もった", "差枚の記録から見積もった"],
+  // 算出条件以外（集計元の一覧・保留理由・店舗の補足）に出る名前。
+  ["スマートプレゴ池袋", "池袋のお店"],
+  ["対象日の台データを", "対象日のデータを"],
+  ["Daidataの保存済み履歴を", "保存済み履歴を"],
 ];
+
+// 利用者指定（2026-11-13）：出典も出さない。「（公表値: 解析サイト名 / …）」は「（公表値）」にする。
+const PUBLISHED_VALUE_SOURCE_RE = /（公表値: [^（）]*）/g;
+// 裏取りに使ったURLの項目。画面だけでなく、ページに埋め込むデータからも外す。
+const DROPPED_CALC_SPEC_KEYS = new Set(["仕様出典"]);
 
 export function hideSourceNamesInText(text: string): string {
   let out = text;
   for (const [from, to] of SOURCE_NAME_REWRITES) if (out.includes(from)) out = out.split(from).join(to);
-  return out;
+  return out.replace(PUBLISHED_VALUE_SOURCE_RE, "（公表値）");
 }
 
 function hideSourceNames(machine: Machine): Machine {
   const items = machine.calcSpec?.items;
-  const itemsChanged = items?.some(item => hideSourceNamesInText(item.v) !== item.v) ?? false;
+  const itemsChanged = items?.some(item => DROPPED_CALC_SPEC_KEYS.has(item.k) || hideSourceNamesInText(item.v) !== item.v) ?? false;
+  const metaSource = hideSourceNamesInText(machine.meta.source);
+  const metaChanged = metaSource !== machine.meta.source;
   const profilesChanged = machine.profiles.some(profile =>
     typeof profile.pendingReason === "string" && hideSourceNamesInText(profile.pendingReason) !== profile.pendingReason);
-  if (!itemsChanged && !profilesChanged) return machine;
+  if (!itemsChanged && !profilesChanged && !metaChanged) return machine;
   return {
     ...machine,
+    ...(metaChanged ? { meta: { ...machine.meta, source: metaSource } } : {}),
     ...(profilesChanged ? { profiles: machine.profiles.map(profile => typeof profile.pendingReason === "string"
       ? { ...profile, pendingReason: hideSourceNamesInText(profile.pendingReason) } : profile) } : {}),
     ...(itemsChanged && machine.calcSpec ? { calcSpec: { ...machine.calcSpec,
-      items: machine.calcSpec.items.map(item => ({ ...item, v: hideSourceNamesInText(item.v) })) } } : {}),
+      items: machine.calcSpec.items.filter(item => !DROPPED_CALC_SPEC_KEYS.has(item.k))
+        .map(item => ({ ...item, v: hideSourceNamesInText(item.v) })) } } : {}),
   };
 }
 
