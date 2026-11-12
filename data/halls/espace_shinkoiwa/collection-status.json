@@ -339,11 +339,11 @@
       "collectionComplete": true,
       "expectedUnits": 24,
       "collection": {
-        "rows": 8754,
-        "events": 8490,
-        "units": 24,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "rows": 9580,
+        "events": 9290,
+        "units": 26,
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -351,7 +351,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "L 東京喰種",
         "targetDate": "2026-11-10",
-        "inputSha256": "fe2768807bfeed983896112da785fea9248d3b790aedd2dd3653748daf42d536"
+        "inputSha256": "573f53d1597b1cbd30696931d1550696390ae56b04f79c46a3f08ff61cd55f7b"
       }
     },
     {
@@ -406,11 +406,11 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 1198,
-        "events": 1145,
-        "units": 5,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "rows": 1433,
+        "events": 1373,
+        "units": 8,
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -418,7 +418,41 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "Lとある魔術の禁書目録2",
         "targetDate": "2026-11-10",
-        "inputSha256": "c63f90dfe7e0ad2fd66e2da1a13007a68d290e434bd3046415ed590172883af2"
+        "inputSha256": "47aacdae0fd17b76e6e1e6ab0fff5d5b35f4a2439f9426909d8a3d777cf88b48"
+      }
+    },
+    {
+      "id": "m72df0bed",
+      "name": "Lやじきた道中記参る！",
+      "manufacturer": "ユニバーサルブロス",
+      "aliases": [
+        "Lやじきた道中記参る！",
+        "やじきた参る",
+        "やじきた道中記",
+        "Lやじきた道中記参る!"
+      ],
+      "releaseDate": "2026-08-03",
+      "lastUpdated": "2026-10-11",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 68,
+        "events": 65,
+        "units": 3,
+        "days": 1,
+        "firstDate": "2026-10-11",
+        "lastDate": "2026-10-11"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "espace_shinkoiwa",
+        "machineName": "Lやじきた道中記参る！",
+        "targetDate": "2026-10-11",
+        "inputSha256": "ef8ef27dc0dea15e048905e4721dc1b0722b91107357dbf9edd06aec774fb3b4"
       }
     },
     {
@@ -442,11 +476,11 @@
       "collectionComplete": true,
       "expectedUnits": 13,
       "collection": {
-        "rows": 4858,
-        "events": 4717,
+        "rows": 5881,
+        "events": 5728,
         "units": 13,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -454,7 +488,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "Lスマスロ モンキーターンV",
         "targetDate": "2026-11-10",
-        "inputSha256": "4c7f70cf3acbb00d1e75e333dbb6300f0e08b23ffe192bb79678ebe814648245"
+        "inputSha256": "978768673616900324ea50204a36a267154f60a0823737bfadb48ebd1c7f2c9d"
       }
     },
     {
@@ -476,11 +510,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 242,
-        "events": 233,
-        "units": 1,
-        "days": 9,
-        "firstDate": "2026-11-02",
+        "rows": 379,
+        "events": 367,
+        "units": 4,
+        "days": 10,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -488,7 +522,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "Lスマスロ　ゴッドイーター　リザレクション",
         "targetDate": "2026-11-10",
-        "inputSha256": "cddb4b81b07a83270ebd2d510cc62afadc34e9f2138b952f9aaec24beed1d288"
+        "inputSha256": "591bdbe67e931746248fea5ab01f4531ceb1e702e4ed8f761020a317457f8c47"
       }
     },
     {
@@ -509,11 +543,11 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 1663,
-        "events": 1613,
+        "rows": 1789,
+        "events": 1735,
         "units": 5,
-        "days": 10,
-        "firstDate": "2026-10-31",
+        "days": 11,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-09"
       },
       "sourceIntegrity": {
@@ -521,7 +555,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "Lスマスロかぐや様は告らせたい",
         "targetDate": "2026-11-09",
-        "inputSha256": "76b1613959b568eef5c1633f1fe80333a1ef0835d63c1a1070849cbf1f1e1bc1"
+        "inputSha256": "ae8835e9b6abdb9e886930f8dc8666b867ef0dd2bf41aa606b2637484d4e8c1a"
       }
     },
     {
@@ -545,11 +579,11 @@
       "collectionComplete": true,
       "expectedUnits": 13,
       "collection": {
-        "rows": 5845,
-        "events": 5706,
+        "rows": 6581,
+        "events": 6431,
         "units": 13,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -557,7 +591,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "Lスマスロ北斗の拳",
         "targetDate": "2026-11-10",
-        "inputSha256": "caa571efae88a4eba62eb049d11cfcd3e831f4e69c045094cfceda443adccaae"
+        "inputSha256": "a4c67bc20bec9ce200f7ab9ec67df38038ba222b1bb6f62711fd18713ce3e7cf"
       }
     },
     {
@@ -578,11 +612,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 690,
-        "events": 657,
+        "rows": 721,
+        "events": 685,
         "units": 3,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -590,7 +624,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "Lチバリヨ２",
         "targetDate": "2026-11-10",
-        "inputSha256": "0694d001f94b152867feefd1c9ff8cab3f191cc4158b4bc9f83f3c1a28a3f28d"
+        "inputSha256": "cf5ca7fa43294a6953ed50a92017c4eb64c1fcf34dc6649c1ee3972e29c9d34f"
       }
     },
     {
@@ -616,11 +650,11 @@
       "collectionComplete": true,
       "expectedUnits": 8,
       "collection": {
-        "rows": 3617,
-        "events": 3537,
-        "units": 8,
-        "days": 10,
-        "firstDate": "2026-10-31",
+        "rows": 4476,
+        "events": 4387,
+        "units": 9,
+        "days": 11,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-09"
       },
       "sourceIntegrity": {
@@ -628,7 +662,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "Lパチスロ 革命機ヴァルヴレイヴ2（Lヴヴヴ2）",
         "targetDate": "2026-11-09",
-        "inputSha256": "7e8cc4d6472f946eada586c7ee834c78042ca413e2f2001e5199ca7458cea532"
+        "inputSha256": "ef5be792ff3ae7ceea5b355e485e2dc93e3bcd6065c847c4b58154553c4bd966"
       }
     },
     {
@@ -649,11 +683,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 388,
-        "events": 355,
+        "rows": 425,
+        "events": 389,
         "units": 3,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -661,7 +695,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "Lパチスロうみねこのなく頃に2",
         "targetDate": "2026-11-10",
-        "inputSha256": "abafa32608abc976b1bc1bae10343fc1dc3da031083847810dcd3bd92b1c9803"
+        "inputSha256": "3603c909a849d894331bc6a9a30987f32f4c3897d4dba27a39b771296fd75d67"
       }
     },
     {
@@ -684,11 +718,11 @@
       "collectionComplete": true,
       "expectedUnits": 14,
       "collection": {
-        "rows": 3389,
-        "events": 3249,
-        "units": 14,
-        "days": 10,
-        "firstDate": "2026-10-31",
+        "rows": 3689,
+        "events": 3534,
+        "units": 15,
+        "days": 11,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-09"
       },
       "sourceIntegrity": {
@@ -696,7 +730,41 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "Lミリオンゴッド－神々の軌跡－",
         "targetDate": "2026-11-09",
-        "inputSha256": "496cd40b0dcfbb19e3dc46267fc9e7c073aab24a910853a0607fe9ec62f36d41"
+        "inputSha256": "42014cc32c58a337cef8ab0e24861e9e3b70b9441a2299fe518d6c1b484831d6"
+      }
+    },
+    {
+      "id": "mbef0d24f",
+      "name": "Lモグモグ風林火山 大海戦の巻",
+      "manufacturer": "ネット",
+      "aliases": [
+        "Lモグモグ風林火山 大海戦の巻",
+        "モグモグ",
+        "モグ大",
+        "Lﾓｸﾞﾓｸﾞ風林火山"
+      ],
+      "releaseDate": "2026-09-07",
+      "lastUpdated": "2026-10-11",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 186,
+        "events": 183,
+        "units": 3,
+        "days": 1,
+        "firstDate": "2026-10-11",
+        "lastDate": "2026-10-11"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "espace_shinkoiwa",
+        "machineName": "Lモグモグ風林火山 大海戦の巻",
+        "targetDate": "2026-10-11",
+        "inputSha256": "b989f4c27c69372961f23b09fe1b58ad4da2b73ab18a643740629fffcb211d7d"
       }
     },
     {
@@ -718,11 +786,11 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 3509,
-        "events": 3432,
-        "units": 7,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "rows": 4719,
+        "events": 4627,
+        "units": 15,
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -730,7 +798,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "Lリコリス・リコイル",
         "targetDate": "2026-11-10",
-        "inputSha256": "864066140de333c7c306d3824fe55ec54198a0539b311c78e39cf63c7f06f0ed"
+        "inputSha256": "aec24f3d1205f463c183458345c25d7281a739e68cb876dd13fe2317b4f1b6e7"
       }
     },
     {
@@ -750,11 +818,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 636,
-        "events": 603,
+        "rows": 680,
+        "events": 644,
         "units": 3,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -762,7 +830,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "L南国育ちSPECIAL",
         "targetDate": "2026-11-10",
-        "inputSha256": "000f216144c10a9dca177fbd80c7bd925b0f899cd6b08105ce7c20e8e459c366"
+        "inputSha256": "14ad17141058d5f7c811e49e9864cd6f1ae51e5ea21f98a83d8fb41a92839a2b"
       }
     },
     {
@@ -783,11 +851,11 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 480,
-        "events": 462,
-        "units": 2,
-        "days": 9,
-        "firstDate": "2026-11-02",
+        "rows": 589,
+        "events": 569,
+        "units": 4,
+        "days": 10,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -795,7 +863,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "L喰霊-零-Re",
         "targetDate": "2026-11-10",
-        "inputSha256": "9a2120a64f479871fd4b388222c539d2fa8e4d139bdcb16be949e231909e6942"
+        "inputSha256": "800536d1b78dfdd5e8e7e5235abee92a697b613ed9d37746b1b4afa6fb51bebe"
       }
     },
     {
@@ -816,11 +884,11 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 1021,
-        "events": 977,
+        "rows": 1157,
+        "events": 1109,
         "units": 4,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -828,7 +896,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "L彼女、お借りします",
         "targetDate": "2026-11-10",
-        "inputSha256": "7461d83f99befa7f096a86655893677a8415b12c76368fd7c97ec67fa716e36e"
+        "inputSha256": "5ce864ae69ee578e23e904e6857bcd32091aa959424a1be85860524764392a30"
       }
     },
     {
@@ -849,11 +917,11 @@
       "collectionComplete": true,
       "expectedUnits": 10,
       "collection": {
-        "rows": 5937,
-        "events": 5827,
+        "rows": 6553,
+        "events": 6433,
         "units": 10,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -861,7 +929,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "L戦国乙女5 業火を穿つ宿焔の双刃",
         "targetDate": "2026-11-10",
-        "inputSha256": "e03393338d7f1c247cce72150ff52752ca0f38209659a26c8d7e490182d874be"
+        "inputSha256": "b5968cbac1df9bad67c0cbed59109480abf545470610c315219a9e54245b0ce0"
       }
     },
     {
@@ -917,11 +985,11 @@
       "collectionComplete": true,
       "expectedUnits": 19,
       "collection": {
-        "rows": 7661,
-        "events": 7452,
-        "units": 19,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "rows": 8719,
+        "events": 8489,
+        "units": 21,
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -929,7 +997,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "L甲鉄城のカバネリ海門決戦",
         "targetDate": "2026-11-10",
-        "inputSha256": "426d555042028779f12419eab8e1e21881f9e02b6202d37d343d41a86707415f"
+        "inputSha256": "04cd2fab2833c3e194ac19185bfc977e157fa61cf968b623675a762bbe781ce1"
       }
     },
     {
@@ -949,11 +1017,11 @@
       "collectionComplete": true,
       "expectedUnits": 9,
       "collection": {
-        "rows": 4918,
-        "events": 4819,
-        "units": 9,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "rows": 5747,
+        "events": 5638,
+        "units": 10,
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -961,7 +1029,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "L真打吉宗",
         "targetDate": "2026-11-10",
-        "inputSha256": "3b8eb6b89ada85e20ca8f7f3037bfbbec700cf461a13a3e1a09f0eebd86a8e93"
+        "inputSha256": "e1557d5ed156fc314aa77e9eb23fc00bff78812722389622dc1fd8426589c1ac"
       }
     },
     {
@@ -1017,11 +1085,11 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 2507,
-        "events": 2452,
+        "rows": 2833,
+        "events": 2773,
         "units": 5,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1029,7 +1097,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "L青春ブタ野郎はバニーガール先輩の夢を見ない",
         "targetDate": "2026-11-10",
-        "inputSha256": "92468a3a00091c6673d950de83a8cc0cf4591dcd80310b6f278dc35e306e7d2a"
+        "inputSha256": "a03dddc69c989abf7bac34626ec9f1a8678f60b245e6aba03cef4a1152ddf5ea"
       }
     },
     {
@@ -1186,11 +1254,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 736,
-        "events": 726,
+        "rows": 750,
+        "events": 739,
         "units": 1,
-        "days": 10,
-        "firstDate": "2026-10-31",
+        "days": 11,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-09"
       },
       "sourceIntegrity": {
@@ -1198,7 +1266,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "この素晴らしい世界に祝福を！",
         "targetDate": "2026-11-09",
-        "inputSha256": "106a66809491871cf7e2ed52ee446d4a15403f990aa1f80ed77995f54a17afb3"
+        "inputSha256": "3c65c1f029e7323e9f9c6212ec3aa442622627e51f8a4d8d1c9a9abe311efacd"
       }
     },
     {
@@ -1219,11 +1287,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 629,
-        "events": 596,
+        "rows": 776,
+        "events": 740,
         "units": 3,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1231,7 +1299,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "スマスロ シャーマンキング",
         "targetDate": "2026-11-10",
-        "inputSha256": "f7c4e74ec4fd47196a1e849e595f757e038dee32c8625b69f4b68a320d1c8b10"
+        "inputSha256": "ea3dfe173e7435f1d74d8e07a067dcdd1dc995211ea8d31f927b5e33ff4094eb"
       }
     },
     {
@@ -1254,11 +1322,11 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 2583,
-        "events": 2541,
+        "rows": 2697,
+        "events": 2652,
         "units": 4,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1266,7 +1334,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "スマスロ バジリスク絆2 天膳 BLACK EDITION",
         "targetDate": "2026-11-10",
-        "inputSha256": "39f0468b928dd4951be761d1c3f86b1a4c9d86078a6798ef3a5201aea8504733"
+        "inputSha256": "f01cf5411f463c922854aac172f905c63faf5e57baedac5fa9597192ac304792"
       }
     },
     {
@@ -1288,11 +1356,11 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 1974,
-        "events": 1897,
+        "rows": 2221,
+        "events": 2137,
         "units": 7,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1300,7 +1368,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
         "targetDate": "2026-11-10",
-        "inputSha256": "ff432b4629465b4bd203cc6eb56d682ef0c7036f7970a2bdeee743c6f8c83711"
+        "inputSha256": "99eb08e02ecab1084ae44fc703c4140449a7f0fc677beab4ee0947c98e190fba"
       }
     },
     {
@@ -1322,11 +1390,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 842,
-        "events": 815,
-        "units": 3,
-        "days": 9,
-        "firstDate": "2026-11-02",
+        "rows": 958,
+        "events": 928,
+        "units": 6,
+        "days": 10,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1334,7 +1402,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "スマスロ モンスターハンターライズ",
         "targetDate": "2026-11-10",
-        "inputSha256": "b2b6f32595d9edd21e514fdd5ecc601226a9e5aec30693aa312c45086eff3f03"
+        "inputSha256": "87ccf66123f6c719cbfcb66f05325173a8ac14e23b465c67647fce4f2f781761"
       }
     },
     {
@@ -1356,11 +1424,11 @@
       "collectionComplete": true,
       "expectedUnits": 14,
       "collection": {
-        "rows": 3277,
-        "events": 3137,
+        "rows": 3856,
+        "events": 3702,
         "units": 14,
-        "days": 10,
-        "firstDate": "2026-10-31",
+        "days": 11,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-09"
       },
       "sourceIntegrity": {
@@ -1368,7 +1436,40 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "スマスロ モンスターハンターライズ：サンブレイク",
         "targetDate": "2026-11-09",
-        "inputSha256": "584819ee11aa6b0f688ee79e57acefd15954d89d129782ee0c24e48a93699748"
+        "inputSha256": "2925f1400ae867fef9a4ef4da28d1036dc0a4abcd0822305a75916e36f8b6769"
+      }
+    },
+    {
+      "id": "m6a74cdc0",
+      "name": "スマスロ 化物語",
+      "manufacturer": "Sammy",
+      "aliases": [
+        "スマスロ 化物語",
+        "化物語",
+        "L化物語"
+      ],
+      "releaseDate": "2024-01-01",
+      "lastUpdated": "2026-10-11",
+      "status": "pending",
+      "reasonCode": "validation_pending",
+      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "forcePending": false,
+      "collectionComplete": true,
+      "expectedUnits": 3,
+      "collection": {
+        "rows": 195,
+        "events": 192,
+        "units": 3,
+        "days": 1,
+        "firstDate": "2026-10-11",
+        "lastDate": "2026-10-11"
+      },
+      "sourceIntegrity": {
+        "schemaVersion": 1,
+        "hallId": "espace_shinkoiwa",
+        "machineName": "スマスロ 化物語",
+        "targetDate": "2026-10-11",
+        "inputSha256": "c0b19a1eb341d12d258f98f58b92725a1a729c929a9586e23f98527f6bb46933"
       }
     },
     {
@@ -1390,11 +1491,11 @@
       "collectionComplete": true,
       "expectedUnits": 8,
       "collection": {
-        "rows": 4027,
-        "events": 3939,
+        "rows": 4531,
+        "events": 4435,
         "units": 8,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1402,7 +1503,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "スマスロ 北斗の拳 転生の章2",
         "targetDate": "2026-11-10",
-        "inputSha256": "da32c5753763df8653b16206b40bf5222380a7ed35f46176aba075cdc7bb7780"
+        "inputSha256": "3923912a3d1c64d8475ed8a4ba79e6b0669be7ecfce7daf809a82fd998d1a0d1"
       }
     },
     {
@@ -1424,11 +1525,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 824,
-        "events": 791,
+        "rows": 907,
+        "events": 871,
         "units": 3,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1436,7 +1537,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "スマスロ 攻殻機動隊",
         "targetDate": "2026-11-10",
-        "inputSha256": "8eefe890cf0528db8a55a1ce29868eb0da4808880cbf6d5b599dc453210e1df6"
+        "inputSha256": "f112afb0c1738445beadfd0fbf8f8eeac6012cf5d20e92b1490c46dbb7b10651"
       }
     },
     {
@@ -1456,11 +1557,11 @@
       "collectionComplete": true,
       "expectedUnits": 9,
       "collection": {
-        "rows": 5061,
-        "events": 4962,
+        "rows": 5585,
+        "events": 5477,
         "units": 9,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1468,7 +1569,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "スマスロ 獣王",
         "targetDate": "2026-11-10",
-        "inputSha256": "c33e28c22af4c206f034642c6da45c0289b74413a46c7a72aedd881f5c236578"
+        "inputSha256": "150ee0175b675a877d07cc696a120a798a9c6cb95f53d9f80666054b2287625d"
       }
     },
     {
@@ -1488,11 +1589,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 294,
-        "events": 283,
+        "rows": 363,
+        "events": 351,
         "units": 1,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1500,7 +1601,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "スマスロパリピ孔明",
         "targetDate": "2026-11-10",
-        "inputSha256": "230d3a4078f2cb393dfe63769edac77c3d977c72ee45dc99b9e838d9812560c6"
+        "inputSha256": "53ce6de0ca5d6a9ac7b7ffeaab7513459404c268dab21f17f3f3c11970433cf1"
       }
     },
     {
@@ -1525,11 +1626,11 @@
       "collectionComplete": true,
       "expectedUnits": 12,
       "collection": {
-        "rows": 6513,
-        "events": 6381,
+        "rows": 7291,
+        "events": 7147,
         "units": 12,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1537,7 +1638,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "ソードアート・オンラインII",
         "targetDate": "2026-11-10",
-        "inputSha256": "508bcd880f9701468ae81077a4882251bcbdd8b395a9ed34eb0cdc4ae7357166"
+        "inputSha256": "cd47bf15f15dd4ee7eb43686c6286640eccfa727dd6da410284d60f2c6e66f5c"
       }
     },
     {
@@ -1557,11 +1658,11 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1202,
-        "events": 1169,
+        "rows": 1306,
+        "events": 1270,
         "units": 3,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1569,7 +1670,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "ワールドダイスター",
         "targetDate": "2026-11-10",
-        "inputSha256": "0ca881b9417aeab6ad41140f9c61b6c275ca5402b9d639460f929743fea20b39"
+        "inputSha256": "14984d2ae5b064ef35c87a6eca7ae8048c38745efff316df9002013672a5f804"
       }
     },
     {
@@ -1591,11 +1692,11 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 958,
-        "events": 914,
+        "rows": 1070,
+        "events": 1022,
         "units": 4,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1603,7 +1704,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "戦国コレクション6",
         "targetDate": "2026-11-10",
-        "inputSha256": "ab6ff10f4eaae587ca414ce9c37988d98f4bb902b5ab975e0306c375205982eb"
+        "inputSha256": "40e35503252ccaeb6dcfcb82f4e0ca1602f62f63ce05d346a44d05955bc449d3"
       }
     },
     {
@@ -1625,11 +1726,11 @@
       "collectionComplete": false,
       "expectedUnits": 18,
       "collection": {
-        "rows": 6648,
-        "events": 6463,
+        "rows": 7460,
+        "events": 7257,
         "units": 18,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1637,7 +1738,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "沖ドキ！BLACK",
         "targetDate": "2026-11-10",
-        "inputSha256": "63008d5de9b3170c69e1b0ca55d6deefec7a9e944452de034c1aa7c158728aa7"
+        "inputSha256": "e30c5edc669977962f3d6cdbfcf58028dffb2b10615ef4041873694a20a6cc02"
       }
     },
     {
@@ -1657,11 +1758,11 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 152,
-        "events": 141,
+        "rows": 171,
+        "events": 159,
         "units": 1,
-        "days": 11,
-        "firstDate": "2026-10-31",
+        "days": 12,
+        "firstDate": "2026-10-11",
         "lastDate": "2026-11-10"
       },
       "sourceIntegrity": {
@@ -1669,7 +1770,7 @@
         "hallId": "espace_shinkoiwa",
         "machineName": "邪神ちゃんドロップキック",
         "targetDate": "2026-11-10",
-        "inputSha256": "5a59cf95e5e309243a0f58959be28af5268977f9933c58beed41f29ee7a6fb3a"
+        "inputSha256": "6c049d3218a28f7e905ff3e9d2fa4ea91ad2e562126447825312831e3617a577"
       }
     }
   ]
