@@ -3,7 +3,7 @@
   "hallId": "seibu_shinjuku",
   "source": "daidata",
   "storeId": "100950",
-  "lastUpdated": "2026-11-11",
+  "lastUpdated": "2026-11-12",
   "machines": [
     {
       "id": "m6945ca87",
@@ -47,7 +47,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -55,19 +55,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 631,
-        "events": 611,
+        "rows": 695,
+        "events": 673,
         "units": 2,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-11",
-        "inputSha256": "fba862fda1193357b2d5583b4d9c4852e13b6667819a57fbf381ca9b69eaf203"
+        "targetDate": "2026-11-12",
+        "inputSha256": "530ab9c4c981d362f2f3c6b013e9d71d2f806843ac36ff1d3e254425ad38e4ed"
       }
     },
     {
@@ -731,7 +731,7 @@
         "スマスロ牙狼"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -739,19 +739,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 195,
-        "events": 188,
+        "rows": 219,
+        "events": 211,
         "units": 1,
-        "days": 7,
+        "days": 8,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "L牙狼 闇を照らす者",
-        "targetDate": "2026-11-11",
-        "inputSha256": "3ddae519107181b555eca656f8a84a81a09d7bc5ce9824e5f4b6aa76cccb90d1"
+        "targetDate": "2026-11-12",
+        "inputSha256": "032fb490e779a592ca92e9956feab6eff577225fb75187f4061911b2999a9e96"
       }
     },
     {
@@ -831,7 +831,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -839,19 +839,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1453,
-        "events": 1433,
+        "rows": 1591,
+        "events": 1569,
         "units": 2,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-11",
-        "inputSha256": "ed3da9dc86dd1daf34bdefa8090bd11afabf4256cd0bad2a08aaef03bacc7893"
+        "targetDate": "2026-11-12",
+        "inputSha256": "9b1f7989ea916725fcd37858865f7556f28e234abe0c1ef2466236333170dade"
       }
     },
     {
@@ -934,7 +934,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -942,19 +942,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1632,
-        "events": 1612,
+        "rows": 1710,
+        "events": 1688,
         "units": 2,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-11",
-        "inputSha256": "600e0650004305635343ebe82aa2af032621d23903a26e01d0579f99da7e4244"
+        "targetDate": "2026-11-12",
+        "inputSha256": "7cf4a49a17269e35c788f371cfdd035cdc20dd1f21ded789494aebcb70550714"
       }
     },
     {
@@ -968,7 +968,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -976,19 +976,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 3384,
-        "events": 3344,
+        "rows": 3581,
+        "events": 3537,
         "units": 4,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-11",
-        "inputSha256": "bb8e6373e7aa4687fcdb35a3853e5599d84ccb5596267bb5cd12e55693e7ee41"
+        "targetDate": "2026-11-12",
+        "inputSha256": "387797aa5efe2f31cd8be21c7b2ed254d5737c0fef6cde43837fbd9fdb45bbe0"
       }
     },
     {
@@ -1001,7 +1001,7 @@
         "スマスロ ラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1009,19 +1009,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 628,
-        "events": 608,
+        "rows": 651,
+        "events": 629,
         "units": 2,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "seibu_shinjuku",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-11",
-        "inputSha256": "b7d36a512480989f103936d3419e9188a2ac7fd0fd9d8c0c8b48df9a9b1caa0d"
+        "targetDate": "2026-11-12",
+        "inputSha256": "6d94d27306ff889523eb9ed3d9102fc829a2c3dd79e5081ee40506a4ab122357"
       }
     },
     {
