@@ -3,7 +3,7 @@
   "hallId": "espace_shibuya_shinkan",
   "source": "daidata",
   "storeId": "100860",
-  "lastUpdated": "2026-11-10",
+  "lastUpdated": "2026-11-11",
   "machines": [
     {
       "id": "m9abf0c4d",
@@ -16,7 +16,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -24,19 +24,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1108,
-        "events": 1081,
+        "rows": 1244,
+        "events": 1214,
         "units": 3,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-10",
-        "inputSha256": "a116b194a7cd5d78cff8cee829fcfa31ac85132ee5036c14b4c525bf07139f3f"
+        "targetDate": "2026-11-11",
+        "inputSha256": "9790e47880ad53deaeb80e1576e3198db01d1ef4b3fa016d8bdfb46f47c2a73f"
       }
     },
     {
@@ -665,7 +665,7 @@
         "スマスロ牙狼"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -673,19 +673,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 211,
-        "events": 205,
+        "rows": 247,
+        "events": 240,
         "units": 1,
-        "days": 6,
+        "days": 7,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L牙狼 闇を照らす者",
-        "targetDate": "2026-11-10",
-        "inputSha256": "66fbef7a7df78104df4cf0e6e99f7963efe263807966c3aa70ddeddda4ed02cf"
+        "targetDate": "2026-11-11",
+        "inputSha256": "9d01992d0620393af0fdb2137177bfb97226f03e316322d6358d8c3329dac82d"
       }
     },
     {
@@ -765,7 +765,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -773,19 +773,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 4596,
-        "events": 4542,
+        "rows": 5121,
+        "events": 5061,
         "units": 6,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-10",
-        "inputSha256": "253664153154098cb91ca9ea033cf929a4500df0cb144e075e818a547f2400f7"
+        "targetDate": "2026-11-11",
+        "inputSha256": "7b177f60d642e21e2deae55b9a3d99220ced42872b36f0213b6bb205b2df8b5a"
       }
     },
     {
@@ -868,7 +868,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -876,19 +876,19 @@
       "collectionComplete": true,
       "expectedUnits": 8,
       "collection": {
-        "rows": 6930,
-        "events": 6858,
+        "rows": 7882,
+        "events": 7802,
         "units": 8,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-10",
-        "inputSha256": "4ce2d73512721becd834368eaabda2b7d7e39272d5579f30f17df10e7239da71"
+        "targetDate": "2026-11-11",
+        "inputSha256": "8d6a6a38f46dc682ca7aa0897078cca5a87e370b3d254e5698bd38d9cbcc919e"
       }
     },
     {
@@ -902,7 +902,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -910,19 +910,19 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 7224,
-        "events": 7161,
+        "rows": 8124,
+        "events": 8054,
         "units": 7,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-10",
-        "inputSha256": "5e1896b5a7c50199843adf9e0ea78fb8c7ac5ab302b742f55fb60dc93883942b"
+        "targetDate": "2026-11-11",
+        "inputSha256": "16b9436684e627867090ac216e84f102197841294050d1cc24d364372ad8c3cb"
       }
     },
     {
@@ -935,7 +935,7 @@
         "スマスロ ラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-11",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -943,19 +943,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1212,
-        "events": 1185,
+        "rows": 1333,
+        "events": 1303,
         "units": 3,
-        "days": 9,
+        "days": 10,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-11"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "espace_shibuya_shinkan",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-10",
-        "inputSha256": "6505b3736add6d08a00cb599853c27c7ac7e20079d7f60c6a9cc255d2cefd846"
+        "targetDate": "2026-11-11",
+        "inputSha256": "a291b7328ffb56c54cc88a1f9778ae6e965becb7731868aee9b6cf498bc476b4"
       }
     },
     {
