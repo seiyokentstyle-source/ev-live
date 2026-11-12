@@ -152,9 +152,12 @@ function hideSourceNames(machine: Machine): Machine {
   const metaChanged = metaSource !== machine.meta.source;
   const profilesChanged = machine.profiles.some(profile =>
     typeof profile.pendingReason === "string" && hideSourceNamesInText(profile.pendingReason) !== profile.pendingReason);
-  if (!itemsChanged && !profilesChanged && !metaChanged) return machine;
+  const coverage = machine.heatmapCoverage;
+  const coverageChanged = coverage !== undefined && hideSourceNamesInText(coverage.reason) !== coverage.reason;
+  if (!itemsChanged && !profilesChanged && !metaChanged && !coverageChanged) return machine;
   return {
     ...machine,
+    ...(coverageChanged && coverage ? { heatmapCoverage: { ...coverage, reason: hideSourceNamesInText(coverage.reason) } } : {}),
     ...(metaChanged ? { meta: { ...machine.meta, source: metaSource } } : {}),
     ...(profilesChanged ? { profiles: machine.profiles.map(profile => typeof profile.pendingReason === "string"
       ? { ...profile, pendingReason: hideSourceNamesInText(profile.pendingReason) } : profile) } : {}),
