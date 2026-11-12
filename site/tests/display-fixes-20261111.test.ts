@@ -33,7 +33,6 @@ describe("manufacturers for machines the data still calls 未登録", () => {
 describe("same machine under two source names", () => {
   it("groups the Site Seven spellings with the registered names", () => {
     const pairs = [
-      [{ id: "m1b2c9466", name: "LToLOVEるダークネス TRANCE ver.8.7" }, { id: "m25a41de5", name: "L Ｔｏ　ＬＯＶＥるダークネス" }],
       [{ id: "me5b967bb", name: "Lパチスロガールズ＆パンツァー 最終章" }, { id: "mb4736276", name: "Lパチスロ　ガールズ＆パンツァー最終章" }],
     ];
     for (const [main, other] of pairs) {
@@ -41,6 +40,15 @@ describe("same machine under two source names", () => {
       expect(machineSelectionKey(other)).toBe("group:" + main.id);
       expect(sameMachineSelection(main, { ...other, name: "別の名前" })).toBe(false);
     }
+  });
+});
+
+describe("different machines with similar names", () => {
+  it("keeps the first ToLOVEる Darkness apart from TRANCE ver.8.7", () => {
+    const first = { id: "m25a41de5", name: "L Ｔｏ　ＬＯＶＥるダークネス" };
+    const trance = { id: "m1b2c9466", name: "LToLOVEるダークネス TRANCE ver.8.7" };
+    expect(sameMachineSelection(first, trance)).toBe(false);
+    expect(machineSelectionKey(first)).not.toBe(machineSelectionKey(trance));
   });
 });
 
