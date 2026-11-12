@@ -3,7 +3,7 @@
   "hallId": "ueno_honkan",
   "source": "daidata",
   "storeId": "100947",
-  "lastUpdated": "2026-11-11",
+  "lastUpdated": "2026-11-12",
   "machines": [
     {
       "id": "m6945ca87",
@@ -47,7 +47,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -55,19 +55,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 894,
-        "events": 864,
+        "rows": 1002,
+        "events": 969,
         "units": 3,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-11",
-        "inputSha256": "5caa83cc0258ae5fecc191c95df235f2f8c649fdaf82cbb3bb40dfe15361509b"
+        "targetDate": "2026-11-12",
+        "inputSha256": "d79920b33640a167888344a6b99821484c92abc27f08b24d0de948b76ca3dc94"
       }
     },
     {
@@ -929,7 +929,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -937,19 +937,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1901,
-        "events": 1871,
+        "rows": 1941,
+        "events": 1908,
         "units": 3,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-11",
-        "inputSha256": "0880b427cdcd793ce08d7da53b0d7fea6795b52bea45b2e529f2ce720f4c9257"
+        "targetDate": "2026-11-12",
+        "inputSha256": "8dc49ed87d2e1bbcd18ba928a61dc8c679798cef9611c9d3ace706c10f8589b5"
       }
     },
     {
@@ -1064,7 +1064,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1072,19 +1072,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 2763,
-        "events": 2723,
+        "rows": 2882,
+        "events": 2838,
         "units": 4,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-11",
-        "inputSha256": "153fade76e093f94a9dec694e9a57f9403f0f126b10becf9ae4dc9942f50bda2"
+        "targetDate": "2026-11-12",
+        "inputSha256": "b8f142b469a9e108973dd38cce6f0a1e8ad94b3ff62e07c936196a65756845da"
       }
     },
     {
@@ -1098,7 +1098,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1106,19 +1106,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 5587,
-        "events": 5527,
+        "rows": 5905,
+        "events": 5839,
         "units": 6,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-11",
-        "inputSha256": "dc18bb1c1e013fc27466c68e3033b161b2fe7954f798b857400b4df557bff9fc"
+        "targetDate": "2026-11-12",
+        "inputSha256": "224a91852f774996a3b6885e8429d7e0310b5d457a5ca879b092c738c3994723"
       }
     },
     {
@@ -1131,7 +1131,7 @@
         "スマスロ ラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-11",
+      "lastUpdated": "2026-11-12",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1139,19 +1139,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 789,
-        "events": 759,
+        "rows": 857,
+        "events": 824,
         "units": 3,
-        "days": 10,
+        "days": 11,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-11"
+        "lastDate": "2026-11-12"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-11",
-        "inputSha256": "c395095e6578b6bfda54dfc9062cf90e65e02b656324353aba6625ec79063fc0"
+        "targetDate": "2026-11-12",
+        "inputSha256": "4bcb76955f878a394080f2553f099886b1906e0512b63d5150a91aca45cbb312"
       }
     },
     {
