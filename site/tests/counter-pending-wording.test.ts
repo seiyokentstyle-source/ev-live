@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import fixture from '../app/preview/ev-table/machine.json';
-import { normalizeMachineMetadata } from '../lib/machine-metadata';
+import { hideSourceNamesInText, normalizeMachineMetadata } from '../lib/machine-metadata';
 import { withoutLowSetting } from '../lib/ev/low-setting';
 import { validateMachine } from '../lib/ev/validate';
 import type { Machine } from '../lib/ev/types';
 
 const detail = '台データの種別（BB/RB/ART等）と実機のボーナス・AT・CZの対応、連チャンの区切りを実データで確かめるまで、期待値の算出を保留しています。';
 const legacy = '台データオンライン（エスパス日拓新宿歌舞伎町店）だけにある機種で、履歴は取り込み始めたところです。' + detail;
-const current = '履歴は保存済みです。' + detail;
+const current = '履歴は保存済みです。' + detail.replace('台データの種別', 'データカウンターの種別');
 
 type EvidenceMachine = Machine & { sourceIntegrity: { schemaVersion: number; hallId: string;
   machineName: string; targetDate: string; inputSha256: string } };
@@ -21,6 +21,17 @@ function pending(): EvidenceMachine {
     profiles: [{ ...machine.profiles[0], key: 'counter_pending', dataPending: true,
       pendingReason: legacy, baseAnchors: [], sessions: 0 }],
     calcSpec: { items: [{ k: '期待値の算出状況', v: legacy }, { k: 'データカウンター', v: legacy }] },
+  };
+}
+
+// 2026-11-13：算出条件の文からは店名・取得元サイト名を必ず伏せる。その置き換えだけを当てた姿。
+function hidden<T extends Machine>(machine: T): T {
+  return {
+    ...machine,
+    profiles: machine.profiles.map(profile => typeof profile.pendingReason === 'string'
+      ? { ...profile, pendingReason: hideSourceNamesInText(profile.pendingReason) } : profile),
+    ...(machine.calcSpec ? { calcSpec: { ...machine.calcSpec,
+      items: machine.calcSpec.items.map(item => ({ ...item, v: hideSourceNamesInText(item.v) })) } } : {}),
   };
 }
 
@@ -48,7 +59,7 @@ describe('legacy counter-pending display wording', () => {
   ])('leaves unmatched pending profiles and their specification text intact: %j', profile => {
     const input = pending();
     input.profiles[0] = { ...input.profiles[0], ...profile };
-    expect(normalizeMachineMetadata(input)).toBe(input);
+    expect(normalizeMachineMetadata(input)).toEqual(hidden(input));
   });
 
   it('does not rewrite other profile types, keys, or partially matching text', () => {
@@ -56,8 +67,8 @@ describe('legacy counter-pending display wording', () => {
     input.profiles.push({ ...input.profiles[0], key: 'other' });
     input.calcSpec!.items.push({ k: '別の注記', v: legacy }, { k: '期待値の算出状況', v: legacy + '追記' });
     const actual = normalizeMachineMetadata(input);
-    expect(actual.profiles[1]).toBe(input.profiles[1]);
-    expect(actual.calcSpec!.items.slice(2)).toEqual(input.calcSpec!.items.slice(2));
+    expect(actual.profiles[1]).toEqual(hidden(input).profiles[1]);
+    expect(actual.calcSpec!.items.slice(2)).toEqual(hidden(input).calcSpec!.items.slice(2));
   });
 
   it('keeps the numerical filter result equivalent apart from the same three text fields', () => {

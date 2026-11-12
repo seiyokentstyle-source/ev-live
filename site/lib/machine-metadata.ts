@@ -84,6 +84,8 @@ function normalizeCounterPendingWording(machine: Machine): Machine {
 const MAHO_PUBLISHED_SETTING1 = "機械割97.6%／設定1機械割97.6%（公表値: slobase / chonborista）。";
 const MAHO_LEGACY_SETTING1 = MAHO_PUBLISHED_SETTING1
   + "サイトセブンのBB（AT）獲得が約45%欠けるため、この機械割と実測の初当りG分布から1回あたりの獲得を逆算している";
+const MAHO_CURRENT_SETTING1 = MAHO_PUBLISHED_SETTING1
+  + "データカウンターのBB（AT）獲得が約45%欠けるため、この機械割と実測の初当りG分布から1回あたりの獲得を逆算している";
 const MAHO_MEASURED_HALLS = new Set([
   "kabuki", "akiba_espace", "seibu_shinjuku", "ueno_honkan", "ueno_shinkan", "espace_shibuya_shinkan",
 ]);
@@ -96,7 +98,8 @@ function normalizeMahoMixedWording(machine: Machine): Machine {
     || correction?.sourceHallId !== "mixed" || correction.method !== "payout-scale"
     || correction.targetRtp !== 0.976 || sources?.schemaVersion !== 1
     || !sources.halls.length || !sources.halls.every(hall => MAHO_MEASURED_HALLS.has(hall))) return machine;
-  const matches = (item: { k: string; v: string }) => item.k === "設定1（公表）" && item.v === MAHO_LEGACY_SETTING1;
+  const matches = (item: { k: string; v: string }) => item.k === "設定1（公表）"
+    && (item.v === MAHO_LEGACY_SETTING1 || item.v === MAHO_CURRENT_SETTING1);
   if (!machine.calcSpec?.items.some(matches)) return machine;
   return {
     ...machine,
@@ -105,10 +108,54 @@ function normalizeMahoMixedWording(machine: Machine): Machine {
   };
 }
 
+// 利用者指定（2026-11-13）：算出条件には店の名前と取得元サイトの名前を書かない。
+// 生成側の文も直してあるが、公開済みのJSONは機種ごとに作り直されるまで古い文のままなので、
+// 画面に出す直前に決まった言い回しだけを置き換える。数値・判定・項目の並びは変えない。
+const SOURCE_NAME_REWRITES: ReadonlyArray<readonly [string, string]> = [
+  ["台データオンライン（エスパス日拓新宿歌舞伎町店）だけにある機種で、履歴は取り込み始めたところです。", "履歴は保存済みです。"],
+  ["台データの種別（", "データカウンターの種別（"],
+  ["台データの信号。", "データカウンターの信号。"],
+  ["サイトセブンのBB（AT）獲得が", "データカウンターのBB（AT）獲得が"],
+  ["東宝・アイランドはグラフのある日はグラフが上がった区間をAT、台データの店は差枚の記録で判定できる連なりはそれで決める。",
+    "スランプグラフのある日はグラフが上がった区間をAT、差枚の記録がある店は判定できる連なりをそれで決める。"],
+  ["歌舞伎町・西武新宿・上野新館は0GのART、秋葉原は正Gを含むARTを用いる。", "店舗によって0GのART、または正Gを含むARTを用いる。"],
+  ["歌舞伎町のRBをCZ", "RBをCZ"],
+  ["歌舞伎町のBBをBC", "BBをBC"],
+  ["歌舞伎町のARTをGB系", "ARTをGB系"],
+  ["新宿のBB・RBを疑似ボーナス", "BB・RBを疑似ボーナス"],
+  ["（池袋はBB）", "（一部の店舗はBB）"],
+  ["（池袋はRB）", "（一部の店舗はRB）"],
+  ["（スマートプレゴはBB）", "（一部の店舗はBB）"],
+  ["混ざる店（西武新宿）は", "混ざる店は"],
+  ["台データの差枚から見積もった", "差枚の記録から見積もった"],
+];
+
+export function hideSourceNamesInText(text: string): string {
+  let out = text;
+  for (const [from, to] of SOURCE_NAME_REWRITES) if (out.includes(from)) out = out.split(from).join(to);
+  return out;
+}
+
+function hideSourceNames(machine: Machine): Machine {
+  const items = machine.calcSpec?.items;
+  const itemsChanged = items?.some(item => hideSourceNamesInText(item.v) !== item.v) ?? false;
+  const profilesChanged = machine.profiles.some(profile =>
+    typeof profile.pendingReason === "string" && hideSourceNamesInText(profile.pendingReason) !== profile.pendingReason);
+  if (!itemsChanged && !profilesChanged) return machine;
+  return {
+    ...machine,
+    ...(profilesChanged ? { profiles: machine.profiles.map(profile => typeof profile.pendingReason === "string"
+      ? { ...profile, pendingReason: hideSourceNamesInText(profile.pendingReason) } : profile) } : {}),
+    ...(itemsChanged && machine.calcSpec ? { calcSpec: { ...machine.calcSpec,
+      items: machine.calcSpec.items.map(item => ({ ...item, v: hideSourceNamesInText(item.v) })) } } : {}),
+  };
+}
+
 /** Match both the stable ID and complete name; never match a series substring. */
 export function normalizeMachineMetadata(machine: Machine): Machine {
   machine = normalizeCounterPendingWording(machine);
   machine = normalizeMahoMixedWording(machine);
+  machine = hideSourceNames(machine);
   if (A_TYPE_NO_EV[machine.id] === machine.name) return withoutEvTables(machine);
   const metadata = SAO_METADATA[machine.id];
   if (!metadata || metadata.name !== machine.name) return machine;

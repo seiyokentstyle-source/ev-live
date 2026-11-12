@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 import fixture from '../app/preview/ev-table/machine.json';
-import { normalizeMachineMetadata } from '../lib/machine-metadata';
+import { hideSourceNamesInText, normalizeMachineMetadata } from '../lib/machine-metadata';
 import { onlyLowSetting, withoutLowSetting } from '../lib/ev/low-setting';
 import { validateMachine } from '../lib/ev/validate';
 import { MachineDetailClient } from '../app/machines/[id]/MachineDetailClient';
@@ -29,13 +29,24 @@ function mixed(): EvidenceMachine {
   };
 }
 
+// 2026-11-13：算出条件の文からは店名・取得元サイト名を必ず伏せる。その置き換えだけを当てた姿。
+function hidden<T extends Machine>(machine: T): T {
+  return {
+    ...machine,
+    profiles: machine.profiles.map(profile => typeof profile.pendingReason === 'string'
+      ? { ...profile, pendingReason: hideSourceNamesInText(profile.pendingReason) } : profile),
+    ...(machine.calcSpec ? { calcSpec: { ...machine.calcSpec,
+      items: machine.calcSpec.items.map(item => ({ ...item, v: hideSourceNamesInText(item.v) })) } } : {}),
+  };
+}
+
 describe('mixed-source display wording', () => {
   it('changes only the exact obsolete Maho explanation, preserving public RTP, sources and all evidence', () => {
     const input = mixed(), before = structuredClone(input);
     const expected = structuredClone(input);
     expected.calcSpec!.items[0].v = published;
     const actual = normalizeMachineMetadata(input);
-    expect(actual).toEqual(expected);
+    expect(actual).toEqual(hidden(expected));
     expect(input).toEqual(before);
     for (const key of ['profiles', 'setting1Correction', 'sourceIntegrity', 'mixedSources'] as const)
       expect((actual as EvidenceMachine)[key]).toBe(input[key]);
@@ -60,7 +71,7 @@ describe('mixed-source display wording', () => {
   ])('preserves the original explanation for %s', (_case, mutate) => {
     const input = mixed();
     mutate(input);
-    expect(normalizeMachineMetadata(input)).toBe(input);
+    expect(normalizeMachineMetadata(input)).toEqual(hidden(input));
   });
 
   it('keeps both normal filters and all corrected profiles numerically identical', () => {
@@ -68,11 +79,11 @@ describe('mixed-source display wording', () => {
     const before = onlyLowSetting(input)!, after = onlyLowSetting(normalized)!;
     const expected = structuredClone(before);
     expected.calcSpec!.items.find(item => item.k === '設定1（公表）')!.v = published;
-    expect(after).toEqual(expected);
+    expect(after).toEqual(hidden(expected));
     expect(after.profiles).toBe(input.setting1Correction!.profiles);
     const rawExpected = structuredClone(withoutLowSetting(input)!);
     rawExpected.calcSpec!.items.find(item => item.k === '設定1（公表）')!.v = published;
-    expect(withoutLowSetting(normalized)).toEqual(rawExpected);
+    expect(withoutLowSetting(normalized)).toEqual(hidden(rawExpected));
   });
 
   it('renders the corrected mixed table with a source-neutral caption and the retained published citation', () => {
@@ -82,6 +93,6 @@ describe('mixed-source display wording', () => {
     expect(html).not.toContain('当選G・条件別母数は新宿の実測');
     expect(machine.calcSpec!.items.find(item => item.k === '設定1（公表）')!.v).toBe(published);
     // The unrelated item intentionally retains its original text.
-    expect(machine.calcSpec!.items.find(item => item.k === '別の注記')!.v).toBe(legacy);
+    expect(machine.calcSpec!.items.find(item => item.k === '別の注記')!.v).toBe(hideSourceNamesInText(legacy));
   });
 });
