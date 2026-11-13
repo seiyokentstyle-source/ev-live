@@ -142,7 +142,8 @@ export function profileCeilingText(profile: Profile, machineId?: string, profile
  *  「実測」「固定G天井なし」などの説明は出さない。天井の数字は2行目（ceilingHint）に出る。 */
 // 「0スルー」「1スルー以降」はCZ間などの狙い方そのものを分ける（ヴヴヴ2 2026-10-22 利用者指定）。
 // 「有馬ジャッジ失敗後」は東京喰種の天国確定の狙い方（利用者指定 2026-10-30）。
-const KEPT_AIM_QUALIFIERS = /上位AT後|下位AT後|前回(?:BB|RB|BIG|REG)後|\d+スルー(?:以降)?|有馬ジャッジ失敗後/g;
+// 「ミミズ」はヴァルヴレイヴのミミズモード（推定）の表。付けないと通常の表と同じ見出しになる（利用者指摘 2026-11-13）。
+const KEPT_AIM_QUALIFIERS = /上位AT後|下位AT後|前回(?:BB|RB|BIG|REG)後|\d+スルー(?:以降)?|有馬ジャッジ失敗後|ミミズ/g;
 export function shortAimLabel(label: string): string {
   const s1 = label.includes("設定1");
   const reset = /リセ/.test(label);
@@ -168,6 +169,51 @@ export function aimTabLabel(group: ProfileGroup): string {
   if (!profile || group.label !== parseProfile(profile).baseLabel) return group.label;
   const raw = profile.label.replace(SAMPLE_SUFFIX_RE, "").replace(RATE_LABEL_RE, "").trim();
   return shortAimLabel(raw);
+}
+
+/** 表の区切り（AT間・ボナ間など）。機種ごとに付けた見出し（駆け抜け後 等）ではなく、元の見出しから読む。 */
+export function aimIntervalBase(group: ProfileGroup): string {
+  const profile = group.order[0];
+  if (!profile) return "";
+  const raw = profile.label.replace(SAMPLE_SUFFIX_RE, "").replace(RATE_LABEL_RE, "").trim();
+  return shortAimLabel(raw).split(/[（・]/)[0];
+}
+
+/** リセット（朝一）の表は、何までの天井かを見出しに書く（利用者指摘 2026-11-13
+ *  「リセットだけじゃATまでなのかCZまでなのか分からない」）。区切りは同じ機種の主表（AT間・ボナ間など）と同じ。
+ *  例：リセット → リセAT間、朝一 → 朝一ボナ間。主表が無いときは元の見出しのまま。 */
+export function resetAimLabel(label: string, mainBase: string): string {
+  if (!mainBase) return label;
+  if (label === "リセット") return `リセ${mainBase}`;
+  if (label === "朝一") return `朝一${mainBase}`;
+  return label;
+}
+
+/** リセット（朝一）の表の2行目。天井のG数を元の天井表記から読む（「リセット仕様：…」は
+ *  天井表記の言い換えで消えるので、言い換え前の文を渡す）。読めないときは空。
+ *  mainHint は主表（通常時）の天井。リセットで短くならない機種はその値に「短縮なし」を付ける。 */
+export function resetCeilingHint(raw: string, mainHint: string): string {
+  const text = (raw ?? "").trim();
+  const ceiling = text.match(/^リセット天井 (\d+G(?:\+α)?)/);
+  if (ceiling) return ceiling[1];
+  const morning = text.match(/^朝一実測（(\d+G(?:\+α)?)）/);
+  if (morning) return morning[1];
+  if (!/^(?:リセット仕様：|朝一実測（)/.test(text)) return ceilingHint(text);
+  const body = text.replace(/^リセット仕様：/, "");
+  // 何までの天井かが書いてあるもの（例：設定変更時はCZまで777G+α、設定変更後はボーナス間300G+α）
+  const target = body.match(/(CZ|AT|ボーナス)まで\s*(\d+G(?:\+α)?)/);
+  if (target) return `${target[1]}まで${target[2]}`;
+  const interval = body.match(/(CZ間|AT間|ボーナス間)\s*(?:が\s*)?(\d+(?:〜\d+)?(?:G|pt)(?:\+α)?)/);
+  if (interval) return `${interval[1]}${interval[2]}`;
+  // 振分（例：450G（70%）/650G（30%）の振分、65.2%で500G+α、34.8%で1111G+α）
+  const games = [...body.matchAll(/(\d+)G/g)].map(match => match[1]);
+  if (games.length >= 2 && /振分|再抽選|%で/.test(body)) return `${[...new Set(games)].join("/")}G`;
+  const most = body.match(/最大(\d+(?:G|pt|あべし|周期)(?:\+α)?)/);
+  if (most) return most[1];
+  if (/天井なし|天井非搭載/.test(body)) return "天井なし";
+  // 短くならない（固定短縮なし・確認できず・設定変更でも引き継ぐ）
+  if (/短縮[^。]*?(?:なし|確認できず)|引き継/.test(body)) return mainHint ? `${mainHint}・短縮なし` : "短縮なし";
+  return "";
 }
 
 /** 狙い方タブの2行目は天井のG数だけにする（利用者指定 2026-10-22）。

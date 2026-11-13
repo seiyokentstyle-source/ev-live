@@ -245,7 +245,7 @@ describe("short-ceiling runthrough aim replacement", () => {
     const markup = renderToStaticMarkup(createElement(ProfileBar, {
       tabs, activeKey: tabs[0].key, onChange: () => undefined
     }));
-    for (const label of ["駆け抜け以外後", "駆け抜け後", "上位後", "リセット"]) expect(markup).toContain(label);
+    for (const label of ["駆け抜け以外後", "駆け抜け後", "上位後", "リセ"]) expect(markup).toContain(label);
     expect(markup).not.toContain("cz_ceiling");
   });
 
