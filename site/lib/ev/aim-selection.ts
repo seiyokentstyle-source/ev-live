@@ -12,7 +12,8 @@ export function savedTargetIdFromAim(key: string, targets: Array<{ id: string }>
 }
 
 function isResetGroup(key: string): boolean {
-  return key === "reset";
+  // reset_cycle はヴヴヴ2の周期モデルの朝一の表（2026-11-15）。実測の朝一と同じ見出し・天井の書き方にする。
+  return key === "reset" || key === "reset_cycle";
 }
 
 export function aimTabs(groups: ProfileGroup[], targets: Array<{ id: string; name: string; rate: string }>) {
