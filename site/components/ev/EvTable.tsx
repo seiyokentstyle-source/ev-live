@@ -1,6 +1,6 @@
 "use client";
 
-import type { Machine, PivotConfig, Profile, TableRow } from "@/lib/ev/types";
+import type { BaseAnchor, Machine, PivotConfig, Profile, TableRow } from "@/lib/ev/types";
 import { roundedRtp } from "@/lib/ev/rtp";
 import { formatSigned, rtpToneClass, toneClass } from "./format";
 import { ROW_HEIGHT, RowHead, TableScroll, Td, Th, stripe } from "@/components/ui/DataTable";
@@ -16,9 +16,11 @@ export type EvTableRow = Omit<TableRow, "ev" | "rtp" | "hourly" | "medals"> & {
 type EvTableGridProps = {
   /** ピボット列の見出しにだけ使う（簡易期待値表は軸を持たない）. */
   machine: Pick<Machine, "axes">;
-  profile: Pick<Profile, "key">;
+  profile: Pick<Profile, "key"> & Partial<Pick<Profile, "sampleKind">>;
   rows: EvTableRow[];
   pivot?: PivotConfig;
+  /** 絞り込む前の表のアンカー。周期モデルの表で実件数・推定件数を出すのに使う。 */
+  realAnchors?: BaseAnchor[];
 };
 
 type EvTableProps = EvTableGridProps & {
@@ -35,7 +37,7 @@ function pivotHeader(machine: Pick<Machine, "axes">, pivot: PivotConfig): Array<
   }));
 }
 
-export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTableProps) {
+export function EvTable({ machine, profile, rows, pivot, realAnchors, onViewGChange }: EvTableProps) {
   return (
     <TableScroll
       onScroll={(scrollTop) => {
@@ -43,13 +45,27 @@ export function EvTable({ machine, profile, rows, pivot, onViewGChange }: EvTabl
         onViewGChange(rows[index]?.g ?? profile.gRange.start);
       }}
     >
-      <EvTableGrid machine={machine} profile={profile} rows={rows} pivot={pivot} />
+      <EvTableGrid machine={machine} profile={profile} rows={rows} pivot={pivot} realAnchors={realAnchors} />
     </TableScroll>
   );
 }
 
-export function EvTableGrid({ machine, profile, rows, pivot }: EvTableGridProps) {
+/**
+ * 周期モデルの表（期待値は試算、n＝試算の回数）では、サンプル欄を2列にする（利用者指定 2026-11-14）。
+ * 実件数＝そのG数まで届いた実際のセッション数（絞り込み不問）。
+ * 推定件数＝実件数×（その条件の試算回数÷不問の試算回数）。周期・ポイントはカウンターに出ないので実数は無い。
+ */
+export function realSampleCounts(row: Pick<TableRow, "g" | "n">, anchors: BaseAnchor[] | undefined) {
+  const base = anchors?.find((anchor) => anchor.g === row.g);
+  const real = base?.realN;
+  if (real === undefined) return { real: undefined, estimate: undefined };
+  const estimate = row.n !== undefined && base?.n ? Math.round((real * row.n) / base.n) : undefined;
+  return { real, estimate };
+}
+
+export function EvTableGrid({ machine, profile, rows, pivot, realAnchors }: EvTableGridProps) {
   const pivotColumns = pivot ? pivotHeader(machine, pivot) : [];
+  const realColumns = profile.sampleKind === "cycle-model" && Boolean(realAnchors?.some((anchor) => anchor.realN !== undefined));
 
   return (
       // 6列を等幅にし、G列と見出しを固定する。狙い目にも同じ配置・色・単位を使う。
@@ -76,7 +92,14 @@ export function EvTableGrid({ machine, profile, rows, pivot }: EvTableGridProps)
                   </Th>
                   <Th unit="円/h">時給</Th>
                   <Th unit="枚">平均投入</Th>
-                  <Th unit="件">サンプル</Th>
+                  {realColumns ? (
+                    <>
+                      <Th unit="件(不問)">実件数</Th>
+                      <Th unit="件">推定件数</Th>
+                    </>
+                  ) : (
+                    <Th unit="件">サンプル</Th>
+                  )}
                 </>
               )}
             </tr>
@@ -121,9 +144,25 @@ export function EvTableGrid({ machine, profile, rows, pivot }: EvTableGridProps)
                         {dash || row.hourly === null ? "—" : formatSigned(row.hourly)}
                       </Td>
                       <Td alt={alt}>{dash || row.medals === null ? "—" : row.medals.toLocaleString("ja-JP")}</Td>
-                      <Td alt={alt} tone="text-muted">
-                        {row.n === undefined ? "—" : row.n.toLocaleString("ja-JP")}
-                      </Td>
+                      {realColumns ? (
+                        (() => {
+                          const counts = realSampleCounts(row, realAnchors);
+                          return (
+                            <>
+                              <Td alt={alt} tone="text-muted">
+                                {counts.real === undefined ? "—" : counts.real.toLocaleString("ja-JP")}
+                              </Td>
+                              <Td alt={alt} tone="text-muted">
+                                {dash || counts.estimate === undefined ? "—" : counts.estimate.toLocaleString("ja-JP")}
+                              </Td>
+                            </>
+                          );
+                        })()
+                      ) : (
+                        <Td alt={alt} tone="text-muted">
+                          {row.n === undefined ? "—" : row.n.toLocaleString("ja-JP")}
+                        </Td>
+                      )}
                     </>
                   )}
                 </tr>

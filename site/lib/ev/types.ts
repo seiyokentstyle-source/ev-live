@@ -44,6 +44,8 @@ export type BaseAnchor = {
   inv?: number;
   /** Average games to finish one session from this G (通常時＋AT中). Used for 時給. Optional: absent on older data. */
   playG?: number;
+  /** 周期モデルの表だけ：そのG数まで届いた実際のセッション数（n は試算の回数）。 */
+  realN?: number;
 };
 
 export type Zone = {
@@ -209,6 +211,8 @@ export type Profile = {
   sessionUnit?: string;
   /** 公開元が指定する、この狙い方のサンプルの数え方。 */
   sampleNote?: string;
+  /** "cycle-model"：期待値は周期・ポイントの試算（n＝試算の回数）。サンプル欄は realN（実件数）と推定件数を出す。 */
+  sampleKind?: "cycle-model";
   /** 主表の平均初当りG。確率ではないので 1/X 表記にはしない。 */
   firstHitRate?: number;
   /** 生サンプル（旧形式・後方互換）。台番号末尾/特定日の絞り込みで再集計に使う。新データでは undefined。 */

@@ -537,7 +537,7 @@ function MachineDetailBody({ machine, hall, savedTargets = NO_SAVED_TARGETS }: M
               onOpenPicker={(axis, mode) => setPicker({ axis, mode })}
             />
           ) : null}
-          <EvTable machine={machine} profile={displayProfile} rows={rows} pivot={pivot} onViewGChange={setCurrentG} />
+          <EvTable machine={machine} profile={displayProfile} rows={rows} pivot={pivot} realAnchors={profile.baseAnchors} onViewGChange={setCurrentG} />
           <FooterBar profile={displayProfile} rowCount={rows.length} currentG={currentG} />
         </>
       )}
