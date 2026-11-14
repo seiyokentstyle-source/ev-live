@@ -3,7 +3,7 @@
   "hallId": "ueno_honkan",
   "source": "daidata",
   "storeId": "100947",
-  "lastUpdated": "2026-11-12",
+  "lastUpdated": "2026-11-13",
   "machines": [
     {
       "id": "m6945ca87",
@@ -13,7 +13,7 @@
         "ﾊﾞｰｻｽﾘｳﾞｧｲｽﾞ"
       ],
       "releaseDate": null,
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "spec_unverified",
       "pendingReason": "履歴は保存済みです。機種仕様と信号の対応を確認中のため、期待値は算出保留です。",
@@ -21,19 +21,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 676,
-        "events": 641,
+        "rows": 735,
+        "events": 697,
         "units": 1,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "ﾊﾞｰｻｽﾘｳﾞｧｲｽﾞ",
-        "targetDate": "2026-11-10",
-        "inputSha256": "a453f9bd8e966c76b085def73b59b8fbee9abcd8e7f59b9a067f1fccd9dff490"
+        "targetDate": "2026-11-13",
+        "inputSha256": "b453cc2ff71261f51afdf42ce35dcd70cdef9c0638464dab85368cebd12270b6"
       }
     },
     {
@@ -47,7 +47,7 @@
         "スロット Vivy -Fluorite Eye’s Song-"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-12",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -55,19 +55,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1002,
-        "events": 969,
+        "rows": 1097,
+        "events": 1061,
         "units": 3,
-        "days": 11,
+        "days": 12,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-12"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L Vivy",
-        "targetDate": "2026-11-12",
-        "inputSha256": "d79920b33640a167888344a6b99821484c92abc27f08b24d0de948b76ca3dc94"
+        "targetDate": "2026-11-13",
+        "inputSha256": "c43d5baa7ff43323e9d5eda49954949d50d5f2ea3ade8e31f3fd5b496026ba58"
       }
     },
     {
@@ -81,7 +81,7 @@
         "L東京喰種"
       ],
       "releaseDate": "2025-02-03",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -89,19 +89,19 @@
       "collectionComplete": true,
       "expectedUnits": 17,
       "collection": {
-        "rows": 15874,
-        "events": 15279,
+        "rows": 16759,
+        "events": 16113,
         "units": 17,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L 東京喰種",
-        "targetDate": "2026-11-10",
-        "inputSha256": "23355e0df79230230b5588fb05fa92ccd10e13d87e3c6600d2e11fd2f324aa0b"
+        "targetDate": "2026-11-13",
+        "inputSha256": "d1969ac0ecf87f48ca69f13b771317f07b6d2df4b97139bc163828c986ff62cd"
       }
     },
     {
@@ -115,7 +115,7 @@
         "L ToLOVEるﾀﾞｰｸﾈｽver.8.7"
       ],
       "releaseDate": "2025-05-19",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -123,19 +123,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1773,
-        "events": 1671,
+        "rows": 1856,
+        "events": 1745,
         "units": 6,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "LToLOVEるダークネス TRANCE ver.8.7",
-        "targetDate": "2026-11-10",
-        "inputSha256": "5a2cfca219ea0a507e308c680721e60b2ad58d128fa48881529d96047c5ed487"
+        "targetDate": "2026-11-13",
+        "inputSha256": "c2231a38301ebfe8bd1e1360024aed5576ee8a05fe1815708043dca3791a8a48"
       }
     },
     {
@@ -181,7 +181,7 @@
         "とある禁書2"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -189,19 +189,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 2635,
-        "events": 2478,
+        "rows": 2693,
+        "events": 2527,
         "units": 5,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lとある魔術の禁書目録2",
-        "targetDate": "2026-11-10",
-        "inputSha256": "a6e3259cca1c9e2a02c125118601bb5cf6e760e0eb0f8ef1d19f3c5100e120f1"
+        "targetDate": "2026-11-13",
+        "inputSha256": "fef50ebe2921c9cf7684e6988c672c85d89040bb5aea0455ddfe998e6f37f2a6"
       }
     },
     {
@@ -216,7 +216,7 @@
         "Lとんでもｽｷﾙ"
       ],
       "releaseDate": "2026-08-03",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -224,19 +224,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1175,
-        "events": 1140,
+        "rows": 1263,
+        "events": 1225,
         "units": 1,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lとんでもスキルで異世界放浪メシ",
-        "targetDate": "2026-11-10",
-        "inputSha256": "35b4273e2cabeb6a3cb3b8d23eb41211bbd0f6053c19e6ab10041bf5b6e1f8f8"
+        "targetDate": "2026-11-13",
+        "inputSha256": "5ca5e3767893cd0b82aebaabaaae516bab52ad2af8ac4d31de220524f6281cb6"
       }
     },
     {
@@ -250,7 +250,7 @@
         "Lやじきた道中記参る!"
       ],
       "releaseDate": "2026-08-03",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -258,19 +258,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 452,
-        "events": 394,
+        "rows": 458,
+        "events": 397,
         "units": 5,
-        "days": 33,
+        "days": 36,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lやじきた道中記参る！",
-        "targetDate": "2026-11-10",
-        "inputSha256": "0fac5ad1ae3d767f97236985fe10852951f692a4a3ed079f4272f94c24089633"
+        "targetDate": "2026-11-13",
+        "inputSha256": "0c7ec70690a80525caf1e4cd851a4701faa471ac0486a33677ae1f2d67e50b2e"
       }
     },
     {
@@ -286,7 +286,7 @@
         "LﾓﾝｷｰﾀｰﾝV"
       ],
       "releaseDate": "2023-08-07",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -294,19 +294,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 5525,
-        "events": 5315,
+        "rows": 5809,
+        "events": 5581,
         "units": 6,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lスマスロ モンキーターンV",
-        "targetDate": "2026-11-10",
-        "inputSha256": "4ef0aa20a144e85d173ff92e9d4a54e6f336224a8e764b56088768da79e608d2"
+        "targetDate": "2026-11-13",
+        "inputSha256": "471533d878bde8317456209e26bc1eb125e28d36082256a568a45bd2146db9be"
       }
     },
     {
@@ -320,7 +320,7 @@
         "Lｺﾞｯﾄﾞｲｰﾀｰ ﾘｻﾞﾚｸｼｮﾝ"
       ],
       "releaseDate": "2024-07-22",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -328,19 +328,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1235,
-        "events": 1167,
+        "rows": 1342,
+        "events": 1268,
         "units": 2,
-        "days": 34,
+        "days": 37,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lスマスロ　ゴッドイーター　リザレクション",
-        "targetDate": "2026-11-10",
-        "inputSha256": "87934247f79f8ab8f115440eeebce5625061ed2bdbf46f97e63532e15bf1416e"
+        "targetDate": "2026-11-13",
+        "inputSha256": "c630ea47f3c4518755a70c091a8cbd50c4e250bb0f6f982dff2083daf4402c4b"
       }
     },
     {
@@ -356,7 +356,7 @@
         "Lｽﾏｽﾛ北斗"
       ],
       "releaseDate": "2023-04-03",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -364,19 +364,19 @@
       "collectionComplete": true,
       "expectedUnits": 7,
       "collection": {
-        "rows": 7794,
-        "events": 7549,
+        "rows": 8174,
+        "events": 7908,
         "units": 7,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lスマスロ北斗の拳",
-        "targetDate": "2026-11-10",
-        "inputSha256": "cb4d23a386999a11f4456a5eb4b14e8405daeddff5a69151922a25904ff4b65f"
+        "targetDate": "2026-11-13",
+        "inputSha256": "45d01d55dd429097bee502aebbbca6e442d7a700b321eb87d00bfbb79919be91"
       }
     },
     {
@@ -423,7 +423,7 @@
         "Lﾁﾊﾞﾘﾖ2"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -431,19 +431,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 2129,
-        "events": 2024,
+        "rows": 2285,
+        "events": 2171,
         "units": 6,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lチバリヨ２",
-        "targetDate": "2026-11-10",
-        "inputSha256": "598eddbc737e1ef8856d51343e3e6ccadee1ad089e7aa9ca34b4a8752042e636"
+        "targetDate": "2026-11-13",
+        "inputSha256": "2f680c2f02c10396b271caac472eaa51cb376833cc6951dfc2e82985cdb233a7"
       }
     },
     {
@@ -461,7 +461,7 @@
         "L革命機ｳﾞｧﾙｳﾞﾚｲｳﾞ2"
       ],
       "releaseDate": "2025-09-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -469,19 +469,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 3250,
-        "events": 3114,
+        "rows": 3617,
+        "events": 3469,
         "units": 4,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lパチスロ 革命機ヴァルヴレイヴ2（Lヴヴヴ2）",
-        "targetDate": "2026-11-10",
-        "inputSha256": "a6c08d30d56ca82b4ab01bd3b7ab1e3674d829c79b1c8ecfdb26bc92035bd866"
+        "targetDate": "2026-11-13",
+        "inputSha256": "4b49c1168447ae883520e4858ad4e723f481ca303eaf77d72bca0d0683d0923c"
       }
     },
     {
@@ -494,7 +494,7 @@
         "Lうみねこのなく頃に2"
       ],
       "releaseDate": "2026-02-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -502,19 +502,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 487,
-        "events": 453,
+        "rows": 508,
+        "events": 471,
         "units": 1,
-        "days": 34,
+        "days": 37,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lパチスロうみねこのなく頃に2",
-        "targetDate": "2026-11-10",
-        "inputSha256": "1d4b417060b719e29e4f5f478569c795b14efe3a99bf7d20742f42e3b96d8198"
+        "targetDate": "2026-11-13",
+        "inputSha256": "7e4989c55cef75195bfc7570d0576d095a83861055f69e66d456f786b59def42"
       }
     },
     {
@@ -528,7 +528,7 @@
         "L革命機ｳﾞｧﾙｳﾞﾚｲｳﾞ"
       ],
       "releaseDate": "2022-11-21",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -536,19 +536,19 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 1735,
-        "events": 1655,
+        "rows": 1863,
+        "events": 1768,
         "units": 6,
-        "days": 16,
+        "days": 19,
         "firstDate": "2026-10-26",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lパチスロ革命機ヴァルヴレイヴ",
-        "targetDate": "2026-11-10",
-        "inputSha256": "19a29fe8d91954b2c7ea226393a8ff275a50d33c59ee869abccfe77c04ca44aa"
+        "targetDate": "2026-11-13",
+        "inputSha256": "520d2301159c54a5d9498f632db2614edf0a97989d8c5d1e1617d4d7874a8672"
       }
     },
     {
@@ -563,7 +563,7 @@
         "Lﾐﾘｵﾝｺﾞｯﾄﾞ神々の軌跡"
       ],
       "releaseDate": "2026-04-20",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -571,19 +571,19 @@
       "collectionComplete": true,
       "expectedUnits": 10,
       "collection": {
-        "rows": 2985,
-        "events": 2642,
+        "rows": 3097,
+        "events": 2724,
         "units": 10,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lミリオンゴッド－神々の軌跡－",
-        "targetDate": "2026-11-10",
-        "inputSha256": "85c326f96bcaa289fe3735620a0ca08a98bad98542781008eb456689eca83526"
+        "targetDate": "2026-11-13",
+        "inputSha256": "35fdbbd62135fdadaf348039569de33b1666f4d36ba8cf8dc14129bd7bbb7409"
       }
     },
     {
@@ -597,7 +597,7 @@
         "Lﾓｸﾞﾓｸﾞ風林火山"
       ],
       "releaseDate": "2026-09-07",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -605,19 +605,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 829,
+        "rows": 832,
         "events": 775,
         "units": 6,
-        "days": 29,
+        "days": 32,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lモグモグ風林火山 大海戦の巻",
-        "targetDate": "2026-11-10",
-        "inputSha256": "63e09455c0ac481be9cb80d2052c11b1d69694ce07a7031a0cb3029494368cf0"
+        "targetDate": "2026-11-13",
+        "inputSha256": "b71e147479581bfe888f0ca6c73ecc566db6fdd1f9ca7759cac8800d7d0326ce"
       }
     },
     {
@@ -631,7 +631,7 @@
         "Lﾘｺﾘｽ･ﾘｺｲﾙ"
       ],
       "releaseDate": "2026-09-07",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "signal_unverified",
       "pendingReason": "RB＝ラッシュ初当り、ART＝CZまたはラッシュ中ボーナスという資料を反映しています。取得履歴には液晶の現在Gと実獲得枚数がないため、ARTの内訳と通常時Gを確定できず、期待値は算出保留です。",
@@ -639,19 +639,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 9975,
-        "events": 9637,
+        "rows": 10437,
+        "events": 10087,
         "units": 13,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lリコリス・リコイル",
-        "targetDate": "2026-11-10",
-        "inputSha256": "8dbadc8ad2cc433db81b44fbd74f7b3af3ad46170dc52155fb0a42ae7f034a16"
+        "targetDate": "2026-11-13",
+        "inputSha256": "8ddbca4c0faa4d29fa3c3b857413f401837a147ee218b4feb71fee603a899a80"
       }
     },
     {
@@ -696,7 +696,7 @@
         "がれいぜろ"
       ],
       "releaseDate": "2026-08-17",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -704,19 +704,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 790,
-        "events": 721,
+        "rows": 821,
+        "events": 746,
         "units": 2,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L喰霊-零-Re",
-        "targetDate": "2026-11-10",
-        "inputSha256": "42b31cf8c5a0237edb43e37463e2cf5ce6866c55ec8f71546f42828282cde8c6"
+        "targetDate": "2026-11-13",
+        "inputSha256": "93c3bff383926bcac996e6deb78098a33d462e852112548f0827ef1893efff5f"
       }
     },
     {
@@ -729,7 +729,7 @@
         "彼女お借りします"
       ],
       "releaseDate": "2026-09-07",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -737,19 +737,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 1830,
-        "events": 1744,
+        "rows": 1877,
+        "events": 1788,
         "units": 4,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L彼女、お借りします",
-        "targetDate": "2026-11-10",
-        "inputSha256": "f82ef2bf5fff361bd68d59b7741503814ca08db0a2b98b7b8fe9a2d1198ef0bc"
+        "targetDate": "2026-11-13",
+        "inputSha256": "d773e7e9728b5dd3c24b18233b4a8fb729c729656969836f0347452849412fb1"
       }
     },
     {
@@ -762,7 +762,7 @@
         "L戦国乙女5"
       ],
       "releaseDate": "2026-06-08",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -770,19 +770,19 @@
       "collectionComplete": true,
       "expectedUnits": 8,
       "collection": {
-        "rows": 8831,
-        "events": 8552,
+        "rows": 9688,
+        "events": 9385,
         "units": 8,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L戦国乙女5 業火を穿つ宿焔の双刃",
-        "targetDate": "2026-11-10",
-        "inputSha256": "bb053b9e0bdf12884ed007d9dab1bb98141c094dde8c9cdce6ecbcf9a6e2339c"
+        "targetDate": "2026-11-13",
+        "inputSha256": "bc30f88492fe80db9f36a041b6fb6cacf65dac8b990d22195959654559c9ae94"
       }
     },
     {
@@ -796,7 +796,7 @@
         "L甲鉄城のｶﾊﾞﾈﾘ海門決戦"
       ],
       "releaseDate": "2026-03-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -804,19 +804,19 @@
       "collectionComplete": true,
       "expectedUnits": 15,
       "collection": {
-        "rows": 16342,
-        "events": 15823,
+        "rows": 17152,
+        "events": 16588,
         "units": 15,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L甲鉄城のカバネリ海門決戦",
-        "targetDate": "2026-11-10",
-        "inputSha256": "3e6e33eec6beedea5b268a659cfb7808e92ea5998271f702ef81fb2b7121d9eb"
+        "targetDate": "2026-11-13",
+        "inputSha256": "af6be875ce45fced31b3c769a57d1ecfd567187f2e719ea04869f599111d63fe"
       }
     },
     {
@@ -829,7 +829,7 @@
         "L防振り"
       ],
       "releaseDate": "2024-06-03",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -837,19 +837,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1160,
-        "events": 1090,
+        "rows": 1228,
+        "events": 1152,
         "units": 2,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L痛いのは嫌なので防御力に極振りしたいと思います。",
-        "targetDate": "2026-11-10",
-        "inputSha256": "db80fa31da278128bfae59dad9d14a9e9b6f547e6e0f7d6b356547b67699e49a"
+        "targetDate": "2026-11-13",
+        "inputSha256": "00485b9ec03229ee3c44b7c53218dc3016ab4c3a7a0816dd231a9413a8443967"
       }
     },
     {
@@ -861,7 +861,7 @@
         "吉宗"
       ],
       "releaseDate": "2026-04-06",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -869,19 +869,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 5009,
-        "events": 4804,
+        "rows": 5715,
+        "events": 5492,
         "units": 6,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L真打吉宗",
-        "targetDate": "2026-11-10",
-        "inputSha256": "6cd98ed9442812bbfb2f745cd28522caed519fbee6f7f4a4c1b0f81e5be115e9"
+        "targetDate": "2026-11-13",
+        "inputSha256": "aec93aa8ea78191b487d7689762bc109a559de9fd1431629229f7a311b5e02df"
       }
     },
     {
@@ -895,7 +895,7 @@
         "L聖闘士星矢 海皇覚醒"
       ],
       "releaseDate": "2024-06-03",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -903,19 +903,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1966,
-        "events": 1866,
+        "rows": 2134,
+        "events": 2025,
         "units": 3,
-        "days": 34,
+        "days": 37,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L聖闘士星矢 海皇覚醒 CUSTOM EDITION",
-        "targetDate": "2026-11-10",
-        "inputSha256": "3e80e321e675db4f2b1f9d363f54263e240202ae1c4e9119a5d052effdd2ace7"
+        "targetDate": "2026-11-13",
+        "inputSha256": "da3e1f60dbe2cacd8903bb8445015ca960068c7e780171ede5248d74a54fa3be"
       }
     },
     {
@@ -929,7 +929,7 @@
         "星矢黄金"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-12",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -937,19 +937,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1941,
-        "events": 1908,
+        "rows": 2103,
+        "events": 2067,
         "units": 3,
-        "days": 11,
+        "days": 12,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-12"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L聖闘士星矢 黄金十二宮",
-        "targetDate": "2026-11-12",
-        "inputSha256": "8dc49ed87d2e1bbcd18ba928a61dc8c679798cef9611c9d3ace706c10f8589b5"
+        "targetDate": "2026-11-13",
+        "inputSha256": "a8b4eb226028a03dcd1e2536e9b3abc1454c36e142e79eef1f6a499d41f8e68f"
       }
     },
     {
@@ -961,7 +961,7 @@
         "きょこすい"
       ],
       "releaseDate": "2026-04-06",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -969,19 +969,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 772,
-        "events": 740,
+        "rows": 842,
+        "events": 804,
         "units": 4,
-        "days": 16,
+        "days": 19,
         "firstDate": "2026-10-26",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L虚構推理",
-        "targetDate": "2026-11-10",
-        "inputSha256": "6edf956e75bb449b798059e0c7474ce05ee3743c2b4cfd3309e7a57b7c78efcf"
+        "targetDate": "2026-11-13",
+        "inputSha256": "b8d8eb7031c73eb2c27c2a39a9ec4fe782f4dc52b0406e1a0a0cfb902da08929"
       }
     },
     {
@@ -995,7 +995,7 @@
         "L青春ﾌﾞﾀ野郎はﾊﾞﾆｰｶﾞｰﾙ"
       ],
       "releaseDate": "2026-09-07",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1003,19 +1003,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 3737,
-        "events": 3607,
+        "rows": 3919,
+        "events": 3780,
         "units": 4,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L青春ブタ野郎はバニーガール先輩の夢を見ない",
-        "targetDate": "2026-11-10",
-        "inputSha256": "008ed371489bb186dc1f103d120d6db4362802cbdd08e994f92664df075a6d66"
+        "targetDate": "2026-11-13",
+        "inputSha256": "a7dfc3573cf086ca78be50ee7e7d6fbd773e5f63804c29505d125f578cf20bef"
       }
     },
     {
@@ -1029,7 +1029,7 @@
         "魔法少女にあこがれて"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -1037,19 +1037,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 2244,
-        "events": 2175,
+        "rows": 2399,
+        "events": 2321,
         "units": 3,
-        "days": 23,
+        "days": 26,
         "firstDate": "2026-10-19",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "L魔法少女にあこがれて",
-        "targetDate": "2026-11-10",
-        "inputSha256": "0e58c1a46085edbaff3bdb48ab5dc1a29aed65fcd0cc1c3f837dfa8344acdb32"
+        "targetDate": "2026-11-13",
+        "inputSha256": "25fb67cb62c13842b2643d7c63583127456e6a5aa9e387392ab2f3e5243f73df"
       }
     },
     {
@@ -1064,7 +1064,7 @@
         "L ソードアート・オンライン オルタナティブ ガンゲイル・オンライン"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-12",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1072,19 +1072,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 2882,
-        "events": 2838,
+        "rows": 3120,
+        "events": 3072,
         "units": 4,
-        "days": 11,
+        "days": 12,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-12"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lｶﾞﾝｹﾞｲﾙ･ｵﾝﾗｲﾝ",
-        "targetDate": "2026-11-12",
-        "inputSha256": "b8f142b469a9e108973dd38cce6f0a1e8ad94b3ff62e07c936196a65756845da"
+        "targetDate": "2026-11-13",
+        "inputSha256": "9aa173fb595a879e5be74218faf77408cd5dcda0cc1c130c697312d4fc851120"
       }
     },
     {
@@ -1098,7 +1098,7 @@
         "Lパチスロ ゴジラ対エヴァンゲリオン 2"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-12",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1106,19 +1106,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 5905,
-        "events": 5839,
+        "rows": 6497,
+        "events": 6425,
         "units": 6,
-        "days": 11,
+        "days": 12,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-12"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lｺﾞｼﾞﾗ対ｴｳﾞｧﾝｹﾞﾘｵﾝ2",
-        "targetDate": "2026-11-12",
-        "inputSha256": "224a91852f774996a3b6885e8429d7e0310b5d457a5ca879b092c738c3994723"
+        "targetDate": "2026-11-13",
+        "inputSha256": "4726e6338aab2ae6eac9a2911dee9a2c3938f37b63b4fecee36b1c6137bc8dea"
       }
     },
     {
@@ -1131,7 +1131,7 @@
         "スマスロ ラグナドール"
       ],
       "releaseDate": "2026-11-02",
-      "lastUpdated": "2026-11-12",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1139,19 +1139,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 857,
-        "events": 824,
+        "rows": 902,
+        "events": 866,
         "units": 3,
-        "days": 11,
+        "days": 12,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-12"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "Lﾗｸﾞﾅﾄﾞｰﾙ",
-        "targetDate": "2026-11-12",
-        "inputSha256": "4bcb76955f878a394080f2553f099886b1906e0512b63d5150a91aca45cbb312"
+        "targetDate": "2026-11-13",
+        "inputSha256": "b9ee7b026382282194cd5e7b690cdd347b562358acdd5c88c66fc723270b1824"
       }
     },
     {
@@ -1164,7 +1164,7 @@
         "この素晴らしい世界に祝福"
       ],
       "releaseDate": "2022-04-04",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1172,19 +1172,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 335,
-        "events": 326,
+        "rows": 413,
+        "events": 401,
         "units": 1,
-        "days": 9,
+        "days": 12,
         "firstDate": "2026-11-02",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "この素晴らしい世界に祝福を！",
-        "targetDate": "2026-11-10",
-        "inputSha256": "a9bdf1a1838275a9560cd865ec9ec11ef3f989b486b7fd9a4a811daa23d7c09a"
+        "targetDate": "2026-11-13",
+        "inputSha256": "7ebd692dad9c045ae6326afd2dfe3c741e7f2ff39f5e45d45a61c15e9cf046e7"
       }
     },
     {
@@ -1197,7 +1197,7 @@
         "Lｼｬｰﾏﾝｷﾝｸﾞ"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1205,19 +1205,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1089,
-        "events": 987,
+        "rows": 1185,
+        "events": 1074,
         "units": 3,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロ シャーマンキング",
-        "targetDate": "2026-11-10",
-        "inputSha256": "f650b75f6041235c04333792ac118d32201d5050ccbe975848834b37eb78baae"
+        "targetDate": "2026-11-13",
+        "inputSha256": "238a0e8382aa57693fdfd7b41e03d6e54d0606c6d7a0f8415da5426508d74623"
       }
     },
     {
@@ -1232,7 +1232,7 @@
         "Lﾊﾞｼﾞﾘｽｸ絆2天膳BLACK"
       ],
       "releaseDate": "2023-12-18",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1240,19 +1240,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 4876,
-        "events": 4771,
+        "rows": 5238,
+        "events": 5124,
         "units": 3,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロ バジリスク絆2 天膳 BLACK EDITION",
-        "targetDate": "2026-11-10",
-        "inputSha256": "b83af96cd7d81798cfc528e4ecec02187901f99400759e2fa0e34fd63fb7cfdf"
+        "targetDate": "2026-11-13",
+        "inputSha256": "9930822afd13da0f8713c4b4a67da890e6a2d6e8f7f71b690bd61b3d0bd94aea"
       }
     },
     {
@@ -1266,7 +1266,7 @@
         "Lﾏｷﾞｱﾚｺｰﾄﾞ"
       ],
       "releaseDate": "2025-04-07",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1274,19 +1274,19 @@
       "collectionComplete": true,
       "expectedUnits": 6,
       "collection": {
-        "rows": 3715,
-        "events": 3512,
+        "rows": 3918,
+        "events": 3697,
         "units": 6,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロ マギアレコード 魔法少女まどか☆マギカ外伝",
-        "targetDate": "2026-11-10",
-        "inputSha256": "38b646dafe11226d5c14724a35039ad456c51008f1667ab2c433c7c3c0419137"
+        "targetDate": "2026-11-13",
+        "inputSha256": "b524a68e4e65776889a9af5786a2f18592fe654843b0be7dbb5beef81353f931"
       }
     },
     {
@@ -1300,7 +1300,7 @@
         "Lﾓﾝｽﾀｰﾊﾝﾀｰﾗｲｽﾞ"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1308,19 +1308,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 822,
-        "events": 787,
+        "rows": 907,
+        "events": 869,
         "units": 1,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロ モンスターハンターライズ",
-        "targetDate": "2026-11-10",
-        "inputSha256": "819d514096d71c5c291cea7759924f3441cf321cde32084eb46643310303838f"
+        "targetDate": "2026-11-13",
+        "inputSha256": "cc16172d142448826139a705f2e86258f5289d9659477b01e8e59d5eaa209a9c"
       }
     },
     {
@@ -1334,7 +1334,7 @@
         "Lﾓﾝｽﾀｰﾊﾝﾀｰﾗｲｽﾞ：ｻﾝﾌﾞﾚｲｸ"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1342,19 +1342,19 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 8326,
-        "events": 8001,
+        "rows": 8474,
+        "events": 8134,
         "units": 11,
-        "days": 37,
+        "days": 40,
         "firstDate": "2026-10-05",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロ モンスターハンターライズ：サンブレイク",
-        "targetDate": "2026-11-10",
-        "inputSha256": "01356d226327d7d9e38b9303701421a7cb4b202ab26ceb5116f09a9fd771e908"
+        "targetDate": "2026-11-13",
+        "inputSha256": "e061863f6e8786d5a4f7e5621c0432aa002f6f7a6accd372c8d4bc338502d439"
       }
     },
     {
@@ -1367,7 +1367,7 @@
         "L化物語"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1375,19 +1375,19 @@
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1249,
-        "events": 1181,
+        "rows": 1283,
+        "events": 1209,
         "units": 2,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロ 化物語",
-        "targetDate": "2026-11-10",
-        "inputSha256": "516481951946e3abfbd22b45b35c04d1b40b6458afe8a3206c3e7815c614d92f"
+        "targetDate": "2026-11-13",
+        "inputSha256": "47f28119be9613b7a647a5f010b725a7a4312fc8238bb91373ce0257e34acf6b"
       }
     },
     {
@@ -1401,7 +1401,7 @@
         "L北斗 転生の章2"
       ],
       "releaseDate": "2026-01-05",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1409,19 +1409,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 5344,
-        "events": 5205,
+        "rows": 5681,
+        "events": 5530,
         "units": 4,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロ 北斗の拳 転生の章2",
-        "targetDate": "2026-11-10",
-        "inputSha256": "362da15b960b78b0f865ef0886cc495adc73073d7350895561e3bc85a09cc603"
+        "targetDate": "2026-11-13",
+        "inputSha256": "2ca5ae5e5ac6b7fa98dd6d401c79337536cf19f00bd1b5997d92ab8b56ed51bb"
       }
     },
     {
@@ -1435,7 +1435,7 @@
         "L攻殻機動隊"
       ],
       "releaseDate": "2026-02-02",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1443,19 +1443,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 2253,
-        "events": 2116,
+        "rows": 2390,
+        "events": 2241,
         "units": 8,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロ 攻殻機動隊",
-        "targetDate": "2026-11-10",
-        "inputSha256": "5fe4aa73cb1c29cb3906cf536b963995d049053574d0f5f2b00b6856c7ebd654"
+        "targetDate": "2026-11-13",
+        "inputSha256": "3db87f176c8ca38cd6b9acbeaa1286922ed28e20982eb704245edb0e8877f881"
       }
     },
     {
@@ -1468,27 +1468,27 @@
         "L東京ﾘﾍﾞﾝｼﾞｬｰｽﾞ"
       ],
       "releaseDate": "2025-09-08",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
-      "reasonCode": "validation_pending",
-      "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
+      "reasonCode": "payout_unavailable",
+      "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
       "forcePending": false,
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 473,
-        "events": 438,
+        "rows": 503,
+        "events": 465,
         "units": 1,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロ 東京リベンジャーズ",
-        "targetDate": "2026-11-10",
-        "inputSha256": "53b3c685b030b3dc4f928f1418177b606cbfe89d6d795ae21a7c47bce3b3f58a"
+        "targetDate": "2026-11-13",
+        "inputSha256": "320bdb11f6df31943cea6fcc8a49f390f2ce5a7d531f327565d771929229e826"
       }
     },
     {
@@ -1500,7 +1500,7 @@
         "L獣王"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1508,19 +1508,19 @@
       "collectionComplete": true,
       "expectedUnits": 5,
       "collection": {
-        "rows": 9951,
-        "events": 9766,
+        "rows": 10475,
+        "events": 10275,
         "units": 5,
-        "days": 37,
+        "days": 40,
         "firstDate": "2026-10-05",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロ 獣王",
-        "targetDate": "2026-11-10",
-        "inputSha256": "77393068e8a64fb5ca3a4222566a42e8f8e3a1cc4b496ddb4bbe10c0a81242b1"
+        "targetDate": "2026-11-13",
+        "inputSha256": "85eb7078b57aa0d1d351615833a48a43e5087940ff23172bb8d4df8a8699f38f"
       }
     },
     {
@@ -1534,7 +1534,7 @@
         "スーパーブラックジャック"
       ],
       "releaseDate": "2025-02-03",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1542,19 +1542,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 684,
-        "events": 651,
+        "rows": 701,
+        "events": 665,
         "units": 1,
-        "days": 33,
+        "days": 36,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロスーパーブラックジャック",
-        "targetDate": "2026-11-10",
-        "inputSha256": "8168e72fa43be92bef02347fe7b3a0709bde95249104b56ac20a4db264ff741e"
+        "targetDate": "2026-11-13",
+        "inputSha256": "32b72fee155c783797f2e0691ea44e6e966424b6d11d50dd33deb0b16cd66da0"
       }
     },
     {
@@ -1566,7 +1566,7 @@
         "Lﾊﾟﾘﾋﾟ孔明"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1574,19 +1574,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 826,
-        "events": 789,
+        "rows": 853,
+        "events": 813,
         "units": 1,
-        "days": 37,
+        "days": 40,
         "firstDate": "2026-10-05",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "スマスロパリピ孔明",
-        "targetDate": "2026-11-10",
-        "inputSha256": "bacd5242df576efe2098e511b5bc6e69490691905f4edac33be9bbf8c73a2908"
+        "targetDate": "2026-11-13",
+        "inputSha256": "450e56ba1629d8f6ad081e2f42b010549738242e8050a37f71fc765859f6a46b"
       }
     },
     {
@@ -1603,7 +1603,7 @@
         "Lｿｰﾄﾞｱｰﾄ･ｵﾝﾗｲﾝII"
       ],
       "releaseDate": "2026-06-08",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "payout_unavailable",
       "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
@@ -1611,19 +1611,19 @@
       "collectionComplete": true,
       "expectedUnits": 10,
       "collection": {
-        "rows": 13288,
-        "events": 12938,
+        "rows": 14350,
+        "events": 13970,
         "units": 10,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "ソードアート・オンラインII",
-        "targetDate": "2026-11-10",
-        "inputSha256": "8d448ce9b1c98dd428364b9c93395ece88ff1ba7fa2117e0c1e66c46a9ccd51d"
+        "targetDate": "2026-11-13",
+        "inputSha256": "71860f1fb5ba5d670eb07fbc921f6fb69b72a1d6c682d292811ac46bea5a0e3d"
       }
     },
     {
@@ -1635,27 +1635,27 @@
         "Lﾜｰﾙﾄﾞﾀﾞｲｽﾀｰ"
       ],
       "releaseDate": "2026-08-03",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
-      "reasonCode": "signal_unverified",
-      "pendingReason": "履歴は収集済みです。獲得枚数と通常時・ST中のゲーム数を履歴から分離できないため、期待値の算出を保留しています。",
+      "reasonCode": "payout_unavailable",
+      "pendingReason": "履歴は保存済みですが、実際の獲得枚数を履歴から確認できないため、実測の期待値は算出保留です。",
       "forcePending": false,
       "collectionComplete": true,
       "expectedUnits": 2,
       "collection": {
-        "rows": 1623,
-        "events": 1554,
+        "rows": 1694,
+        "events": 1619,
         "units": 4,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "ワールドダイスター",
-        "targetDate": "2026-11-10",
-        "inputSha256": "fbceaa41aa6bef1044e2b5a56516bcabb907db8b6163da9edee283f0904c4a6e"
+        "targetDate": "2026-11-13",
+        "inputSha256": "10c89b98357908c2d13dcd66f06f990487b274cfc3498afb16b83bcb89a1d5bf"
       }
     },
     {
@@ -1669,7 +1669,7 @@
         "L戦国ｺﾚｸｼｮﾝ6"
       ],
       "releaseDate": "2024-01-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1677,19 +1677,19 @@
       "collectionComplete": true,
       "expectedUnits": 3,
       "collection": {
-        "rows": 1526,
-        "events": 1422,
+        "rows": 1650,
+        "events": 1537,
         "units": 6,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "戦国コレクション6",
-        "targetDate": "2026-11-10",
-        "inputSha256": "6f2b69cb971a0766cdb806f34ec28ad38f38227228740b24e9bf84de07b00f19"
+        "targetDate": "2026-11-13",
+        "inputSha256": "e114ab6e7213676249179fc0f3245f0c3e886425fceace36a35d9d25d86b960f"
       }
     },
     {
@@ -1703,7 +1703,7 @@
         "沖ﾄﾞｷ!BLACK"
       ],
       "releaseDate": "2024-07-01",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1711,19 +1711,19 @@
       "collectionComplete": true,
       "expectedUnits": 4,
       "collection": {
-        "rows": 3905,
-        "events": 3765,
+        "rows": 4124,
+        "events": 3972,
         "units": 4,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "沖ドキ！BLACK",
-        "targetDate": "2026-11-10",
-        "inputSha256": "fae6c95bafa01f6e43bbf9c3112a66d7ca54de34c8d52417d2ccea761a629aed"
+        "targetDate": "2026-11-13",
+        "inputSha256": "8c683b288f5b7090d01d274e5079bc42f1d3e27dffc8a91fc3f3f2917ca83f8b"
       }
     },
     {
@@ -1735,7 +1735,7 @@
         "L邪神ちゃんﾄﾞﾛｯﾌﾟｷｯｸ"
       ],
       "releaseDate": "2026-08-03",
-      "lastUpdated": "2026-11-10",
+      "lastUpdated": "2026-11-13",
       "status": "pending",
       "reasonCode": "validation_pending",
       "pendingReason": "履歴は保存済みです。表示できる実測の期待値表がまだないため、信号対応・集計条件・有効サンプルを確認中です。",
@@ -1743,19 +1743,19 @@
       "collectionComplete": true,
       "expectedUnits": 1,
       "collection": {
-        "rows": 567,
-        "events": 532,
+        "rows": 574,
+        "events": 536,
         "units": 1,
-        "days": 35,
+        "days": 38,
         "firstDate": "2026-10-07",
-        "lastDate": "2026-11-10"
+        "lastDate": "2026-11-13"
       },
       "sourceIntegrity": {
         "schemaVersion": 1,
         "hallId": "ueno_honkan",
         "machineName": "邪神ちゃんドロップキック",
-        "targetDate": "2026-11-10",
-        "inputSha256": "c5337338645e14725996a57939b6ba35032d7dd5ea96386b5f7343dcae3d6ce8"
+        "targetDate": "2026-11-13",
+        "inputSha256": "a7d091634778cbd02df68232095d6f579c7a36b130ddbe4e75a19cf8c94e72be"
       }
     }
   ]
