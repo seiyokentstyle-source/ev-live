@@ -189,3 +189,12 @@ describe("ghoul heaven tab label", () => {
     expect(shortAimLabel("AT間天井（有馬ジャッジ失敗後・推定・150Gまで見てやめ）")).toBe("AT間（有馬ジャッジ失敗後）");
   });
 });
+
+describe("周期モデルの表のタブ名（ヴヴヴ2 2026-11-15）", () => {
+  test("実測の表と同じ名前にしない", async () => {
+    const { shortAimLabel } = await import("../lib/ev/profiles");
+    expect(shortAimLabel("AT・RB間天井（周期・通常）")).toBe("BB・RB間（周期）");
+    expect(shortAimLabel("AT・RB間天井（通常）")).toBe("BB・RB間");
+    expect(shortAimLabel("朝一（周期・リセット想定）")).toBe("リセット（周期）");
+  });
+});

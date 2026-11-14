@@ -143,7 +143,8 @@ export function profileCeilingText(profile: Profile, machineId?: string, profile
 // 「0スルー」「1スルー以降」はCZ間などの狙い方そのものを分ける（ヴヴヴ2 2026-10-22 利用者指定）。
 // 「有馬ジャッジ失敗後」は東京喰種の天国確定の狙い方（利用者指定 2026-10-30）。
 // 「ミミズ」はヴァルヴレイヴのミミズモード（推定）の表。付けないと通常の表と同じ見出しになる（利用者指摘 2026-11-13）。
-const KEPT_AIM_QUALIFIERS = /上位AT後|下位AT後|前回(?:BB|RB|BIG|REG)後|\d+スルー(?:以降)?|有馬ジャッジ失敗後|ミミズ/g;
+// 「周期」は周期・ポイントの試算の表（ヴヴヴ2、利用者指定 2026-11-15「実測最初にして」）。実測の表と同じ見出しにしない。
+const KEPT_AIM_QUALIFIERS = /上位AT後|下位AT後|前回(?:BB|RB|BIG|REG)後|\d+スルー(?:以降)?|有馬ジャッジ失敗後|ミミズ|周期/g;
 export function shortAimLabel(label: string): string {
   const s1 = label.includes("設定1");
   const reset = /リセ/.test(label);
@@ -154,7 +155,9 @@ export function shortAimLabel(label: string): string {
     .replace(/^引き戻しゾーン/, "引き戻し");
   if (base === "朝一") base = reset ? "リセット" : "朝一";
   else if (reset && !base.startsWith("リセ") && !base.startsWith("朝一")) base = `リセ${base}`;
-  const quals = [...new Set(label.slice(base.length).match(KEPT_AIM_QUALIFIERS) ?? [])];
+  // 見出しの残り（「（」以降）から区別を拾う。base は言い換えで長さが変わる（朝一→リセット）ので、元の区切りで切る。
+  const head = label.split("（")[0];
+  const quals = [...new Set(label.slice(head.length).match(KEPT_AIM_QUALIFIERS) ?? [])];
   const stop = label.match(/(\d+)Gまで見てやめ/);
   // 有馬ジャッジ失敗後は天国を見てやめる表しか無いので「150Gやめ」は付けない（利用者指定 2026-11-02）。
   if (stop && !quals.includes("有馬ジャッジ失敗後")) quals.push(`${stop[1]}Gやめ`);
