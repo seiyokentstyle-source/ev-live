@@ -179,7 +179,8 @@ export function aimIntervalBase(group: ProfileGroup): string {
   const profile = group.order[0];
   if (!profile) return "";
   const raw = profile.label.replace(SAMPLE_SUFFIX_RE, "").replace(RATE_LABEL_RE, "").trim();
-  return shortAimLabel(raw).split(/[（・]/)[0];
+  // 区切りの名前に「・」を含む機種がある（ヴヴヴ2の「BB・RB間」）。「（」の前までで切る（「リセBB」になっていた、2026-11-15）。
+  return shortAimLabel(raw).split("（")[0];
 }
 
 /** リセット（朝一）の表は、何までの天井かを見出しに書く（利用者指摘 2026-11-13
@@ -189,6 +190,9 @@ export function resetAimLabel(label: string, mainBase: string): string {
   if (!mainBase) return label;
   if (label === "リセット") return `リセ${mainBase}`;
   if (label === "朝一") return `朝一${mainBase}`;
+  // 「リセット（周期）」のように区別が付いた表も同じ見出しにそろえる（ヴヴヴ2の周期の表、2026-11-15）。
+  const m = label.match(/^(リセット|朝一)（(周期[^）]*)）$/);
+  if (m) return `${m[1] === "リセット" ? "リセ" : "朝一"}${mainBase}（${m[2]}）`;
   return label;
 }
 

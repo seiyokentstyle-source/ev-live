@@ -33,3 +33,13 @@ describe("リセットの狙い方の見出し", () => {
     expect(shortAimLabel("ボーナス/AT間天井（通常（下位AT後））")).toBe("ボーナス/AT間（下位AT後）");
   });
 });
+
+describe("ヴヴヴ2の朝一の見出し（2026-11-15）", () => {
+  it("区切りの「・」で切らない・周期の表もそろえる", async () => {
+    const { aimIntervalBase } = await import("../lib/ev/profiles");
+    const group = { key: "game_ceiling", label: "AT・RB間天井", ceiling: "", variants: {}, order: [{ key: "game_ceiling_4652", label: "AT・RB間天井（通常）・46/52" }] } as never;
+    expect(aimIntervalBase(group)).toBe("BB・RB間");
+    expect(resetAimLabel("リセット", "BB・RB間")).toBe("リセBB・RB間");
+    expect(resetAimLabel("リセット（周期）", "BB・RB間")).toBe("リセBB・RB間（周期）");
+  });
+});
